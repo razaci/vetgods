@@ -951,6 +951,7 @@
       .operationActivities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px;perspective:700px}.operationActivity{min-height:154px;text-align:center;padding:8px 7px;border:2px solid #58727a;border-radius:12px;background:radial-gradient(circle at 50% 15%,#26505b,#0b181d 68%);overflow:hidden;box-shadow:0 6px 0 #03090b,0 10px 20px #0008;transition:.18s}.operationActivity:before{content:attr(data-suit);position:absolute;left:6px;top:4px;color:#f4d66a;font-size:.66rem}.operationActivity span{display:block;font-size:2rem;filter:drop-shadow(0 0 8px #32dbc277)}.operationActivity b{display:block;color:#fff0a4;margin:5px 0 3px;font-size:.72rem}.operationActivity small{display:block;color:#b9cfcc;line-height:1.25;font-size:.56rem}.operationActivity em{display:block;margin-top:7px;padding:5px 3px;border-radius:6px;background:#14353d;color:#7ff5e5;font-style:normal;font-size:.55rem;font-weight:900;letter-spacing:.06em}.operationActivity:hover,.operationActivity:focus{border-color:var(--gold);box-shadow:0 6px 0 #4e3e10,0 0 22px #f3c95c55;transform:translateY(-3px) rotateX(2deg)}.operationActivity:active{transform:translateY(3px);box-shadow:0 2px 0 #03090b}.operationActivity.bonus{border-color:var(--gold);background:radial-gradient(circle at 50% 15%,#5a4c1e,#10262c 70%);animation:yellowPulse 1.2s infinite}.operationActivity.bonus em{background:#f3c95c;color:#241b04}.activityStage{padding:9px 11px;border-left:3px solid var(--gold);background:#09171c;border-radius:8px;color:#d8ece8}.cardHandHud{display:flex;justify-content:space-between;gap:6px;margin-top:8px;font-size:.62rem}.cardHandHud span{padding:5px 8px;background:#071115;border:1px solid #314b53;border-radius:99px}.cardHandHud b{color:var(--gold)}.dealFlash{animation:dealCards .38s ease-out}@keyframes dealCards{from{opacity:.25;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}.legacyPerform{display:none!important}@media(max-width:700px){.operationActivities{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.operationActivity{min-height:139px;padding:7px 4px}.operationActivity span{font-size:1.55rem}.operationActivity b{font-size:.62rem}.operationActivity small{font-size:.49rem}.operationActivity em{font-size:.48rem}.cardHandHud{flex-wrap:wrap}}
       .wardHud{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}.wardStat{padding:9px;text-align:center;border:1px solid #38545c;border-radius:9px;background:#08171c}.wardStat b{display:block;color:var(--gold);font-size:1.15rem}.wardStat small{font-size:.52rem;color:#a9c4c0}.recovery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.recovery{display:block!important;text-align:left;padding:12px!important}.recoveryTop{display:grid;grid-template-columns:54px 1fr auto;gap:9px;align-items:center}.recoveryTop .icon{font-size:2.3rem}.acuity{padding:4px 7px;border-radius:99px;font-size:.52rem;font-weight:900;background:#173a35;color:#7ff5e5}.acuity.watch{background:#4b3c13;color:#ffe477}.acuity.critical{background:#521b24;color:#ff9aa5}.recoveryVitals{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:9px 0}.recoveryVital{padding:6px;background:#071216;border-radius:6px;text-align:center}.recoveryVital b{display:block;font-size:.7rem;color:#dff}.recoveryVital small{font-size:.48rem}.recoveryNeeds{display:flex;gap:4px;flex-wrap:wrap;margin:7px 0}.recoveryNeeds span{padding:4px 6px;border-radius:5px;background:#231d0b;color:#f7d76c;font-size:.5rem}.recovery-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.recovery-controls button{padding:7px 4px;font-size:.54rem}.recovery-controls .discharge{grid-column:1/-1;background:#163d34;border-color:#46c9a6}.wardAlert{margin-top:7px;padding:6px;border-left:3px solid var(--red);background:#35151b;color:#ffc0c5;font-size:.58rem}.wardEmpty{grid-column:1/-1;padding:35px;text-align:center;color:#a9c4c0}@media(max-width:700px){.wardHud{grid-template-columns:repeat(2,1fr)}.recovery-grid{grid-template-columns:1fr}.recovery-controls{grid-template-columns:repeat(3,1fr)}}
       .procedure{position:relative}.procedure em{display:block;margin-top:5px;color:#7ff5e5;font-size:.52rem;font-style:normal;font-weight:900;letter-spacing:.08em}.procedure.selected em{color:#241b04;background:var(--gold);padding:4px 6px;border-radius:5px}.procedureStatus{padding:10px;margin-bottom:8px;border:1px solid var(--gold);border-radius:9px;background:#2a2410;color:#ffe89a;font-size:.65rem}.procedure.picked{animation:procedurePick .45s ease-out}@keyframes procedurePick{50%{transform:scale(1.035);box-shadow:0 0 30px #f3c95c88}}
+      .stabilityHead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px;margin-bottom:8px;border:1px solid #36545b;border-radius:8px;background:#071519}.stabilityHead b{color:#74ead8}.vitalButtons{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:9px}.vitalButton{padding:8px 6px;text-align:left;font-size:.6rem;background:linear-gradient(145deg,#17363e,#09171c)}.vitalButton b{display:block;color:#dffff9;font-size:.62rem}.vitalButton small{font-size:.5rem;color:#9ebbb7}.vitalButton.all{grid-column:1/-1;text-align:center;border-color:var(--gold);background:#3b3216;color:#fff0a4}.vitalButton:active{transform:scale(.97)}
     </style>
   </head>
   <body>
@@ -1172,6 +1173,7 @@
           <div class="stack rightcol">
             <div class="panel">
               <h2>Live Anesthesia Console</h2>
+              <div class="stabilityHead"><span>Patient stability</span><b id="stabilityScore">100%</b></div>
               <div class="controls">
                 <div class="control">
                   <label>Oxygen <b id="oxygenVal">70%</b></label
@@ -1212,6 +1214,7 @@
                 Keep oxygen above 60%, anesthetic depth near 45%, fluids near
                 50%, and warming near 50%.
               </p>
+              <div class="vitalButtons"><button class="vitalButton" id="boostOxygen"><b>🫁 Support Oxygen</b><small>Raises SpO₂ now</small></button><button class="vitalButton" id="balanceDepth"><b>😴 Balance Depth</b><small>Steadies HR and BP</small></button><button class="vitalButton" id="boostFluids"><b>💧 Increase Fluids</b><small>Raises pressure now</small></button><button class="vitalButton" id="boostWarmth"><b>🔥 Add Warmth</b><small>Raises temperature now</small></button><button class="vitalButton all" id="stabilizeVitals">💚 STABILIZE ALL VITALS</button></div>
             </div>
             <div class="panel">
               <h2>Team</h2>
@@ -2068,6 +2071,12 @@
           $("bp").textContent = Math.round(v.bp);
           $("temp").textContent = v.temp.toFixed(1) + "°";
           $("blood").textContent = Math.round(v.blood) + "%";
+          if ($("stabilityScore")) {
+            const stability=Math.round(clamp(100-Math.abs(v.hr-105)*.18-Math.max(0,92-v.o2)*2.2-Math.abs(v.bp-90)*.22-Math.abs(v.temp-99.5)*5-Math.max(0,75-v.blood)*.7,0,100));
+            $("stabilityScore").textContent=stability+"%";
+            $("stabilityScore").style.color=stability>=80?"var(--green)":stability>=55?"var(--gold)":"var(--red)";
+            $("consoleHint").textContent=stability>=80?"Vitals are stable. Maintain support while playing operation cards.":stability>=55?"Vitals need attention. Use one of the support buttons below.":"Immediate support needed—press STABILIZE ALL VITALS.";
+          }
           $("teamStatus").innerHTML =
             `<b>${plan.surgeon}</b><br>${plan.anes}<br>${plan.anesthesia}<br>Recovery: ${plan.recovery}`;
           $("complication").classList.toggle("show", !!comp);
@@ -2168,6 +2177,15 @@
           );
           v.temp = clamp(v.temp + (wa - 45) / 100 - 0.08, 94, 106);
           if (v.o2 < 82 || v.bp < 58 || v.temp < 97 || v.blood < 55) makeComp();
+        }
+        function applyVitalSupport(type){
+          if(!running)return toast("Enter the operating theatre before adjusting support");
+          if(type==="oxygen"||type==="all"){$("oxygen").value=85;v.o2=Math.max(v.o2,96)}
+          if(type==="depth"||type==="all"){$("depth").value=43;v.hr=105;v.bp=clamp(v.bp+(90-v.bp)*.5,40,135)}
+          if(type==="fluid"||type==="all"){$("fluid").value=72;v.bp=v.bp<88?90:v.bp>105?98:v.bp}
+          if(type==="warm"||type==="all"){$("warm").value=72;v.temp=v.temp<98.8?99.2:v.temp>101?100:v.temp}
+          if(type==="all"){v.o2=97;v.bp=92;v.temp=99.5;v.hr=105}
+          updateControls();renderOp();addLog(`${type==="all"?"💚 Full vital stabilization":"✓ "+type+" support"} applied. Monitor values updated immediately.`,"ok");toast(type==="all"?"All vitals stabilized":"Support applied — vitals updated");
         }
         function makeComp() {
           const pool =
@@ -2412,6 +2430,11 @@
               renderOp();
             }),
         );
+        $("boostOxygen").onclick=()=>applyVitalSupport("oxygen");
+        $("balanceDepth").onclick=()=>applyVitalSupport("depth");
+        $("boostFluids").onclick=()=>applyVitalSupport("fluid");
+        $("boostWarmth").onclick=()=>applyVitalSupport("warm");
+        $("stabilizeVitals").onclick=()=>applyVitalSupport("all");
         $("newPatient").onclick = () => newPatient();
         $("autoPlan").onclick = autoPlan;
         $("beginOperation").onclick = begin;
