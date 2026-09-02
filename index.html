@@ -948,7 +948,7 @@
       .arenaSpark{position:fixed;z-index:2;pointer-events:none;color:#f7dc70;text-shadow:0 0 9px currentColor;animation:arenaDrift 4s linear forwards}@keyframes arenaDrift{from{opacity:0;transform:translateY(20px) scale(.5)}20%{opacity:.8}to{opacity:0;transform:translateY(-100px) rotate(120deg) scale(1.2)}}
       @media(max-width:900px){.arenaRunes{grid-template-columns:repeat(4,1fr)}.arenaHero{min-height:190px;background-position:58% center}#operate:before{height:120px}}
       @media(max-width:700px){body{background-attachment:scroll}.arenaHero{min-height:150px;padding:9px}.arenaHeroText{padding:9px}.arenaHeroText p{font-size:.65rem}.arenaHero:before{letter-spacing:.35rem;font-size:.68rem}.arenaRunes{grid-template-columns:repeat(4,1fr)}.arenaRune{min-height:46px;font-size:1.05rem}#operate:before{height:90px}.arenaSpark{display:none}}
-      .operationActivities{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.operationActivity{min-height:118px;text-align:left;padding:12px;border:1px solid #3f5c64;background:linear-gradient(145deg,#19343c,#09171c);overflow:hidden}.operationActivity span{display:block;font-size:1.75rem}.operationActivity b{display:block;color:#fff0a4;margin:5px 0}.operationActivity small{display:block;color:#b9cfcc;line-height:1.35}.operationActivity:hover,.operationActivity:focus{border-color:var(--gold);box-shadow:0 0 22px #f3c95c3d;transform:translateY(-2px)}.activityStage{padding:9px 11px;border-left:3px solid var(--gold);background:#09171c;border-radius:8px;color:#d8ece8}.legacyPerform{display:none!important}@media(max-width:700px){.operationActivities{grid-template-columns:1fr}.operationActivity{min-height:82px;display:grid;grid-template-columns:42px 1fr;align-items:center;column-gap:8px}.operationActivity span{grid-row:1/3}.operationActivity b{margin:0}.operationActivity small{grid-column:2}}
+      .operationActivities{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px;perspective:700px}.operationActivity{min-height:154px;text-align:center;padding:8px 7px;border:2px solid #58727a;border-radius:12px;background:radial-gradient(circle at 50% 15%,#26505b,#0b181d 68%);overflow:hidden;box-shadow:0 6px 0 #03090b,0 10px 20px #0008;transition:.18s}.operationActivity:before{content:attr(data-suit);position:absolute;left:6px;top:4px;color:#f4d66a;font-size:.66rem}.operationActivity span{display:block;font-size:2rem;filter:drop-shadow(0 0 8px #32dbc277)}.operationActivity b{display:block;color:#fff0a4;margin:5px 0 3px;font-size:.72rem}.operationActivity small{display:block;color:#b9cfcc;line-height:1.25;font-size:.56rem}.operationActivity em{display:block;margin-top:7px;padding:5px 3px;border-radius:6px;background:#14353d;color:#7ff5e5;font-style:normal;font-size:.55rem;font-weight:900;letter-spacing:.06em}.operationActivity:hover,.operationActivity:focus{border-color:var(--gold);box-shadow:0 6px 0 #4e3e10,0 0 22px #f3c95c55;transform:translateY(-3px) rotateX(2deg)}.operationActivity:active{transform:translateY(3px);box-shadow:0 2px 0 #03090b}.operationActivity.bonus{border-color:var(--gold);background:radial-gradient(circle at 50% 15%,#5a4c1e,#10262c 70%);animation:yellowPulse 1.2s infinite}.operationActivity.bonus em{background:#f3c95c;color:#241b04}.activityStage{padding:9px 11px;border-left:3px solid var(--gold);background:#09171c;border-radius:8px;color:#d8ece8}.cardHandHud{display:flex;justify-content:space-between;gap:6px;margin-top:8px;font-size:.62rem}.cardHandHud span{padding:5px 8px;background:#071115;border:1px solid #314b53;border-radius:99px}.cardHandHud b{color:var(--gold)}.dealFlash{animation:dealCards .38s ease-out}@keyframes dealCards{from{opacity:.25;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}.legacyPerform{display:none!important}@media(max-width:700px){.operationActivities{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.operationActivity{min-height:139px;padding:7px 4px}.operationActivity span{font-size:1.55rem}.operationActivity b{font-size:.62rem}.operationActivity small{font-size:.49rem}.operationActivity em{font-size:.48rem}.cardHandHud{flex-wrap:wrap}}
     </style>
   </head>
   <body>
@@ -1155,10 +1155,11 @@
             <div class="panel">
               <h2>Choose an Operation Activity</h2>
               <div class="activityStage" id="activityStage">The team is waiting for the next safe activity.</div>
+              <div class="cardHandHud"><span>HAND <b id="activityHand">3 CARDS</b></span><span>TACTICAL COMBO <b id="activityCombo">x1</b></span><span>BONUS <b id="activityBonus">SCAN</b></span></div>
               <div class="operationActivities">
-                <button class="operationActivity" id="activityScan"><span>🔎</span><b>Diagnostic Scan</b><small>Confirm the target and let the owl guide the correct instrument.</small></button>
-                <button class="operationActivity" id="activityTeam"><span>🤝</span><b>Team Checklist</b><small>Coordinate anesthesia, monitoring, and the surgical team before advancing.</small></button>
-                <button class="operationActivity" id="activityGuardian"><span>🛡️</span><b>Guardian Assist</b><small>Use a protected automatic action and strengthen the patient.</small></button>
+                <button class="operationActivity" id="activityScan" data-suit="✦ SCAN"><span>🔎</span><b>Diagnostic Scan</b><small>Confirm target and instrument. Earn precision XP.</small><em>PLAY CARD</em></button>
+                <button class="operationActivity" id="activityTeam" data-suit="♥ TEAM"><span>🤝</span><b>Team Sync</b><small>Raise oxygen and pressure before the safe action.</small><em>PLAY CARD</em></button>
+                <button class="operationActivity" id="activityGuardian" data-suit="◆ GUARD"><span>🛡️</span><b>Guardian Assist</b><small>Protect blood volume and calm heart rate.</small><em>PLAY CARD</em></button>
               </div>
               <div class="actions" style="margin-top:9px"><button id="modifyPlan">⚙ Modify Operation</button></div>
               <div class="legacyPerform"><div class="skill"><i class="needle" id="needle"></i></div><button id="perform" disabled>Legacy Action</button><button id="autoStep">Legacy Safe Action</button></div>
@@ -1879,6 +1880,8 @@
           running = false,
           comp = null,
           log = [],
+          activityCombo = 1,
+          activityBonusIndex = 0,
           v = { hr: 112, o2: 97, bp: 92, temp: 100.4, blood: 100 },
           plan = {
             surgeon: STAFF[0],
@@ -1982,6 +1985,8 @@
           v = { hr: 112, o2: 97, bp: 92, temp: 100.4, blood: 100 };
           running = true;
           comp = null;
+          activityCombo = 1;
+          activityBonusIndex = 0;
           $("incision").classList.remove("show");
           $("opAnimal").textContent = patient.icon;
           $("guide").classList.remove("show");
@@ -2012,6 +2017,16 @@
           if ($("activityStage")) $("activityStage").innerHTML = s
             ? `<b>Stage ${stage + 1}: ${s.n}</b> · ${s.why}`
             : "✓ All operation activities are complete.";
+          if ($("activityCombo")) {
+            const cards = [$("activityScan"), $("activityTeam"), $("activityGuardian")];
+            activityBonusIndex = stage % cards.length;
+            cards.forEach((card, i) => card.classList.toggle("bonus", i === activityBonusIndex));
+            $("activityCombo").textContent = "x" + activityCombo;
+            $("activityBonus").textContent = ["SCAN", "TEAM", "GUARD"][activityBonusIndex] + " ×2";
+            $("activityHand").textContent = s ? "3 CARDS" : "COMPLETE";
+            document.querySelector(".operationActivities")?.classList.remove("dealFlash");
+            requestAnimationFrame(() => document.querySelector(".operationActivities")?.classList.add("dealFlash"));
+          }
           $("tray").innerHTML = TOOLS.filter((t) => packed.has(t.id))
             .map(
               (t) =>
@@ -2084,20 +2099,23 @@
           const s = selectedOp.steps[stage];
           if (!running || !s) return;
           document.querySelectorAll('.battleEffect,.victoryFlash,.eventFloat').forEach((x) => x.remove());
+          const playedIndex = type === "scan" ? 0 : type === "team" ? 1 : 2;
+          const bonus = playedIndex === activityBonusIndex;
           selectedTool = s.tool;
           needle = 50;
           if (type === "scan") {
-            save.xp += 5;
-            addLog(`🔎 Diagnostic scan confirmed ${TOOLS.find((t) => t.id === s.tool).n} for ${s.n}.`, "ok");
+            save.xp += bonus ? 12 : 6;
+            addLog(`🔎 Diagnostic scan confirmed ${TOOLS.find((t) => t.id === s.tool).n} for ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
           } else if (type === "team") {
-            v.o2 = clamp(v.o2 + 2, 65, 100);
-            v.bp = clamp(v.bp + 3, 40, 135);
-            addLog(`🤝 Team checklist completed before ${s.n}.`, "ok");
+            v.o2 = clamp(v.o2 + (bonus ? 4 : 2), 65, 100);
+            v.bp = clamp(v.bp + (bonus ? 6 : 3), 40, 135);
+            addLog(`🤝 Team sync completed before ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
           } else {
-            v.hr = clamp(v.hr - 3, 45, 240);
-            v.blood = clamp(v.blood + 2, 0, 100);
-            addLog(`🛡 Guardian protected the patient during ${s.n}.`, "ok");
+            v.hr = clamp(v.hr - (bonus ? 6 : 3), 45, 240);
+            v.blood = clamp(v.blood + (bonus ? 4 : 2), 0, 100);
+            addLog(`🛡 Guardian protected the patient during ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
           }
+          activityCombo = bonus ? activityCombo + 1 : Math.max(1, activityCombo - 1);
           perform(true);
         }
         function tickVitals() {
