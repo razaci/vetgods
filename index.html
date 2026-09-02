@@ -1020,6 +1020,20 @@
     <style>
       .catalogHero{padding:16px;border:2px solid #59d9ff;border-radius:18px;background:linear-gradient(90deg,#07192fe8,#172a3fe8),var(--arena-ai) center/cover}.catalogHero h1{margin:0;color:#bcefff}.catalogHud{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:9px 0}.catalogStat{padding:8px;text-align:center;border:1px solid #426a7a;border-radius:9px;background:#07161e}.catalogStat b,.catalogStat small{display:block}.catalogStat b{color:#8ee9ff}.catalogStat small{font-size:.48rem;color:#9db8c0}.catalogTools{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.catalogTools select,.catalogTools input{min-width:140px}.materialGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}.materialCard{padding:9px;border:1px solid #3e5964;border-radius:11px;background:linear-gradient(145deg,#122631,#07141a)}.materialCard.rare{border-color:#617dec}.materialCard.epic{border-color:#bc68e8}.materialCard.mythic{border-color:#f0c951;box-shadow:0 0 14px #f0c95133}.materialCard b,.materialCard small{display:block}.materialCard b{color:#d8f7ff}.materialCard small{font-size:.51rem;color:#a2bac0}.materialIcon{font-size:2rem}.stockLine{display:flex;justify-content:space-between;margin:6px 0;font-size:.51rem}.stockLine span:first-child{color:#83ffda}.stockLine span:last-child{color:#ffe078}.materialActions{display:grid;grid-template-columns:1fr 1fr;gap:4px}.materialActions button{padding:6px 3px;font-size:.49rem}.ownedShelf{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.ownedItem{padding:7px;text-align:center;border:1px solid #42606b;border-radius:9px;background:#081820}.ownedItem span{display:block;font-size:1.6rem}.ownedItem small,.ownedItem b{display:block}.ownedItem small{font-size:.48rem}.craftBench{display:grid;grid-template-columns:1fr 1fr auto;gap:7px;align-items:end}.selectionInspector{padding:8px;border-left:4px solid #58d9ff;background:#0a2530;margin:7px 0;color:#caeff8}.systemLoadout{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}.systemSlot{padding:8px;text-align:center;border:1px dashed #45616b;border-radius:9px;background:#07151b}.systemSlot.filled{border-style:solid;border-color:#65e3cb}.systemSlot b,.systemSlot small{display:block}.systemSlot small{font-size:.47rem}@media(max-width:900px){.materialGrid{grid-template-columns:repeat(3,1fr)}.ownedShelf{grid-template-columns:repeat(3,1fr)}.systemLoadout{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.catalogHud{grid-template-columns:repeat(2,1fr)}.materialGrid{grid-template-columns:repeat(2,1fr)}.craftBench{grid-template-columns:1fr}.catalogTools>*{flex:1}.ownedShelf{grid-template-columns:repeat(2,1fr)}}@media(max-width:390px){.materialGrid{grid-template-columns:1fr}}
     </style>
+    <style>
+      .mainWingRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
+      .mainWingShortcut{min-height:76px;padding:10px 12px;border:1px solid #55747b;border-radius:12px;background:linear-gradient(145deg,#17323a,#09171c);color:#fff;text-align:left;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;box-shadow:inset 0 0 18px #32dbc212,0 5px 16px #0005;transition:transform .18s,border-color .18s,box-shadow .18s}
+      .mainWingShortcut:hover,.mainWingShortcut:focus-visible{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 0 18px #f3c95c35,inset 0 0 18px #32dbc218}
+      .mainWingShortcut .wingIcon{grid-row:1/3;font-size:1.75rem;filter:drop-shadow(0 0 7px #32dbc277)}
+      .mainWingShortcut b{color:#fff0b4;font-size:.77rem;letter-spacing:.04em}
+      .mainWingShortcut small{color:#b8d4d0;font-size:.58rem;line-height:1.25}
+      .deepControlDock{display:grid;grid-template-columns:auto 1fr repeat(3,auto);gap:7px;align-items:center;margin:0 0 12px;padding:8px;border:1px solid #385860;border-radius:12px;background:linear-gradient(90deg,#07151bec,#102a31ec);box-shadow:0 8px 22px #0005;position:sticky;top:65px;z-index:32;backdrop-filter:blur(10px)}
+      .deepControlDock .deepMark{font-size:1.25rem;filter:drop-shadow(0 0 7px #f3c95c88)}
+      .deepTrail{min-width:0}.deepTrail b,.deepTrail small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.deepTrail b{font-size:.7rem;color:#fff0b4}.deepTrail small{font-size:.55rem;color:#9fc4c2;margin-top:2px}
+      .deepControlDock button{min-height:38px;padding:7px 10px;font-size:.61rem;border-color:#496970}.deepControlDock button:hover{border-color:var(--gold)}
+      @media(max-width:650px){.mainWingRow{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.mainWingShortcut{min-width:210px;scroll-snap-align:start;min-height:70px}}
+      @media(max-width:650px){.deepControlDock{top:61px;grid-template-columns:auto 1fr repeat(3,38px);gap:5px;padding:6px}.deepControlDock button{font-size:0;padding:5px}.deepControlDock button span{font-size:1rem}.deepTrail small{max-width:145px}}
+    </style>
   </head>
   <body>
     <div class="introScreen" id="introScreen" role="dialog" aria-modal="true" aria-label="Vet Gods introduction"><div class="introPanel"><div class="introCrest"></div><div class="introSubtitle">THE DIVINE VETERINARY BATTLE SIMULATOR</div><h1 class="introTitle">VET GODS</h1><p>Lead heroic animal guardians through the operating theatre, defeat Disease Titans with safe action cards, and monitor every patient through recovery.</p><div class="introGuardians" aria-hidden="true"><span>🐕‍🦺</span><span>🐈</span><span>🐰</span><span>🦉</span><span>🐴</span></div><div class="introActions"><button class="gold" id="introStart">⚕ Begin New Case</button><button class="primary" id="introContinue">▶ Continue Hospital</button><button id="introHelp">? How to Play</button></div><div class="introHow" id="introHow"><div><b>1 · Choose a Patient</b><small>Press one of ten procedure cards. The team builds the recommended plan.</small></div><div><b>2 · Play Operation Cards</b><small>Pick Scan, Team, or Guardian cards while keeping the vital signs stable.</small></div><div><b>3 · Run Recovery</b><small>Monitor every surgical patient and meet all goals before discharge.</small></div></div><small class="introVersion">CINEMATIC ARENA EDITION · SINGLE-FILE GAME</small></div></div>
@@ -1059,7 +1073,13 @@
       <div class="easyBar"><div class="easyLabel">EASY CONTROLS</div><button id="easyPlan">1 · Auto Plan</button><button id="easyOperate">2 · Enter Theatre</button><button id="easyNext" class="next">3 · Next Safe Move</button><button id="easyStabilize">4 · Stabilize</button><button id="easyFinish">5 · Safe Action</button></div>
       <div class="arenaHero" aria-label="Vet Gods battle arena"><div class="arenaHeroText"><h1>THE DIVINE OPERATING ARENA</h1><p>Heal the patient, build guardian power, and defeat the Disease Titan—one safe veterinary action at a time.</p></div></div>
       <div class="arenaRunes" aria-label="Battle arena shortcuts"><button class="arenaRune" data-arena="plan">🐾<small>Patient</small></button><button class="arenaRune" data-arena="care">⚕️<small>Care</small></button><button class="arenaRune" data-arena="stability">🛡️<small>Stability</small></button><button class="arenaRune" data-arena="vitals">💓<small>Vitals</small></button><button class="arenaRune" data-arena="recover">🧪<small>Recovery</small></button><button class="arenaRune" data-arena="learn">🦉<small>Insight</small></button><button class="arenaRune" data-arena="titan">⚔️<small>Titan</small></button><button class="arenaRune" data-arena="charge">✨<small>Charge</small></button></div>
+      <div class="mainWingRow" aria-label="Main wing shortcuts">
+        <button class="mainWingShortcut" data-page="nursery" title="Open the Nursery Wing"><span class="wingIcon">🍼</span><b>NURSERY WING</b><small>Care for expecting mothers and newborns</small></button>
+        <button class="mainWingShortcut" data-page="laboratory" title="Open the Genetics Laboratory"><span class="wingIcon">🧬</span><b>LABORATORY</b><small>Mix parent traits and create companion babies</small></button>
+        <button class="mainWingShortcut" data-page="recover" title="Open the Recovery Ward"><span class="wingIcon">💓</span><b>RECOVERY WARD</b><small>Monitor and stabilize patients after surgery</small></button>
+      </div>
       <div class="complexDash"><button class="dashTile" data-dash="area"><small>CURRENT AREA</small><b id="dashArea">Planning</b></button><button class="dashTile" data-dash="next"><small>NEXT ACTION</small><b id="dashNext">Build Plan</b></button><button class="dashTile" data-dash="status"><small>GAME STATUS</small><b id="dashStatus">Ready</b></button><button class="dashTile" data-dash="charge"><small>DIVINE CHARGE</small><b id="dashCharge">0%</b></button></div>
+      <div class="deepControlDock" id="deepControlDock" aria-label="Deep menu navigation"><span class="deepMark">🧭</span><div class="deepTrail"><b id="deepPageName">PATIENT PLANNING</b><small id="deepPanelName">Main gameplay area · controls ready</small></div><button id="deepBack" title="Return to the previous game area"><span>↩</span> Back</button><button id="deepFocus" title="Move to the active controls"><span>◎</span> Focus</button><button id="deepNext" title="Open the next panel or recommended control"><span>▶</span> Next panel</button></div>
       <section id="pets" class="page"><div class="petHero"><h1>🐾 My Pets · Companion Command Center</h1><p>Build a three-animal squad, train specialized roles, equip gear, form bonds, and send companions on missions. Your active pet remains beside you throughout the game.</p></div><div class="petHubGrid"><div class="panel"><h2>Healed Animal Inventory</h2><div class="petInventory" id="petInventory"><div class="petEmpty">Complete a successful operation to unlock your first customizable pet.</div></div></div><aside class="panel petEditor"><h2>Companion Profile</h2><div class="petPreview" id="petPreview">🐾</div><p class="sub" id="petEditStatus">Select an animal from your inventory.</p><div id="petStats"></div><div id="petEditControls"><div class="field"><label>Nickname</label><input id="petNickname" maxlength="18" placeholder="Companion name"></div><div class="field"><label>Companion role</label><select id="petRole"><option>Medic</option><option>Scout</option><option>Guardian</option><option>Technician</option><option>Recovery Helper</option><option>Titan Fighter</option></select></div><div class="field"><label>Aura color</label><select id="petAura"><option value="#f3c95c">Golden</option><option value="#65e8d2">Teal</option><option value="#ff76d8">Mystic Pink</option><option value="#8f91ff">Cosmic Violet</option><option value="#76ff88">Healing Green</option><option value="#ff704f">Fire Red</option></select></div><div class="field"><label>Accessory</label><select id="petAccessory"><option value="👑">Crown</option><option value="🛡️">Shield</option><option value="⚕️">Healer Crest</option><option value="✨">Starlight</option><option value="🎓">Scholar Cap</option><option value="🌿">Herbal Wreath</option></select></div><div class="field"><label>Floating size</label><select id="petSize"><option value="2.5rem">Small</option><option value="3rem" selected>Medium</option><option value="3.7rem">Large</option></select></div><div class="field"><label>Screen side</label><select id="petSide"><option value="right">Right</option><option value="left">Left</option></select></div><div class="petEditorActions"><button id="savePetStyle" class="primary">Save Profile</button><button id="activatePet" class="gold">Activate</button><button id="hideActivePet">Hide Pet</button><button id="equipPetHero">Use in Surgery</button></div></div></aside></div><div class="companionSystems"><div class="panel"><h2>⚕ Three-Companion Squad</h2><p class="sub">Squad roles provide real surgery and recovery bonuses.</p><div class="squadSlots" id="squadSlots"></div><button id="toggleSquadPet" class="gold" style="margin-top:8px">Add Selected Pet to Squad</button><div class="systemReadout" id="squadBonus">No squad bonuses active.</div></div><div class="panel"><h2>💚 Bond, Care & Training</h2><div class="petCommands"><button data-petcare="train">🎯 Train</button><button data-petcare="feed">🥣 Feed</button><button data-petcare="play">🎾 Play</button><button data-petcare="rest">🛏️ Rest</button></div><div class="systemReadout" id="petCareReadout">Choose a companion and build its bond.</div></div><div class="panel"><h2>🧭 Background Missions</h2><div class="missionGridPet" id="petMissions"></div><div class="systemReadout" id="missionReadout">Missions earn stars, experience, and bond while you play.</div></div><div class="panel"><h2>🎒 Companion Equipment</h2><div class="gearGridPet" id="petGear"></div><div class="systemReadout" id="gearReadout">Equipment improves companion statistics and mission rewards.</div></div></div></section>
       <section id="plan" class="page active">
         <div class="playCenterHead"><div><h1>⚕ MAIN PLAY CENTER</h1><p>Choose a patient, review the emergency, assemble your companions, and launch the operation from one screen.</p></div><div class="playCenterActions"><button id="refreshRoster" class="primary">Refresh Patient Roster</button><button data-page="pets" class="gold">Open My Pets & Squad</button></div></div>
@@ -2280,7 +2300,9 @@
           go();
         }
         function perform(auto = false) {
-          if (!selectedTool) return;
+          const activeStep=selectedOp?.steps?.[stage];
+          if (!running || !activeStep) return toast(running ? "Operation stage is complete — continue to Recovery" : "Enter the operating theatre to use operation controls");
+          if (!selectedTool) return toast("Select the highlighted instrument first");
           cancelAnimationFrame(raf);
           const s = selectedOp.steps[stage],
             correct = selectedTool === s.tool,
@@ -2332,7 +2354,7 @@
           const playedIndex = ["scan","team","guardian","sterile","precision","monitor"].indexOf(type);
           const bonus = playedIndex === activityBonusIndex;
           setTimeout(() => {
-            if (!running || selectedOp.steps[stage] !== s) { activityLocked = false; return; }
+            if (!running || selectedOp.steps[stage] !== s) { activityLocked = false; if(running)renderOp(); return; }
             selectedTool = s.tool;
             needle = 50;
             if (type === "scan") {
@@ -2649,7 +2671,9 @@
         $("beginOperation").onclick = begin;
         $("perform").onclick = () => perform(false);
         $("autoStep").onclick = () => {
-          selectedTool = selectedOp.steps[stage].tool;
+          const s=selectedOp?.steps?.[stage];
+          if(!running||!s)return toast(running ? "All operation stages are complete — open Recovery" : "Enter the operating theatre first");
+          selectedTool = s.tool;
           needle = 50;
           perform(true);
         };
@@ -2660,21 +2684,26 @@
         $("activityPrecision").onclick = () => operationActivity("precision");
         $("activityMonitor").onclick = () => operationActivity("monitor");
         $("quickTool").onclick = () => {
-          const s=selectedOp.steps[stage];
-          if(s) selectTool(s.tool);
+          const s=selectedOp?.steps?.[stage];
+          if(!running||!s)return toast(running ? "Procedure complete — continue to Recovery" : "Enter the operating theatre first");
+          selectTool(s.tool);
         };
         $("quickAction").onclick = () => {
+          if(!running||!selectedOp?.steps?.[stage])return toast(running ? "Procedure complete — continue to Recovery" : "Enter the operating theatre first");
+          if(activityLocked)return toast("The current action is resolving — controls will unlock automatically");
           const cards=[$("activityScan"),$("activityTeam"),$("activityGuardian"),$("activitySterile"),$("activityPrecision"),$("activityMonitor")];
           const best=cards[activityBonusIndex]||cards[0];
           if(best&&!best.disabled) best.click();
         };
         $("quickStabilize").onclick = () => applyVitalSupport("all");
         $("showNext").onclick = () => {
+          const step=selectedOp?.steps?.[stage];
+          if(!running||!step)return toast(running ? "Procedure complete — the next destination is Recovery" : "Enter the operating theatre first");
           document
             .querySelectorAll(".tool")
             .forEach((x) => x.classList.remove("correct"));
           const x = document.querySelector(
-            `[data-tool="${selectedOp.steps[stage].tool}"]`,
+            `[data-tool="${step.tool}"]`,
           );
           if (x) {
             x.classList.add("correct");
@@ -3667,6 +3696,37 @@
       function apply(m){C.active[m.category]=m.id;if(m.category==='Surgical'){let t={};try{t=JSON.parse(localStorage.getItem('vetGodsTacticsV1')||'{}')}catch(e){}t.supplies=t.supplies||{};t.supplies.gauze=(t.supplies.gauze||0)+2;t.supplies.suture=(t.supplies.suture||0)+2;localStorage.setItem('vetGodsTacticsV1',JSON.stringify(t))}if(m.category==='Nursery'){let n={};try{n=JSON.parse(localStorage.getItem('vetGodsNurseryV1')||'{}')}catch(e){};(n.babies||[]).forEach(b=>{b.warmth=Math.min(100,b.warmth+8);b.hunger=Math.min(100,b.hunger+8);b.rest=Math.min(100,b.rest+8)});n.funds=(n.funds||0)+20;localStorage.setItem('vetGodsNurseryV1',JSON.stringify(n));document.querySelector('[data-baby="cuddle"]')?.click()}if(m.category==='Genetics'){const s=$("maternalMaterial");if(s&&[...s.options].some(o=>o.value===m.name)){s.value=m.name;s.dispatchEvent(new Event('change',{bubbles:true}))}}if(m.category==='Meadow'){let x={};try{x=JSON.parse(localStorage.getItem('vetGodsMeadowV1')||'{}')}catch(e){}x.feed=(x.feed||0)+35;x.toys=(x.toys||0)+12;localStorage.setItem('vetGodsMeadowV1',JSON.stringify(x))}if(m.category==='Recovery')$("quickStabilize")?.click();if(m.category==='Spirit'){let c={};try{c=JSON.parse(localStorage.getItem('vetGodsCemeteryV1')||'{}')}catch(e){}c.essence=(c.essence||0)+(m.rarity==='Mythic'?35:m.rarity==='Epic'?20:10);localStorage.setItem('vetGodsCemeteryV1',JSON.stringify(c));if(m.id==='first_shard'){let g={};try{g=JSON.parse(localStorage.getItem('vetGodsBabySagaV1')||'{}')}catch(e){}g.clues=Math.min(100,(g.clues||0)+8);localStorage.setItem('vetGodsBabySagaV1',JSON.stringify(g))}}C.owned[m.id]--;toast(`${m.name} loaded into ${m.category}: ${m.effect}`);render()}
       function open(){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('active',x.id==='materials'));document.querySelectorAll('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page==='materials'));render();sec.scrollIntoView({block:'start'})}document.addEventListener('click',e=>{if(e.target.closest('[data-page="materials"]')){e.preventDefault();open()}const ins=e.target.closest('[data-inspectmaterial]');if(ins){const m=material(ins.dataset.inspectmaterial);C.selected=m.id;$("materialInspector").innerHTML=`<b>${m.icon} ${m.name}</b> · ${m.rarity} ${m.category}<br>${m.effect}. Current stock ${m.stock}; owned ${C.owned[m.id]||0}; dynamic market price ${price(m)}.`}const buy=e.target.closest('[data-buymaterial]');if(buy){const m=material(buy.dataset.buymaterial),p=price(m);if(m.stock&&C.credits>=p){C.credits-=p;m.stock--;C.owned[m.id]=(C.owned[m.id]||0)+1;render();toast(`${m.name} added to the material shelf`)}}const load=e.target.closest('[data-loadmaterial]');if(load){const m=material(load.dataset.loadmaterial);if((C.owned[m.id]||0)>0)apply(m)}if(e.target.id==='rotateMarket'&&C.credits>=40){C.credits-=40;C.day++;MAT.forEach((m,i)=>{m.stock=1+(C.day*3+i*5)%9;m.quality=65+(C.day*7+i*3)%35});render();toast('The hospital market rotated with new prices and stock')}if(e.target.id==='fuseMaterials'){const a=material($("craftMaterialA").value),b=material($("craftMaterialB").value);if(!a||!b||a.id===b.id)return toast('Choose two different owned materials');if((C.owned[a.id]||0)<1||(C.owned[b.id]||0)<1)return toast('Both materials must be owned');C.owned[a.id]--;C.owned[b.id]--;const name=`${a.name.split(' ')[0]}-${b.name.split(' ').pop()} Fusion`;C.crafted[name]=C.crafted[name]||{count:0,effect:`${a.effect} + ${b.effect}`};C.crafted[name].count++;C.crafted[name].effect=`${a.effect} + ${b.effect}`;render();toast(`${name} crafted with two working effects`)}});$("materialCategory").addEventListener('change',render);$("materialSearch").addEventListener('input',render);
       function auditSelects(){document.querySelectorAll('select').forEach(s=>{if(!s.options.length){const o=document.createElement('option');o.textContent='Standard available option';s.append(o)}[...s.options].forEach(o=>{if(!o.title)o.title=`Select ${o.textContent.trim()} to update this game system.`});s.disabled=s.options.length===0})}new MutationObserver(()=>auditSelects()).observe(document.body,{childList:true,subtree:true});setInterval(()=>{C.credits+=2;save();if($("materials").classList.contains('active'))render()},10000);render();auditSelects()})();
+    </script>
+    <script>
+      (()=>{"use strict";
+        const $=id=>document.getElementById(id),KEY="vetGodsDeepMenuV2";
+        const pageNames={pets:"My Pets",plan:"Patient Planning",operate:"Divine Operation Theatre",recover:"Recovery Ward",upgrades:"Clinic Upgrades",hospital:"Hospital",learn:"Vet Gods Academy",catalog:"Equipment Catalog",guardians:"Guardians",mastery:"Mastery",inventory:"Inventory & Logistics",summary:"Case Summary",campaign:"Campaign Command",cemetery:"Eternal Paws Cemetery",laboratory:"Companion Laboratory",nursery:"Nursery Wing",strays:"Stray Animal Wing",babysaga:"Baby Story Saga",meadow:"Companion Meadow",materials:"Materials Catalog"};
+        const groups=[
+          {page:"inventory",button:"[data-invtab]",panel:".invPane",id:v=>"inv-"+v},
+          {page:"campaign",button:"[data-camptab]",panel:".campaignPane",id:v=>"camp"+v},
+          {page:"cemetery",button:"[data-cemtab]",panel:".cemPane",id:v=>"cem"+v},
+          {page:"nursery",button:"[data-wingtab]",panel:"#nursery .wingPane",id:v=>"nursery"+v},
+          {page:"strays",button:"[data-straytab]",panel:"#strays .wingPane",id:v=>"stray"+v},
+          {page:"babysaga",button:"[data-sagatab]",panel:".sagaPane",id:v=>"saga"+v}
+        ];
+        let state={tabs:{},history:[]};try{state=Object.assign(state,JSON.parse(localStorage.getItem(KEY)||"{}"));state.tabs=state.tabs||{};state.history=Array.isArray(state.history)?state.history.slice(-12):[]}catch(e){}
+        let goingBack=false,queued=false;
+        const save=()=>localStorage.setItem(KEY,JSON.stringify(state));
+        const activePage=()=>document.querySelector(".page.active");
+        const tabValue=b=>b?Object.values(b.dataset)[0]:"";
+        function groupFor(page){return groups.find(g=>g.page===page)}
+        function setText(id,value){const x=$(id);if(x&&x.textContent!==value)x.textContent=value}
+        function sync(){queued=false;const p=activePage(),id=p?.id||"plan",g=groupFor(id),tab=g?p.querySelector(`${g.button}.active`):null;setText("deepPageName",(pageNames[id]||id).toUpperCase());setText("deepPanelName",tab?`${tab.textContent.trim()} panel · deep controls active`:id==="operate"?`${$("overviewStage")?.textContent||"Operation console"} · controls protected`:"Main gameplay area · controls ready");$("deepBack").disabled=!state.history.length;$("deepNext").title=g?"Open the next panel":"Highlight the recommended control"}
+        function schedule(){if(!queued){queued=true;requestAnimationFrame(sync)}}
+        function enforceTab(button){const p=button.closest(".page"),g=groupFor(p?.id);if(!g||!button.matches(g.button))return;const value=tabValue(button),wanted=g.id(value),panel=document.getElementById(wanted);p.querySelectorAll(g.button).forEach(x=>x.classList.toggle("active",x===button));p.querySelectorAll(g.panel).forEach(x=>x.classList.toggle("active",x===panel));state.tabs[p.id]=value;save();schedule()}
+        function restore(page){const g=groupFor(page);if(!g||!state.tabs[page])return;const p=document.getElementById(page),button=[...p.querySelectorAll(g.button)].find(x=>tabValue(x)===state.tabs[page]);if(button&&!button.classList.contains("active"))button.click()}
+        document.addEventListener("click",e=>{const route=e.target.closest("[data-page]");if(route){const from=activePage()?.id,to=route.dataset.page;if(!goingBack&&from&&to&&from!==to){state.history.push(from);state.history=state.history.slice(-12);save()}setTimeout(()=>{restore(to);sync()},30)}const tab=groups.map(g=>g.button).reduce((found,s)=>found||e.target.closest(s),null);if(tab)setTimeout(()=>enforceTab(tab),0)},true);
+        $("deepBack").onclick=()=>{const target=state.history.pop();if(!target)return;save();goingBack=true;const route=document.querySelector(`[data-page="${target}"]`);if(route)route.click();else{document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===target));sync()}setTimeout(()=>goingBack=false,50)};
+        $("deepFocus").onclick=()=>{const p=activePage(),g=groupFor(p?.id),panel=g?p.querySelector(`${g.panel}.active`):p,target=panel?.querySelector("button:not(:disabled),select,input")||panel||p;target?.scrollIntoView({behavior:"smooth",block:"center"});target?.classList.add("focusFlash");setTimeout(()=>target?.classList.remove("focusFlash"),1000)};
+        $("deepNext").onclick=()=>{const p=activePage();if(!p)return;const g=groupFor(p.id);if(g){const tabs=[...p.querySelectorAll(g.button)],i=Math.max(0,tabs.findIndex(x=>x.classList.contains("active")));tabs[(i+1)%tabs.length]?.click();return}if(p.id==="operate")return $("cardNext")?.click();if(p.id==="plan")return $("autoPlan")?.click();const target=p.querySelector(".focusFlash,button.next,button.gold:not(:disabled),button.primary:not(:disabled),button:not(:disabled)");target?.scrollIntoView({behavior:"smooth",block:"center"});target?.classList.add("focusFlash");setTimeout(()=>target?.classList.remove("focusFlash"),1000)};
+        const main=document.querySelector("main");if(main)new MutationObserver(schedule).observe(main,{childList:true,subtree:true,attributes:true,attributeFilter:["class","disabled"]});
+        sync();
+      })();
     </script>
   </body>
 </html>
