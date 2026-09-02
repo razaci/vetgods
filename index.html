@@ -955,6 +955,7 @@
       button.dashTile{color:inherit;text-align:left;width:100%;cursor:pointer}.dashTile:hover,.dashTile:focus{border-color:var(--gold);box-shadow:0 0 15px #f3c95c35}.dashTile:active{transform:translateY(2px)}button.arenaRune{padding:5px;cursor:pointer;width:100%}.arenaRune:active{transform:translateY(2px) scale(.97)}
       .introScreen{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px;background:linear-gradient(90deg,#02090de8,#07101488 50%,#02090de8),var(--arena-ai) center/cover;overflow:auto;transition:opacity .55s,transform .55s}.introScreen.closed{opacity:0;transform:scale(1.04);pointer-events:none}.introPanel{width:min(780px,100%);text-align:center;padding:clamp(18px,4vw,36px);border:2px solid var(--gold);border-radius:22px;background:linear-gradient(145deg,#071519e8,#10282ee8);box-shadow:0 0 70px #000,0 0 38px #f3c95c44;backdrop-filter:blur(8px)}.introCrest{width:120px;height:120px;margin:auto;border:3px solid var(--gold);border-radius:50%;background:var(--team-ai) center 38%/cover;box-shadow:0 0 0 8px #f3c95c20,0 0 40px #32dbc277;animation:introFloat 2.4s ease-in-out infinite}.introTitle{font-size:clamp(2rem,8vw,4.4rem);line-height:.9;margin:18px 0 8px;color:#fff0a4;text-shadow:0 4px 0 #704e14,0 0 28px #f3c95c77}.introSubtitle{color:#bff5ec;letter-spacing:.22em;font-weight:900;font-size:clamp(.62rem,2vw,.88rem)}.introGuardians{display:flex;justify-content:center;gap:10px;margin:15px 0;font-size:clamp(1.3rem,5vw,2.3rem)}.introGuardians span{width:48px;height:48px;display:grid;place-items:center;border:1px solid #4e747b;border-radius:50%;background:#08171ce6;animation:introFloat 2s ease-in-out infinite}.introGuardians span:nth-child(even){animation-delay:-1s}.introActions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:18px}.introActions button{min-width:155px;padding:12px 18px}.introHow{display:none;margin-top:15px;text-align:left;padding:13px;border:1px solid #41626a;border-radius:10px;background:#061216}.introHow.show{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.introHow div{padding:9px;border-radius:7px;background:#0e252b}.introHow b{display:block;color:var(--gold);margin-bottom:3px}.introHow small{color:#b8cfcc}.introVersion{display:block;margin-top:14px;color:#75918e;font-size:.55rem}@keyframes introFloat{50%{transform:translateY(-7px);filter:brightness(1.15)}}@media(max-width:600px){.introScreen{padding:9px}.introPanel{padding:17px 11px}.introCrest{width:86px;height:86px}.introHow.show{grid-template-columns:1fr}.introActions button{min-width:130px;flex:1}.introGuardians{gap:5px}.introGuardians span{width:38px;height:38px}}
       .middleStack{display:flex;flex-direction:column;gap:10px}.middleStack>.stagePanel{order:-20}.middleStack>.coreActionPanel{order:-19;border:2px solid var(--gold);box-shadow:0 0 25px #f3c95c2b}.coreActionPanel h2{display:flex;justify-content:space-between}.coreActionPanel h2:after{content:'MAIN GAMEPLAY';font-size:.48rem;color:#071014;background:var(--gold);padding:4px 7px;border-radius:99px}.coreActionPanel .operationActivities{grid-template-columns:repeat(6,minmax(0,1fr))}.coreActionPanel .operationActivity{min-height:142px}.coreActionPanel .operationActivity span{font-size:1.55rem}@media(max-width:1100px){.coreActionPanel .operationActivities{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.middleStack{display:flex!important}.coreActionPanel .operationActivities{grid-template-columns:repeat(3,minmax(0,1fr))}.coreActionPanel .operationActivity{min-height:132px}}
+      .instrumentGate{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;margin:8px 0;padding:9px;border:1px solid #49656c;border-radius:9px;background:#071519}.instrumentGate .gateIcon{font-size:1.5rem}.instrumentGate b{display:block;color:#fff0a4}.instrumentGate small{color:#a9c4c0}.instrumentGate .gateState{padding:5px 8px;border-radius:99px;background:#48202a;color:#ffadb5;font-size:.55rem;font-weight:900}.instrumentGate.ready{border-color:#39c9a6;background:#0c2d28}.instrumentGate.ready .gateState{background:#17463c;color:#8ff5da}.instrumentGate.wrong{border-color:#ff6573;animation:alarm .75s 2}.instrumentGate.wrong .gateState{background:#5b1c27;color:#ffd0d4}.tool.required{border-color:var(--gold);box-shadow:0 0 18px #f3c95c66}.tool.selected{transform:translateY(-3px);border-color:#64f0d8!important;box-shadow:0 0 20px #32dbc266!important}
     </style>
   </head>
   <body>
@@ -1163,6 +1164,7 @@
             <div class="panel coreActionPanel">
               <h2>Choose an Operation Activity</h2>
               <div class="activityStage" id="activityStage">The team is waiting for the next safe activity.</div>
+              <div class="instrumentGate" id="instrumentGate"><span class="gateIcon">🧰</span><div><b>Select an instrument first</b><small>Choose the required tool from the tray, then play one card.</small></div><span class="gateState">WAITING</span></div>
               <div class="cardHandHud"><span>HAND <b id="activityHand">6 CARDS</b></span><span>TACTICAL COMBO <b id="activityCombo">x1</b></span><span>BONUS <b id="activityBonus">SCAN</b></span></div>
               <div class="operationActivities">
                 <button class="operationActivity" id="activityScan" data-suit="✦ SCAN"><span>🔎</span><b>Diagnostic Scan</b><small>Confirm target and instrument. Earn precision XP.</small><em>PLAY CARD</em></button>
@@ -2069,10 +2071,15 @@
           $("tray").innerHTML = TOOLS.filter((t) => packed.has(t.id))
             .map(
               (t) =>
-                `<button class="tool ${selectedTool === t.id ? "selected" : ""}" data-tool="${t.id}"><span>${t.i}</span><small>${t.n}</small></button>`,
+              `<button class="tool ${selectedTool === t.id ? "selected" : ""} ${s&&t.id===s.tool?"required":""}" data-tool="${t.id}"><span>${t.i}</span><small>${t.n}</small></button>`,
             )
             .join("");
           $("perform").disabled = !selectedTool;
+          if ($("instrumentGate")) {
+            const chosen=TOOLS.find(t=>t.id===selectedTool),needed=s&&TOOLS.find(t=>t.id===s.tool),correct=!!(s&&selectedTool===s.tool);
+            $("instrumentGate").className="instrumentGate"+(correct?" ready":selectedTool?" wrong":"");
+            $("instrumentGate").innerHTML=correct?`<span class="gateIcon">${chosen.i}</span><div><b>${chosen.n} selected</b><small>Instrument confirmed. Play any operation card.</small></div><span class="gateState">READY</span>`:selectedTool?`<span class="gateIcon">${chosen?.i||"?"}</span><div><b>${chosen?.n||"Instrument"} does not match</b><small>This stage needs ${needed?.n||"the highlighted tool"}.</small></div><span class="gateState">CHANGE TOOL</span>`:`<span class="gateIcon">🧰</span><div><b>Select ${needed?.n||"an instrument"} first</b><small>Press the gold-highlighted tool in the Instrument Tray, then play a card.</small></div><span class="gateState">WAITING</span>`;
+          }
           $("hr").textContent = Math.round(v.hr);
           $("o2").textContent = Math.round(v.o2) + "%";
           $("bp").textContent = Math.round(v.bp);
@@ -2143,6 +2150,14 @@
         function operationActivity(type) {
           const s = selectedOp.steps[stage];
           if (!running || !s || activityLocked) return;
+          if (!selectedTool) {
+            $("instrumentGate").classList.add("wrong");
+            $("activityStage").innerHTML=`<b>Instrument required</b> Select ${TOOLS.find(t=>t.id===s.tool).n} from the tray before playing a card.`;
+            $("showNext").click();toast("Select the highlighted instrument first");return;
+          }
+          if (selectedTool!==s.tool) {
+            const wrong=TOOLS.find(t=>t.id===selectedTool),right=TOOLS.find(t=>t.id===s.tool);v.hr=clamp(v.hr+3,45,240);activityCombo=1;addLog(`⚠ Instrument mismatch: ${wrong?.n||"tool"} cannot perform ${s.n}. Select ${right.n}.`,"warn");selectedTool=null;renderOp();$("instrumentGate").classList.add("wrong");$("showNext").click();toast(`Wrong instrument — choose ${right.n}`);return;
+          }
           activityLocked = true;
           document.querySelectorAll('.operationActivity').forEach(x => x.disabled = true);
           $("activityStage").innerHTML = `<b>Resolving ${s.n}…</b> The team is carrying out your card choice.`;
