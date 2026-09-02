@@ -1031,8 +1031,12 @@
       .deepControlDock .deepMark{font-size:1.25rem;filter:drop-shadow(0 0 7px #f3c95c88)}
       .deepTrail{min-width:0}.deepTrail b,.deepTrail small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.deepTrail b{font-size:.7rem;color:#fff0b4}.deepTrail small{font-size:.55rem;color:#9fc4c2;margin-top:2px}
       .deepControlDock button{min-height:38px;padding:7px 10px;font-size:.61rem;border-color:#496970}.deepControlDock button:hover{border-color:var(--gold)}
+      .nav{display:none!important}.nav.navOpen{display:grid!important;position:fixed;z-index:90;top:72px;right:12px;width:min(560px,calc(100vw - 24px));max-height:72vh;overflow:auto;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:10px;border:1px solid var(--gold);border-radius:14px;background:#071419f5;box-shadow:0 18px 55px #000d,0 0 24px #f3c95c22;backdrop-filter:blur(14px)}
+      .nav.navOpen button{min-height:45px}.areasToggle{border-color:var(--gold)!important;color:#fff0b4!important;white-space:nowrap}.procedureLibrary{display:none!important}
+      #plan .planning{grid-template-columns:330px minmax(0,1fr)}#plan .patient-card{grid-column:1;grid-row:1}#plan .planning>.stack{grid-column:2;grid-row:1}#plan .queueStrip{grid-column:1/-1;grid-row:2}
       @media(max-width:650px){.mainWingRow{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px}.mainWingShortcut{min-width:210px;scroll-snap-align:start;min-height:70px}}
       @media(max-width:650px){.deepControlDock{top:61px;grid-template-columns:auto 1fr repeat(3,38px);gap:5px;padding:6px}.deepControlDock button{font-size:0;padding:5px}.deepControlDock button span{font-size:1rem}.deepTrail small{max-width:145px}}
+      @media(max-width:700px){.nav.navOpen{top:62px;grid-template-columns:repeat(2,minmax(0,1fr))}#plan .planning{grid-template-columns:1fr}#plan .patient-card,#plan .planning>.stack,#plan .queueStrip{grid-column:auto;grid-row:auto}}
     </style>
   </head>
   <body>
@@ -1047,6 +1051,7 @@
         </div>
       </div>
       <div class="hud">
+        <button id="allAreasToggle" class="areasToggle" type="button" aria-expanded="false" aria-controls="mainAreaMenu">☰ ALL AREAS</button>
         <button id="soundToggle" class="soundControl on" type="button" aria-pressed="true">🔊 SOUND ON</button>
         <div><b id="credits">800</b><small>Credits</small></div>
         <div><b id="level">1</b><small>Level</small></div>
@@ -1055,7 +1060,7 @@
     </header>
     <div class="activePetFloat" id="activePetFloat" aria-live="polite"><span class="accessory" id="floatAccessory">👑</span><div class="floatIcon" id="floatPetIcon">🐾</div><b id="floatPetName">Companion</b><small id="floatPetRole">ACTIVE PET</small></div>
     <main class="shell">
-      <nav class="nav">
+      <nav class="nav" id="mainAreaMenu" aria-label="All game areas">
         <button class="active" data-page="plan">1 · Plan</button
         ><button data-page="pets">🐾 Main Pets</button
         ><button data-page="operate">2 · Operate</button
@@ -1147,7 +1152,7 @@
               </div>
             </div>
           </div>
-          <aside class="panel">
+          <aside class="panel procedureLibrary" aria-hidden="true">
             <h2>Ten Surgical Procedures</h2>
             <div class="procedureStatus" id="procedureStatus">Choose a procedure card to assign a patient and build its complete operation plan.</div>
             <div class="procedure-list" id="procedureList"></div>
@@ -3730,6 +3735,9 @@
         const main=document.querySelector("main");if(main)new MutationObserver(schedule).observe(main,{childList:true,subtree:true,attributes:true,attributeFilter:["class","disabled"]});
         sync();
       })();
+    </script>
+    <script>
+      (()=>{"use strict";const menu=document.getElementById("mainAreaMenu"),toggle=document.getElementById("allAreasToggle");if(!menu||!toggle)return;function set(open){menu.classList.toggle("navOpen",open);toggle.setAttribute("aria-expanded",String(open));toggle.textContent=open?"× CLOSE AREAS":"☰ ALL AREAS"}toggle.addEventListener("click",e=>{e.stopPropagation();set(!menu.classList.contains("navOpen"))});menu.addEventListener("click",e=>{if(e.target.closest("[data-page],#help"))set(false)});document.addEventListener("click",e=>{if(menu.classList.contains("navOpen")&&!menu.contains(e.target)&&e.target!==toggle)set(false)});document.addEventListener("keydown",e=>{if(e.key==="Escape")set(false)})})();
     </script>
   </body>
 </html>
