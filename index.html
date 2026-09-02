@@ -971,6 +971,9 @@
       .companionHud{position:fixed;right:12px;top:128px;z-index:70;width:112px;padding:7px;text-align:center;border:2px solid #f5d45e;border-radius:16px;background:linear-gradient(160deg,#213f49ee,#080f13ee);box-shadow:0 10px 28px #000b,0 0 22px #f5d45e55;display:none}.companionHud.show{display:block;animation:companionFloat 2.6s ease-in-out infinite}.companionHud .heroIcon{font-size:2.65rem;filter:drop-shadow(0 0 10px #ffe66b)}.companionHud b,.companionHud small{display:block}.companionHud b{font-size:.62rem;color:#fff0a4}.companionHud small{font-size:.48rem;color:#b9cfcc;margin:3px 0}.companionHud button{padding:6px 4px;width:100%;font-size:.55rem;background:#f3c95c;color:#161000}.companionHud button:disabled{opacity:.45}@keyframes companionFloat{50%{transform:translateY(-7px)}}
       .rewardRosterTitle{grid-column:1/-1;padding:8px 10px;border-left:4px solid var(--gold);background:#0a191e;color:#fff0a4}.guardian.rescued{background:radial-gradient(circle at 50% 20%,#385a3e,#0b1817 70%);border-color:#7be69a}.guardian.rescued .gicon{filter:drop-shadow(0 0 12px #79ff9b)}
       @media(max-width:700px){.companionHud{position:absolute;top:208px;right:8px;width:92px}.companionHud .heroIcon{font-size:2rem}}
+      .soundControl{min-width:96px;padding:7px 9px;border-color:#5d7d84;background:#10242a;color:#d8f7f1;font-size:.62rem}.soundControl.on{border-color:#f3c95c;color:#fff0a4;box-shadow:0 0 13px #f3c95c44}.soundControl.pulse{animation:soundPulse .3s}@keyframes soundPulse{50%{transform:scale(1.08)}}
+      .menuFeedback{margin-top:8px;padding:7px;border-radius:8px;background:#102f2d;color:#a9ffe9;font-size:.68rem;display:none}.menuFeedback.show{display:block}.modal.show{z-index:200}.modalbox .actions{position:sticky;bottom:-1px;z-index:4;padding:9px;background:#132229;border-top:1px solid #49636b}.modalbox button{touch-action:manipulation}
+      @media(max-width:700px){.soundControl{position:fixed;right:8px;bottom:74px;z-index:75;min-width:76px}.hud{padding-right:0}}
     </style>
   </head>
   <body>
@@ -985,6 +988,7 @@
         </div>
       </div>
       <div class="hud">
+        <button id="soundToggle" class="soundControl on" type="button" aria-pressed="true">🔊 SOUND ON</button>
         <div><b id="credits">800</b><small>Credits</small></div>
         <div><b id="level">1</b><small>Level</small></div>
         <div><b id="saved">0</b><small>Recovered</small></div>
@@ -1379,6 +1383,7 @@
           <button id="applyPlan" class="primary">Apply Changes</button
           ><button id="closePlan">Cancel</button>
         </div>
+        <div class="menuFeedback" id="planFeedback">Instrument pack updated.</div>
       </div>
     </div>
     <div class="modal show" id="guide">
@@ -2581,7 +2586,7 @@
               `<label class="check"><input type="checkbox" data-mpack="${t.id}" ${packed.has(t.id) ? "checked" : ""}> ${t.i} ${t.n}</label>`,
           ).join("");
         };
-        $("applyPlan").onclick = () => {
+        function applyPlanChanges() {
           plan = {
             surgeon: $("mSurgeon").value,
             anes: $("mAnesthetist").value,
@@ -2596,10 +2601,19 @@
                 : packed.delete(x.dataset.mpack),
             );
           $("planModal").classList.remove("show");
-          addLog("Operation plan modified safely while paused.", "warn");
+          addLog(`Operation plan updated: ${packed.size} instruments packed.`, "warn");
           renderOp();
-        };
-        $("closePlan").onclick = () => $("planModal").classList.remove("show");
+          setTimeout(()=>$("showNext").click(),60);
+          toast(`Changes applied · ${packed.size} instruments ready`);
+        }
+        function closePlanMenu(){
+          $("planModal").classList.remove("show");
+          toast("Changes cancelled · original plan kept");
+        }
+        $("applyPlan").onclick = applyPlanChanges;
+        $("closePlan").onclick = closePlanMenu;
+        $("planModal").addEventListener("click",e=>{if(e.target===$("planModal"))closePlanMenu()});
+        document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("planModal").classList.contains("show"))closePlanMenu()});
         $("abort").onclick = () => {
           if (confirm("Transfer this patient safely and end the operation?")) {
             running = false;
@@ -3372,6 +3386,9 @@
     </script>
     <script>
       (()=>{"use strict";const $=id=>document.getElementById(id);function note(t){const e=$("toast");e.textContent=t;e.classList.add("show");setTimeout(()=>e.classList.remove("show"),1500)}function page(id){document.querySelector(`[data-page="${id}"]`)?.click()}function inOR(){return $("operate").classList.contains("active")}document.addEventListener("click",e=>{const a=e.target.closest("[data-arena]");if(a){const action=a.dataset.arena;if(action==="plan")page("plan");else if(action==="care"||action==="recover")page("recover");else if(action==="learn")page("learn");else if(action==="charge")page("guardians");else if(action==="stability"){if(inOR())$("stabilizeVitals").click();else note("Start an operation to use Stability")}else if(action==="vitals"){if(inOR()){$("stabilityScore").scrollIntoView({behavior:"smooth",block:"center"});$("stabilityScore").classList.add("focusFlash");setTimeout(()=>$("stabilityScore").classList.remove("focusFlash"),900)}else note("Start an operation to open live vitals")}else if(action==="titan"){if(inOR())$("titanHealth").scrollIntoView({behavior:"smooth",block:"center"});else $("easyOperate").click()}note(`${a.textContent.trim()} opened`)}const d=e.target.closest("[data-dash]");if(d){const action=d.dataset.dash,active=document.querySelector(".page.active");if(action==="area"){active?.scrollIntoView({behavior:"smooth",block:"start"});note(`Viewing ${$("dashArea").textContent}`)}else if(action==="next"){if(active?.id==="plan")$("easyPlan").click();else if(active?.id==="operate")document.querySelector(".operationActivity.bonus")?.click();else if(active?.id==="recover")document.querySelector('[data-ward="auto"]')?.click();else note("Use the highlighted control in this area")}else if(action==="status"){if(inOR())$("stabilizeVitals").click();else if(active?.id==="recover")document.querySelector('[data-ward="monitor"]')?.click();else $("help").click()}else if(action==="charge")page("guardians")}})})();
+    </script>
+    <script>
+      (()=>{"use strict";const $=id=>document.getElementById(id);let ctx=null,masterGain=null;let enabled=localStorage.getItem("vetGodsSound")!=="off";function unlock(){if(!enabled)return;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!ctx){ctx=new AC();masterGain=ctx.createGain();masterGain.gain.value=.16;masterGain.connect(ctx.destination)}if(ctx.state==="suspended")ctx.resume()}function tone(freq=440,duration=.08,type="sine",volume=.45,delay=0){if(!enabled)return;unlock();if(!ctx||!masterGain)return;const start=ctx.currentTime+delay,o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(freq,start);g.gain.setValueAtTime(.001,start);g.gain.exponentialRampToValueAtTime(Math.max(.001,volume),start+.012);g.gain.exponentialRampToValueAtTime(.001,start+duration);o.connect(g);g.connect(masterGain);o.start(start);o.stop(start+duration+.02)}function chord(notes,type="sine"){notes.forEach((n,i)=>tone(n,.12,type,.32,i*.045))}function setButton(){const b=$("soundToggle");if(!b)return;b.textContent=enabled?"🔊 SOUND ON":"🔇 SOUND OFF";b.classList.toggle("on",enabled);b.setAttribute("aria-pressed",String(enabled))}function toggle(){enabled=!enabled;localStorage.setItem("vetGodsSound",enabled?"on":"off");setButton();if(enabled){unlock();chord([523,659,784],"triangle")}else if(ctx)ctx.suspend()}document.addEventListener("pointerdown",unlock,{once:true});$("soundToggle").onclick=toggle;document.addEventListener("click",e=>{if(e.target.closest("#soundToggle"))return;if(e.target.closest("[data-tool],#quickTool"))tone(520,.06,"square",.22);else if(e.target.closest(".operationActivity,#quickAction"))chord([392,523,659],"triangle");else if(e.target.closest("#applyPlan"))chord([440,554,659],"sine");else if(e.target.closest("#closePlan"))tone(260,.09,"sine",.25);else if(e.target.closest("[data-ward]"))tone(620,.07,"triangle",.2);else if(e.target.closest(".chest,#companionAbility"))chord([523,659,784,1047],"triangle");else if(e.target.closest("button:not(:disabled)"))tone(360,.045,"sine",.14)});let compOn=false;new MutationObserver(()=>{const on=$("complication")?.classList.contains("show");if(on&&!compOn){tone(150,.28,"sawtooth",.42);tone(110,.3,"sawtooth",.3,.18)}compOn=on}).observe($("complication"),{attributes:true,attributeFilter:["class"]});setInterval(()=>{if(enabled&&$("operate")?.classList.contains("active")){tone(82,.055,"sine",.16);tone(116,.035,"sine",.1,.12)}},1050);setButton()})();
     </script>
     <script>
       (()=>{"use strict";const $=id=>document.getElementById(id),intro=$("introScreen"),guide=$("guide");let saved={};try{saved=JSON.parse(localStorage.getItem("vetTheatreSave")||"{}")}catch(e){}const hasProgress=(saved.saved||0)>0||(saved.recovery||[]).length>0;$("introContinue").disabled=!hasProgress;$("introContinue").title=hasProgress?"Return to your hospital":"Complete a case to unlock Continue";function closeIntro(){intro.classList.add("closed");setTimeout(()=>intro.style.display="none",580)}$("introStart").onclick=()=>{closeIntro();guide.classList.add("show")};$("introContinue").onclick=()=>{if(!hasProgress)return;closeIntro();guide.classList.remove("show");document.querySelector(`[data-page="${(saved.recovery||[]).length?"recover":"plan"}"]`)?.click()};$("introHelp").onclick=()=>{$("introHow").classList.toggle("show");$("introHelp").textContent=$("introHow").classList.contains("show")?"× Close Guide":"? How to Play"};document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("introHow").classList.contains("show"))$("introHelp").click()})})();
