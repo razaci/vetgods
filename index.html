@@ -954,6 +954,7 @@
       .stabilityHead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px;margin-bottom:8px;border:1px solid #36545b;border-radius:8px;background:#071519}.stabilityHead b{color:#74ead8}.vitalButtons{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:9px}.vitalButton{padding:8px 6px;text-align:left;font-size:.6rem;background:linear-gradient(145deg,#17363e,#09171c)}.vitalButton b{display:block;color:#dffff9;font-size:.62rem}.vitalButton small{font-size:.5rem;color:#9ebbb7}.vitalButton.all{grid-column:1/-1;text-align:center;border-color:var(--gold);background:#3b3216;color:#fff0a4}.vitalButton:active{transform:scale(.97)}
       button.dashTile{color:inherit;text-align:left;width:100%;cursor:pointer}.dashTile:hover,.dashTile:focus{border-color:var(--gold);box-shadow:0 0 15px #f3c95c35}.dashTile:active{transform:translateY(2px)}button.arenaRune{padding:5px;cursor:pointer;width:100%}.arenaRune:active{transform:translateY(2px) scale(.97)}
       .introScreen{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:18px;background:linear-gradient(90deg,#02090de8,#07101488 50%,#02090de8),var(--arena-ai) center/cover;overflow:auto;transition:opacity .55s,transform .55s}.introScreen.closed{opacity:0;transform:scale(1.04);pointer-events:none}.introPanel{width:min(780px,100%);text-align:center;padding:clamp(18px,4vw,36px);border:2px solid var(--gold);border-radius:22px;background:linear-gradient(145deg,#071519e8,#10282ee8);box-shadow:0 0 70px #000,0 0 38px #f3c95c44;backdrop-filter:blur(8px)}.introCrest{width:120px;height:120px;margin:auto;border:3px solid var(--gold);border-radius:50%;background:var(--team-ai) center 38%/cover;box-shadow:0 0 0 8px #f3c95c20,0 0 40px #32dbc277;animation:introFloat 2.4s ease-in-out infinite}.introTitle{font-size:clamp(2rem,8vw,4.4rem);line-height:.9;margin:18px 0 8px;color:#fff0a4;text-shadow:0 4px 0 #704e14,0 0 28px #f3c95c77}.introSubtitle{color:#bff5ec;letter-spacing:.22em;font-weight:900;font-size:clamp(.62rem,2vw,.88rem)}.introGuardians{display:flex;justify-content:center;gap:10px;margin:15px 0;font-size:clamp(1.3rem,5vw,2.3rem)}.introGuardians span{width:48px;height:48px;display:grid;place-items:center;border:1px solid #4e747b;border-radius:50%;background:#08171ce6;animation:introFloat 2s ease-in-out infinite}.introGuardians span:nth-child(even){animation-delay:-1s}.introActions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:18px}.introActions button{min-width:155px;padding:12px 18px}.introHow{display:none;margin-top:15px;text-align:left;padding:13px;border:1px solid #41626a;border-radius:10px;background:#061216}.introHow.show{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.introHow div{padding:9px;border-radius:7px;background:#0e252b}.introHow b{display:block;color:var(--gold);margin-bottom:3px}.introHow small{color:#b8cfcc}.introVersion{display:block;margin-top:14px;color:#75918e;font-size:.55rem}@keyframes introFloat{50%{transform:translateY(-7px);filter:brightness(1.15)}}@media(max-width:600px){.introScreen{padding:9px}.introPanel{padding:17px 11px}.introCrest{width:86px;height:86px}.introHow.show{grid-template-columns:1fr}.introActions button{min-width:130px;flex:1}.introGuardians{gap:5px}.introGuardians span{width:38px;height:38px}}
+      .middleStack{display:flex;flex-direction:column;gap:10px}.middleStack>.stagePanel{order:-20}.middleStack>.coreActionPanel{order:-19;border:2px solid var(--gold);box-shadow:0 0 25px #f3c95c2b}.coreActionPanel h2{display:flex;justify-content:space-between}.coreActionPanel h2:after{content:'MAIN GAMEPLAY';font-size:.48rem;color:#071014;background:var(--gold);padding:4px 7px;border-radius:99px}.coreActionPanel .operationActivities{grid-template-columns:repeat(6,minmax(0,1fr))}.coreActionPanel .operationActivity{min-height:142px}.coreActionPanel .operationActivity span{font-size:1.55rem}@media(max-width:1100px){.coreActionPanel .operationActivities{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:700px){.middleStack{display:flex!important}.coreActionPanel .operationActivities{grid-template-columns:repeat(3,minmax(0,1fr))}.coreActionPanel .operationActivity{min-height:132px}}
     </style>
   </head>
   <body>
@@ -1097,8 +1098,8 @@
               <div class="log" id="opLog"></div>
             </div>
           </div>
-          <div class="stack">
-            <div class="panel">
+          <div class="stack middleStack">
+            <div class="panel stagePanel">
               <div class="opmeta">
                 <div><b id="opClock">00:00</b><small>SURGICAL TIME</small></div>
                 <div>
@@ -1159,14 +1160,17 @@
                 </button>
               </div>
             </div>
-            <div class="panel">
+            <div class="panel coreActionPanel">
               <h2>Choose an Operation Activity</h2>
               <div class="activityStage" id="activityStage">The team is waiting for the next safe activity.</div>
-              <div class="cardHandHud"><span>HAND <b id="activityHand">3 CARDS</b></span><span>TACTICAL COMBO <b id="activityCombo">x1</b></span><span>BONUS <b id="activityBonus">SCAN</b></span></div>
+              <div class="cardHandHud"><span>HAND <b id="activityHand">6 CARDS</b></span><span>TACTICAL COMBO <b id="activityCombo">x1</b></span><span>BONUS <b id="activityBonus">SCAN</b></span></div>
               <div class="operationActivities">
                 <button class="operationActivity" id="activityScan" data-suit="✦ SCAN"><span>🔎</span><b>Diagnostic Scan</b><small>Confirm target and instrument. Earn precision XP.</small><em>PLAY CARD</em></button>
                 <button class="operationActivity" id="activityTeam" data-suit="♥ TEAM"><span>🤝</span><b>Team Sync</b><small>Raise oxygen and pressure before the safe action.</small><em>PLAY CARD</em></button>
                 <button class="operationActivity" id="activityGuardian" data-suit="◆ GUARD"><span>🛡️</span><b>Guardian Assist</b><small>Protect blood volume and calm heart rate.</small><em>PLAY CARD</em></button>
+                <button class="operationActivity" id="activitySterile" data-suit="♣ CLEAN"><span>🧼</span><b>Sterile Prep</b><small>Protect the field and earn safety experience.</small><em>PLAY CARD</em></button>
+                <button class="operationActivity" id="activityPrecision" data-suit="♠ SKILL"><span>🎯</span><b>Precision Move</b><small>Careful technique earns the highest skill XP.</small><em>PLAY CARD</em></button>
+                <button class="operationActivity" id="activityMonitor" data-suit="♥ WATCH"><span>📟</span><b>Monitor Check</b><small>Review and support oxygen and circulation.</small><em>PLAY CARD</em></button>
               </div>
               <div class="actions" style="margin-top:9px"><button id="modifyPlan">⚙ Modify Operation</button></div>
               <div class="legacyPerform"><div class="skill"><i class="needle" id="needle"></i></div><button id="perform" disabled>Legacy Action</button><button id="autoStep">Legacy Safe Action</button></div>
@@ -2053,12 +2057,12 @@
             ? `<b>Stage ${stage + 1}: ${s.n}</b> · ${s.why}`
             : "✓ All operation activities are complete.";
           if ($("activityCombo")) {
-            const cards = [$("activityScan"), $("activityTeam"), $("activityGuardian")];
+            const cards = [$("activityScan"), $("activityTeam"), $("activityGuardian"), $("activitySterile"), $("activityPrecision"), $("activityMonitor")];
             activityBonusIndex = stage % cards.length;
             cards.forEach((card, i) => { card.classList.toggle("bonus", i === activityBonusIndex); card.disabled = !s || activityLocked; });
             $("activityCombo").textContent = "x" + activityCombo;
-            $("activityBonus").textContent = ["SCAN", "TEAM", "GUARD"][activityBonusIndex] + " ×2";
-            $("activityHand").textContent = s ? "3 CARDS" : "COMPLETE";
+            $("activityBonus").textContent = ["SCAN", "TEAM", "GUARD", "CLEAN", "SKILL", "WATCH"][activityBonusIndex] + " ×2";
+            $("activityHand").textContent = s ? "6 CARDS" : "COMPLETE";
             document.querySelector(".operationActivities")?.classList.remove("dealFlash");
             requestAnimationFrame(() => document.querySelector(".operationActivities")?.classList.add("dealFlash"));
           }
@@ -2143,7 +2147,7 @@
           document.querySelectorAll('.operationActivity').forEach(x => x.disabled = true);
           $("activityStage").innerHTML = `<b>Resolving ${s.n}…</b> The team is carrying out your card choice.`;
           document.querySelectorAll('.battleEffect,.victoryFlash,.eventFloat').forEach((x) => x.remove());
-          const playedIndex = type === "scan" ? 0 : type === "team" ? 1 : 2;
+          const playedIndex = ["scan","team","guardian","sterile","precision","monitor"].indexOf(type);
           const bonus = playedIndex === activityBonusIndex;
           setTimeout(() => {
             if (!running || selectedOp.steps[stage] !== s) { activityLocked = false; return; }
@@ -2156,10 +2160,21 @@
               v.o2 = clamp(v.o2 + (bonus ? 4 : 2), 65, 100);
               v.bp = clamp(v.bp + (bonus ? 6 : 3), 40, 135);
               addLog(`🤝 Team sync completed before ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
-            } else {
+            } else if (type === "guardian") {
               v.hr = clamp(v.hr - (bonus ? 6 : 3), 45, 240);
               v.blood = clamp(v.blood + (bonus ? 4 : 2), 0, 100);
               addLog(`🛡 Guardian protected the patient during ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
+            } else if (type === "sterile") {
+              save.xp += bonus ? 16 : 8;
+              v.blood=clamp(v.blood+1,0,100);
+              addLog(`🧼 Sterile field verified before ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
+            } else if (type === "precision") {
+              save.xp += bonus ? 24 : 12;
+              v.hr=clamp(v.hr-2,45,240);
+              addLog(`🎯 Precision technique completed for ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
+            } else {
+              v.o2=clamp(v.o2+(bonus?6:3),65,100);v.bp=clamp(v.bp+(bonus?4:2),40,135);
+              addLog(`📟 Monitor check supported oxygen and circulation during ${s.n}.${bonus ? " BONUS CARD ×2." : ""}`, "ok");
             }
             activityCombo = bonus ? activityCombo + 1 : Math.max(1, activityCombo - 1);
             activityLocked = false;
@@ -2450,6 +2465,9 @@
         $("activityScan").onclick = () => operationActivity("scan");
         $("activityTeam").onclick = () => operationActivity("team");
         $("activityGuardian").onclick = () => operationActivity("guardian");
+        $("activitySterile").onclick = () => operationActivity("sterile");
+        $("activityPrecision").onclick = () => operationActivity("precision");
+        $("activityMonitor").onclick = () => operationActivity("monitor");
         $("showNext").onclick = () => {
           document
             .querySelectorAll(".tool")
