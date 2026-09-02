@@ -1906,17 +1906,30 @@
             recovery: "Monitored recovery",
           };
         const ANIMAL_ROSTER={
-          wound:[["🐕","Dog"],["🐈","Cat"],["🐰","Rabbit"],["🦊","Fox"],["🦝","Raccoon"],["🐐","Goat"]],
-          foreign:[["🐕","Dog"],["🐈","Cat"],["🦜","Parrot"],["🐷","Pig"],["🦦","Otter"]],
-          urinary:[["🐈","Cat"],["🐕","Dog"],["🐐","Goat"],["🐑","Sheep"]],
-          fracture:[["🐕","Dog"],["🐈","Cat"],["🐴","Horse"],["🦌","Deer"],["🦅","Eagle"],["🐢","Tortoise"]],
-          gdv:[["🐕","Dog"],["🐺","Wolf"],["🐴","Horse"]],
-          abscess:[["🐈","Cat"],["🐰","Rabbit"],["🐴","Horse"],["🐮","Cow"],["🦔","Hedgehog"]],
-          csection:[["🐕","Dog"],["🐈","Cat"],["🐰","Rabbit"],["🐐","Goat"],["🐑","Sheep"],["🐷","Pig"]],
-          mass:[["🐕","Dog"],["🐈","Cat"],["🐰","Rabbit"],["🦜","Parrot"],["🦎","Lizard"],["🐹","Hamster"]],
-          eye:[["🐕","Dog"],["🐈","Cat"],["🐴","Horse"],["🦉","Owl"],["🦅","Eagle"],["🦜","Parrot"]],
-          hemorrhage:[["🐕","Dog"],["🐈","Cat"],["🐴","Horse"],["🦌","Deer"],["🐅","Tiger"],["🦁","Lion"]]
+          wound:[["🐕","Dog"],["🐈","Cat"],["🦊","Fox"],["🦝","Raccoon"],["🐅","Tiger"],["🦁","Lion"],["🐆","Leopard"],["🐻","Bear"],["🐻‍❄️","Polar Bear"],["🦍","Gorilla"],["🦧","Orangutan"],["🦘","Kangaroo"],["🦡","Badger"],["🦨","Skunk"]],
+          foreign:[["🐕","Dog"],["🐈","Cat"],["🦜","Parrot"],["🐷","Pig"],["🦦","Otter"],["🐘","Elephant"],["🦒","Giraffe"],["🦛","Hippopotamus"],["🐼","Panda"],["🐨","Koala"],["🐒","Monkey"],["🦥","Sloth"],["🐊","Crocodile"],["🐧","Penguin"]],
+          urinary:[["🐈","Cat"],["🐕","Dog"],["🐐","Goat"],["🐑","Sheep"],["🦏","Rhinoceros"],["🦓","Zebra"],["🐫","Camel"],["🦙","Llama"],["🦬","Bison"],["🐃","Buffalo"],["🐗","Boar"],["🫎","Moose"]],
+          fracture:[["🐕","Dog"],["🐈","Cat"],["🐴","Horse"],["🦌","Deer"],["🦅","Eagle"],["🐢","Tortoise"],["🦒","Giraffe"],["🦓","Zebra"],["🦏","Rhinoceros"],["🐘","Elephant"],["🦘","Kangaroo"],["🐺","Wolf"],["🦩","Flamingo"],["🦚","Peacock"],["🦢","Swan"]],
+          gdv:[["🐕","Dog"],["🐺","Wolf"],["🐴","Horse"],["🦁","Lion"],["🐅","Tiger"],["🐆","Leopard"],["🐻","Bear"],["🦏","Rhinoceros"],["🦛","Hippopotamus"],["🦬","Bison"],["🐫","Camel"]],
+          abscess:[["🐈","Cat"],["🐰","Rabbit"],["🐴","Horse"],["🐮","Cow"],["🦔","Hedgehog"],["🦫","Beaver"],["🦡","Badger"],["🦨","Skunk"],["🐿️","Squirrel"],["🦇","Bat"],["🐀","Rat"],["🐁","Mouse"],["🦭","Seal"],["🦦","Otter"]],
+          csection:[["🐕","Dog"],["🐈","Cat"],["🐰","Rabbit"],["🐐","Goat"],["🐑","Sheep"],["🐷","Pig"],["🐘","Elephant"],["🦒","Giraffe"],["🦓","Zebra"],["🦏","Rhinoceros"],["🦛","Hippopotamus"],["🦍","Gorilla"],["🐫","Camel"],["🦙","Llama"],["🦬","Bison"]],
+          mass:[["🐕","Dog"],["🐈","Cat"],["🐰","Rabbit"],["🦜","Parrot"],["🦎","Lizard"],["🐹","Hamster"],["🐍","Snake"],["🐸","Frog"],["🐢","Turtle"],["🐊","Crocodile"],["🐙","Octopus"],["🦞","Lobster"],["🦈","Shark"],["🐬","Dolphin"],["🐋","Whale"]],
+          eye:[["🐕","Dog"],["🐈","Cat"],["🐴","Horse"],["🦉","Owl"],["🦅","Eagle"],["🦜","Parrot"],["🦚","Peacock"],["🦢","Swan"],["🦩","Flamingo"],["🐧","Penguin"],["🦃","Turkey"],["🐓","Rooster"],["🦆","Duck"],["🦇","Bat"]],
+          hemorrhage:[["🐕","Dog"],["🐈","Cat"],["🐴","Horse"],["🦌","Deer"],["🐅","Tiger"],["🦁","Lion"],["🐘","Elephant"],["🦒","Giraffe"],["🦍","Gorilla"],["🦧","Orangutan"],["🐻‍❄️","Polar Bear"],["🦭","Seal"],["🐬","Dolphin"],["🦈","Shark"]]
         };
+        const CRITICAL_CASES={
+          wound:["crushing trauma with deep contamination and rapid swelling","severe thermal injury with dangerous fluid loss","multiple bite injuries with spreading infection risk","large traumatic wound with extensive tissue damage"],
+          foreign:["complete intestinal obstruction with shock","sharp swallowed object threatening perforation","multiple swallowed objects causing bowel compromise","obstruction with severe dehydration and collapse"],
+          urinary:["complete urinary blockage with dangerous electrolyte imbalance","prolonged obstruction with rupture risk","kidney stress with cardiovascular instability","obstructed urinary tract with shock"],
+          fracture:["unstable open fracture with impaired circulation","multiple limb fractures after major trauma","spinal instability with loss of movement","crushed joint with severe swelling and nerve risk"],
+          gdv:["acute stomach torsion with rapidly failing circulation","severe abdominal distension and shock","stomach rotation with breathing compromise","advanced torsion with dangerous heart rhythm changes"],
+          abscess:["deep infection spreading through surrounding tissue","large infected pocket with systemic illness","recurrent infection close to a major joint","rapidly expanding infection with fever and weakness"],
+          csection:["obstructed labor with an exhausted parent and distressed offspring","prolonged labor with falling vital signs","malpositioned offspring requiring urgent delivery","pregnancy emergency with shock risk"],
+          mass:["large invasive mass compressing major structures","bleeding mass with severe anemia","fast-growing mass obstructing normal function","complex mass closely attached to vital tissue"],
+          eye:["deep corneal injury threatening vision","severe orbital trauma with dangerous swelling","penetrating eye injury requiring urgent repair","rapid pressure rise threatening permanent blindness"],
+          hemorrhage:["internal bleeding with rapidly falling blood pressure","major vessel injury and shock","multiple internal injuries with severe blood loss","hidden abdominal bleeding with cardiovascular collapse"]
+        };
+        const rosterSize=new Set(Object.values(ANIMAL_ROSTER).flat().map(a=>a[1])).size;
         const persist = () =>
           localStorage.setItem("vetTheatreSave", JSON.stringify(save));
         function toast(t) {
@@ -1942,6 +1955,7 @@
         function newPatient(forcedOp = null) {
           selectedOp = forcedOp || pick(OPS);
           const animal=pick(ANIMAL_ROSTER[selectedOp.id]||[["🐕","Dog"]]);
+          const severity=pick(["SEVERE","CRITICAL","CRITICAL","EXTREME"]);
           patient = {
             name: pick([
               "Bailey",
@@ -1965,7 +1979,9 @@
             species: animal[1],
             age: pick(["young", "adult", "senior"]),
             temper: pick(["calm", "fearful", "reactive"]),
-            risk: pick(["low", "moderate", "elevated"]),
+            risk: pick(["moderate", "elevated", "elevated"]),
+            severity,
+            condition: pick(CRITICAL_CASES[selectedOp.id] || ["life-threatening surgical emergency"]),
           };
           renderPlan();
         }
@@ -1977,10 +1993,11 @@
             patient.age,
             patient.temper,
             patient.risk + " anesthesia risk",
+            patient.severity + " CASE",
           ]
             .map((x) => `<span class="tag">${x}</span>`)
             .join("");
-          $("patientStory").textContent = selectedOp.story;
+          $("patientStory").textContent = `${selectedOp.story} Critical condition: ${patient.condition}.`;
           $("procedureList").innerHTML = OPS.map(
             (o) =>
               `<button class="procedure ${o.id === selectedOp.id ? "selected" : ""}" data-op="${o.id}"><span class="pi">${o.icon}</span><span><b>${o.n}</b><small>${o.steps.length} guided stages · ${o.tools.length} tools</small><em>${o.id === selectedOp.id ? "✓ SELECTED — READY" : "PRESS TO SELECT CASE"}</em></span></button>`,
@@ -1991,7 +2008,7 @@
           ).join("");
           $("planCoach").innerHTML =
             `<strong>Recommended:</strong> ${selectedOp.n}. If unsure, press Build Recommended Plan; it packs ${selectedOp.tools.length} required instruments.`;
-          if ($("procedureStatus")) $("procedureStatus").innerHTML=`<b>${patient.icon} ${patient.name} the ${patient.species || "animal"}</b> assigned to <b>${selectedOp.n}</b>. ${selectedOp.steps.length} stages and ${selectedOp.tools.length} instruments.`;
+          if ($("procedureStatus")) $("procedureStatus").innerHTML=`<b>${patient.icon} ${patient.name} the ${patient.species || "animal"}</b> assigned to <b>${selectedOp.n}</b>. <b>${patient.severity}</b>: ${patient.condition}. ${selectedOp.steps.length} stages, ${selectedOp.tools.length} instruments, ${rosterSize} possible species.`;
           hud();
         }
         function autoPlan() {
@@ -2022,7 +2039,12 @@
           stage = 0;
           selectedTool = null;
           log = [];
-          v = { hr: 112, o2: 97, bp: 92, temp: 100.4, blood: 100 };
+          const startingVitals={
+            SEVERE:{hr:120,o2:94,bp:84,temp:99.8,blood:92},
+            CRITICAL:{hr:134,o2:90,bp:72,temp:98.5,blood:78},
+            EXTREME:{hr:148,o2:86,bp:64,temp:97.2,blood:65}
+          };
+          v = { ...(startingVitals[patient.severity] || startingVitals.SEVERE) };
           running = true;
           comp = null;
           activityCombo = 1;
@@ -2033,7 +2055,7 @@
           $("guide").classList.remove("show");
           $("planModal").classList.remove("show");
           document.querySelectorAll(".battleEffect").forEach((x) => x.remove());
-          addLog(`${patient.name} entered theatre for ${selectedOp.n}.`);
+          addLog(`${patient.name} entered theatre: ${patient.severity.toLowerCase()} ${patient.condition}.`,"warn");
           nav("operate");
           renderOp();
           requestAnimationFrame(() => {
@@ -2305,6 +2327,7 @@
           save.recovery.unshift({
             id: Date.now() + Math.random(), name: patient.name, icon: patient.icon,
             op: selectedOp.n, status: stable ? "Continuous monitoring" : "Intensive support",
+            species: patient.species, severity: patient.severity, condition: patient.condition,
             progress: stable ? 12 : 4, risk: !stable || Math.random() < 0.3,
             o2: Math.round(clamp(v.o2, 70, 99)), hr: Math.round(clamp(v.hr, 55, 190)),
             temp: +clamp(v.temp, 95, 104).toFixed(1), pain: stable ? 42 : 68,
@@ -2321,6 +2344,9 @@
             name: patient.name,
             icon: patient.icon,
             op: selectedOp.n,
+            species: patient.species,
+            severity: patient.severity,
+            condition: patient.condition,
             steps: selectedOp.steps.map((x) => x.n),
             stable,
             v: { ...v },
@@ -2345,14 +2371,14 @@
             )
             .join("");
           $("summaryOutcome").innerHTML =
-            `<div style="font-size:55px">${s.icon}</div><h2>${s.name} · ${s.op}</h2><b style="color:${s.stable ? "var(--green)" : "var(--red)"}">${s.stable ? "Stable in recovery" : "Transferred for support"}</b><p>Final simulated vitals: HR ${Math.round(s.v.hr)}, oxygen ${Math.round(s.v.o2)}%, BP ${Math.round(s.v.bp)}, temperature ${s.v.temp.toFixed(1)}°, blood volume ${Math.round(s.v.blood)}%.</p><p>Recovery plan: ${s.plan.recovery}</p>`;
+            `<div style="font-size:55px">${s.icon}</div><h2>${s.name} the ${s.species || "animal"} · ${s.op}</h2><b style="color:${s.stable ? "var(--green)" : "var(--red)"}">${s.stable ? "Stable in recovery" : "Transferred for support"}</b><p><b>${s.severity || "CRITICAL"} CASE:</b> ${s.condition || "surgical emergency"}.</p><p>Final simulated vitals: HR ${Math.round(s.v.hr)}, oxygen ${Math.round(s.v.o2)}%, BP ${Math.round(s.v.bp)}, temperature ${s.v.temp.toFixed(1)}°, blood volume ${Math.round(s.v.blood)}%.</p><p>Recovery plan: ${s.plan.recovery}</p>`;
         }
         function renderRecovery() {
-          save.recovery.forEach((p,i)=>{p.id??=Date.now()+i;p.o2??=94;p.hr??=105;p.temp??=99.4;p.pain??=45;p.hydration??=55;p.comfort??=45;p.infection??=15;p.careScore??=0;p.alert??="Monitoring check due";p.progress??=10});
+          save.recovery.forEach((p,i)=>{p.id??=Date.now()+i;p.o2??=94;p.hr??=105;p.temp??=99.4;p.pain??=45;p.hydration??=55;p.comfort??=45;p.infection??=15;p.careScore??=0;p.alert??="Monitoring check due";p.progress??=10;p.severity??="SEVERE";p.condition??="post-operative surgical emergency"});
           const ready=p=>p.progress>=100&&p.o2>=92&&p.pain<=30&&p.hydration>=65&&p.comfort>=70&&p.infection<=20;
           const alerts=save.recovery.filter(p=>p.alert).length,readyCount=save.recovery.filter(ready).length,totalScore=save.recovery.reduce((a,p)=>a+(p.careScore||0),0);
           $("wardPatients").textContent=save.recovery.length;$("wardAlerts").textContent=alerts;$("wardReady").textContent=readyCount;$("wardScore").textContent=totalScore;
-          $("recoveryGrid").innerHTML = save.recovery.length ? save.recovery.map((p,i)=>{const acuity=p.o2<88||p.pain>70?"critical":p.alert?"watch":"stable";const needs=[];if(p.o2<92)needs.push("🫁 Oxygen");if(p.pain>30)needs.push("💚 Comfort");if(p.hydration<65)needs.push("💧 Fluids");if(p.temp<98.5)needs.push("🔥 Warmth");if(p.infection>20)needs.push("🧼 Wound check");if(!needs.length)needs.push("✓ Routine monitoring");return `<div class="recovery" data-patient="${i}"><div class="recoveryTop"><div class="icon">${p.icon}</div><div><b>${p.name}</b><span class="sub">${p.op}<br>${p.status}</span></div><span class="acuity ${acuity}">${acuity.toUpperCase()}</span></div><div class="progress"><i style="width:${p.progress}%"></i></div><div class="recoveryVitals"><div class="recoveryVital"><small>SpO₂</small><b>${p.o2}%</b></div><div class="recoveryVital"><small>HR</small><b>${p.hr}</b></div><div class="recoveryVital"><small>TEMP</small><b>${p.temp.toFixed(1)}°</b></div><div class="recoveryVital"><small>PAIN</small><b>${p.pain}</b></div><div class="recoveryVital"><small>HYDRATION</small><b>${p.hydration}</b></div><div class="recoveryVital"><small>COMFORT</small><b>${p.comfort}</b></div></div><div class="recoveryNeeds">${needs.map(n=>`<span>${n}</span>`).join("")}</div>${p.alert?`<div class="wardAlert">⚠ ${p.alert}</div>`:""}<div class="recovery-controls"><button data-ward="monitor" data-index="${i}">📟 Monitor</button><button data-ward="comfort" data-index="${i}">💚 Comfort</button><button data-ward="fluids" data-index="${i}">💧 Fluids</button><button data-ward="warm" data-index="${i}">🔥 Warm</button><button data-ward="wound" data-index="${i}">🧼 Wound</button><button data-ward="auto" data-index="${i}">⚕ Auto Care</button><button class="discharge" data-ward="discharge" data-index="${i}" ${ready(p)?"":"disabled"}>🏠 Discharge Patient</button></div></div>`}).join("") : "<div class='wardEmpty'>Complete an operation to admit a patient for monitored recovery.</div>";
+          $("recoveryGrid").innerHTML = save.recovery.length ? save.recovery.map((p,i)=>{const acuity=p.o2<88||p.pain>70||p.severity==="EXTREME"?"critical":p.alert?"watch":"stable";const needs=[];if(p.o2<92)needs.push("🫁 Oxygen");if(p.pain>30)needs.push("💚 Comfort");if(p.hydration<65)needs.push("💧 Fluids");if(p.temp<98.5)needs.push("🔥 Warmth");if(p.infection>20)needs.push("🧼 Wound check");if(!needs.length)needs.push("✓ Routine monitoring");return `<div class="recovery" data-patient="${i}"><div class="recoveryTop"><div class="icon">${p.icon}</div><div><b>${p.name} · ${p.species || "Animal"}</b><span class="sub">${p.op}<br><b>${p.severity}</b>: ${p.condition}<br>${p.status}</span></div><span class="acuity ${acuity}">${acuity.toUpperCase()}</span></div><div class="progress"><i style="width:${p.progress}%"></i></div><div class="recoveryVitals"><div class="recoveryVital"><small>SpO₂</small><b>${p.o2}%</b></div><div class="recoveryVital"><small>HR</small><b>${p.hr}</b></div><div class="recoveryVital"><small>TEMP</small><b>${p.temp.toFixed(1)}°</b></div><div class="recoveryVital"><small>PAIN</small><b>${p.pain}</b></div><div class="recoveryVital"><small>HYDRATION</small><b>${p.hydration}</b></div><div class="recoveryVital"><small>COMFORT</small><b>${p.comfort}</b></div></div><div class="recoveryNeeds">${needs.map(n=>`<span>${n}</span>`).join("")}</div>${p.alert?`<div class="wardAlert">⚠ ${p.alert}</div>`:""}<div class="recovery-controls"><button data-ward="monitor" data-index="${i}">📟 Monitor</button><button data-ward="comfort" data-index="${i}">💚 Comfort</button><button data-ward="fluids" data-index="${i}">💧 Fluids</button><button data-ward="warm" data-index="${i}">🔥 Warm</button><button data-ward="wound" data-index="${i}">🧼 Wound</button><button data-ward="auto" data-index="${i}">⚕ Auto Care</button><button class="discharge" data-ward="discharge" data-index="${i}" ${ready(p)?"":"disabled"}>🏠 Discharge Patient</button></div></div>`}).join("") : "<div class='wardEmpty'>Complete an operation to admit a patient for monitored recovery.</div>";
           persist();
         }
         function recoveryAction(action,index){const p=save.recovery[index];if(!p)return;const gain=5+save.up.recovery*2;if(action==="monitor"){p.o2=clamp(p.o2+4,70,100);p.hr=clamp(p.hr-4,50,200);p.alert=""}else if(action==="comfort"){p.pain=clamp(p.pain-16,0,100);p.comfort=clamp(p.comfort+15,0,100)}else if(action==="fluids"){p.hydration=clamp(p.hydration+18,0,100);p.hr=clamp(p.hr-2,50,200)}else if(action==="warm"){p.temp=+clamp(p.temp+.6,96,102.5).toFixed(1);p.comfort=clamp(p.comfort+6,0,100)}else if(action==="wound"){p.infection=clamp(p.infection-14,0,100);p.pain=clamp(p.pain-5,0,100)}else if(action==="auto"){p.o2=Math.max(94,p.o2);p.pain=Math.min(28,p.pain);p.hydration=Math.max(68,p.hydration);p.temp=Math.max(98.8,p.temp);p.comfort=Math.max(72,p.comfort);p.infection=Math.min(18,p.infection);p.alert="";p.progress=clamp(p.progress+18+save.up.recovery*4,0,100)}else if(action==="discharge"){save.credits+=150+(p.careScore||0)*2;save.recovery.splice(index,1);toast(`${p.name} discharged — excellent recovery`);hud();renderRecovery();return}if(action!=="auto")p.progress=clamp(p.progress+gain,0,100);p.careScore=(p.careScore||0)+(action==="auto"?8:12);p.status=p.progress>=100?"Discharge assessment":"Recovering under observation";renderRecovery();}
