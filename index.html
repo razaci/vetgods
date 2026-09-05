@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <title>Vet Gods: Operating Theatre</title>
+    <title>Vet Gods: Operating Theatre — Production Core</title>
     <style>
       :root {
         --bg: #071014;
@@ -4749,7 +4749,7 @@ body.vgc-contrast{--bg:#000;--panel:#071015;--panel2:#0c1820;--ink:#fff;--muted:
 #vgCommercialHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:10px 12px;border:1px solid #294650;background:#0a151b;border-radius:12px}.vgcBrandMini b{display:block;letter-spacing:.08em;font-size:.78rem}.vgcBrandMini small{color:#81979f;font-size:.6rem}.vgcHeaderActions{display:flex;gap:6px}.vgcHeaderActions button{padding:7px 9px;font-size:.66rem}
 #mainAreaMenu{align-items:center;scrollbar-width:none}#mainAreaMenu::-webkit-scrollbar{display:none}#mainAreaMenu button{white-space:nowrap}.vgcSecondaryNav{display:none!important}body.vgc-more-open .vgcSecondaryNav{display:inline-flex!important}#vgcMore.active{border-color:#52c7df!important;color:#dffaff!important;background:#123440!important}
 #vgcFirstCase{margin:0 0 12px;border:1px solid #346273;background:linear-gradient(145deg,#0c2029,#0a171d);border-radius:16px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;box-shadow:0 12px 35px #0005}.vgcCaseEyebrow{font-size:.62rem;color:#65cfe0;letter-spacing:.16em;font-weight:900}.vgcCaseTitle{font-size:1.08rem;font-weight:950;color:#f0f8fb;margin:4px 0}.vgcCaseCopy{color:#a2b7bf;font-size:.76rem;line-height:1.45}.vgcFirstActions{display:grid;gap:7px;min-width:220px}.vgcFirstActions button{min-height:48px;font-weight:900}.vgcSteps{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}.vgcSteps span{font-size:.58rem;padding:5px 7px;border-radius:999px;border:1px solid #294650;color:#8fa5ad}.vgcSteps span:first-child{border-color:#56bed1;color:#dffbff;background:#102e38}
-#vgCommercialSettings,#vgCommercialError{position:fixed;inset:0;z-index:2147480100;background:#000b;display:grid;place-items:center;padding:18px}#vgCommercialSettings[hidden],#vgCommercialError[hidden]{display:none!important}.vgcModal{width:min(520px,100%);max-height:88vh;overflow:auto;background:#0b171d;border:1px solid #355661;border-radius:18px;padding:18px;box-shadow:0 30px 80px #000d}.vgcModal h2{margin:0 0 5px;color:#f3f9fb}.vgcModal p{color:#9bb0b7;font-size:.76rem;line-height:1.5}.vgcSetting{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 0;border-top:1px solid #203941}.vgcSetting input{width:22px;height:22px}.vgcModalActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.vgcModalActions button{min-height:46px}
+#vgCommercialSettings{position:fixed;inset:0;z-index:2147480100;background:#000b;display:grid;place-items:center;padding:18px}#vgCommercialSettings[hidden]{display:none!important}#vgCommercialError{display:none!important}.vgcModal{width:min(520px,100%);max-height:88vh;overflow:auto;background:#0b171d;border:1px solid #355661;border-radius:18px;padding:18px;box-shadow:0 30px 80px #000d}.vgcModal h2{margin:0 0 5px;color:#f3f9fb}.vgcModal p{color:#9bb0b7;font-size:.76rem;line-height:1.5}.vgcSetting{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 0;border-top:1px solid #203941}.vgcSetting input{width:22px;height:22px}.vgcModalActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.vgcModalActions button{min-height:46px}
 #vgcStatusToast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));z-index:2147479000;transform:translate(-50%,18px);opacity:0;pointer-events:none;background:#0c1a20;border:1px solid #3d6977;color:#eaf8fb;border-radius:999px;padding:9px 14px;font-size:.7rem;box-shadow:0 12px 32px #0008;transition:.2s}#vgcStatusToast.show{opacity:1;transform:translate(-50%,0)}
 #vgCommercialFooter{margin:18px 0 4px;text-align:center;color:#607980;font-size:.58rem;letter-spacing:.06em}.page{scroll-margin-top:12px}
 @media(max-width:700px){.vgcBootCard{padding:19px 15px;border-radius:20px}.vgcBootMeta{flex-direction:column;align-items:center}.vgcBootActions button{min-height:58px}.shell{padding-bottom:18px!important}#vgCommercialHeader{position:static}.vgcHeaderActions button{min-height:38px}#vgcFirstCase{grid-template-columns:1fr}.vgcFirstActions{min-width:0}.vgcFirstActions button{min-height:54px}.vgcModalActions{grid-template-columns:1fr}}
@@ -4778,15 +4778,13 @@ body.vgc-contrast{--bg:#000;--panel:#071015;--panel2:#0c1820;--ink:#fff;--muted:
   </div>
 </div>
 
-<div id="vgCommercialError" hidden role="alertdialog" aria-modal="true">
- <div class="vgcModal"><h2>Recover Game View</h2><p>A screen did not finish opening. Your browser session is still intact. Return to the case screen or reload the current build.</p><div class="vgcModalActions"><button id="vgcRecoverPlan" class="vgcPrimary">RETURN TO CASE</button><button id="vgcReload">RELOAD GAME</button></div></div>
 </div>
 <div id="vgcStatusToast" aria-live="polite"></div>
 
 <script id="vgCommercialWrapScript">
 (()=>{
 'use strict';
-const VERSION='1.0';
+const VERSION='2.0';
 const SAVE_KEYS=['vetTheatreSave','vetTheatreFun','vetTheatreAdvanced','vetGodsSaveSlot','vetInventorySystem','vetGodsNurseryV1','vetGodsGeneticLabV1','vetGodsCemeteryV1','vetGodsMeadowV1','vetGodsBabySagaV1','vetGodsTacticsV1','spiritGodsSituationalAwarenessV1'];
 const $=id=>document.getElementById(id);
 const settingKey='vetGodsCommercialSettingsV1';
@@ -4820,14 +4818,308 @@ function wire(){
  $('vgcNewGame').onclick=()=>{if(hasSave()&&!confirm('Start a new hospital? Existing local progress for this build will be reset.'))return;SAVE_KEYS.forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});shell={lastPage:'plan',welcomed:true};saveShell();closeBoot('plan');setTimeout(()=>{try{$('newPatient')?.click();$('autoPlan')?.click()}catch(_){};toast('New hospital started')},120)};
  $('vgcBootSettings').onclick=openSettings;$('vgcCloseSettings').onclick=closeSettings;$('vgcReturnTitle').onclick=()=>{closeSettings();openBoot()};
  [['vgcReduceMotion','motion'],['vgcLargeText','large'],['vgcHighContrast','contrast']].forEach(([id,key])=>{$(id).onchange=e=>{settings[key]=e.target.checked;saveSettings()}});
- $('vgcRecoverPlan').onclick=()=>{$('vgCommercialError').hidden=true;document.body.classList.remove('blackout');go('plan')};$('vgcReload').onclick=()=>location.reload();
+ 
  document.addEventListener('click',e=>{const p=e.target.closest('[data-page]');if(p?.dataset.page){shell.lastPage=p.dataset.page;saveShell()}},true);
- // Commercial safety: catch uncaught UI failures and offer recovery instead of a blank screen.
- window.addEventListener('error',e=>{if(e?.error && !String(e.error).includes('ResizeObserver')) $('vgCommercialError').hidden=false});
- window.addEventListener('unhandledrejection',()=>{$('vgCommercialError').hidden=false});
+ // Commercial safety: never replace the game with an error screen.
+ window.addEventListener('error',e=>{
+   if(String(e?.message||'').includes('ResizeObserver')) return;
+   console.warn('[Vet Gods UI warning]',e?.message||e?.error||e);
+ });
+ window.addEventListener('unhandledrejection',e=>{
+   console.warn('[Vet Gods async warning]',e?.reason||e);
+ });
 }
 function init(){buildChrome();wire();applySettings();const c=$('vgcContinue');if(c)c.textContent=hasSave()?'CONTINUE HOSPITAL':'ENTER HOSPITAL';openBoot()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
+
+<script id="vgCommercialBootFailsafe">
+(()=>{
+  const reveal=()=>{
+    const boot=document.getElementById('vgCommercialBoot');
+    const err=document.getElementById('vgCommercialError');
+    if(err) err.style.setProperty('display','none','important');
+    if(boot && !boot.hidden){
+      // Keep the title screen only if its primary controls are alive.
+      const live=document.getElementById('vgcContinue') && document.getElementById('vgcNewGame');
+      if(!live){
+        boot.hidden=true;
+        document.body.style.removeProperty('overflow');
+      }
+    }
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',reveal,{once:true});
+  else reveal();
+  setTimeout(reveal,500);
+  setTimeout(reveal,1500);
+})();
+</script>
+
+
+<style id="vgProductionCoreStyle">
+:root{
+  --vgpc-bg:#071116;--vgpc-panel:#0b171d;--vgpc-line:#294853;--vgpc-text:#eaf5f7;
+  --vgpc-sub:#91a9b1;--vgpc-accent:#4eb6d6;--vgpc-good:#67d8a0;--vgpc-warn:#e7bd6b
+}
+#vgProductionHUD{
+  display:grid;grid-template-columns:minmax(0,1.5fr) repeat(4,minmax(78px,.55fr));gap:7px;
+  margin:0 0 9px;padding:9px;border:1px solid var(--vgpc-line);border-radius:13px;background:var(--vgpc-bg)
+}
+.vgpcLead{min-width:0;padding:5px 7px}.vgpcLead b{display:block;font-size:.76rem;letter-spacing:.06em}
+.vgpcLead small{display:block;color:var(--vgpc-sub);font-size:.62rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vgpcStat{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:48px;padding:5px;border:1px solid #1f3942;border-radius:9px;background:#0d1b22}
+.vgpcStat b{font-size:.78rem}.vgpcStat small{font-size:.52rem;color:var(--vgpc-sub);letter-spacing:.05em}
+#vgProductionFlow{display:flex;gap:5px;overflow:auto;margin:0 0 9px;padding:2px 0 5px;scrollbar-width:none}
+#vgProductionFlow button{flex:0 0 auto;min-height:38px;padding:8px 11px;border:1px solid #294853;border-radius:9px;background:#0b171d;color:#b8cbd1;font-weight:800;font-size:.64rem}
+#vgProductionFlow button.active{background:#12313d;border-color:var(--vgpc-accent);color:#fff}
+#vgProductionFlow button.locked{opacity:.45}
+#vgCoreSurgeryDeck{margin:0 0 10px;padding:11px;border:1px solid #31515c;border-radius:14px;background:#09151b}
+#vgCoreSurgeryDeck h3{margin:0 0 3px;font-size:.82rem;color:#f1f7f8}
+#vgCoreSurgeryDeck p{margin:0 0 9px;color:#8fa6ae;font-size:.66rem;line-height:1.4}
+.vgpcSurgeryActions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.vgpcSurgeryActions button{min-height:58px;padding:9px 6px;border-radius:11px;border:1px solid #31515c;background:#10232b;color:white;font-weight:900;font-size:.68rem}
+.vgpcSurgeryActions button:first-child{border-color:#4e9fba}.vgpcSurgeryActions button:nth-child(2){border-color:#6bbf96}.vgpcSurgeryActions button:nth-child(3){border-color:#d2a958}
+#vgpcNextInstruction{margin-top:8px;padding:8px 9px;border-left:3px solid var(--vgpc-accent);background:#0d1c23;color:#c8d8dc;font-size:.65rem}
+#vgpcDiagPanel{display:none;margin-top:12px;padding:10px;border:1px solid #38515a;border-radius:10px;background:#071116}
+#vgpcDiagPanel.show{display:block}
+#vgpcDiagPanel pre{max-height:220px;overflow:auto;white-space:pre-wrap;word-break:break-word;font-size:.58rem;color:#a8bbc0}
+.vgpcDiagActions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.vgpcDiagActions button{min-height:38px}
+#vgpcBuildBadge{font-size:.52rem;color:#6f8991;margin-left:6px}
+body.vgpc-ready #vgcFirstCase .vgcCaseCopy{max-width:720px}
+body.vgpc-ready .vgcSecondaryNav{opacity:.88}
+body.vgpc-ready #mainAreaMenu{border-bottom:1px solid #203b44;padding-bottom:7px;margin-bottom:8px}
+@media(max-width:760px){
+ #vgProductionHUD{grid-template-columns:1.4fr repeat(2,1fr)}
+ #vgProductionHUD .vgpcStat:nth-of-type(n+4){display:none}
+ .vgpcSurgeryActions{grid-template-columns:1fr}
+ .vgpcSurgeryActions button{min-height:52px}
+}
+</style>
+
+<script id="vgProductionCoreScript">
+(()=>{
+'use strict';
+const BUILD='2.0-PRODUCTION';
+const KEY='vetGodsProductionCoreV2';
+const LEGACY_KEYS=[
+ 'vetTheatreSave','vetTheatreFun','vetTheatreAdvanced','vetInventorySystem',
+ 'vetGodsNurseryV1','vetGodsGeneticLabV1','vetGodsCemeteryV1','vetGodsMeadowV1',
+ 'vetGodsBabySagaV1','vetGodsTacticsV1','spiritGodsSituationalAwarenessV1'
+];
+const $=id=>document.getElementById(id);
+const q=s=>document.querySelector(s);
+const qa=s=>[...document.querySelectorAll(s)];
+const read=(k,d={})=>{try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch(_){return d}};
+let P=Object.assign({build:BUILD,lastPage:'plan',phase:'PATIENT',caseStarted:false,operations:0,recoveries:0,errors:[],lastSave:0},read(KEY,{}));
+let originalBegin=null;
+let cleanBeginButton=null;
+const log=(type,msg)=>{
+  P.errors.unshift({time:new Date().toLocaleTimeString(),type,msg:String(msg||'Unknown')});
+  P.errors=P.errors.slice(0,30); save(false); renderDiagnostics();
+};
+function save(snapshot=true){
+  P.build=BUILD;P.lastSave=Date.now();
+  if(snapshot){
+    P.backup={};
+    LEGACY_KEYS.forEach(k=>{try{const v=localStorage.getItem(k);if(v)P.backup[k]=v}catch(_){}});
+  }
+  try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){console.warn(e)}
+}
+function toast(msg){
+  const t=$('vgcStatusToast')||$('toast');
+  if(!t)return;
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1600);
+}
+function activePage(){return q('.page.active')?.id||'plan'}
+function route(page,scroll=true){
+  const target=$(page);if(!target)return false;
+  qa('.page').forEach(x=>x.classList.toggle('active',x===target));
+  qa('[data-page]').forEach(x=>x.classList.toggle('active',x.dataset.page===page));
+  P.lastPage=page;
+  if(page==='plan')P.phase=P.caseStarted?'PLAN':'PATIENT';
+  if(page==='operate')P.phase='OPERATE';
+  if(page==='recover')P.phase='RECOVER';
+  if(page==='summary')P.phase='REWARD';
+  save(false);renderHUD();
+  if(scroll)requestAnimationFrame(()=>target.scrollIntoView({block:'start',behavior:'auto'}));
+  document.dispatchEvent(new CustomEvent('vetgods:route',{detail:{page}}));
+  return true;
+}
+function isolateBegin(){
+  const old=$('beginOperation');
+  if(!old||old.dataset.vgpcClean==='1')return;
+  originalBegin=old.onclick;
+  const clone=old.cloneNode(true);
+  clone.dataset.vgpcClean='1';
+  clone.onclick=null;
+  old.replaceWith(clone);
+  cleanBeginButton=clone;
+  clone.addEventListener('click',e=>{
+    e.preventDefault();e.stopPropagation();
+    startOperation();
+  });
+}
+function ensurePlan(){
+  const auto=$('autoPlan');
+  try{if(auto&&typeof auto.onclick==='function')auto.onclick.call(auto)}catch(e){log('plan',e.message)}
+}
+function startOperation(){
+  isolateBegin();
+  ensurePlan();
+  P.caseStarted=true;P.phase='OPERATE';save();
+  try{
+    if(typeof originalBegin==='function'){
+      originalBegin.call(cleanBeginButton||$('beginOperation'));
+      P.operations++;P.lastPage='operate';save();renderHUD();
+      document.dispatchEvent(new CustomEvent('vetgods:operation-started'));
+      setTimeout(()=>{route('operate',false);renderSurgeryDeck();},40);
+      return;
+    }
+    route('operate');
+    log('start','Original theatre start handler was unavailable; opened theatre view only.');
+  }catch(e){
+    log('start',e.stack||e.message);route('operate');toast('Theatre opened in recovery-safe mode');
+  }
+}
+function firstCase(){
+  const boot=$('vgCommercialBoot');if(boot)boot.hidden=true;
+  document.body.style.removeProperty('overflow');
+  route('plan');
+  try{$('newPatient')?.click()}catch(e){log('patient',e.message)}
+  ensurePlan();
+  setTimeout(startOperation,70);
+}
+function buildHUD(){
+  const shell=q('main.shell'),nav=$('mainAreaMenu');if(!shell||!nav||$('vgProductionHUD'))return;
+  const hud=document.createElement('section');hud.id='vgProductionHUD';
+  hud.innerHTML='<div class="vgpcLead"><b>VET GODS · PRODUCTION CORE <span id="vgpcBuildBadge">'+BUILD+'</span></b><small id="vgpcObjective">Prepare the active patient.</small></div><div class="vgpcStat"><b id="vgpcPatient">—</b><small>PATIENT</small></div><div class="vgpcStat"><b id="vgpcPhase">PATIENT</b><small>PHASE</small></div><div class="vgpcStat"><b id="vgpcCredits">—</b><small>CREDITS</small></div><div class="vgpcStat"><b id="vgpcSave">READY</b><small>AUTOSAVE</small></div>';
+  shell.insertBefore(hud,nav);
+  const flow=document.createElement('div');flow.id='vgProductionFlow';
+  flow.innerHTML='<button data-vgpc-route="plan">1 PATIENT / PLAN</button><button data-vgpc-start>2 OPERATE</button><button data-vgpc-route="recover">3 RECOVER</button><button data-vgpc-route="summary">4 REWARD</button><button data-vgpc-route="hospital">HOSPITAL</button>';
+  nav.insertAdjacentElement('afterend',flow);
+}
+function objective(){
+  const page=activePage();
+  if(page==='plan')return P.caseStarted?'Review or refresh the plan, then enter theatre.':'Choose the patient and build the recommended plan.';
+  if(page==='operate'){
+    const stage=$('overviewStage')?.textContent?.trim();
+    return stage||'Follow the three core surgery controls below.';
+  }
+  if(page==='recover')return 'Stabilize recovery, complete care, then discharge.';
+  if(page==='summary')return 'Review the outcome and begin the next case.';
+  return 'Hospital systems are available; return to Plan when ready for a case.';
+}
+function renderHUD(){
+  if(!$('vgProductionHUD'))return;
+  $('vgpcPatient').textContent=$('patientName')?.textContent?.trim()||'ACTIVE';
+  $('vgpcPhase').textContent=P.phase||activePage().toUpperCase();
+  $('vgpcCredits').textContent=$('credits')?.textContent?.trim()||'—';
+  $('vgpcObjective').textContent=objective();
+  $('vgpcSave').textContent=P.lastSave?'SAVED':'READY';
+  qa('#vgProductionFlow [data-vgpc-route]').forEach(b=>b.classList.toggle('active',b.dataset.vgpcRoute===activePage()));
+  q('#vgProductionFlow [data-vgpc-start]')?.classList.toggle('active',activePage()==='operate');
+}
+function buildSurgeryDeck(){
+  const op=$('operate');if(!op||$('vgCoreSurgeryDeck'))return;
+  const deck=document.createElement('section');deck.id='vgCoreSurgeryDeck';
+  deck.innerHTML='<h3>OPERATING THEATRE · CORE CONTROLS</h3><p>Three controls run the surgical loop. The detailed monitors and advanced systems remain below.</p><div class="vgpcSurgeryActions"><button id="vgpcTool">1 · SELECT CORRECT TOOL</button><button id="vgpcAction">2 · PERFORM BEST ACTION</button><button id="vgpcStabilize">3 · STABILIZE PATIENT</button></div><div id="vgpcNextInstruction">Enter the theatre to begin the procedure.</div>';
+  op.insertBefore(deck,op.firstChild);
+  $('vgpcTool').onclick=()=>{$('quickTool')?.click();setTimeout(renderSurgeryDeck,30)};
+  $('vgpcAction').onclick=()=>{($('quickAction')||$('autoStep'))?.click();setTimeout(renderSurgeryDeck,30)};
+  $('vgpcStabilize').onclick=()=>{$('quickStabilize')?.click();setTimeout(renderSurgeryDeck,30)};
+}
+function renderSurgeryDeck(){
+  buildSurgeryDeck();
+  const note=$('vgpcNextInstruction');if(!note)return;
+  const stage=$('overviewStage')?.textContent?.trim();
+  const obj=$('objective')?.textContent?.trim();
+  note.textContent=stage||obj||'Select the correct tool, perform the action, then stabilize if the vitals move.';
+  renderHUD();
+}
+function buildDiagnostics(){
+  const modal=$('vgCommercialSettings')?.querySelector('.vgcModal');if(!modal||$('vgpcDiagPanel'))return;
+  const open=document.createElement('button');open.id='vgpcDiagToggle';open.textContent='DIAGNOSTICS';open.style.marginTop='10px';
+  const panel=document.createElement('div');panel.id='vgpcDiagPanel';
+  panel.innerHTML='<b>PRODUCTION DIAGNOSTICS</b><pre id="vgpcDiagText">No errors recorded.</pre><div class="vgpcDiagActions"><button id="vgpcBackup">SAVE SNAPSHOT</button><button id="vgpcRestore">RESTORE LAST SNAPSHOT</button><button id="vgpcClearDiag">CLEAR LOG</button></div>';
+  modal.append(open,panel);
+  open.onclick=()=>panel.classList.toggle('show');
+  $('vgpcBackup').onclick=()=>{save(true);toast('Production snapshot saved');renderDiagnostics()};
+  $('vgpcRestore').onclick=()=>{
+    if(!P.backup)return toast('No production snapshot available');
+    Object.entries(P.backup).forEach(([k,v])=>{try{localStorage.setItem(k,v)}catch(_){}});
+    toast('Snapshot restored · reloading');setTimeout(()=>location.reload(),400);
+  };
+  $('vgpcClearDiag').onclick=()=>{P.errors=[];save(false);renderDiagnostics()};
+}
+function renderDiagnostics(){
+  const pre=$('vgpcDiagText');if(!pre)return;
+  const lines=[
+    'Build: '+BUILD,
+    'Active page: '+activePage(),
+    'Phase: '+P.phase,
+    'Operations started: '+P.operations,
+    'Recoveries recorded: '+P.recoveries,
+    'Last autosave: '+(P.lastSave?new Date(P.lastSave).toLocaleTimeString():'none'),
+    '',
+    ...(P.errors.length?P.errors.map(x=>`[${x.time}] ${x.type}: ${x.msg}`):['No errors recorded.'])
+  ];
+  pre.textContent=lines.join('\n');
+}
+function wireCore(){
+  document.addEventListener('click',e=>{
+    const r=e.target.closest('[data-vgpc-route]');
+    if(r){e.preventDefault();route(r.dataset.vgpcRoute);return}
+    if(e.target.closest('[data-vgpc-start]')){e.preventDefault();startOperation();return}
+  });
+  // Core menu pages use one router; secondary areas keep their own specialized legacy open handlers.
+  const core=new Set(['plan','operate','recover','summary','hospital','pets']);
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('#mainAreaMenu [data-page]');
+    if(!b||!core.has(b.dataset.page))return;
+    e.preventDefault();e.stopImmediatePropagation();
+    route(b.dataset.page);
+  },true);
+  // Any later/duplicate "start game" button is redirected to the single production entry.
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('#vgcBeginCase,#vgStartGame,#vgStartTheatre,#vgQueueBegin,#vgTopBegin');
+    if(!b)return;
+    e.preventDefault();e.stopImmediatePropagation();firstCase();
+  },true);
+  // Existing clean begin button gets isolated at initialization; if another script replaces it, isolate again.
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#beginOperation') && e.target.dataset.vgpcClean!=='1'){
+      e.preventDefault();e.stopImmediatePropagation();isolateBegin();startOperation();
+    }
+  },true);
+  // Autosave meaningful progression without saving every pointer movement.
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#perform,#autoStep,#quickAction,#quickTool,#quickStabilize,#finishRecovery,[data-care],[data-recovery],[data-ward],#newPatient,#autoPlan')){
+      setTimeout(()=>{if(e.target.closest('#finishRecovery,[data-recovery="discharge"],[data-ward="discharge"]')){P.recoveries++;P.phase='REWARD'}save();renderHUD();renderSurgeryDeck()},80);
+    }
+  },false);
+  window.addEventListener('error',e=>{if(!String(e.message||'').includes('ResizeObserver'))log('error',e.message||e.error)},false);
+  window.addEventListener('unhandledrejection',e=>log('promise',e.reason?.stack||e.reason),false);
+  document.addEventListener('vetgods:route',()=>renderHUD());
+}
+function upgradeCommercialStart(){
+  const first=$('vgcBeginCase');if(first){first.textContent='START SHIFT · FIRST OPERATION';first.onclick=null}
+  const title=$('vgcBootTitle');if(title)title.textContent='VET GODS: OPERATING THEATRE';
+  const sub=q('.vgcBootSub');if(sub)sub.textContent='Take one patient from intake to surgery, recovery, and reward. The deeper hospital unlocks around that loop.';
+}
+function init(){
+  document.body.classList.add('vgpc-ready');
+  isolateBegin();
+  buildHUD();buildSurgeryDeck();buildDiagnostics();wireCore();upgradeCommercialStart();
+  if(P.lastPage && $(P.lastPage) && !$('vgCommercialBoot')?.hidden===false){/* boot controls entry */}
+  renderHUD();renderSurgeryDeck();save(false);
+  setInterval(()=>{save(false);renderHUD()},30000);
+  console.info('[Vet Gods Production Core]',BUILD,'ready');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0),{once:true});
+else setTimeout(init,0);
 })();
 </script>
 
