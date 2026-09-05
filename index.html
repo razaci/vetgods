@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <title>Spirit Gods: War Within</title>
+    <title>Vet Gods: Operating Theatre</title>
     <style>
       :root {
         --bg: #071014;
@@ -1141,6 +1141,15 @@
   .vg2Main{padding:7px!important;}
 }
 </style>
+
+<meta name="theme-color" content="#0b2029" />
+<meta name="description" content="Vet Gods: Operating Theatre — a fictional veterinary fantasy simulation." />
+<meta name="application-name" content="Vet Gods" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Vet Gods" />
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Vet%20Gods%3A%20Operating%20Theatre%22%2C%22short_name%22%3A%22Vet%20Gods%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23071014%22%2C%22theme_color%22%3A%22%230b2029%22%2C%22description%22%3A%22A%20fictional%20veterinary%20fantasy%20operating-theatre%20simulation.%22%7D" />
+
 </head>
   <body>
     <div class="introScreen" id="introScreen" role="dialog" aria-modal="true" aria-label="The Mind Within introduction"><div class="introPanel"><div class="introCrest"></div><div class="introSubtitle">A PSYCHOLOGICAL THRILLER INSIDE THE LIVING BODY</div><h1 class="introTitle">THE MIND WITHIN</h1><p>Awaken beneath an unknown skull. Raise living ideas, reconstruct fractured memories, read the body's alarms, and discover whether you are the healer—or another thought created by the Nursery.</p><div class="introGuardians" aria-hidden="true"><span>🧠</span><span>🐈</span><span>💭</span><span>🫀</span><span>🌙</span></div><div class="introActions"><button class="gold" id="introStart">🧠 Enter the Mind</button><button class="primary" id="introContinue">▶ Continue Descent</button><button id="introHelp">? How to Play</button></div><div class="introHow" id="introHow"><div><b>1 · Read the Body</b><small>Physical signals influence which thought-animals are born.</small></div><div><b>2 · Test the Thought</b><small>Ground, question, comfort, or compare it with evidence.</small></div><div><b>3 · Choose What Remains</b><small>Integrate, transform, remember, or release each symbolic thought-form.</small></div></div><small class="introVersion">FICTIONAL SYMBOLIC THRILLER · NOT A CLINICAL MODEL</small></div></div>
@@ -4725,6 +4734,103 @@ body.blackout main{filter:none!important}
   filter:none!important;
 }
 </style>
+
+<style id="vgCommercialWrapStyle">
+:root{--vgc-bg:#071014;--vgc-panel:#0d1a20;--vgc-line:#294550;--vgc-ink:#edf7fa;--vgc-muted:#9bb0b7;--vgc-accent:#52c7df;--vgc-safe:#74d99a;--vgc-warn:#e8c36a}
+html{scroll-behavior:smooth}
+body.vgc-no-motion *,body.vgc-no-motion *:before,body.vgc-no-motion *:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+body.vgc-large{font-size:18px}
+body.vgc-contrast{--bg:#000;--panel:#071015;--panel2:#0c1820;--ink:#fff;--muted:#d5e0e5}
+#vgCommercialBoot{position:fixed;inset:0;z-index:2147480000;background:radial-gradient(circle at 50% 15%,#123441 0,#071014 44%,#030708 100%);display:grid;place-items:center;padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));overflow:auto}
+#vgCommercialBoot[hidden]{display:none!important}
+.vgcBootCard{width:min(680px,100%);border:1px solid #2e5664;background:linear-gradient(180deg,#0f2028f5,#091217f8);border-radius:24px;padding:24px;box-shadow:0 28px 80px #000b}
+.vgcMark{width:72px;height:72px;border-radius:22px;display:grid;place-items:center;margin:0 auto 15px;border:1px solid #5ec9dc;background:linear-gradient(145deg,#183b47,#0a2029);font-size:36px;box-shadow:0 0 36px #3bc6dc26}
+.vgcBootCard h1{margin:0;text-align:center;font-size:clamp(1.65rem,7vw,2.7rem);letter-spacing:.08em;color:#f4fbfd}.vgcBootCard h1 span{display:block;color:#6ed0df;font-size:.42em;letter-spacing:.23em;margin-top:6px}.vgcBootLead{max-width:500px;margin:15px auto 20px;text-align:center;color:#a9bcc3;line-height:1.55;font-size:.86rem}.vgcBootActions{display:grid;gap:9px}.vgcBootActions button{min-height:56px;font-weight:900;border-radius:13px}.vgcPrimary{background:linear-gradient(#22697d,#164858)!important;border-color:#61c7dd!important;color:#fff!important}.vgcSecondary{background:#101c23!important;border-color:#36505b!important;color:#e8f4f7!important}.vgcBootMeta{display:flex;justify-content:space-between;gap:10px;margin-top:14px;color:#718991;font-size:.65rem;border-top:1px solid #1e353e;padding-top:12px}
+#vgCommercialHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:10px 12px;border:1px solid #294650;background:#0a151b;border-radius:12px}.vgcBrandMini b{display:block;letter-spacing:.08em;font-size:.78rem}.vgcBrandMini small{color:#81979f;font-size:.6rem}.vgcHeaderActions{display:flex;gap:6px}.vgcHeaderActions button{padding:7px 9px;font-size:.66rem}
+#mainAreaMenu{align-items:center;scrollbar-width:none}#mainAreaMenu::-webkit-scrollbar{display:none}#mainAreaMenu button{white-space:nowrap}.vgcSecondaryNav{display:none!important}body.vgc-more-open .vgcSecondaryNav{display:inline-flex!important}#vgcMore.active{border-color:#52c7df!important;color:#dffaff!important;background:#123440!important}
+#vgcFirstCase{margin:0 0 12px;border:1px solid #346273;background:linear-gradient(145deg,#0c2029,#0a171d);border-radius:16px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;box-shadow:0 12px 35px #0005}.vgcCaseEyebrow{font-size:.62rem;color:#65cfe0;letter-spacing:.16em;font-weight:900}.vgcCaseTitle{font-size:1.08rem;font-weight:950;color:#f0f8fb;margin:4px 0}.vgcCaseCopy{color:#a2b7bf;font-size:.76rem;line-height:1.45}.vgcFirstActions{display:grid;gap:7px;min-width:220px}.vgcFirstActions button{min-height:48px;font-weight:900}.vgcSteps{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px}.vgcSteps span{font-size:.58rem;padding:5px 7px;border-radius:999px;border:1px solid #294650;color:#8fa5ad}.vgcSteps span:first-child{border-color:#56bed1;color:#dffbff;background:#102e38}
+#vgCommercialSettings,#vgCommercialError{position:fixed;inset:0;z-index:2147480100;background:#000b;display:grid;place-items:center;padding:18px}#vgCommercialSettings[hidden],#vgCommercialError[hidden]{display:none!important}.vgcModal{width:min(520px,100%);max-height:88vh;overflow:auto;background:#0b171d;border:1px solid #355661;border-radius:18px;padding:18px;box-shadow:0 30px 80px #000d}.vgcModal h2{margin:0 0 5px;color:#f3f9fb}.vgcModal p{color:#9bb0b7;font-size:.76rem;line-height:1.5}.vgcSetting{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 0;border-top:1px solid #203941}.vgcSetting input{width:22px;height:22px}.vgcModalActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.vgcModalActions button{min-height:46px}
+#vgcStatusToast{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));z-index:2147479000;transform:translate(-50%,18px);opacity:0;pointer-events:none;background:#0c1a20;border:1px solid #3d6977;color:#eaf8fb;border-radius:999px;padding:9px 14px;font-size:.7rem;box-shadow:0 12px 32px #0008;transition:.2s}#vgcStatusToast.show{opacity:1;transform:translate(-50%,0)}
+#vgCommercialFooter{margin:18px 0 4px;text-align:center;color:#607980;font-size:.58rem;letter-spacing:.06em}.page{scroll-margin-top:12px}
+@media(max-width:700px){.vgcBootCard{padding:19px 15px;border-radius:20px}.vgcBootMeta{flex-direction:column;align-items:center}.vgcBootActions button{min-height:58px}.shell{padding-bottom:18px!important}#vgCommercialHeader{position:static}.vgcHeaderActions button{min-height:38px}#vgcFirstCase{grid-template-columns:1fr}.vgcFirstActions{min-width:0}.vgcFirstActions button{min-height:54px}.vgcModalActions{grid-template-columns:1fr}}
+</style>
+
+<div id="vgCommercialBoot" role="dialog" aria-modal="true" aria-labelledby="vgcBootTitle">
+  <div class="vgcBootCard">
+    <div class="vgcMark" aria-hidden="true">⚕</div>
+    <h1 id="vgcBootTitle">VET GODS<span>OPERATING THEATRE</span></h1>
+    <p class="vgcBootLead">Take the case, build the plan, enter theatre, stabilize the patient, and bring them through recovery. The deeper hospital opens around that core loop.</p>
+    <div class="vgcBootActions">
+      <button id="vgcContinue" class="vgcPrimary">CONTINUE HOSPITAL</button>
+      <button id="vgcNewGame" class="vgcSecondary">NEW GAME</button>
+      <button id="vgcBootSettings" class="vgcSecondary">SETTINGS & ACCESSIBILITY</button>
+    </div>
+    <div class="vgcBootMeta"><span>FICTIONAL VETERINARY FANTASY SIMULATION</span><span>BUILD 1.0 · COMMERCIAL WRAP</span></div>
+  </div>
+</div>
+
+<div id="vgCommercialSettings" hidden role="dialog" aria-modal="true" aria-labelledby="vgcSettingsTitle">
+  <div class="vgcModal"><h2 id="vgcSettingsTitle">Settings</h2><p>These controls affect presentation only. They do not change case outcomes.</p>
+    <label class="vgcSetting"><span>Reduce motion</span><input id="vgcReduceMotion" type="checkbox"></label>
+    <label class="vgcSetting"><span>Larger interface text</span><input id="vgcLargeText" type="checkbox"></label>
+    <label class="vgcSetting"><span>Higher contrast</span><input id="vgcHighContrast" type="checkbox"></label>
+    <div class="vgcModalActions"><button id="vgcCloseSettings" class="vgcPrimary">DONE</button><button id="vgcReturnTitle">TITLE SCREEN</button></div>
+  </div>
+</div>
+
+<div id="vgCommercialError" hidden role="alertdialog" aria-modal="true">
+ <div class="vgcModal"><h2>Recover Game View</h2><p>A screen did not finish opening. Your browser session is still intact. Return to the case screen or reload the current build.</p><div class="vgcModalActions"><button id="vgcRecoverPlan" class="vgcPrimary">RETURN TO CASE</button><button id="vgcReload">RELOAD GAME</button></div></div>
+</div>
+<div id="vgcStatusToast" aria-live="polite"></div>
+
+<script id="vgCommercialWrapScript">
+(()=>{
+'use strict';
+const VERSION='1.0';
+const SAVE_KEYS=['vetTheatreSave','vetTheatreFun','vetTheatreAdvanced','vetGodsSaveSlot','vetInventorySystem','vetGodsNurseryV1','vetGodsGeneticLabV1','vetGodsCemeteryV1','vetGodsMeadowV1','vetGodsBabySagaV1','vetGodsTacticsV1','spiritGodsSituationalAwarenessV1'];
+const $=id=>document.getElementById(id);
+const settingKey='vetGodsCommercialSettingsV1';
+const stateKey='vetGodsCommercialShellV1';
+const safeParse=(s,d={})=>{try{return JSON.parse(s)||d}catch(_){return d}};
+let settings=safeParse(localStorage.getItem(settingKey),{motion:false,large:false,contrast:false});
+let shell=safeParse(localStorage.getItem(stateKey),{lastPage:'plan',welcomed:false});
+function saveShell(){try{localStorage.setItem(stateKey,JSON.stringify(shell))}catch(_){}}
+function saveSettings(){try{localStorage.setItem(settingKey,JSON.stringify(settings))}catch(_){};applySettings()}
+function applySettings(){document.body.classList.toggle('vgc-no-motion',!!settings.motion);document.body.classList.toggle('vgc-large',!!settings.large);document.body.classList.toggle('vgc-contrast',!!settings.contrast);if($('vgcReduceMotion'))$('vgcReduceMotion').checked=!!settings.motion;if($('vgcLargeText'))$('vgcLargeText').checked=!!settings.large;if($('vgcHighContrast'))$('vgcHighContrast').checked=!!settings.contrast}
+function toast(msg){const t=$('vgcStatusToast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),1700)}
+function hasSave(){return SAVE_KEYS.some(k=>{try{return !!localStorage.getItem(k)}catch(_){return false}})}
+function go(page){const b=document.querySelector(`#mainAreaMenu [data-page="${page}"]`)||document.querySelector(`[data-page="${page}"]`);if(b){b.click();shell.lastPage=page;saveShell();return true}return false}
+function closeBoot(page){$('vgCommercialBoot').hidden=true;document.body.style.removeProperty('overflow');if(page)setTimeout(()=>go(page),25)}
+function openBoot(){ $('vgCommercialBoot').hidden=false; document.body.style.overflow='hidden'; setTimeout(()=>$('vgcContinue')?.focus(),40)}
+function openSettings(){applySettings();$('vgCommercialSettings').hidden=false;$('vgcReduceMotion')?.focus()}
+function closeSettings(){$('vgCommercialSettings').hidden=true}
+function startFirstCase(){closeBoot();go('plan');setTimeout(()=>{try{$('autoPlan')?.click()}catch(_){};setTimeout(()=>{const b=$('beginOperation');if(b&&!b.disabled)b.click();else go('operate')},120)},70)}
+function buildChrome(){
+ const shellEl=document.querySelector('main.shell');const nav=$('mainAreaMenu');if(!shellEl||!nav)return;
+ if(!$('vgCommercialHeader')){const h=document.createElement('div');h.id='vgCommercialHeader';h.innerHTML='<div class="vgcBrandMini"><b>VET GODS · OPERATING THEATRE</b><small>SHIFT COMMAND · BUILD '+VERSION+'</small></div><div class="vgcHeaderActions"><button id="vgcHome">TITLE</button><button id="vgcSettings">SETTINGS</button></div>';shellEl.insertBefore(h,nav);$('vgcHome').onclick=openBoot;$('vgcSettings').onclick=openSettings}
+ // Keep the commercial loop visible. Everything else lives behind More.
+ const keep=new Set(['plan','operate','recover','hospital','pets']);
+ nav.querySelectorAll('button[data-page]').forEach(b=>{if(!keep.has(b.dataset.page))b.classList.add('vgcSecondaryNav')});
+ if(!$('vgcMore')){const b=document.createElement('button');b.id='vgcMore';b.textContent='MORE AREAS';b.type='button';b.onclick=()=>{document.body.classList.toggle('vgc-more-open');b.classList.toggle('active',document.body.classList.contains('vgc-more-open'));b.textContent=document.body.classList.contains('vgc-more-open')?'CLOSE MORE':'MORE AREAS'};nav.appendChild(b)}
+ const plan=$('plan');if(plan&&!$('vgcFirstCase')){const c=document.createElement('section');c.id='vgcFirstCase';c.innerHTML='<div><div class="vgcCaseEyebrow">START HERE · ACTIVE SHIFT</div><div class="vgcCaseTitle">Take the patient from intake to recovery.</div><div class="vgcCaseCopy">The recommended plan is built for you. Start the operation when ready; advanced hospital systems can wait until after the first case.</div><div class="vgcSteps"><span>1 PATIENT</span><span>2 PLAN</span><span>3 OPERATE</span><span>4 RECOVER</span><span>5 REWARD</span></div></div><div class="vgcFirstActions"><button id="vgcBeginCase" class="vgcPrimary">BEGIN FIRST OPERATION</button><button id="vgcBuildPlan">BUILD / REFRESH PLAN</button></div>';plan.insertBefore(c,plan.firstChild);$('vgcBeginCase').onclick=startFirstCase;$('vgcBuildPlan').onclick=()=>{try{$('autoPlan')?.click();toast('Recommended plan ready')}catch(_){}}}
+ if(!$('vgCommercialFooter')){const f=document.createElement('div');f.id='vgCommercialFooter';f.textContent='VET GODS · OPERATING THEATRE · FICTIONAL SIMULATION · BUILD '+VERSION;shellEl.appendChild(f)}
+}
+function wire(){
+ $('vgcContinue').onclick=()=>closeBoot(shell.lastPage||'plan');
+ $('vgcNewGame').onclick=()=>{if(hasSave()&&!confirm('Start a new hospital? Existing local progress for this build will be reset.'))return;SAVE_KEYS.forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});shell={lastPage:'plan',welcomed:true};saveShell();closeBoot('plan');setTimeout(()=>{try{$('newPatient')?.click();$('autoPlan')?.click()}catch(_){};toast('New hospital started')},120)};
+ $('vgcBootSettings').onclick=openSettings;$('vgcCloseSettings').onclick=closeSettings;$('vgcReturnTitle').onclick=()=>{closeSettings();openBoot()};
+ [['vgcReduceMotion','motion'],['vgcLargeText','large'],['vgcHighContrast','contrast']].forEach(([id,key])=>{$(id).onchange=e=>{settings[key]=e.target.checked;saveSettings()}});
+ $('vgcRecoverPlan').onclick=()=>{$('vgCommercialError').hidden=true;document.body.classList.remove('blackout');go('plan')};$('vgcReload').onclick=()=>location.reload();
+ document.addEventListener('click',e=>{const p=e.target.closest('[data-page]');if(p?.dataset.page){shell.lastPage=p.dataset.page;saveShell()}},true);
+ // Commercial safety: catch uncaught UI failures and offer recovery instead of a blank screen.
+ window.addEventListener('error',e=>{if(e?.error && !String(e.error).includes('ResizeObserver')) $('vgCommercialError').hidden=false});
+ window.addEventListener('unhandledrejection',()=>{$('vgCommercialError').hidden=false});
+}
+function init(){buildChrome();wire();applySettings();const c=$('vgcContinue');if(c)c.textContent=hasSave()?'CONTINUE HOSPITAL':'ENTER HOSPITAL';openBoot()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();
+</script>
+
 </body>
 </html>
 
