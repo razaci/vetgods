@@ -1069,6 +1069,78 @@
 @media(prefers-reduced-motion:reduce),(max-width:760px) and (pointer:coarse){.vgGuideTarget{animation:none!important}*[style*="animation"]{animation-duration:.001ms!important}}
 </style>
 
+
+<style id="vg2CleanTopMenuPatch">
+/* CLEAN SCREEN PASS: no persistent battle artwork; navigation lives at top */
+#vg2Shell{
+  background:#070a0f!important;
+  background-image:none!important;
+  background-attachment:scroll!important;
+}
+#vg2Shell::before,#vg2Shell::after{display:none!important;content:none!important;background:none!important;}
+.vg2BattleHero{display:none!important;}
+.vg2Top{
+  position:sticky!important;top:0!important;z-index:9999!important;
+  background:rgba(7,10,15,.98)!important;
+  background-image:none!important;
+  border-bottom:1px solid #273445!important;
+  box-shadow:0 8px 24px #0008!important;
+  backdrop-filter:blur(12px);
+  padding:8px 10px 9px!important;
+}
+.vg2TitleRow{margin:0 auto 7px!important;max-width:1180px!important;gap:7px!important;}
+.vg2TitleRow h1{font-size:clamp(.88rem,2.5vw,1.14rem)!important;letter-spacing:.04em!important;color:#f3f7fb!important;text-shadow:none!important;}
+.vg2Hud{max-width:1180px!important;margin:0 auto 7px!important;background:#0b1119!important;background-image:none!important;border:1px solid #1d2a39!important;border-radius:10px!important;box-shadow:none!important;}
+.vg2Nav{
+  max-width:1180px!important;margin:0 auto!important;display:flex!important;
+  gap:6px!important;overflow-x:auto!important;overflow-y:hidden!important;
+  padding:2px 1px 5px!important;scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch;
+}
+.vg2Nav::-webkit-scrollbar{display:none!important;}
+.vg2Nav button{
+  flex:0 0 auto!important;min-height:38px!important;white-space:nowrap!important;
+  border:1px solid #263547!important;background:#0b121b!important;color:#dce8f4!important;
+  border-radius:9px!important;box-shadow:none!important;text-shadow:none!important;
+  padding:8px 12px!important;font-size:.78rem!important;
+}
+.vg2Nav button.active{background:#142436!important;border-color:#56b7ff!important;color:#fff!important;box-shadow:inset 0 -2px 0 #56b7ff!important;}
+.vg2Main{padding-top:10px!important;max-width:1180px!important;margin:0 auto!important;}
+/* remove battle image from generic / persistent UI surfaces */
+.vg2Mission,.vg2Card,.vg2Room,.vg2Portrait,.vg2ShiftReport{
+  background-color:#0b1017!important;background-image:none!important;
+}
+.vg2Mission::before,.vg2Card::before{display:none!important;content:none!important;background:none!important;}
+.vg2Mission{border:1px solid #243244!important;box-shadow:none!important;}
+.vg2Card{border:1px solid #202d3d!important;box-shadow:0 8px 20px #0004!important;}
+.vg2Room.current{border-color:#56b7ff!important;box-shadow:inset 0 0 0 1px #56b7ff55!important;}
+.vg2Portrait{border-color:#314459!important;box-shadow:none!important;}
+.vg2ShiftReport{border-color:#314459!important;box-shadow:none!important;}
+/* battle art stays only on active theatre/action moments */
+.vg2Theatre{
+  background-image:linear-gradient(180deg,#03060a18,#03060ae7 92%),var(--vgBattle)!important;
+  background-size:cover!important;background-position:center 46%!important;
+}
+.vg2Choice{
+  background-color:#090d13!important;
+  background-image:linear-gradient(180deg,transparent 25%,#070b11eb 75%,#06090e 100%),var(--vgBattle)!important;
+  background-size:cover!important;
+}
+/* eliminate casino/gold persistence */
+.vg2Primary,.vg2Action,.vg2Close,#vg2Launch{box-shadow:none!important;text-shadow:none!important;}
+.vg2Primary{background:#123453!important;border-color:#4eb7ff!important;color:#eef8ff!important;}
+.vg2Action{background:#101925!important;border-color:#33465d!important;color:#dce8f4!important;}
+.vg2Close{background:#191d24!important;border-color:#414c59!important;color:#e8edf2!important;}
+#vg2Launch{background:#101925!important;border:1px solid #38536e!important;color:#eef7ff!important;}
+@media(max-width:650px){
+  .vg2Top{padding:6px 7px 7px!important;}
+  .vg2TitleRow h1{font-size:.82rem!important;}
+  .vg2Hud{font-size:.69rem!important;margin-bottom:5px!important;}
+  .vg2Nav{gap:5px!important;}
+  .vg2Nav button{min-height:36px!important;padding:7px 10px!important;font-size:.72rem!important;}
+  .vg2Main{padding:7px!important;}
+}
+</style>
 </head>
   <body>
     <div class="introScreen" id="introScreen" role="dialog" aria-modal="true" aria-label="The Mind Within introduction"><div class="introPanel"><div class="introCrest"></div><div class="introSubtitle">A PSYCHOLOGICAL THRILLER INSIDE THE LIVING BODY</div><h1 class="introTitle">THE MIND WITHIN</h1><p>Awaken beneath an unknown skull. Raise living ideas, reconstruct fractured memories, read the body's alarms, and discover whether you are the healer—or another thought created by the Nursery.</p><div class="introGuardians" aria-hidden="true"><span>🧠</span><span>🐈</span><span>💭</span><span>🫀</span><span>🌙</span></div><div class="introActions"><button class="gold" id="introStart">🧠 Enter the Mind</button><button class="primary" id="introContinue">▶ Continue Descent</button><button id="introHelp">? How to Play</button></div><div class="introHow" id="introHow"><div><b>1 · Read the Body</b><small>Physical signals influence which thought-animals are born.</small></div><div><b>2 · Test the Thought</b><small>Ground, question, comfort, or compare it with evidence.</small></div><div><b>3 · Choose What Remains</b><small>Integrate, transform, remember, or release each symbolic thought-form.</small></div></div><small class="introVersion">FICTIONAL SYMBOLIC THRILLER · NOT A CLINICAL MODEL</small></div></div>
@@ -4390,7 +4462,7 @@ body{background:#05070a!important;background-image:radial-gradient(circle at 16%
 @media(prefers-reduced-motion:reduce){#vg2Shell::before{animation:none!important}.vg2Choice{transition:none!important}}
 </style>
 <button id="vg2Launch" type="button">⚕ VET GODS 2.0</button>
-<div id="vg2Shell" aria-hidden="true"><div class="vg2Top"><div class="vg2TitleRow"><h1>⚕ VET GODS · HOSPITAL COMMAND</h1><button id="vg2Perf" class="vg2Action">Performance</button><button id="vg2Close" class="vg2Close">RETURN</button></div><div id="vg2Hud" class="vg2Hud"></div><div id="vg2Nav" class="vg2Nav"></div></div><section class="vg2BattleHero" aria-hidden="true"></section><main id="vg2Main" class="vg2Main"></main></div><div id="vg2Toast" class="vg2Toast"></div>
+<div id="vg2Shell" aria-hidden="true"><div class="vg2Top"><div class="vg2TitleRow"><h1>⚕ VET GODS · HOSPITAL COMMAND</h1><button id="vg2Perf" class="vg2Action">Performance</button><button id="vg2Close" class="vg2Close">RETURN</button></div><div id="vg2Hud" class="vg2Hud"></div><div id="vg2Nav" class="vg2Nav"></div></div><main id="vg2Main" class="vg2Main"></main></div><div id="vg2Toast" class="vg2Toast"></div>
 <script id="vg2Engine">
 (()=>{'use strict';
 const $=s=>document.querySelector(s), KEY='vetGods2StateV1';
