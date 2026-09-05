@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
-    <title>Vet Gods: Operating Theatre — Logic Core 3.0</title>
+    <title>Vet Gods: Operating Theatre — Logic Core 3.1</title>
     <style>
       :root {
         --bg: #071014;
@@ -4947,6 +4947,213 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 
+
+
+<style id="vgLiveAnimalTheatreStyle">
+#vgLiveAnimalTheatre{
+  position:relative;overflow:hidden;margin:0 0 12px;padding:12px;border:1px solid #3b5963;
+  border-radius:16px;background:
+  radial-gradient(circle at 50% 10%,rgba(130,215,255,.14),transparent 34%),
+  linear-gradient(180deg,#101b20 0%,#071116 68%,#05090b 100%);
+  box-shadow:inset 0 0 38px #000a,0 10px 30px #0007
+}
+#vgLiveAnimalTheatre::before,#vgLiveAnimalTheatre::after{
+  content:"";position:absolute;top:-36px;width:42%;height:140px;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(230,250,255,.26),rgba(120,210,255,.08) 38%,transparent 70%);
+  filter:blur(2px);pointer-events:none
+}
+#vgLiveAnimalTheatre::before{left:-2%;transform:rotate(18deg)}
+#vgLiveAnimalTheatre::after{right:-2%;transform:rotate(-18deg)}
+.vgltHead{position:relative;z-index:2;display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:9px}
+.vgltHead b{font-size:.78rem;letter-spacing:.11em}.vgltHead small{font-size:.56rem;color:#94aab2}
+#vgltAlert{padding:5px 8px;border:1px solid #31515c;border-radius:999px;font-size:.57rem;font-weight:1000;letter-spacing:.08em}
+#vgltAlert.warn{border-color:#c9953f;color:#ffd98a;animation:vgltPulse 1.2s infinite}
+#vgltAlert.critical{border-color:#e85f5f;color:#ffb0b0;background:#4a101866;animation:vgltCritical .52s infinite}
+.vgltStage{position:relative;z-index:2;display:grid;grid-template-columns:1.65fr .85fr;gap:9px}
+.vgltTable{
+  position:relative;min-height:265px;border:1px solid #2c4650;border-radius:15px;overflow:hidden;
+  background:linear-gradient(180deg,#11242b,#0a161b 58%,#061014)
+}
+.vgltTable::after{content:"";position:absolute;left:8%;right:8%;bottom:28px;height:30px;border-radius:50%;background:#24363c;box-shadow:0 8px 0 #111b1f,0 14px 22px #000b}
+.vgltPatientWrap{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);width:82%;text-align:center;z-index:3}
+#vgltAnimal{
+  display:block;font-size:7.6rem;line-height:1;filter:drop-shadow(0 13px 7px #0009);
+  transform-origin:50% 70%;transition:transform .2s,filter .2s
+}
+#vgltAnimal.uneasy{animation:vgltBreath 1.8s ease-in-out infinite}
+#vgltAnimal.danger{animation:vgltShake .25s infinite;filter:drop-shadow(0 0 15px #ff5d5d) drop-shadow(0 13px 7px #0009)}
+#vgltAnimal.stable{animation:vgltBreath 2.8s ease-in-out infinite;filter:drop-shadow(0 0 10px #66e1ad66) drop-shadow(0 13px 7px #0009)}
+#vgltPatientName{display:block;margin-top:5px;font-size:1rem}
+#vgltProcedure{display:block;color:#8fa7af;font-size:.61rem;margin-top:3px}
+.vgltDrape{position:absolute;left:17%;right:17%;top:51%;height:39%;z-index:2;border-radius:20px 20px 9px 9px;background:linear-gradient(180deg,#1b4d55ee,#0b3037ee);border:1px solid #3d6d75;box-shadow:0 4px 18px #0007}
+.vgltIncision{position:absolute;left:50%;top:60%;transform:translateX(-50%);z-index:4;width:88px;height:8px;border-radius:50%;background:#5d1717;box-shadow:0 0 13px #ff454577;opacity:.35}
+.vgltPulseLine{position:absolute;left:0;right:0;bottom:0;height:38px;opacity:.7;background:
+linear-gradient(90deg,transparent 0 8%,#55de9f 8% 9%,transparent 9% 17%,#55de9f 17% 18%,transparent 18% 100%);
+background-size:130px 100%;animation:vgltLine 2.1s linear infinite}
+.vgltSide{display:grid;gap:7px}
+.vgltMeter{padding:8px;border:1px solid #29454f;border-radius:11px;background:#09151a}
+.vgltMeterTop{display:flex;justify-content:space-between;gap:6px;font-size:.58rem}.vgltMeterTop b{font-size:.68rem}
+.vgltBar{height:7px;margin-top:5px;background:#17272d;border-radius:99px;overflow:hidden}.vgltBar i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#4a94ac,#67d8a0);transition:width .25s}
+.vgltControls{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:9px}
+.vgltControls button{min-height:48px;padding:7px 5px;border-radius:10px;border:1px solid #31515c;background:#0e2027;color:#eef8fa;font-size:.61rem;font-weight:900}
+.vgltControls button.danger{border-color:#a95a4f;background:#291516}
+#vgltEvent{position:relative;z-index:2;margin-top:8px;padding:8px 9px;border-left:3px solid #4eb6d6;background:#0a171d;font-size:.62rem;color:#c4d6db}
+#vgltEvent.hot{border-left-color:#e8a24f;background:#261a0d}
+#vgltEvent.critical{border-left-color:#ef5c5c;background:#2d1115}
+@keyframes vgltBreath{50%{transform:scale(1.035) translateY(-2px)}}
+@keyframes vgltShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-2px) rotate(-.6deg)}75%{transform:translateX(2px) rotate(.6deg)}}
+@keyframes vgltPulse{50%{box-shadow:0 0 12px #d9a14a77}}
+@keyframes vgltCritical{50%{box-shadow:0 0 18px #ff424299}}
+@keyframes vgltLine{to{background-position:130px 0}}
+@media(max-width:720px){
+ .vgltStage{grid-template-columns:1fr}.vgltTable{min-height:235px}#vgltAnimal{font-size:6.6rem}
+ .vgltSide{grid-template-columns:repeat(2,1fr)}.vgltControls{grid-template-columns:repeat(2,1fr)}
+}
+@media(prefers-reduced-motion:reduce){
+ #vgltAnimal,#vgltAlert,.vgltPulseLine{animation:none!important}
+}
+</style>
+
+<script id="vgLiveAnimalTheatreScript">
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const q=s=>document.querySelector(s);
+function num(id){const t=$(id)?.textContent||'';const n=parseFloat(t.replace(/[^\d.-]/g,''));return Number.isFinite(n)?n:null}
+function build(){
+  const op=$('operate');
+  if(!op||$('vgLiveAnimalTheatre'))return;
+  const box=document.createElement('section');
+  box.id='vgLiveAnimalTheatre';
+  box.innerHTML=`
+    <div class="vgltHead">
+      <div><b>LIVE PATIENT · SURGICAL FIELD</b><br><small>The patient stays visible while you operate.</small></div>
+      <span id="vgltAlert">THEATRE READY</span>
+    </div>
+    <div class="vgltStage">
+      <div class="vgltTable">
+        <div class="vgltPatientWrap">
+          <span id="vgltAnimal">🐾</span>
+          <b id="vgltPatientName">Preparing patient…</b>
+          <small id="vgltProcedure">Awaiting procedure</small>
+        </div>
+        <div class="vgltDrape"></div>
+        <div class="vgltIncision"></div>
+        <div class="vgltPulseLine"></div>
+      </div>
+      <div class="vgltSide">
+        <div class="vgltMeter"><div class="vgltMeterTop"><span>STABILITY</span><b id="vgltStableTxt">—</b></div><div class="vgltBar"><i id="vgltStableBar"></i></div></div>
+        <div class="vgltMeter"><div class="vgltMeterTop"><span>OXYGEN</span><b id="vgltO2Txt">—</b></div><div class="vgltBar"><i id="vgltO2Bar"></i></div></div>
+        <div class="vgltMeter"><div class="vgltMeterTop"><span>BLOOD</span><b id="vgltBloodTxt">—</b></div><div class="vgltBar"><i id="vgltBloodBar"></i></div></div>
+        <div class="vgltMeter"><div class="vgltMeterTop"><span>THEATRE PRESSURE</span><b id="vgltPressureTxt">0%</b></div><div class="vgltBar"><i id="vgltPressureBar"></i></div></div>
+      </div>
+    </div>
+    <div class="vgltControls">
+      <button id="vgltOxygen">O₂ SUPPORT</button>
+      <button id="vgltDepth">BALANCE DEPTH</button>
+      <button id="vgltFluids">FLUID SUPPORT</button>
+      <button id="vgltAll" class="danger">STABILIZE ALL</button>
+    </div>
+    <div id="vgltEvent">Enter theatre and keep your eyes on the patient while making decisions.</div>`;
+  const logic=$('vgLogicSurgery');
+  if(logic)logic.insertAdjacentElement('afterend',box);
+  else op.insertBefore(box,op.firstChild);
+
+  $('vgltOxygen').onclick=()=>($('boostOxygen')||$('quickStabilize'))?.click();
+  $('vgltDepth').onclick=()=>($('balanceDepth')||$('quickStabilize'))?.click();
+  $('vgltFluids').onclick=()=>($('boostFluids')||$('quickStabilize'))?.click();
+  $('vgltAll').onclick=()=>($('stabilizeVitals')||$('quickStabilize'))?.click();
+}
+function getPatient(){
+  const api=window.VetGodsCore||window.vetGodsCore||window.VET_GODS_CORE;
+  try{
+    const st=api?.state?.()||api?.getState?.();
+    if(st?.patient)return st.patient;
+  }catch(_){}
+  const raw=$('overviewPatient')?.textContent||'';
+  const icon=(raw.match(/^[^\w\d\s]{1,4}/u)||[])[0]||$('portrait')?.textContent?.trim()||'🐾';
+  const parts=raw.split('·');
+  return {icon,name:(parts[0]||'').replace(icon,'').trim()||$('patientName')?.textContent?.trim()||'Active Patient',condition:parts.slice(1).join('·').trim()};
+}
+function update(){
+  build();
+  const animal=$('vgltAnimal'); if(!animal)return;
+  const p=getPatient();
+  const active=$('operate')?.classList.contains('active');
+  const stage=$('overviewStage')?.textContent?.trim()||'Waiting for operation';
+  const procedure=($('overviewPatient')?.textContent||'').split('·').slice(1).join('·').trim()||p.condition||stage;
+  const stable=num('overviewStable'),o2=num('overviewO2'),blood=num('overviewBlood'),hr=num('overviewHr');
+  let pressure=0;
+  if(stable!=null)pressure+=Math.max(0,70-stable)*1.2;
+  if(o2!=null)pressure+=Math.max(0,94-o2)*2.5;
+  if(blood!=null)pressure+=Math.max(0,75-blood)*1.1;
+  if(hr!=null)pressure+=Math.max(0,Math.abs(hr-95)-30)*.65;
+  pressure=Math.max(0,Math.min(100,Math.round(pressure)));
+
+  animal.textContent=p.icon||'🐾';
+  $('vgltPatientName').textContent=p.name||'Active Patient';
+  $('vgltProcedure').textContent=procedure||stage;
+  $('vgltStableTxt').textContent=stable==null?'—':Math.round(stable)+'%';
+  $('vgltO2Txt').textContent=o2==null?'—':Math.round(o2)+'%';
+  $('vgltBloodTxt').textContent=blood==null?'—':Math.round(blood)+'%';
+  $('vgltPressureTxt').textContent=pressure+'%';
+  $('vgltStableBar').style.width=(stable==null?0:Math.max(0,Math.min(100,stable)))+'%';
+  $('vgltO2Bar').style.width=(o2==null?0:Math.max(0,Math.min(100,o2)))+'%';
+  $('vgltBloodBar').style.width=(blood==null?0:Math.max(0,Math.min(100,blood)))+'%';
+  $('vgltPressureBar').style.width=pressure+'%';
+
+  animal.className=pressure>=65?'danger':pressure>=30?'uneasy':'stable';
+  const alert=$('vgltAlert'),event=$('vgltEvent');
+  alert.className='';
+  event.className='';
+  if(!active){
+    alert.textContent='AWAITING PATIENT';
+    event.textContent='Enter the operating theatre to activate the live patient field.';
+  }else if(/complete/i.test(stage)){
+    alert.textContent='PROCEDURE COMPLETE';
+    event.textContent='Surgical chain complete. Transfer the patient to monitored recovery.';
+  }else if(pressure>=65){
+    alert.textContent='CRITICAL PRESSURE'; alert.className='critical';
+    event.textContent='Patient instability is rising. Stabilize the vitals before committing to the next surgical decision.';event.className='critical';
+  }else if(pressure>=30){
+    alert.textContent='PRESSURE RISING'; alert.className='warn';
+    event.textContent='The theatre is getting tense. Watch oxygen, blood and stability while choosing the next action.';event.className='hot';
+  }else{
+    alert.textContent='PATIENT STABLE';
+    event.textContent=stage+' · Keep the patient stable while selecting the correct instrument and action.';
+  }
+}
+function intensifyEvents(){
+  const comp=$('complication');
+  if(comp?.classList.contains('show')){
+    const title=$('compTitle')?.textContent?.trim()||'Complication';
+    const txt=$('compText')?.textContent?.trim()||'Resolve the active complication.';
+    const event=$('vgltEvent'),alert=$('vgltAlert');
+    if(event){event.textContent='⚠ '+title.toUpperCase()+' · '+txt;event.className='critical'}
+    if(alert){alert.textContent='COMPLICATION ACTIVE';alert.className='critical'}
+  }
+}
+function init(){
+  build();update();
+  const root=$('operationOverview');
+  if(root){
+    const mo=new MutationObserver(()=>{update();intensifyEvents()});
+    mo.observe(root,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['class','style']});
+  }
+  const comp=$('complication');
+  if(comp){
+    const cm=new MutationObserver(()=>{update();intensifyEvents()});
+    cm.observe(comp,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+  }
+  document.addEventListener('click',e=>{
+    if(e.target.closest('#operate button,[data-vgl-tool],[data-vgl-act]'))setTimeout(()=>{update();intensifyEvents()},60);
+  });
+  console.info('[Vet Gods Live Animal Theatre] 3.1 ready');
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(init,0),{once:true});
+else setTimeout(init,0);
+})();
+</script>
 
 </body>
 </html>
