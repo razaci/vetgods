@@ -4522,5 +4522,94 @@ document.addEventListener('click',e=>{if(e.target.closest('#vg2Launch')){$('#vg2
 ensurePatients();save();
 })();
 </script>
+
+<style id="vgNoPersistentUiPatch">
+/* USER REQUEST: no persistent/floating artwork, docks, icon bars, or bottom navigation. */
+#vgCommandBar,
+#vg2Launch,
+.companionHud,
+.activePetFloat,
+.spiritFollowerBar,
+.labFollowerBar,
+.soundControl,
+.yellowMarker,
+.visualLayers,
+.thrillerVignette,
+.dominantBanner,
+.deepControlDock,
+.easyBar { display:none !important; }
+
+/* Main game navigation now belongs to the document flow at the TOP of each screen. */
+.nav,
+@media(max-width:700px){.nav} { }
+.nav{
+  position:static !important;
+  inset:auto !important;
+  left:auto !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:auto !important;
+  z-index:20 !important;
+  margin:0 0 10px !important;
+  padding:7px !important;
+  background:#0a1118 !important;
+  border:1px solid #273847 !important;
+  border-radius:12px !important;
+  box-shadow:none !important;
+  display:flex !important;
+  gap:6px !important;
+  overflow-x:auto !important;
+  overflow-y:hidden !important;
+  flex-wrap:nowrap !important;
+}
+.nav button{
+  flex:0 0 auto !important;
+  min-width:max-content !important;
+  min-height:36px !important;
+  padding:7px 10px !important;
+  font-size:.7rem !important;
+  box-shadow:none !important;
+}
+.shell{padding-bottom:14px !important;}
+
+/* 2.0 remains full-screen only when deliberately opened; no persistent decorative layers. */
+#vg2Shell::before,#vg2Shell::after{display:none !important;content:none !important;}
+.vg2BattleHero{display:none !important;}
+.vg2Main{padding-bottom:16px !important;}
+.vg2Toast{bottom:18px !important;}
+
+/* Keep transient gameplay feedback only when it is actually triggered. */
+.eventFloat,.battleEffect,.victoryFlash,.spiritRewardBurst,.petFxBurst{pointer-events:none;}
+
+@media(max-width:700px){
+  .shell{padding:8px 8px 12px !important;}
+  .nav{position:static !important;bottom:auto !important;margin:0 0 8px !important;padding:6px !important;}
+  .nav button{font-size:.68rem !important;padding:7px 9px !important;}
+}
+</style>
+<script id="vgNoPersistentUiScript">
+(()=>{
+  const removePersistent=()=>{
+    document.querySelectorAll('.companionHud,.activePetFloat,.spiritFollowerBar,.labFollowerBar,.yellowMarker,.visualLayers,.thrillerVignette,.dominantBanner,.deepControlDock,.easyBar').forEach(el=>el.remove());
+    const sound=document.getElementById('soundToggle'); if(sound) sound.remove();
+    const floatLaunch=document.getElementById('vg2Launch'); if(floatLaunch) floatLaunch.style.display='none';
+    const cmd=document.getElementById('vgCommandBar'); if(cmd) cmd.remove();
+    const nav=document.getElementById('mainAreaMenu');
+    if(nav && !document.getElementById('vg2LaunchTop')){
+      const b=document.createElement('button');
+      b.id='vg2LaunchTop'; b.type='button'; b.textContent='Vet Gods 2.0';
+      nav.appendChild(b);
+      b.addEventListener('click',()=>{
+        const shell=document.getElementById('vg2Shell');
+        if(shell){ shell.classList.add('open'); shell.setAttribute('aria-hidden','false'); }
+        try{ if(typeof render==='function') render(); }catch(_){}
+      });
+    }
+  };
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',removePersistent,{once:true}); else removePersistent();
+  setTimeout(removePersistent,300);
+  setTimeout(removePersistent,1200);
+})();
+</script>
 </body>
 </html>
