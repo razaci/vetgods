@@ -405,34 +405,183 @@ function vgPatientSignature(p){
   ].filter(Boolean).join(" · ");
 }
 
+
+const VG_TREATMENT_TIERS={
+ shock:[
+  {name:"GENTLE STABILIZE",tier:"MILD",power:16,risk:0,cost:4,desc:"A careful first step. Safe, but may need another pass."},
+  {name:"BALANCED STABILIZE",tier:"STANDARD",power:28,risk:3,cost:8,desc:"A solid stabilization push with moderate resource use."},
+  {name:"FULL TRAUMA SUPPORT",tier:"AGGRESSIVE",power:42,risk:7,cost:14,desc:"Heavy support. Fastest correction, but more resource-heavy."}
+ ],
+ bleeding:[
+  {name:"LIGHT PRESSURE CONTROL",tier:"MILD",power:18,risk:0,cost:3,desc:"Slows bleeding safely. May leave residual bleeding."},
+  {name:"HEMOSTASIS PROTOCOL",tier:"STANDARD",power:30,risk:2,cost:7,desc:"Strong bleeding control with a balanced approach."},
+  {name:"MAXIMUM BLEED CONTROL",tier:"AGGRESSIVE",power:45,risk:6,cost:13,desc:"Fast, forceful control for severe bleeding."}
+ ],
+ infection:[
+  {name:"CLEAN + SUPPORT",tier:"MILD",power:14,risk:0,cost:4,desc:"Reduces contamination and buys time."},
+  {name:"TARGETED ANTIMICROBIAL",tier:"STANDARD",power:27,risk:2,cost:9,desc:"A focused infection-control plan."},
+  {name:"FULL INFECTION PROTOCOL",tier:"AGGRESSIVE",power:40,risk:5,cost:15,desc:"Maximum infection control for difficult cases."}
+ ],
+ oxygen:[
+  {name:"LOW-FLOW OXYGEN",tier:"MILD",power:16,risk:0,cost:3,desc:"Gentle oxygen support. Safe but slower."},
+  {name:"RESPIRATORY SUPPORT",tier:"STANDARD",power:29,risk:2,cost:7,desc:"A balanced oxygen and breathing intervention."},
+  {name:"HIGH-INTENSITY OXYGEN",tier:"AGGRESSIVE",power:43,risk:6,cost:12,desc:"Rapid respiratory correction for critical patients."}
+ ],
+ pain:[
+  {name:"COMFORT DOSE",tier:"MILD",power:18,risk:0,cost:3,desc:"Takes the edge off with minimal downside."},
+  {name:"BALANCED PAIN CONTROL",tier:"STANDARD",power:30,risk:2,cost:6,desc:"Reliable pain relief for most cases."},
+  {name:"DEEP PAIN CONTROL",tier:"AGGRESSIVE",power:44,risk:5,cost:11,desc:"Stronger relief when pain is severe."}
+ ],
+ stress:[
+  {name:"QUIET CONTACT",tier:"MILD",power:18,risk:0,cost:2,desc:"Builds calm and trust gradually."},
+  {name:"CALMING PROTOCOL",tier:"STANDARD",power:30,risk:1,cost:5,desc:"A stronger calming approach with good reliability."},
+  {name:"FULL SANCTUARY RESET",tier:"AGGRESSIVE",power:44,risk:3,cost:9,desc:"Maximum calming support for highly distressed patients."}
+ ],
+ trust:[
+  {name:"SOFT REASSURANCE",tier:"MILD",power:14,risk:0,cost:1,desc:"Small trust gain with no downside."},
+  {name:"BONDING SESSION",tier:"STANDARD",power:25,risk:0,cost:3,desc:"Builds trust more meaningfully."},
+  {name:"GUARDIAN BOND",tier:"AGGRESSIVE",power:38,risk:1,cost:6,desc:"A strong relationship-building intervention."}
+ ],
+ diagnosis:[
+  {name:"QUICK RECHECK",tier:"MILD",power:16,risk:0,cost:3,desc:"Adds some certainty without slowing care."},
+  {name:"FOCUSED DIAGNOSTICS",tier:"STANDARD",power:28,risk:1,cost:7,desc:"A stronger diagnostic pass."},
+  {name:"FULL DIAGNOSTIC ARRAY",tier:"AGGRESSIVE",power:42,risk:2,cost:12,desc:"Maximum diagnostic confidence in one move."}
+ ]
+};
+
+function vgPrimaryTarget(p){
+ vgPatient(p);
+ if(p.clinical.focusTarget)return p.clinical.focusTarget;
+ let need=vgNeed(p);
+ if(!need || need==="none"){
+   if((p.clinical.confidence||0)<75)return "diagnosis";
+   if((p.stress||0)>35)return "stress";
+   return "trust";
+ }
+ return need;
+}
+
+function vgTierHand(p){
+ let target=vgPrimaryTarget(p);
+ let rows=VG_TREATMENT_TIERS[target]||VG_TREATMENT_TIERS.diagnosis;
+ return rows.map((r,i)=>({
+   id:"tier_"+target+"_"+i,
+   name:r.name,
+   rarity:i===0?"COMMON":i===1?"RARE":"EPIC",
+   tags:[target,"same-target",r.tier.toLowerCase()],
+   risk:r.risk,
+   target,
+   tier:r.tier,
+   power:r.power,
+   cost:r.cost,
+   desc:r.desc
+ }));
+}
+
+function vgResidualMessage(target,remaining,tier){
+ let label=target==="oxygen"?"oxygen deficit":target;
+ if(remaining<=18)return "That worked. The "+label+" is nearly controlled.";
+ if(tier==="MILD")return "That helped, but it was not enough. The next hand will stay on "+label+" with stronger options.";
+ if(tier==="STANDARD")return "Good progress. There is still some "+label+" left to finish.";
+ return "Strong correction. The "+label+" has been pushed down hard.";
+}
+
+function vgApplyTierCard(card,p){
+ vgPatient(p);
+ let target=card.target, power=card.power||20;
+ let before=0, after=0;
+
+ if(target==="shock"){
+   before=p.clinical.shock||0;
+   p.clinical.shock=Math.max(0,before-power);
+   p.life=Math.min(100,(p.life||60)+Math.round(power*.35));
+   after=p.clinical.shock;
+ }else if(target==="bleeding"){
+   before=p.clinical.bleeding||0;
+   p.clinical.bleeding=Math.max(0,before-power);
+   after=p.clinical.bleeding;
+ }else if(target==="infection"){
+   before=p.clinical.infection||0;
+   p.clinical.infection=Math.max(0,before-power);
+   after=p.clinical.infection;
+ }else if(target==="oxygen"){
+   before=Math.max(0,100-(p.clinical.oxygen||100));
+   p.clinical.oxygen=Math.min(100,(p.clinical.oxygen||0)+power);
+   after=Math.max(0,100-p.clinical.oxygen);
+ }else if(target==="pain"){
+   before=p.pain||0;
+   p.pain=Math.max(0,before-power);
+   after=p.pain;
+ }else if(target==="stress"){
+   before=p.stress||0;
+   p.stress=Math.max(0,before-power);
+   p.trust=Math.min(100,(p.trust||0)+Math.round(power*.2));
+   after=p.stress;
+ }else if(target==="trust"){
+   before=Math.max(0,100-(p.trust||0));
+   p.trust=Math.min(100,(p.trust||0)+power);
+   after=Math.max(0,100-p.trust);
+ }else{
+   before=Math.max(0,100-(p.clinical.confidence||0));
+   p.clinical.confidence=Math.min(100,(p.clinical.confidence||0)+power);
+   after=Math.max(0,100-p.clinical.confidence);
+ }
+
+ S.funds=Math.max(0,(S.funds||0)-(card.cost||0));
+ S.meta.streak=(S.meta.streak||0)+1;
+ S.meta.bestStreak=Math.max(S.meta.bestStreak||0,S.meta.streak);
+ S.mercy=(S.mercy||0)+(card.tier==="AGGRESSIVE"?8:card.tier==="STANDARD"?5:3);
+ S.meta.xp=(S.meta.xp||0)+(card.tier==="AGGRESSIVE"?16:card.tier==="STANDARD"?12:8);
+
+ // Aggressive options are still "correct", but can create a manageable side-effect.
+ let complicationChance=(card.risk||0)-(S.meta.upgrades||[]).includes("anesthesia")?5:0;
+ complicationChance=Math.max(0,complicationChance);
+ if(complicationChance && Math.random()*100<complicationChance){
+   p.stress=Math.min(100,(p.stress||0)+8);
+   p.history.push("Strong "+target+" treatment caused a temporary stress spike.");
+   jackpotFlash("STRONG TREATMENT · TEMPORARY STRESS");
+ }else{
+   jackpotHit(card.tier+" · "+card.name);
+ }
+
+ let msg=vgResidualMessage(target,after,card.tier);
+ p.history.push(card.name+": "+msg);
+ toast(msg);
+
+ // If residual issue remains, keep the same target locked for the next hand.
+ if(after>18){
+   p.clinical.focusTarget=target;
+ }else{
+   p.clinical.focusTarget=null;
+ }
+
+ // Level progression
+ while(S.meta.xp>=S.meta.level*100){
+   S.meta.xp-=S.meta.level*100;
+   S.meta.level++;
+   vgUnlock();
+   jackpotFlash("LEVEL "+S.meta.level+" · NEW CARD UNLOCKED");
+ }
+
+ S.meta.hand=[];
+ S.meta.handPatient=null;
+ save();
+ render();
+}
+
 function vgDraw(p){
- vgEnsure();vgPatient(p);
- let pool=vgPatientPool(p);
- if(!pool.length)pool=VG_CARD_LIBRARY.slice(0,10);
- let need=vgNeed(p),hand=[];
- function addRandom(arr){
-   let options=arr.filter(c=>!hand.includes(c));
-   if(options.length)hand.push(options[Math.floor(Math.random()*options.length)]);
- }
- addRandom(pool.filter(c=>c.tags.includes(need)));
- addRandom(pool.filter(c=>c.tags.includes("diagnosis")));
- addRandom(pool.filter(c=>c.tags.includes("divine")||c.tags.includes("wild")));
- while(hand.length<3){
-   let before=hand.length;addRandom(pool);
-   if(hand.length===before)break;
- }
- while(hand.length<3){
-   addRandom(VG_CARD_LIBRARY.filter(c=>S.meta.unlocked.includes(c.id)));
-   if(hand.length>=VG_CARD_LIBRARY.length)break;
- }
- S.meta.hand=hand.map(c=>c.id);return hand;
+ vgPatient(p);
+ let hand=vgTierHand(p);
+ S.meta.hand=hand.map(c=>c.id);
+ S.meta.handTarget=hand[0]&&hand[0].target;
+ return hand;
 }
 function vgNeed(p){
  vgPatient(p);let c=p.clinical;
  let arr=[["shock",c.shock],["infection",c.infection],["bleeding",c.bleeding],["oxygen",100-c.oxygen],["pain",p.pain],["stress",p.stress]];
  arr.sort((a,b)=>b[1]-a[1]);return arr[0][0];
 }
-function vgPlay(id){
+function vgPlayLegacy(id){
  let p=hospital();if(!p)return;vgEnsure();vgPatient(p);
  let c=vgCard(id);if(!c)return;
  let need=vgNeed(p),good=c.tags.includes(need)||c.tags.includes("life")||c.tags.includes("divine");
@@ -449,6 +598,16 @@ function vgPlay(id){
  }
  if(S.meta.xp>=S.meta.level*100){S.meta.xp-=S.meta.level*100;S.meta.level++;vgUnlock();showSplash("HOSPITAL LEVEL "+S.meta.level,"A new treatment card has entered the deck.","relic"+(S.meta.level%8),"relic")}
  vgMaybeEvent(p);vgDraw(p);save();render()
+}
+function vgPlay(id){
+ let p=hospital();
+ if(!p)return;
+ if(String(id).startsWith("tier_")){
+   let hand=vgTierHand(p);
+   let card=hand.find(c=>c.id===id);
+   if(card)return vgApplyTierCard(card,p);
+ }
+ return vgPlayLegacy(id);
 }
 function vgUnlock(){
  let locked=VG_CARD_LIBRARY.filter(c=>!S.meta.unlocked.includes(c.id));
@@ -473,15 +632,37 @@ function vgBoss(){
  S.meta.event=b.name;showSplash(b.name,b.desc,"battle"+(S.meta.bossIndex%20),"alert");S.meta.bossIndex++;save();render()
 }
 function vgDeckHTML(p){
- vgEnsure();vgPatient(p);
- let sig=(p.id||p.name)+"|"+p.currentDepartment+"|"+Math.floor(p.clinical.shock/10)+"|"+Math.floor(p.clinical.bleeding/10)+"|"+Math.floor(p.clinical.infection/10)+"|"+Math.floor(p.clinical.oxygen/10);
- if(S.meta.handPatient!==sig){S.meta.hand=[];S.meta.handPatient=sig}
- let hand=(S.meta.hand||[]).map(vgCard).filter(Boolean);if(hand.length!==3)hand=vgDraw(p);
- let need=vgNeed(p),c=p.clinical;
- return `<div class="panel"><div class="title">LIFE SPARK CARD ENGINE</div>
- <div class="clinicalGrid"><div>DIAGNOSIS<b>${c.confidence}%</b></div><div>SHOCK<b>${c.shock}%</b></div><div>BLEEDING<b>${c.bleeding}%</b></div><div>INFECTION<b>${c.infection}%</b></div><div>OXYGEN<b>${c.oxygen}%</b></div><div>STREAK<b>${S.meta.streak}</b></div></div>
- <div class="small"><b>PATIENT-SPECIFIC HAND:</b> ${vgPatientSignature(p)}</div><div class="small">Highest hidden pressure: <b>${c.confidence>=70?need.toUpperCase():"???"}</b> · These three choices come from this patient's own weighted treatment pool and reshuffle as their condition changes.</div>
- <div class="vgHand">${hand.map((x,i)=>`<button class="vgCard ${x.rarity.toLowerCase()}" data-vgcard="${x.id}" style="background-image:linear-gradient(rgba(3,8,15,.40),rgba(3,8,15,.94)),url('${HEAVY_MEDIA["card"+(((p.animalId||0)*5+i*7+(p.clinical.shock||0))%24)]}')"><span>${x.rarity}</span><strong>${x.name}</strong><small>${x.tags.join(" · ")}</small><em>RISK ${x.risk||0}%</em></button>`).join("")}</div></div>`
+ vgPatient(p);
+ let target=(p.clinical.focusTarget||vgPrimaryTarget(p));
+ let hand=vgTierHand(p);
+ S.meta.hand=hand.map(c=>c.id);
+ let targetLabel=target==="oxygen"?"OXYGEN DEFICIT":target.toUpperCase();
+ let hint=target==="diagnosis"
+  ?"All three cards improve diagnostic confidence. Pick how hard you want to push."
+  :"All three cards treat the SAME problem: "+targetLabel+". Mild is safest, Standard is balanced, Aggressive is strongest.";
+ let cards=hand.map((c,i)=>`
+  <button class="vgCard ${c.rarity.toLowerCase()}" data-vgcard="${c.id}" style="background-image:linear-gradient(rgba(2,7,16,.48),rgba(2,7,16,.94)),url('${HEAVY_MEDIA["card"+(((p.animalId||0)*5+i*7+(p.clinical.shock||0))%24)]||""}')">
+    <span class="tiny">${c.rarity} · ${c.tier}</span>
+    <strong>${c.name}</strong>
+    <span>${c.desc}</span>
+    <span class="tiny">POWER ${c.power} · COST $${c.cost} · RISK ${c.risk}%</span>
+  </button>`).join("");
+ return `
+ <section class="panel">
+  <div class="eyebrow">JACKPOT CARE · SAME-TARGET CHOICE</div>
+  <h3>${targetLabel}</h3>
+  <p>${hint}</p>
+  <div class="clinicalGrid">
+    <div><b>Diagnosis</b><br>${Math.round(p.clinical.confidence||0)}%</div>
+    <div><b>Shock</b><br>${Math.round(p.clinical.shock||0)}</div>
+    <div><b>Bleeding</b><br>${Math.round(p.clinical.bleeding||0)}</div>
+    <div><b>Infection</b><br>${Math.round(p.clinical.infection||0)}</div>
+    <div><b>Oxygen</b><br>${Math.round(p.clinical.oxygen||0)}%</div>
+    <div><b>Streak</b><br>${S.meta.streak||0}</div>
+  </div>
+  <div class="vgHand">${cards}</div>
+  <div class="tiny" style="margin-top:8px">No trap cards here. Every choice helps. The difference is how much treatment you commit right now.</div>
+ </section>`;
 }
 function vgMetaHTML(){
  vgEnsure();return `<div class="panel"><div class="title">HOSPITAL COMMAND</div><div class="clinicalGrid"><div>LEVEL<b>${S.meta.level}</b></div><div>XP<b>${S.meta.xp}/${S.meta.level*100}</b></div><div>BEST STREAK<b>${S.meta.bestStreak}</b></div><div>CARDS<b>${S.meta.unlocked.length}/${VG_CARD_LIBRARY.length}</b></div><div>UPGRADES<b>${S.meta.upgrades.length}</b></div><div>SHIFT<b>${S.meta.shift}</b></div></div>
