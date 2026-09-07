@@ -152,6 +152,26 @@ button.good{background:linear-gradient(180deg,#154538,#0b251f)!important}button.
 .vgHand{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.vgCard{height:185px!important;padding:12px!important;background-size:cover!important;background-position:center!important;border-radius:17px!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;align-items:flex-start!important;text-align:left!important}.vgCard span{font-size:9px;letter-spacing:.15em;color:#9cd9ed}.vgCard strong{font-size:15px;margin:3px 0}.vgCard small{opacity:.82}.vgCard em{font-style:normal;font-size:9px;margin-top:6px;color:#ffd3a0}.vgCard.rare{border-color:rgba(90,210,255,.6)!important}.vgCard.epic{border-color:rgba(190,115,255,.7)!important}.vgCard.divine{border-color:rgba(255,220,120,.8)!important;box-shadow:0 0 25px rgba(255,205,90,.16)!important}
 .upgradeGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:10px 0}.upgradeGrid button{min-height:78px;text-align:left}.upgradeGrid small{display:block;margin-top:5px;opacity:.72}
 @media(max-width:700px){.clinicalGrid{grid-template-columns:repeat(2,1fr)}.vgHand{grid-template-columns:1fr}.vgCard{height:145px!important}.upgradeGrid{grid-template-columns:1fr}}
+
+.treatmentStation{overflow:hidden}
+.treatHeader{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.treatHeader h3{font-size:24px;margin:3px 0}
+.treatHeader p{margin:0;opacity:.78}
+.treatReadout{font:900 34px/1 monospace;padding:12px 15px;border:1px solid rgba(255,255,255,.2);border-radius:10px;background:#07101b;min-width:62px;text-align:center}
+.treatMeter{height:18px;border-radius:20px;background:#07101b;border:1px solid rgba(255,255,255,.16);overflow:hidden;margin:15px 0 4px}
+.treatMeter i{display:block;height:100%;background:linear-gradient(90deg,#4fe1b7,#ffd86b,#ff6767);transition:width .25s ease}
+.treatScale,.treatFooter{display:flex;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:.08em;opacity:.75}
+.treatControls{display:grid;gap:8px;margin-top:14px}
+.treatControl{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:10px;width:100%;min-height:72px;text-align:left;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(90deg,#0a1824,#102538);color:#eefaff}
+.treatControl:active{transform:scale(.985)}
+.treatNumber{font:900 20px monospace;opacity:.65}
+.treatText{display:flex;flex-direction:column;gap:4px}
+.treatText b{font-size:14px}
+.treatText small{font-size:11px;opacity:.72}
+.treatStats{text-align:right;font:700 10px/1.5 monospace;opacity:.78}
+.treatFooter{margin-top:12px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.12);padding-top:9px}
+@media(max-width:560px){.treatControl{grid-template-columns:34px 1fr}.treatStats{grid-column:2;text-align:left}.treatReadout{font-size:26px}.treatHeader h3{font-size:20px}}
+
 </style></head><body><div id="msg"></div><div class="app">
 <section id="hero"><div class="heroText"><div class="logo">VET<br>GODS</div><div class="tag">500 animals. 500 sad histories. Warring space gods fighting over every Life Spark.</div><button id="enter">ENTER THE NIGHT SHIFT</button></div></section>
 <div id="game"><div id="stats" class="stats"></div><div id="nav" class="nav"></div><section id="clinic" class="screen"></section><section id="surgery" class="screen"></section><section id="recovery" class="screen"></section><section id="pets" class="screen"></section><section id="status" class="screen"></section><section id="funding" class="screen"></section></div></div>
@@ -637,31 +657,37 @@ function vgDeckHTML(p){
  let hand=vgTierHand(p);
  S.meta.hand=hand.map(c=>c.id);
  let targetLabel=target==="oxygen"?"OXYGEN DEFICIT":target.toUpperCase();
- let hint=target==="diagnosis"
-  ?"All three cards improve diagnostic confidence. Pick how hard you want to push."
-  :"All three cards treat the SAME problem: "+targetLabel+". Mild is safest, Standard is balanced, Aggressive is strongest.";
- let cards=hand.map((c,i)=>`
-  <button class="vgCard ${c.rarity.toLowerCase()}" data-vgcard="${c.id}" style="background-image:linear-gradient(rgba(2,7,16,.48),rgba(2,7,16,.94)),url('${HEAVY_MEDIA["card"+(((p.animalId||0)*5+i*7+(p.clinical.shock||0))%24)]||""}')">
-    <span class="tiny">${c.rarity} · ${c.tier}</span>
-    <strong>${c.name}</strong>
-    <span>${c.desc}</span>
-    <span class="tiny">POWER ${c.power} · COST $${c.cost} · RISK ${c.risk}%</span>
-  </button>`).join("");
+ let value=target==="shock"?p.clinical.shock:
+           target==="bleeding"?p.clinical.bleeding:
+           target==="infection"?p.clinical.infection:
+           target==="oxygen"?Math.max(0,100-p.clinical.oxygen):
+           target==="pain"?p.pain:
+           target==="stress"?p.stress:
+           target==="trust"?Math.max(0,100-p.trust):
+           Math.max(0,100-p.clinical.confidence);
+ let pct=Math.max(4,Math.min(100,Math.round(value||0)));
+ let controls=hand.map((c,i)=>`
+   <button data-vgcard="${c.id}" class="treatControl">
+     <span class="treatNumber">0${i+1}</span>
+     <span class="treatText"><b>${c.name}</b><small>${c.desc}</small></span>
+     <span class="treatStats">POWER ${c.power}<br>$${c.cost}</span>
+   </button>`).join("");
  return `
- <section class="panel">
-  <div class="eyebrow">JACKPOT CARE · SAME-TARGET CHOICE</div>
-  <h3>${targetLabel}</h3>
-  <p>${hint}</p>
-  <div class="clinicalGrid">
-    <div><b>Diagnosis</b><br>${Math.round(p.clinical.confidence||0)}%</div>
-    <div><b>Shock</b><br>${Math.round(p.clinical.shock||0)}</div>
-    <div><b>Bleeding</b><br>${Math.round(p.clinical.bleeding||0)}</div>
-    <div><b>Infection</b><br>${Math.round(p.clinical.infection||0)}</div>
-    <div><b>Oxygen</b><br>${Math.round(p.clinical.oxygen||0)}%</div>
-    <div><b>Streak</b><br>${S.meta.streak||0}</div>
-  </div>
-  <div class="vgHand">${cards}</div>
-  <div class="tiny" style="margin-top:8px">No trap cards here. Every choice helps. The difference is how much treatment you commit right now.</div>
+ <section class="panel treatmentStation">
+   <div class="eyebrow">DIRECT CARE STATION</div>
+   <div class="treatHeader">
+     <div><h3>${targetLabel}</h3><p>Choose how strongly to treat the current problem. Every control is a valid treatment.</p></div>
+     <div class="treatReadout">${Math.round(value||0)}</div>
+   </div>
+   <div class="treatMeter"><i style="width:${pct}%"></i></div>
+   <div class="treatScale"><span>STABLE</span><span>NEEDS CARE</span><span>CRITICAL</span></div>
+   <div class="treatControls">${controls}</div>
+   <div class="treatFooter">
+     <span>Patient: <b>${p.name}</b></span>
+     <span>Trust ${Math.round(p.trust||0)}</span>
+     <span>O₂ ${Math.round(p.clinical.oxygen||0)}%</span>
+     <span>Diagnosis ${Math.round(p.clinical.confidence||0)}%</span>
+   </div>
  </section>`;
 }
 function vgMetaHTML(){
