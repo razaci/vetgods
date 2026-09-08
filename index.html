@@ -891,114 +891,51 @@ button:active,.action:active{
 
 
 
-/* =========================================================
-   VET GODS · DARK CARTOON CONTRAST FIX
-   Keeps the cartoon layer; fixes dark text on dark screens.
-   ========================================================= */
-body,
-body[data-screen],
-.screen,
-.screen.active{
-  color:#f7fbff !important;
+/* VET GODS · ORIGINAL BRIGHT COLOR SCENE + CARTOON STYLE */
+body{
+ color:#173047 !important;
+ background:linear-gradient(180deg,#dff3ff 0%,#edf9ff 48%,#e8f7ef 100%) !important;
+ background-attachment:scroll !important;
 }
-
-.screen h1,
-.screen h2,
-.screen h3,
-.screen h4,
-.screen b,
-.screen strong,
-.screen .small,
-.screen p,
-.screen span,
-.screen label,
-.screen .tree-observation,
-.screen .condition-summary,
-.screen .resident-label,
-.screen .meter-label,
-.screen .meter-value,
-.screen .objective,
-.screen .memory,
-.screen .sim-event,
-.screen .relationship,
-.screen .complication,
-.screen .story-panel,
-.screen .tree-stage,
-.screen .dept-scene,
-.screen .animal-status,
-.screen .patient-card,
-.screen .ward-animal,
-.screen .animal-tile,
-.screen .animal-focus-card,
-.screen .pet-card,
-.screen .econ-card,
-.screen .case-test{
-  color:#f7fbff !important;
+.screen,.screen.active{color:#173047 !important}
+.panel,.tree-stage,.dept-scene,.story-panel,.animal-focus-card,.patient-card,
+.ward-animal,.animal-tile,.pet-card,.econ-card,.case-test,.care-outcome,.memory,.sim-event{
+ color:#173047 !important;
+ background:rgba(248,252,255,.95) !important;
+ border-color:#b9d8e5 !important;
 }
-
-.screen .panel,
-.screen .tree-stage,
-.screen .dept-scene,
-.screen .story-panel,
-.screen .animal-focus-card,
-.screen .patient-card,
-.screen .ward-animal,
-.screen .animal-tile,
-.screen .pet-card,
-.screen .econ-card{
-  background:rgba(20,28,48,.92) !important;
-  border-color:rgba(255,255,255,.18) !important;
+.small,.screen .small,.meter-label,.condition-summary{color:#52677d !important}
+h1,h2,h3,h4,.screen h1,.screen h2,.screen h3,.screen h4,b,strong,label,
+.resident-label,.tree-observation,.objective,.relationship,.complication{color:#173047 !important}
+.chip,.sim-chip,.chapter-pill,.animal-status{
+ color:#244057 !important;background:#edf7fb !important;border-color:#c4dfe9 !important;
 }
-
-.screen .small{
-  color:#d6e6f7 !important;
+input,select,textarea{
+ color:#173047 !important;background:#fff !important;border-color:#b7d1dc !important;
 }
-
-.screen .chip{
-  color:#ffffff !important;
-  background:rgba(255,255,255,.10) !important;
-  border-color:rgba(255,255,255,.16) !important;
+.meter{background:#dceaf0 !important}
+button,.action,.nav button{
+ color:#173047 !important;text-shadow:none !important;
+ background:linear-gradient(180deg,#fff,#dff1f8) !important;border-color:#9fc7d7 !important;
 }
-
-.screen button,
-.screen .action,
-.nav button{
-  color:#ffffff !important;
-  text-shadow:0 1px 1px rgba(0,0,0,.35);
+.action.green{
+ color:#153b2a !important;background:linear-gradient(180deg,#dff8e9,#bfe8cf) !important;border-color:#82c7a0 !important;
 }
-
-.screen button:not(.green):not(.gold):not(.red),
-.screen .action:not(.green):not(.gold):not(.red){
-  background:linear-gradient(180deg,#536b95,#314564) !important;
-  border-color:#7890b8 !important;
+.action.gold{
+ color:#543c12 !important;background:linear-gradient(180deg,#fff6d8,#f2d98f) !important;border-color:#d7b95d !important;
 }
-
-.screen .action.green{
-  background:linear-gradient(180deg,#3da46c,#267248) !important;
+.action.red{
+ color:#612b32 !important;background:linear-gradient(180deg,#ffe8e8,#f3bfc4) !important;border-color:#d68e96 !important;
 }
-.screen .action.gold{
-  background:linear-gradient(180deg,#d39a34,#8e641c) !important;
+.nav{background:rgba(244,251,255,.96) !important;border-color:#b9d8e5 !important}
+.nav button.active{
+ color:#123b54 !important;background:linear-gradient(180deg,#dff5ff,#bfe8f7) !important;border-color:#76bad3 !important;
 }
-.screen .action.red{
-  background:linear-gradient(180deg,#c85b64,#82383e) !important;
+.dept-scene{
+ background:linear-gradient(180deg,rgba(222,244,255,.96),rgba(239,250,246,.96)) !important;
 }
-
-.screen input,
-.screen select,
-.screen textarea{
-  color:#f7fbff !important;
-  background:#1b2638 !important;
-  border-color:#52657f !important;
-}
-
-.screen .meter{
-  background:rgba(255,255,255,.12) !important;
-}
-
-/* Keep light image areas from being dimmed by inherited text effects */
-.screen img{
-  filter:none !important;
-}
+body::before,body::after,.screen::before,.screen::after{opacity:.18 !important;pointer-events:none !important}
+img{filter:none !important}
 
 </style>
 </head>
