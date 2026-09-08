@@ -608,6 +608,96 @@ body::before,body::after,.screen::before,.screen::after{pointer-events:none !imp
   .game-menu{width:88vw}
 }
 
+
+/* VET GODS · ALWAYS-VISIBLE QUICK LINKS */
+.quick-links{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 10px 8px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.quick-links::-webkit-scrollbar{display:none}
+.quick-links button{
+  flex:0 0 auto;
+  min-height:34px;
+  padding:7px 12px;
+  border-radius:999px;
+  font-size:.82rem;
+  font-weight:800;
+  background:#ffffff;
+  color:#203040;
+  border:1px solid #c4d5dc;
+  box-shadow:0 2px 7px rgba(20,40,60,.08);
+}
+.quick-links button.active{
+  background:#dceff6;
+  border-color:#9fc8d8;
+  color:#173e51;
+}
+@media(max-width:520px){
+  .quick-links{
+    gap:6px;
+    padding:0 8px 7px;
+  }
+  .quick-links button{
+    min-height:32px;
+    padding:6px 10px;
+    font-size:.78rem;
+  }
+}
+
+
+/* =========================================================
+   VET GODS · 500 ANIMAL DATABASE UI
+   ========================================================= */
+.vg-db-toolbar{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.vg-db-toolbar input,.vg-db-toolbar select{
+  min-height:42px;border-radius:10px;border:1px solid #c7d6dc;background:#fff;color:#203040;padding:8px 10px;
+}
+.vg-db-grid{display:grid;gap:10px}
+.vg-db-card{
+  background:#fff;border:1px solid #d6e0e4;border-radius:14px;padding:12px;box-shadow:0 3px 10px rgba(20,40,60,.06)
+}
+.vg-db-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:6px}
+.vg-sev{font-size:.75rem;font-weight:800;padding:5px 8px;border:1px solid #ccd9de;border-radius:999px;white-space:nowrap}
+.vg-problem-list{display:grid;gap:7px;margin:9px 0}
+.vg-problem{border-left:3px solid #aac5d0;background:#f7fafb;border-radius:9px;padding:8px 9px}
+.vg-problem-title{font-weight:800;margin-bottom:3px}
+.vg-amazon{
+  display:inline-block;margin-top:5px;font-size:.78rem;font-weight:800;text-decoration:none;
+  color:#245a73;background:#eef6f9;border:1px solid #c7dce5;border-radius:8px;padding:5px 7px
+}
+.vg-db-pager{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:12px}
+.vg-db-pager button{min-height:36px;border-radius:9px;padding:6px 10px}
+.vg-case-plan{margin-top:10px}
+@media(max-width:520px){
+  .vg-db-toolbar{grid-template-columns:1fr}
+  .vg-db-head{align-items:flex-start}
+  .vg-db-pager{display:grid;grid-template-columns:1fr auto 1fr}
+  .vg-db-pager button{padding:6px}
+}
+
+
+/* VET GODS · DYNAMIC CARE PATH UI */
+.vg-dynamic-care{margin-top:10px}
+.vg-dynamic-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.vg-stage-pill{
+  flex:0 0 auto;font-size:.72rem;font-weight:900;letter-spacing:.06em;
+  padding:5px 8px;border-radius:999px;border:1px solid #c7d6dc;background:#f6fafb;color:#274554;
+}
+.vg-dynamic-buttons{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px;
+}
+.vg-dynamic-buttons .action{min-height:46px}
+.vg-reveal-box{
+  margin-top:8px;padding:9px 10px;border-radius:10px;border:1px solid #cbdce3;background:#f7fbfc;
+}
+@media(max-width:520px){
+  .vg-dynamic-buttons{grid-template-columns:1fr 1fr}
+}
+
 </style>
 </head>
 <body>
@@ -628,6 +718,13 @@ body::before,body::after,.screen::before,.screen::after{pointer-events:none !imp
 <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="gameMenu">
   ☰ <span>MENU</span>
 </button>
+<div class="quick-links" aria-label="Quick areas">
+  <button type="button" data-screen="clinic">Clinic</button>
+  <button type="button" data-screen="admit">Admit Animal</button>
+  <button type="button" data-screen="pets">My Pets</button>
+  <button type="button" data-screen="reception">Reception</button>
+</div>
+
 <div id="menuBackdrop" class="menu-backdrop" aria-hidden="true"></div>
 <div id="gameMenu" class="game-menu" aria-hidden="true">
   <div class="game-menu-head">
@@ -2577,6 +2674,7 @@ function render(){
 
     document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
     document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.screen===state.screen));
+    document.querySelectorAll(".quick-links button").forEach(b=>b.classList.toggle("active",b.dataset.screen===state.screen));
 
     const target=document.getElementById(state.screen)||document.getElementById("clinic");
     if(target)target.classList.add("active");
@@ -2658,6 +2756,725 @@ document.querySelectorAll("[data-screen]").forEach(b=>{
 });
 document.addEventListener("keydown",ev=>{if(ev.key==="Escape")setGameMenu(false);});
 
+
+
+/* =========================================================
+   VET GODS · 500 ANIMAL CASE DATABASE
+   Each case has a distinct identity, problem mix, care plan,
+   adoption chance, and product-search helpers.
+   ========================================================= */
+
+const VG_SPECIES = [
+  "Dog","Cat","Rabbit","Guinea Pig","Hamster","Ferret","Goat","Sheep","Pig","Mini Horse",
+  "Chicken","Duck","Parrot","Cockatiel","Tortoise","Bearded Dragon","Gecko","Chinchilla","Rat","Mouse"
+];
+
+const VG_BREEDS = {
+  "Dog":["Mixed Breed","Labrador","German Shepherd","Beagle","Border Collie","Boxer","Greyhound","Terrier","Husky","Spaniel"],
+  "Cat":["Domestic Shorthair","Domestic Longhair","Maine Coon","Siamese","Tabby","Tuxedo","Calico","Russian Blue","Bengal","Ragdoll"],
+  "Rabbit":["Holland Lop","Mini Rex","Lionhead","Dutch","Flemish Giant","English Spot"],
+  "Guinea Pig":["American","Abyssinian","Peruvian","Teddy"],
+  "Hamster":["Syrian","Dwarf","Roborovski"],
+  "Ferret":["Sable","Albino","Silver"],
+  "Goat":["Nigerian Dwarf","Pygmy","Boer"],
+  "Sheep":["Miniature","Dorset","Suffolk"],
+  "Pig":["Pot-Bellied","Mini Pig","Kunekune"],
+  "Mini Horse":["Miniature Horse","Pony Cross"],
+  "Chicken":["Silkie","Leghorn","Plymouth Rock"],
+  "Duck":["Pekin","Runner","Mallard Cross"],
+  "Parrot":["African Grey","Amazon","Conure"],
+  "Cockatiel":["Normal Grey","Pearl","Pied"],
+  "Tortoise":["Russian","Greek","Sulcata"],
+  "Bearded Dragon":["Central Bearded Dragon","Fancy"],
+  "Gecko":["Leopard Gecko","Crested Gecko"],
+  "Chinchilla":["Standard Grey","Mosaic"],
+  "Rat":["Fancy Rat","Dumbo Rat"],
+  "Mouse":["Fancy Mouse","Satin"]
+};
+
+const VG_NAMES = [
+  "Atlas","Koda","Luna","Max","Bella","Charlie","Milo","Zoe","Rocky","Daisy","Coco","Nala","Leo","Ollie","Ruby","Eve","Willow","Scout","Honey","Pepper",
+  "Shadow","Blue","Kiwi","Jasper","Maple","Oliver","Stella","Baxter","Hazel","Finn","Rosie","Bandit","Ivy","Snickers","Mocha","Biscuit","Sky","River","Ash","Ember",
+  "Storm","Clover","Gidget","Diesel","Poppy","Bruno","Sage","Rocco","Misty","Copper","Snow","Ace","Autumn","Phoenix","Whisper","Sunny","Tango","Angel","Hero",
+  "Bean","Peach","Miso","Pip","Luma","Echo","Moth","Nibbles","Rune","Nova","Comet","Orbit","Dew","Mango","Toby","Remy","Waffles","Otis","Mabel","Juniper",
+  "Indigo","Marble","Cosmo","Dash","Fable","Noodle","Pico","Tilly","Gizmo","Mochi","Bunny","Sparrow","Cricket","Pebble","Panda","Toast","Pudding","Freckles","Suki","Rex"
+];
+
+const VG_PROBLEMS = [
+  {key:"dehydration",name:"Dehydration",severity:2,solution:"Offer fresh water, monitor intake, and seek veterinary care if weakness, vomiting, or poor intake continues.",search:"pet hydration bowl oral syringe veterinary"},
+  {key:"minor_wound",name:"Minor skin wound",severity:2,solution:"Keep the area clean and prevent licking; have a veterinarian assess deep, infected, or painful wounds.",search:"pet wound care cone gauze non stick pads"},
+  {key:"itching",name:"Itchy skin / scratching",severity:2,solution:"Check for fleas, skin irritation, and allergies with a veterinarian; keep bedding clean and use species-appropriate grooming supplies.",search:"pet grooming brush flea comb hypoallergenic pet shampoo"},
+  {key:"ear_irritation",name:"Ear irritation",severity:2,solution:"Keep ears dry and have a veterinarian check for infection, mites, or foreign material before using medicated products.",search:"pet ear cleaning wipes veterinary"},
+  {key:"anxiety",name:"Fear / anxiety",severity:1,solution:"Reduce noise, provide a safe hiding area, and use calm predictable handling.",search:"pet calming bed hiding house pheromone diffuser"},
+  {key:"loneliness",name:"Loneliness / isolation stress",severity:1,solution:"Increase safe companionship, enrichment, and predictable social contact appropriate to the species.",search:"pet enrichment toys snuffle mat hideout"},
+  {key:"poor_appetite",name:"Poor appetite",severity:3,solution:"Track eating closely and arrange veterinary evaluation if appetite is reduced or absent, especially with lethargy or weight loss.",search:"pet feeding bowl recovery food mat"},
+  {key:"mobility",name:"Mobility weakness",severity:3,solution:"Limit slippery surfaces and strenuous activity; veterinary assessment is important for pain, injury, or neurologic causes.",search:"pet non slip mat support harness orthopedic bed"},
+  {key:"joint_stiffness",name:"Joint stiffness",severity:2,solution:"Use soft bedding and non-slip flooring; ask a veterinarian about the cause and an appropriate mobility plan.",search:"orthopedic pet bed non slip pet mat ramp"},
+  {key:"dental",name:"Dental discomfort",severity:3,solution:"A veterinarian should examine painful teeth, broken teeth, swelling, or eating difficulty. Use gentle species-appropriate dental care only when advised.",search:"pet toothbrush dental wipes veterinary"},
+  {key:"eye_irritation",name:"Eye irritation",severity:3,solution:"Eye pain, squinting, cloudiness, discharge, or injury needs prompt veterinary evaluation. Avoid medicated eye drops unless prescribed.",search:"pet eye wash sterile saline veterinary"},
+  {key:"respiratory",name:"Breathing / respiratory concern",severity:4,solution:"Breathing difficulty can be urgent. Keep the animal calm and seek veterinary care promptly rather than relying on home products.",search:"pet carrier soft blanket digital thermometer"},
+  {key:"digestive",name:"Digestive upset",severity:3,solution:"Monitor stool, hydration, and appetite; repeated vomiting, diarrhea, blood, bloating, or weakness needs veterinary care.",search:"pet slow feeder washable feeding mat water bowl"},
+  {key:"parasites",name:"Possible external parasites",severity:2,solution:"Use a flea comb and veterinary guidance to identify the parasite; treatment must be species- and weight-appropriate.",search:"pet flea comb tick remover grooming"},
+  {key:"overgrown_nails",name:"Overgrown nails",severity:1,solution:"Trim carefully with species-appropriate tools, avoiding the quick; a groomer or veterinarian can help if nails are curled or painful.",search:"pet nail clippers styptic powder grinder"},
+  {key:"matted_fur",name:"Matted fur",severity:1,solution:"Use gentle grooming and avoid pulling close to skin; severe mats may need professional clipping.",search:"pet dematting comb grooming brush"},
+  {key:"cold_stress",name:"Cold stress",severity:2,solution:"Move to a warm dry environment and warm gradually. Severe lethargy or abnormal breathing needs veterinary care.",search:"pet warming pad microwave heat disc fleece blanket"},
+  {key:"heat_stress",name:"Heat stress risk",severity:4,solution:"Move to a cool area and seek veterinary help for panting, weakness, collapse, or altered behavior. Do not use ice-cold immersion.",search:"pet cooling mat travel water bowl shade cover"},
+  {key:"weight_loss",name:"Unexplained weight loss",severity:3,solution:"Track weight and food intake and arrange veterinary evaluation to find the underlying cause.",search:"pet digital scale feeding bowl measuring scoop"},
+  {key:"obesity",name:"Weight management need",severity:2,solution:"Use measured meals and species-appropriate activity; a veterinarian can set a safe target weight and feeding plan.",search:"pet food measuring scoop puzzle feeder slow feeder"},
+  {key:"dirty_bedding",name:"Soiled bedding / habitat",severity:1,solution:"Replace wet or dirty bedding, clean food and water containers, and keep the resting area dry.",search:"washable pet bedding cage liner pet safe cleaning"},
+  {key:"boredom",name:"Low enrichment / boredom",severity:1,solution:"Add safe species-appropriate exploration, chew, forage, climbing, or play opportunities.",search:"pet enrichment toys forage mat chew toys tunnel"},
+  {key:"paw_irritation",name:"Paw / foot irritation",severity:2,solution:"Check for debris, redness, swelling, burns, or broken nails; persistent pain or limping needs veterinary care.",search:"pet paw wipes booties non slip mat"},
+  {key:"post_surgery",name:"Post-procedure recovery",severity:3,solution:"Follow the veterinarian's discharge instructions, restrict activity as directed, and monitor the incision and appetite.",search:"pet recovery suit cone crate orthopedic bed"},
+  {key:"senior_care",name:"Senior comfort needs",severity:2,solution:"Provide easy access to food, water, bedding, and litter/toileting areas; schedule regular veterinary checks.",search:"senior pet ramp orthopedic bed elevated bowl"},
+  {key:"vision_loss",name:"Reduced vision",severity:2,solution:"Keep furniture layout consistent, block hazards, and use scent/touch cues; veterinary examination can identify treatable causes.",search:"pet safety gate textured mat night light"},
+  {key:"hearing_loss",name:"Reduced hearing",severity:1,solution:"Use visual or vibration cues and avoid startling the animal; keep routines predictable.",search:"pet vibration tag safety light training clicker"},
+  {key:"recovery_rest",name:"Needs protected rest",severity:1,solution:"Provide a quiet low-traffic resting place with soft bedding and easy access to water.",search:"pet crate cover orthopedic bed soft blanket"},
+  {key:"stress_eating",name:"Stress-related eating changes",severity:2,solution:"Use a calm feeding area and predictable schedule; persistent refusal to eat needs veterinary evaluation.",search:"pet lick mat slow feeder quiet feeding bowl"},
+  {key:"skin_dryness",name:"Dry skin / coat",severity:1,solution:"Improve grooming and humidity as appropriate and have persistent flaking, sores, or hair loss evaluated.",search:"pet grooming brush humidifier pet shampoo hypoallergenic"}
+];
+
+function vgHash(i,a,b){ return (i*37 + a*17 + b*11) % 9973; }
+function vgPick(arr,i,salt){ return arr[(vgHash(i,salt,arr.length)) % arr.length]; }
+function vgAmazonSearch(q){
+  return "https://www.amazon.com/s?k="+encodeURIComponent(q);
+}
+function vgEscape(s){
+  return String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+}
+function vgProblemCombo(i){
+  const one=VG_PROBLEMS[i % VG_PROBLEMS.length];
+  let two=VG_PROBLEMS[(i*7+11)%VG_PROBLEMS.length];
+  let three=VG_PROBLEMS[(i*13+5)%VG_PROBLEMS.length];
+  if(two.key===one.key)two=VG_PROBLEMS[(i*7+12)%VG_PROBLEMS.length];
+  if(three.key===one.key||three.key===two.key)three=VG_PROBLEMS[(i*13+7)%VG_PROBLEMS.length];
+  const count=1+(i%3);
+  return [one,two,three].slice(0,count);
+}
+function vgMakeDatabaseAnimal(i){
+  const species=VG_SPECIES[i%VG_SPECIES.length];
+  const breed=vgPick(VG_BREEDS[species]||["Mixed"],i,3);
+  const name=VG_NAMES[i%VG_NAMES.length] + (i>=VG_NAMES.length ? " "+(Math.floor(i/VG_NAMES.length)+1) : "");
+  const problems=vgProblemCombo(i);
+  const maxSeverity=Math.max(...problems.map(p=>p.severity));
+  const adoptChance=(i*19+27)%100;
+  const disposition=adoptChance<58?"Eligible for My Pets after recovery":adoptChance<80?"Sanctuary / foster candidate":"Return-home / release candidate";
+  return {
+    dbId:"VG"+String(i+1).padStart(3,"0"),
+    name,
+    species,
+    breed,
+    ageLabel:["Young","Adult","Adult","Senior"][i%4],
+    sex:i%2?"Female":"Male",
+    problems,
+    disposition,
+    canBecomePet:adoptChance<58,
+    personality:["gentle","shy","curious","watchful","playful","quiet","brave","cautious","social","independent"][i%10],
+    backstory:[
+      "Found waiting near an empty house after a family moved away.",
+      "Arrived from a crowded shelter transfer with little history.",
+      "Brought in after being found cold and alone near a roadside.",
+      "Surrendered with an old blanket and a handwritten note.",
+      "Rescued after several days hiding beneath a porch.",
+      "Transferred after an evacuation separated the animal from its records.",
+      "Found wandering near a closed store and brought to safety.",
+      "Came from a foster home that could no longer provide medical care.",
+      "Recovered by an animal-control team after a storm.",
+      "Brought in by a neighbor who had been leaving food outside."
+    ][i%10],
+    maxSeverity
+  };
+}
+const VG_ANIMAL_DATABASE = Array.from({length:500},(_,i)=>vgMakeDatabaseAnimal(i));
+
+function vgDatabaseAnimalToPatient(db){
+  const idx=parseInt(db.dbId.slice(2),10)-1;
+  const p=makePatient(state.nextCase++);
+  p.name=db.name;
+  p.species=db.species;
+  p.breed=db.breed;
+  p.condition=db.problems.map(x=>x.name).join(" + ");
+  p.department="Clinic";
+  p.location="Clinic";
+  p.admitted=true;
+  p.dbId=db.dbId;
+  p.dbProblems=db.problems.map(x=>x.key);
+  p.canBecomePet=db.canBecomePet;
+  p.disposition=db.disposition;
+  p.personality=db.personality;
+  p.backstory=db.backstory;
+  p.image=THUMBS[idx%THUMBS.length];
+
+  const sev=db.maxSeverity;
+  p.pain=Math.min(90,24+sev*12+(idx%13));
+  p.stress=Math.min(95,34+sev*9+(idx%17));
+  p.shock=sev>=4?40:Math.max(5,sev*7);
+  p.bleeding=db.problems.some(x=>x.key==="minor_wound")?30:8;
+  p.infection=db.problems.some(x=>["minor_wound","dental","ear_irritation"].includes(x.key))?24:7;
+  p.oxygen=db.problems.some(x=>x.key==="respiratory")?78:96;
+  p.hydration=db.problems.some(x=>x.key==="dehydration")?45:72;
+  if(typeof ensureTree==="function"){
+    const t=ensureTree(p);
+    t.hydration=p.hydration||65;
+    t.fear=Math.min(90,p.stress||50);
+    t.trust=20+(idx%25);
+    t.loneliness=35+(idx%40);
+    t.comfort=35+(idx%25);
+    t.mobility=db.problems.some(x=>x.key==="mobility"||x.key==="joint_stiffness")?42:72;
+    t.appetite=db.problems.some(x=>x.key==="poor_appetite")?38:68;
+  }
+  if(typeof ensureLongPatient==="function")ensureLongPatient(p);
+  if(typeof ensureFlow==="function")ensureFlow(p);
+  return p;
+}
+
+function admitDatabaseAnimal(dbId){
+  const db=VG_ANIMAL_DATABASE.find(x=>x.dbId===dbId);
+  if(!db)return;
+  if(state.patients.some(p=>p.admitted&&p.dbId===dbId)){
+    const existing=state.patients.find(p=>p.admitted&&p.dbId===dbId);
+    state.activeId=existing.id;
+    state.screen="clinic";
+    render();
+    return;
+  }
+  const p=vgDatabaseAnimalToPatient(db);
+  state.patients.push(p);
+  state.activeId=p.id;
+  state.screen="clinic";
+  addLog(`${p.name} admitted from the 500-animal database`);
+  if(typeof saveGame==="function")try{saveGame("Animal admitted",true)}catch(e){}
+  render();
+}
+
+function vgProblemCard(pr){
+  const serious=pr.severity>=3;
+  return `<div class="vg-problem">
+    <div class="vg-problem-title">${serious?"⚠️":"🐾"} ${vgEscape(pr.name)}</div>
+    <div class="small">${vgEscape(pr.solution)}</div>
+    <a class="vg-amazon" href="${vgAmazonSearch(pr.search)}" target="_blank" rel="noopener noreferrer">Search Amazon for supplies ↗</a>
+  </div>`;
+}
+
+function vgAnimalDatabaseCard(a){
+  return `<div class="vg-db-card">
+    <div class="vg-db-head">
+      <div>
+        <b>${vgEscape(a.name)}</b>
+        <div class="small">${a.dbId} · ${vgEscape(a.species)} · ${vgEscape(a.breed)} · ${a.ageLabel}</div>
+      </div>
+      <span class="vg-sev">Level ${a.maxSeverity}</span>
+    </div>
+    <div class="small"><b>Personality:</b> ${vgEscape(a.personality)} · <b>Outcome:</b> ${vgEscape(a.disposition)}</div>
+    <div class="vg-problem-list">${a.problems.map(vgProblemCard).join("")}</div>
+    <button class="action green" onclick="admitDatabaseAnimal('${a.dbId}')">Admit ${vgEscape(a.name)}</button>
+  </div>`;
+}
+
+let VG_DB_PAGE=0;
+let VG_DB_FILTER="";
+let VG_DB_SPECIES="All";
+
+function vgRenderDatabaseBrowser(){
+  const el=document.getElementById("vgAnimalDatabase");
+  if(!el)return;
+  const q=(VG_DB_FILTER||"").trim().toLowerCase();
+  let rows=VG_ANIMAL_DATABASE.filter(a=>{
+    const hay=[a.name,a.dbId,a.species,a.breed,...a.problems.map(p=>p.name)].join(" ").toLowerCase();
+    return (!q||hay.includes(q)) && (VG_DB_SPECIES==="All"||a.species===VG_DB_SPECIES);
+  });
+  const pageSize=10, pages=Math.max(1,Math.ceil(rows.length/pageSize));
+  VG_DB_PAGE=Math.min(Math.max(0,VG_DB_PAGE),pages-1);
+  const page=rows.slice(VG_DB_PAGE*pageSize,(VG_DB_PAGE+1)*pageSize);
+
+  el.innerHTML=`
+    <div class="vg-db-toolbar">
+      <input id="vgDbSearch" value="${vgEscape(VG_DB_FILTER)}" placeholder="Search name, species, problem…" oninput="VG_DB_FILTER=this.value;VG_DB_PAGE=0;vgRenderDatabaseBrowser()">
+      <select onchange="VG_DB_SPECIES=this.value;VG_DB_PAGE=0;vgRenderDatabaseBrowser()">
+        <option ${VG_DB_SPECIES==="All"?"selected":""}>All</option>
+        ${VG_SPECIES.map(s=>`<option ${VG_DB_SPECIES===s?"selected":""}>${s}</option>`).join("")}
+      </select>
+    </div>
+    <div class="small" style="margin:7px 0">${rows.length} matching animals · showing ${page.length} at a time</div>
+    <div class="vg-db-grid">${page.map(vgAnimalDatabaseCard).join("")}</div>
+    <div class="vg-db-pager">
+      <button onclick="VG_DB_PAGE=Math.max(0,VG_DB_PAGE-1);vgRenderDatabaseBrowser()">← Previous</button>
+      <b>Page ${VG_DB_PAGE+1} / ${pages}</b>
+      <button onclick="VG_DB_PAGE=Math.min(${pages-1},VG_DB_PAGE+1);vgRenderDatabaseBrowser()">Next →</button>
+    </div>`;
+}
+
+/* Patch the Admit screen to include the searchable 500-animal database. */
+const _vgOriginalRenderAdmit = typeof renderAdmit==="function" ? renderAdmit : null;
+renderAdmit=function(){
+  const el=document.getElementById("admit");
+  if(!el)return;
+  el.innerHTML=`
+    <div class="panel">
+      <h2>🐾 Admit Animal</h2>
+      <p class="small">Choose from 500 distinct animal cases. Each animal has its own problem mix, care notes, likely outcome, and supply-search links.</p>
+      <div class="small"><b>Important:</b> Product links are for finding general care supplies. Serious or worsening symptoms still need a veterinarian.</div>
+    </div>
+    <div class="panel" id="vgAnimalDatabase"></div>`;
+  vgRenderDatabaseBrowser();
+};
+
+
+/* =========================================================
+   VET GODS · DYNAMIC CARE PATHS
+   Preserves the existing click-through play style while
+   customizing discovery, treatment, and recovery per animal.
+   ========================================================= */
+
+const VG_SPECIES_GROUP = {
+  Dog:"canine", Cat:"feline",
+  Rabbit:"small_mammal", "Guinea Pig":"small_mammal", Hamster:"small_mammal",
+  Ferret:"small_mammal", Chinchilla:"small_mammal", Rat:"small_mammal", Mouse:"small_mammal",
+  Parrot:"bird", Cockatiel:"bird", Chicken:"bird", Duck:"bird",
+  Tortoise:"reptile", "Bearded Dragon":"reptile", Gecko:"reptile",
+  Goat:"farm", Sheep:"farm", Pig:"farm", "Mini Horse":"farm"
+};
+
+const VG_CARE_GROUPS = {
+  canine:{
+    discovery:["Watch Movement","Approach Slowly","Check Breathing","Inspect Paws","Feel for Tenderness","Listen to Chest"],
+    treatment:["Calm Handling","Clean Affected Area","Pain Support","Hydration Support","Soft Bedding","Short Leash Walk"],
+    recovery:["Quiet Rest","Offer Food","Fresh Water","Gentle Walk","Stay Nearby","Recheck Comfort"]
+  },
+  feline:{
+    discovery:["Watch From Distance","Check Posture","Listen to Breathing","Inspect Eyes","Feel Abdomen","Check Coat"],
+    treatment:["Low-Stress Handling","Warm Bedding","Hydration Support","Pain Support","Quiet Feeding","Reduce Stimulation"],
+    recovery:["Quiet Rest","Offer Food","Fresh Water","Hide Box","Stay Nearby","Recheck Appetite"]
+  },
+  small_mammal:{
+    discovery:["Watch Eating","Check Droppings","Inspect Teeth","Feel Abdomen","Check Hydration","Watch Breathing"],
+    treatment:["Warm Enclosure","Fresh Hay / Food","Hydration Support","Soft Bedding","Reduce Handling","Comfort Support"],
+    recovery:["Quiet Rest","Offer Food","Fresh Water","Warm Nest","Gentle Check","Recheck Droppings"]
+  },
+  bird:{
+    discovery:["Observe Perching","Watch Breathing","Inspect Feathers","Check Feet","Check Droppings","Listen Quietly"],
+    treatment:["Warm Enclosure","Reduce Stress","Hydration Support","Perch Support","Quiet Feeding","Gentle Monitoring"],
+    recovery:["Quiet Rest","Offer Food","Fresh Water","Warm Perch","Low Noise","Recheck Breathing"]
+  },
+  reptile:{
+    discovery:["Check Heat Zone","Observe Activity","Inspect Skin","Check Eyes","Check Hydration","Watch Breathing"],
+    treatment:["Adjust Heat","Hydration Support","Habitat Cleaning","UVB Check","Quiet Handling","Feeding Trial"],
+    recovery:["Warm Rest","Fresh Water","Habitat Check","Feeding Trial","Minimal Handling","Recheck Activity"]
+  },
+  farm:{
+    discovery:["Observe Standing","Watch Gait","Check Breathing","Inspect Feet","Check Hydration","Listen to Gut"],
+    treatment:["Rest Stall","Fresh Water","Pain Support","Clean Bedding","Feed Support","Movement Support"],
+    recovery:["Quiet Rest","Offer Feed","Fresh Water","Short Walk","Clean Bedding","Recheck Mobility"]
+  }
+};
+
+const VG_PROBLEM_PATHS = {
+  dehydration:{
+    discover:["Check Gums / Moisture","Check Water Interest","Watch Skin Elasticity"],
+    treat:["Hydration Support","Offer Fresh Water","Monitor Intake"],
+    recover:["Fresh Water","Recheck Hydration","Offer Food"]
+  },
+  minor_wound:{
+    discover:["Inspect Wound","Check Bleeding","Check Tenderness"],
+    treat:["Clean Wound","Protect Area","Pain Support"],
+    recover:["Quiet Rest","Inspect Healing","Gentle Movement"]
+  },
+  itching:{
+    discover:["Inspect Skin","Check Coat","Look for Parasites"],
+    treat:["Gentle Grooming","Clean Bedding","Reduce Irritation"],
+    recover:["Brush Coat","Fresh Bedding","Recheck Skin"]
+  },
+  ear_irritation:{
+    discover:["Inspect Ear","Watch Head Shaking","Check Sensitivity"],
+    treat:["Keep Ear Dry","Gentle Cleaning","Reduce Scratching"],
+    recover:["Quiet Rest","Recheck Ear","Comfort"]
+  },
+  anxiety:{
+    discover:["Watch Body Language","Approach Slowly","Note Triggers"],
+    treat:["Reduce Fear","Safe Space","Stay Nearby"],
+    recover:["Stay Nearby","Quiet Rest","Build Trust"]
+  },
+  loneliness:{
+    discover:["Watch Social Behavior","Check Vocalizing","Observe Restlessness"],
+    treat:["Companionship","Gentle Interaction","Safe Enrichment"],
+    recover:["Stay Nearby","Play / Enrichment","Build Trust"]
+  },
+  poor_appetite:{
+    discover:["Watch Eating","Check Mouth","Observe Nausea Signs"],
+    treat:["Quiet Feeding","Offer Preferred Food","Hydration Support"],
+    recover:["Offer Food","Fresh Water","Recheck Appetite"]
+  },
+  mobility:{
+    discover:["Watch Gait","Check Weight Bearing","Inspect Limbs"],
+    treat:["Pain Support","Non-Slip Rest","Movement Support"],
+    recover:["Gentle Walk","Quiet Rest","Recheck Mobility"]
+  },
+  joint_stiffness:{
+    discover:["Watch Rising","Check Range of Motion","Check Tenderness"],
+    treat:["Soft Bedding","Pain Support","Gentle Movement"],
+    recover:["Gentle Walk","Warm Rest","Recheck Mobility"]
+  },
+  dental:{
+    discover:["Inspect Mouth","Watch Chewing","Check Drooling"],
+    treat:["Soft Food","Pain Support","Mouth Care"],
+    recover:["Offer Food","Fresh Water","Recheck Eating"]
+  },
+  eye_irritation:{
+    discover:["Inspect Eye","Check Squinting","Check Discharge"],
+    treat:["Reduce Bright Light","Prevent Rubbing","Gentle Cleaning"],
+    recover:["Quiet Rest","Recheck Eye","Comfort"]
+  },
+  respiratory:{
+    discover:["Watch Breathing","Listen to Chest","Check Oxygen"],
+    treat:["Reduce Stress","Oxygen Support","Warm Rest"],
+    recover:["Quiet Rest","Recheck Breathing","Fresh Water"]
+  },
+  digestive:{
+    discover:["Check Abdomen","Check Stool","Watch Eating"],
+    treat:["Hydration Support","Quiet Feeding","Rest"],
+    recover:["Offer Food","Fresh Water","Recheck Stool"]
+  },
+  parasites:{
+    discover:["Inspect Coat","Check Skin","Look for Parasites"],
+    treat:["Gentle Grooming","Clean Bedding","Parasite Control Plan"],
+    recover:["Fresh Bedding","Brush Coat","Recheck Skin"]
+  },
+  overgrown_nails:{
+    discover:["Inspect Nails","Watch Gait","Check Foot Pain"],
+    treat:["Trim Nails","Foot Care","Non-Slip Rest"],
+    recover:["Gentle Walk","Recheck Feet","Quiet Rest"]
+  },
+  matted_fur:{
+    discover:["Inspect Coat","Check Skin Under Mats","Check Pulling Pain"],
+    treat:["Gentle Dematting","Brush Coat","Clean Bedding"],
+    recover:["Brush Coat","Fresh Bedding","Comfort"]
+  },
+  cold_stress:{
+    discover:["Check Temperature","Watch Activity","Check Extremities"],
+    treat:["Warm Bedding","Gradual Warming","Hydration Support"],
+    recover:["Warm Rest","Offer Food","Fresh Water"]
+  },
+  heat_stress:{
+    discover:["Check Temperature","Watch Panting","Check Weakness"],
+    treat:["Cool Environment","Fresh Water","Reduce Exertion"],
+    recover:["Cool Rest","Fresh Water","Recheck Energy"]
+  },
+  weight_loss:{
+    discover:["Check Body Condition","Watch Eating","Check Weight"],
+    treat:["Nutrition Support","Quiet Feeding","Hydration Support"],
+    recover:["Offer Food","Fresh Water","Recheck Weight"]
+  },
+  obesity:{
+    discover:["Check Body Condition","Watch Movement","Review Feeding"],
+    treat:["Measured Feeding","Gentle Activity","Enrichment"],
+    recover:["Gentle Walk","Measured Food","Recheck Mobility"]
+  },
+  dirty_bedding:{
+    discover:["Inspect Bedding","Check Skin","Check Odor / Dampness"],
+    treat:["Fresh Bedding","Clean Habitat","Dry Rest Area"],
+    recover:["Fresh Bedding","Quiet Rest","Recheck Skin"]
+  },
+  boredom:{
+    discover:["Watch Repetitive Behavior","Check Activity","Check Curiosity"],
+    treat:["Enrichment","Foraging Activity","Safe Play"],
+    recover:["Play / Enrichment","Quiet Rest","Social Time"]
+  },
+  paw_irritation:{
+    discover:["Inspect Paw","Check Debris","Watch Weight Bearing"],
+    treat:["Clean Paw","Protect Foot","Pain Support"],
+    recover:["Quiet Rest","Gentle Walk","Recheck Paw"]
+  },
+  post_surgery:{
+    discover:["Inspect Incision","Check Pain","Check Appetite"],
+    treat:["Protect Incision","Pain Support","Activity Restriction"],
+    recover:["Quiet Rest","Offer Food","Recheck Incision"]
+  },
+  senior_care:{
+    discover:["Watch Mobility","Check Eating","Assess Comfort"],
+    treat:["Soft Bedding","Easy Access Water","Gentle Support"],
+    recover:["Quiet Rest","Offer Food","Gentle Walk"]
+  },
+  vision_loss:{
+    discover:["Watch Navigation","Check Eye Response","Check Startle"],
+    treat:["Safe Layout","Reduce Obstacles","Calm Guidance"],
+    recover:["Quiet Rest","Guided Walk","Stay Nearby"]
+  },
+  hearing_loss:{
+    discover:["Check Response to Sound","Watch Startle","Observe Orientation"],
+    treat:["Visual Cues","Gentle Approach","Predictable Routine"],
+    recover:["Quiet Rest","Stay Nearby","Gentle Interaction"]
+  },
+  recovery_rest:{
+    discover:["Check Fatigue","Watch Sleep","Assess Comfort"],
+    treat:["Quiet Rest","Soft Bedding","Low Stimulation"],
+    recover:["Quiet Rest","Fresh Water","Recheck Energy"]
+  },
+  stress_eating:{
+    discover:["Watch Feeding","Note Triggers","Check Food Avoidance"],
+    treat:["Quiet Feeding","Reduce Stress","Stay Nearby"],
+    recover:["Offer Food","Quiet Rest","Build Trust"]
+  },
+  skin_dryness:{
+    discover:["Inspect Skin","Check Flaking","Check Coat"],
+    treat:["Gentle Grooming","Humidity Support","Clean Bedding"],
+    recover:["Brush Coat","Fresh Bedding","Recheck Skin"]
+  }
+};
+
+function vgEnsureDynamicCare(p){
+  if(!p.dynamicCare){
+    const db=VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId);
+    const group=VG_SPECIES_GROUP[p.species]||"canine";
+    p.dynamicCare={
+      group,
+      stage:"discover",
+      step:0,
+      revealCount:0,
+      treatmentCount:0,
+      recoveryCount:0,
+      discovered:[],
+      treated:[],
+      notes:[],
+      completed:false,
+      routeSeed:parseInt((p.dbId||"VG001").slice(2),10)||1,
+      problemKeys:db?db.problems.map(x=>x.key):(p.dbProblems||[])
+    };
+  }
+  return p.dynamicCare;
+}
+
+function vgUniqueButtons(arr,limit=4){
+  const seen=new Set(), out=[];
+  for(const x of arr){
+    if(!x||seen.has(x))continue;
+    seen.add(x); out.push(x);
+    if(out.length>=limit)break;
+  }
+  return out;
+}
+
+function vgDynamicChoices(p){
+  const d=vgEnsureDynamicCare(p);
+  const group=VG_CARE_GROUPS[d.group]||VG_CARE_GROUPS.canine;
+  const paths=d.problemKeys.map(k=>VG_PROBLEM_PATHS[k]).filter(Boolean);
+
+  if(d.stage==="discover"){
+    const pool=[
+      ...group.discovery,
+      ...paths.flatMap(x=>x.discover||[]),
+      p.personality==="shy"?"Approach Slowly":null,
+      p.personality==="watchful"?"Watch From Distance":null,
+      p.personality==="curious"?"Offer Safe Interaction":null
+    ];
+    return vgUniqueButtons(pool.slice(d.step%Math.max(1,pool.length)).concat(pool),4);
+  }
+
+  if(d.stage==="treat"){
+    const pool=[
+      ...paths.flatMap(x=>x.treat||[]),
+      ...group.treatment,
+      p.personality==="shy"?"Reduce Fear":null,
+      p.personality==="social"?"Stay Nearby":null,
+      p.personality==="independent"?"Give Space":null
+    ];
+    return vgUniqueButtons(pool.slice((d.step+2)%Math.max(1,pool.length)).concat(pool),4);
+  }
+
+  const pool=[
+    ...paths.flatMap(x=>x.recover||[]),
+    ...group.recovery,
+    p.personality==="playful"?"Play / Enrichment":null,
+    p.personality==="gentle"?"Comfort":null
+  ];
+  return vgUniqueButtons(pool.slice((d.step+1)%Math.max(1,pool.length)).concat(pool),4);
+}
+
+function vgDynamicStatus(p){
+  const d=vgEnsureDynamicCare(p);
+  if(d.stage==="discover")return `Discovery ${Math.min(3,d.revealCount)}/3`;
+  if(d.stage==="treat")return `Treatment ${Math.min(4,d.treatmentCount)}/4`;
+  if(d.stage==="recover")return `Recovery ${Math.min(4,d.recoveryCount)}/4`;
+  return "Complete";
+}
+
+function vgDynamicCareHTML(p){
+  if(!p||!p.dbId)return "";
+  const d=vgEnsureDynamicCare(p);
+  const db=VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId);
+  const stageTitle=d.stage==="discover"?"Find Out What's Wrong":d.stage==="treat"?"Treat What You Found":d.stage==="recover"?"Recovery Care":"Case Complete";
+  const choices=vgDynamicChoices(p);
+
+  let reveal="";
+  if(d.discovered.length){
+    reveal=`<div class="vg-reveal-box"><b>What you've discovered:</b><br>${d.discovered.map(x=>"• "+vgEscape(x)).join("<br>")}</div>`;
+  }
+
+  let buttons="";
+  if(!d.completed){
+    buttons=choices.map((c,i)=>`<button class="action" onclick="vgDynamicCareAction('${p.id}',${i})">${vgEscape(c)}</button>`).join("");
+  } else {
+    buttons=`<button class="action green" onclick="vgFinishDynamicCase('${p.id}')">Finish Case</button>`;
+  }
+
+  return `<div class="panel vg-dynamic-care">
+    <div class="vg-dynamic-head">
+      <div>
+        <h3>${stageTitle}</h3>
+        <div class="small">${vgEscape(p.species)} pathway · ${vgEscape(p.personality||"individual")} personality · ${vgDynamicStatus(p)}</div>
+      </div>
+      <span class="vg-stage-pill">${d.stage.toUpperCase()}</span>
+    </div>
+    ${reveal}
+    <div class="small" style="margin:8px 0">Press an option. Each action reveals or improves the case a little, then the next set of choices changes.</div>
+    <div class="vg-dynamic-buttons">${buttons}</div>
+  </div>`;
+}
+
+function vgDynamicCareAction(id,choiceIndex){
+  const p=state.patients.find(x=>x.id===id);
+  if(!p)return;
+  const d=vgEnsureDynamicCare(p);
+  const choices=vgDynamicChoices(p);
+  const choice=choices[choiceIndex]||choices[0]||"Care";
+  d.step++;
+  d.notes.push(choice);
+
+  if(d.stage==="discover"){
+    d.revealCount++;
+    const db=VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId);
+    const problem=db?.problems?.[(d.revealCount-1)%Math.max(1,db.problems.length)];
+    const revealText=problem ? problem.name : (p.condition||"Needs further assessment");
+    if(!d.discovered.includes(revealText))d.discovered.push(revealText);
+
+    p.stress=Math.max(0,(p.stress||50)-4);
+    p.pain=Math.max(0,(p.pain||40)-2);
+
+    if(d.revealCount>=3){
+      d.stage="treat";
+      d.step=0;
+      addLog(`${p.name}: enough findings gathered to begin treatment`);
+    }
+  }
+  else if(d.stage==="treat"){
+    d.treatmentCount++;
+    p.pain=Math.max(0,(p.pain||40)-7);
+    p.stress=Math.max(0,(p.stress||50)-6);
+    p.shock=Math.max(0,(p.shock||20)-5);
+    p.infection=Math.max(0,(p.infection||10)-3);
+    p.bleeding=Math.max(0,(p.bleeding||10)-4);
+    p.oxygen=Math.min(100,(p.oxygen||92)+2);
+    p.hydration=Math.min(100,(p.hydration||60)+5);
+
+    try{
+      const t=ensureTree(p);
+      t.fear=Math.max(0,(t.fear||50)-5);
+      t.trust=Math.min(100,(t.trust||25)+4);
+      t.comfort=Math.min(100,(t.comfort||45)+5);
+      t.hydration=Math.min(100,(t.hydration||60)+5);
+      t.appetite=Math.min(100,(t.appetite||55)+3);
+      t.mobility=Math.min(100,(t.mobility||55)+3);
+    }catch(e){}
+
+    if(d.treatmentCount>=4){
+      d.stage="recover";
+      d.step=0;
+      p.department="Recovery";
+      p.location="Recovery";
+      addLog(`${p.name}: treatment phase complete, moved into Recovery`);
+      state.screen="recovery";
+    }
+  }
+  else if(d.stage==="recover"){
+    d.recoveryCount++;
+    p.pain=Math.max(0,(p.pain||30)-5);
+    p.stress=Math.max(0,(p.stress||35)-5);
+    p.hydration=Math.min(100,(p.hydration||65)+5);
+
+    try{
+      const t=ensureTree(p);
+      t.fear=Math.max(0,(t.fear||40)-5);
+      t.trust=Math.min(100,(t.trust||35)+5);
+      t.comfort=Math.min(100,(t.comfort||55)+5);
+      t.appetite=Math.min(100,(t.appetite||55)+5);
+      t.mobility=Math.min(100,(t.mobility||55)+5);
+    }catch(e){}
+
+    if(d.recoveryCount>=4){
+      d.stage="complete";
+      d.completed=true;
+      addLog(`${p.name}: dynamic care pathway complete`);
+    }
+  }
+
+  state.activeId=p.id;
+  if(typeof saveGame==="function")try{saveGame("Dynamic case progress",true)}catch(e){}
+  render();
+}
+
+function vgFinishDynamicCase(id){
+  const p=state.patients.find(x=>x.id===id);
+  if(!p)return;
+  const d=vgEnsureDynamicCare(p);
+  if(!d.completed)return;
+
+  if(p.canBecomePet){
+    p.department="Home";
+    p.location="Home";
+    p.admitted=false;
+    if(!state.pets.some(x=>x.id===p.id))state.pets.push(p);
+    state.saved=(state.saved||0)+1;
+    addLog(`${p.name} recovered and joined My Pets`);
+    state.screen="pets";
+  }else{
+    p.admitted=false;
+    p.department=p.disposition?.includes("Sanctuary")?"Sanctuary":"Home";
+    p.location=p.department;
+    if(p.department==="Sanctuary" && typeof EXP!=="undefined"){
+      EXP.sanctuary=EXP.sanctuary||[];
+      if(!EXP.sanctuary.some(x=>x.id===p.id))EXP.sanctuary.push(p);
+      state.screen="sanctuary";
+    }else{
+      state.screen="lifebook";
+    }
+    addLog(`${p.name} completed care · ${p.disposition||"discharged"}`);
+  }
+  if(typeof saveGame==="function")try{saveGame("Case completed",true)}catch(e){}
+  render();
+}
+
+/* Inject dynamic pathways into Clinic and Recovery without replacing the existing game loop. */
+const _vgDynamicRenderClinic = renderClinic;
+renderClinic=function(){
+  _vgDynamicRenderClinic();
+  const el=document.getElementById("clinic");
+  const p=active();
+  if(!el||!p||!p.dbId||p.department!=="Clinic")return;
+  el.insertAdjacentHTML("beforeend",vgDynamicCareHTML(p));
+};
+
+const _vgDynamicRenderRecovery = renderRecovery;
+renderRecovery=function(){
+  _vgDynamicRenderRecovery();
+  const el=document.getElementById("recovery");
+  const p=active();
+  if(!el||!p||!p.dbId||p.department!=="Recovery")return;
+  el.insertAdjacentHTML("beforeend",vgDynamicCareHTML(p));
+};
+
+/* Add problem/solution information to Animal Profile if the patient came from the database. */
+const _vgOriginalAnimalProfileHTML = typeof animalProfileHTML==="function" ? animalProfileHTML : null;
+if(_vgOriginalAnimalProfileHTML){
+  animalProfileHTML=function(p){
+    let base=_vgOriginalAnimalProfileHTML(p);
+    const db=VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId);
+    if(!db)return base;
+    const extra=`<div class="panel vg-case-plan">
+      <h3>Case Problems & Solutions</h3>
+      <div class="small"><b>Likely outcome:</b> ${vgEscape(db.disposition)}</div>
+      ${db.problems.map(vgProblemCard).join("")}
+    </div>`;
+    return base+extra;
+  };
+}
 
 // Load persistent game first. Only create the starter patient on a truly new game.
 const hadSave=loadGame();
