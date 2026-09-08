@@ -2169,9 +2169,16 @@ function petSimStep(p,hourIndex){
   s.lastActivityAt=Date.now();
   s.simHours++;
 
-  // Daypart / day progression
-  s.daypartIndex=(s.daypartIndex+1)%PET_SIM.dayparts.length;
-  if(s.daypartIndex===0)s.day++;
+  // Real-time daypart / day progression.
+  // Observation ticks no longer spin the sanctuary clock.
+  const realHour=new Date().getHours();
+  s.daypartIndex=realHour>=6&&realHour<12?0:realHour>=12&&realHour<18?1:realHour>=18&&realHour<22?2:3;
+  const realDate=new Date();
+  const realDayKey=`${realDate.getFullYear()}-${realDate.getMonth()+1}-${realDate.getDate()}`;
+  if(s.lastRealDayKey!==realDayKey){
+    if(s.lastRealDayKey)s.day++;
+    s.lastRealDayKey=realDayKey;
+  }
 
   // Autonomous behaviors have small effects.
   if(activity==="Eating"){
@@ -2658,9 +2665,15 @@ const SANCTUARY_SIM = {
 };
 
 function sanctuaryDaypart(){
-  const p=state.pets[0];
-  if(p && p.sim)return PET_SIM.dayparts[p.sim.daypartIndex]||"Morning";
-  return "Morning";
+  const h=new Date().getHours();
+  if(h>=6 && h<12)return "Morning";
+  if(h>=12 && h<18)return "Afternoon";
+  if(h>=18 && h<22)return "Evening";
+  return "Night";
+}
+function sanctuaryRealClockLabel(){
+  const d=new Date();
+  return `${sanctuaryDaypart()} · ${d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})} · REAL TIME`;
 }
 function sanctuaryLight(){
   const d=sanctuaryDaypart();
