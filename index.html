@@ -2703,7 +2703,7 @@ function sanctuaryCanvasHTML(){
         <span id="sanctuaryFPS">FPS ${Math.round(SANCTUARY_SIM.fps)}</span>
       </div>
     </div>
-    <div class="sanctuary-help small">When a pet says it is drinking, eating, resting or playing, it physically walks to that matching station, stays there doing it, then chooses the next activity and walks there. Drag an object and the pets can chase it.</div>
+    <div class="sanctuary-help small">When a pet says it is drinking, eating, resting or playing, it slowly walks to that matching station, stays there for a long visit, then chooses the next activity. Movement is hard-capped so pets cannot sprint across the deck. Drag an object and the pets will slowly follow it.</div>
   </div>`;
 }
 function sanctuaryEnsureMotion(p,i){
@@ -2774,9 +2774,9 @@ function sanctuaryTargetFor(p,i){
     mot.tx=obj.x; mot.ty=obj.y;
     const dist=Math.hypot(mot.tx-mot.x,mot.ty-mot.y);
     s.activity=mot.activityTravel||`Going to ${obj.label}`;
-    if(dist<.024){
+    if(dist<.018){
       mot.phase="doing";
-      mot.lingerUntil=now+14000+Math.random()*18000;
+      mot.lingerUntil=now+22000+Math.random()*23000;
       s.activity=mot.activityDoing||`Using ${obj.label}`;
       s.room=obj.label;
 
@@ -2826,21 +2826,37 @@ function sanctuaryDraw(){
   ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
   ctx.fillStyle=sanctuaryLight(); ctx.fillRect(0,0,w,h);
 
-  // room grid / paths
   ctx.strokeStyle="rgba(130,210,255,.08)"; ctx.lineWidth=1;
   for(let x=0;x<w;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
   for(let y=0;y<h;y+=70){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
 
+  const now=performance.now();
   state.pets.slice(0,24).forEach((p,i)=>{
     const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
     sanctuaryTargetFor(p,i);
-    const speed=SANCTUARY_SIM.perf==="full"?.00040:.00027;
-    mot.x += (mot.tx-mot.x)*speed*16;
-    mot.y += (mot.ty-mot.y)*speed*16;
+
+    // HARD-CAPPED movement: distance moved per frame is fixed and tiny.
+    // This prevents "speed demon" behavior even if render/update cadence changes.
+    const dx=mot.tx-mot.x, dy=mot.ty-mot.y;
+    const dist=Math.hypot(dx,dy);
+
+    // In doing/linger mode, pet is effectively anchored at the station.
+    const anchored=(mot.phase==="doing" && Date.now()<(mot.lingerUntil||0));
+
+    if(!anchored && dist>.003){
+      const maxStep=SANCTUARY_SIM.perf==="full" ? 0.00042 : 0.00030;
+      const step=Math.min(maxStep,dist);
+      mot.x += dx/dist*step;
+      mot.y += dy/dist*step;
+    }else if(dist<=.003){
+      // Snap only when already extremely close.
+      mot.x=mot.tx; mot.y=mot.ty;
+    }
+
     const x=mot.x*w,y=mot.y*h;
     ctx.save();
-    ctx.shadowBlur=SANCTUARY_SIM.perf==="full"?14:0;
-    ctx.shadowColor="rgba(100,220,255,.35)";
+    ctx.shadowBlur=SANCTUARY_SIM.perf==="full"?10:0;
+    ctx.shadowColor="rgba(100,220,255,.3)";
     ctx.fillStyle=(SANCTUARY_SIM.selectedPetId===p.id)?"#1b5367":"#102b3d";
     ctx.beginPath();ctx.arc(x,y,(SANCTUARY_SIM.selectedPetId===p.id)?27:22,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
