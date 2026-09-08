@@ -543,6 +543,21 @@ input,select,textarea{
 .relationship{padding:7px;border-radius:11px;background:#162d38;font-size:9px;margin-top:5px}
 @media(max-width:620px){.sim-ribbon{grid-template-columns:repeat(2,1fr)}.shift-actions{grid-template-columns:1fr}}
 
+
+/* ===== THREE-PILLAR CARE SYSTEM ===== */
+.care-pillar-wrap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0}
+.care-pillar{border-radius:20px;padding:10px;border:1px solid rgba(190,230,240,.13);background:#132a34}
+.care-pillar.exam{background:#153142}.care-pillar.medical{background:#18362f}.care-pillar.emotional{background:#3a2436}
+.care-pillar h3{margin:0 0 7px;font-size:13px}
+.choice-list{display:grid;gap:6px}
+.choice-btn{min-height:42px;text-align:left;padding:8px 10px;border-radius:13px!important;font-size:10px}
+.choice-btn.locked{opacity:.45}
+.choice-btn.done{background:#1f463b!important}
+.choice-btn .sub{display:block;font-size:8.5px;color:var(--soft-muted);margin-top:2px}
+.pillar-progress{font-size:9px;color:var(--soft-muted);margin-bottom:7px}
+.care-outcome{margin-top:8px;padding:8px;border-radius:12px;background:#10242d;font-size:10px;line-height:1.4}
+@media(max-width:760px){.care-pillar-wrap{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1579,6 +1594,7 @@ function animalTreeUI(p){
     <div class="small">Trust ${t.trust}% · Fear ${t.fear}% · Appetite ${t.appetite}% · Hydration ${t.hydration}% · Mobility ${t.mobility}%</div>
    </div></div>
    <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
+   ${threePillarCareHTML(p)}
   </div>
   <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div>${longPatientPanel(p)}</div>
  </div>`;
@@ -1882,6 +1898,144 @@ function admitWave(){
  ensureLongPatient(p);ensureTree(p);p.long.storyBeat="Arrived during a rescue intake.";
  longEvent(`${p.name}, a ${p.species}, arrived for ${p.condition}.`);
  state.screen="clinic";render();
+}
+
+/* ===== EXPANDED EXAM / MEDICAL / EMOTIONAL CHOICE ENGINE ===== */
+const CARE_CHOICES={
+ exam:[
+  ["observe","Behavior Observation","Watch posture, breathing and reactions",0],
+  ["vitals","Vital Signs","Temperature, pulse, breathing and oxygen",0],
+  ["physical","Physical Exam","Eyes, ears, mouth, skin and body check",1],
+  ["paincheck","Pain Assessment","Locate and grade discomfort",1],
+  ["mobilitycheck","Mobility Check","Gait, limb use and reflexes",1],
+  ["woundcheck","Wound Assessment","Depth, swelling and bleeding",2],
+  ["nutritioncheck","Nutrition Assessment","Appetite, weight and hydration clues",2],
+  ["environment","Environmental Check","Parasites, toxins and exposure clues",2],
+  ["diagnostics","Diagnostics","Bloodwork, imaging and sample testing",3],
+  ["specialist","Specialist Consult","Unlock a second opinion",4]
+ ],
+ medical:[
+  ["painrelief","Pain Relief","Reduce pain and improve handling",0],
+  ["fluids","Fluids / Hydration","Support circulation and hydration",0],
+  ["woundcare","Wound Care","Clean, protect and reassess injury",0],
+  ["oxygen","Oxygen Therapy","Support breathing and oxygenation",1],
+  ["antibiotics","Antibiotics","Treat suspected infection",1],
+  ["antiinflam","Anti-Inflammatory","Reduce swelling and discomfort",1],
+  ["nutrition","Nutrition Support","Help restore appetite and strength",2],
+  ["monitor","Monitoring","Observe response over time",2],
+  ["parasite","Parasite Treatment","Treat fleas, worms or mites",2],
+  ["transfusion","Blood Support","For blood loss or severe anemia",3],
+  ["physicaltherapy","Physical Therapy","Improve mobility after stabilization",3],
+  ["surgerychoice","Surgery","Escalate to operative care",4]
+ ],
+ emotional:[
+  ["comfort","Comfort","Calm and reassure",0],
+  ["reducefear","Reduce Fear","Gentle handling and quiet environment",0],
+  ["buildtrust","Build Trust","Slow positive interaction",0],
+  ["safespace","Safe Space","Give the animal somewhere to retreat",1],
+  ["companionship","Companionship","Use a calm companion when appropriate",1],
+  ["loneliness","Reduce Loneliness","Attention, presence and social contact",1],
+  ["enrichment","Enrichment","Toys, puzzles and stimulation",2],
+  ["grooming","Grooming","Brushing, cleaning and soothing touch",2],
+  ["reinforce","Positive Reinforcement","Treats and praise after cooperation",2],
+  ["humanbond","Human Bonding","Sit, talk and remain nearby",3],
+  ["desensitize","Desensitization","Gradually reduce trigger responses",3],
+  ["emotionalmed","Emotional Medication","Use only for severe distress",4]
+ ]
+};
+function ensureCareTree(p){
+ if(!p.careTree)p.careTree={examDone:[],medicalDone:[],emotionalDone:[],examLevel:0,medicalLevel:0,emotionalLevel:0,lastOutcome:""};
+ return p.careTree;
+}
+function pillarData(type){return CARE_CHOICES[type]||[]}
+function pillarDone(p,type){return ensureCareTree(p)[type+"Done"]}
+function pillarLevel(p,type){return ensureCareTree(p)[type+"Level"]||0}
+function pillarProgressText(p,type){
+ const done=pillarDone(p,type).length,total=pillarData(type).length;
+ return `${done}/${total} choices completed · Level ${pillarLevel(p,type)+1}`;
+}
+function careChoice(id,type,key){
+ const p=state.patients.find(x=>x.id===id);if(!p)return;
+ const c=ensureCareTree(p),t=ensureTree(p),l=ensureLongPatient(p);
+ const item=pillarData(type).find(x=>x[0]===key);if(!item)return;
+ const levelKey=type+"Level",doneKey=type+"Done";
+ if(item[3]>c[levelKey]){c.lastOutcome="That option unlocks after more progress in this section.";render();return}
+ if(!c[doneKey].includes(key))c[doneKey].push(key);
+
+ if(type==="exam"){
+  if(key==="observe"){t.fear=Math.max(0,t.fear-4);unlock(t,"behavior")}
+  if(key==="vitals"){unlock(t,"oxygen");p.oxygen=Math.min(100,(p.oxygen||82)+2)}
+  if(key==="physical"){unlock(t,"pain");unlock(t,"mobility")}
+  if(key==="paincheck"){unlock(t,"pain");}
+  if(key==="mobilitycheck"){t.mobility=Math.min(100,t.mobility+3)}
+  if(key==="woundcheck"){unlock(t,"wound");}
+  if(key==="nutritioncheck"){t.appetite=Math.min(100,t.appetite+2)}
+  if(key==="environment"){unlock(t,"exposure")}
+  if(key==="diagnostics"){t.diagnosis=true;complete(t,"diagnosis")}
+  if(key==="specialist"){l.secondary=l.secondary||"specialist review suggests a hidden secondary concern"}
+ }
+ if(type==="medical"){
+  if(key==="painrelief")p.pain=Math.max(0,(p.pain||45)-18);
+  if(key==="fluids")t.hydration=Math.min(100,t.hydration+18);
+  if(key==="woundcare"){p.bleeding=Math.max(0,(p.bleeding||25)-18);p.infection=Math.max(0,(p.infection||20)-6)}
+  if(key==="oxygen")p.oxygen=Math.min(100,(p.oxygen||80)+12);
+  if(key==="antibiotics")p.infection=Math.max(0,(p.infection||20)-16);
+  if(key==="antiinflam")p.pain=Math.max(0,(p.pain||40)-8);
+  if(key==="nutrition"){t.appetite=Math.min(100,t.appetite+16);l.meals++}
+  if(key==="monitor"){l.rechecks++;p.stress=Math.max(0,(p.stress||40)-3)}
+  if(key==="parasite")p.infection=Math.max(0,(p.infection||15)-5);
+  if(key==="transfusion"){p.shock=Math.max(0,(p.shock||35)-18);p.oxygen=Math.min(100,(p.oxygen||80)+5)}
+  if(key==="physicaltherapy"){t.mobility=Math.min(100,t.mobility+15);l.walks++}
+  if(key==="surgerychoice"){t.stage="surgery";route(p,"Surgery");return}
+ }
+ if(type==="emotional"){
+  if(key==="comfort"){t.fear=Math.max(0,t.fear-12);t.trust=Math.min(100,t.trust+8)}
+  if(key==="reducefear"){t.fear=Math.max(0,t.fear-16);p.stress=Math.max(0,(p.stress||45)-10)}
+  if(key==="buildtrust")t.trust=Math.min(100,t.trust+14);
+  if(key==="safespace"){t.fear=Math.max(0,t.fear-10);p.stress=Math.max(0,(p.stress||40)-8)}
+  if(key==="companionship"){t.fear=Math.max(0,t.fear-8);if(p.sim)ensurePetSim(p).loneliness=Math.max(0,ensurePetSim(p).loneliness-12)}
+  if(key==="loneliness"){if(p.sim)ensurePetSim(p).loneliness=Math.max(0,ensurePetSim(p).loneliness-18);t.trust=Math.min(100,t.trust+4)}
+  if(key==="enrichment"){t.fear=Math.max(0,t.fear-5);t.trust=Math.min(100,t.trust+5)}
+  if(key==="grooming"){t.trust=Math.min(100,t.trust+6);p.stress=Math.max(0,(p.stress||40)-5)}
+  if(key==="reinforce"){t.trust=Math.min(100,t.trust+10)}
+  if(key==="humanbond"){t.trust=Math.min(100,t.trust+12);t.fear=Math.max(0,t.fear-7)}
+  if(key==="desensitize"){t.fear=Math.max(0,t.fear-14)}
+  if(key==="emotionalmed"){t.fear=Math.max(0,t.fear-20);p.stress=Math.max(0,(p.stress||50)-15)}
+ }
+
+ c.lastOutcome=`${item[1]} completed for ${p.name}.`;
+ treeNote(p,`${type.toUpperCase()} · ${item[1]}`);
+ if(c[doneKey].length>=2 && c[levelKey]<1)c[levelKey]=1;
+ if(c[doneKey].length>=4 && c[levelKey]<2)c[levelKey]=2;
+ if(c[doneKey].length>=6 && c[levelKey]<3)c[levelKey]=3;
+ if(c[doneKey].length>=8 && c[levelKey]<4)c[levelKey]=4;
+
+ // milestone progression
+ if(c.examDone.length>=5){complete(t,"exam");if(t.stage==="observe"||t.stage==="approach"||t.stage==="exam")t.stage="diagnose"}
+ if(c.medicalDone.length>=4 && c.emotionalDone.length>=4 && t.stage==="diagnose")t.stage="treat";
+ resolveComplication(p);
+ render();
+}
+function carePillarHTML(p,type,title){
+ const c=ensureCareTree(p),done=pillarDone(p,type),lvl=pillarLevel(p,type);
+ return `<div class="care-pillar ${type}">
+   <h3>${title}</h3><div class="pillar-progress">${pillarProgressText(p,type)}</div>
+   <div class="choice-list">${pillarData(type).map(x=>{
+      const locked=x[3]>lvl,completed=done.includes(x[0]);
+      return `<button class="choice-btn ${locked?"locked":""} ${completed?"done":""}" onclick="careChoice('${p.id}','${type}','${x[0]}')">
+        ${completed?"✓ ":""}${x[1]}<span class="sub">${locked?"Unlocks later":x[2]}</span>
+      </button>`;
+   }).join("")}</div>
+   ${c.lastOutcome?`<div class="care-outcome">${c.lastOutcome}</div>`:""}
+ </div>`;
+}
+function threePillarCareHTML(p){
+ if(!p)return "";
+ return `<div class="care-pillar-wrap">
+   ${carePillarHTML(p,"exam","1 · Examine")}
+   ${carePillarHTML(p,"medical","2 · Medical")}
+   ${carePillarHTML(p,"emotional","3 · Emotional")}
+ </div>`;
 }
 function render(){
   state.patients.filter(p=>p.admitted).forEach(applyMeterInteractions);
