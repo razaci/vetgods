@@ -1358,6 +1358,10 @@ button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
 .shop-amazon{padding:7px;border:1px solid #687142;border-radius:5px;background:#202718;color:#e6efcf;font-size:.46rem;font-weight:900}
 @media(max-width:520px){.shop-row{grid-template-columns:30px 1fr}.shop-amazon{grid-column:2;width:100%}.mypets-shop-title{align-items:flex-start}}
 
+
+/* SANCTUARY SLOW-CHASE TUNING */
+.sanctuary-help{line-height:1.45}
+
 </style>
 </head>
 <body>
@@ -2637,6 +2641,10 @@ const SANCTUARY_SIM = {
   dragMoved:false,
   dragStartX:0,
   dragStartY:0,
+  lureObjectId:null,
+  lureUntil:0,
+  lingerMinMs:12000,
+  lingerMaxMs:30000,
   lastFrame:0,
   fps:60,
   objects:[
@@ -2695,35 +2703,118 @@ function sanctuaryCanvasHTML(){
         <span id="sanctuaryFPS">FPS ${Math.round(SANCTUARY_SIM.fps)}</span>
       </div>
     </div>
-    <div class="sanctuary-help small">Drag habitat objects. Tap a moving pet to open its profile. Their needs and memories influence where they go.</div>
+    <div class="sanctuary-help small">When a pet says it is drinking, eating, resting or playing, it physically walks to that matching station, stays there doing it, then chooses the next activity and walks there. Drag an object and the pets can chase it.</div>
   </div>`;
 }
 function sanctuaryEnsureMotion(p,i){
   const s=ensurePetSim(p);
   if(!s.motion){
     const pos=petWorldPos(p,i);
-    s.motion={x:pos.x/100,y:pos.y/100,tx:pos.x/100,ty:pos.y/100,vx:0,vy:0};
+    s.motion={x:pos.x/100,y:pos.y/100,tx:pos.x/100,ty:pos.y/100,vx:0,vy:0,targetObjectId:null,lingerUntil:0,lastRetargetAt:0,phase:null,activityType:null,activityTravel:"",activityDoing:""};
   }
-  return s.motion;
+  const mot=s.motion;
+  if(mot.lingerUntil==null)mot.lingerUntil=0;
+  if(mot.lastRetargetAt==null)mot.lastRetargetAt=0;
+  if(mot.phase===undefined)mot.phase=null;
+  return mot;
 }
 function sanctuaryTargetFor(p,i){
-  const s=ensurePetSim(p),m=ensurePetMind(p),mot=sanctuaryEnsureMotion(p,i);
-  let target=null;
-  if((p.hunger||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="food");
-  else if((p.water||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="water");
-  else if((p.energy||0)<30 || (s.sleep||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="bed")||SANCTUARY_SIM.objects.find(o=>o.type==="hide");
-  else if((p.fear||0)>55)target=SANCTUARY_SIM.objects.find(o=>o.type==="hide");
-  else if((s.enrichment||0)<45)target=SANCTUARY_SIM.objects.find(o=>o.type==="toy");
-  else if(m.favoriteRoom && Math.random()<.1){
-    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
+  const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
+  const now=Date.now();
+
+  const byType=t=>SANCTUARY_SIM.objects.find(o=>o.type===t);
+  const chooseNextActivity=()=>{
+    // Needs decide the next real destination first.
+    if((p.water||0)<55)return {type:"water",label:"Going for a drink",doing:"Drinking fresh water"};
+    if((p.hunger||0)<55)return {type:"food",label:"Going to eat",doing:"Eating at the food station"};
+    if((p.energy||0)<45 || (s.sleep||0)<45)return {type:"bed",label:"Going to rest",doing:"Resting in the soft bed"};
+    if((p.fear||0)>45)return {type:"hide",label:"Going somewhere quiet",doing:"Settling in the quiet hide"};
+    if((s.enrichment||0)<55)return {type:"toy",label:"Going to play",doing:"Playing with enrichment"};
+    const cycle=[
+      {type:"toy",label:"Heading to play",doing:"Playing with enrichment"},
+      {type:"bed",label:"Heading to rest",doing:"Relaxing in the soft bed"},
+      {type:"water",label:"Heading for water",doing:"Drinking fresh water"},
+      {type:"food",label:"Heading for food",doing:"Eating at the food station"},
+      {type:"hide",label:"Heading to the quiet area",doing:"Resting in the quiet hide"},
+      {type:"care",label:"Heading to the care station",doing:"Visiting the care station"}
+    ];
+    return cycle[Math.floor(Math.random()*cycle.length)];
+  };
+
+  // Player-dragged lure overrides normal routine; all pets physically chase it.
+  const lure=SANCTUARY_SIM.lureObjectId ? SANCTUARY_SIM.objects.find(o=>o.id===SANCTUARY_SIM.lureObjectId) : null;
+  if(lure && (SANCTUARY_SIM.dragObject===lure.id || now<SANCTUARY_SIM.lureUntil)){
+    mot.targetObjectId=lure.id;
+    mot.tx=lure.x; mot.ty=lure.y;
+    mot.phase="travel";
+    mot.activityDoing=`Gathering around ${lure.label}`;
+    s.activity=`Following ${lure.label}`;
+    return;
   }
-  if(!target && (Math.random()<.02 || Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.03)){
-    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
+
+  // Initialize a true activity plan.
+  if(!mot.phase){
+    const a=chooseNextActivity(),obj=byType(a.type);
+    if(obj){
+      mot.phase="travel";
+      mot.targetObjectId=obj.id;
+      mot.activityType=a.type;
+      mot.activityTravel=a.label;
+      mot.activityDoing=a.doing;
+      mot.tx=obj.x; mot.ty=obj.y;
+      mot.lingerUntil=0;
+      mot.lastRetargetAt=now;
+      s.activity=a.label;
+    }
   }
-  if(target){
-    mot.tx=Math.max(.05,Math.min(.95,target.x+(Math.random()-.5)*.08));
-    mot.ty=Math.max(.08,Math.min(.92,target.y+(Math.random()-.5)*.08));
+
+  const obj=SANCTUARY_SIM.objects.find(o=>o.id===mot.targetObjectId);
+  if(obj && mot.phase==="travel"){
+    // Follow the object if player moved it.
+    mot.tx=obj.x; mot.ty=obj.y;
+    const dist=Math.hypot(mot.tx-mot.x,mot.ty-mot.y);
+    s.activity=mot.activityTravel||`Going to ${obj.label}`;
+    if(dist<.024){
+      mot.phase="doing";
+      mot.lingerUntil=now+14000+Math.random()*18000;
+      s.activity=mot.activityDoing||`Using ${obj.label}`;
+      s.room=obj.label;
+
+      // Apply a little benefit ON ARRIVAL; do not instantly switch activity text.
+      if(mot.activityType==="water")p.water=Math.min(100,(p.water||50)+12);
+      if(mot.activityType==="food")p.hunger=Math.min(100,(p.hunger||50)+10);
+      if(mot.activityType==="bed"){p.energy=Math.min(100,(p.energy||50)+8);s.sleep=Math.min(100,(s.sleep||50)+8);}
+      if(mot.activityType==="hide")p.fear=Math.max(0,(p.fear||0)-6);
+      if(mot.activityType==="toy"){s.enrichment=Math.min(100,(s.enrichment||50)+8);p.happiness=Math.min(100,(p.happiness||50)+5);}
+    }
+    return;
   }
+
+  if(obj && mot.phase==="doing"){
+    // Stay physically at the object and keep the matching activity label.
+    mot.tx=obj.x; mot.ty=obj.y;
+    s.activity=mot.activityDoing||`Using ${obj.label}`;
+    if(now<mot.lingerUntil)return;
+
+    // Activity finishes only AFTER linger time. Now choose the next thing,
+    // change label to "Going to..." and start physically traveling there.
+    const a=chooseNextActivity(),next=byType(a.type);
+    if(next){
+      mot.phase="travel";
+      mot.targetObjectId=next.id;
+      mot.activityType=a.type;
+      mot.activityTravel=a.label;
+      mot.activityDoing=a.doing;
+      mot.tx=next.x; mot.ty=next.y;
+      mot.lingerUntil=0;
+      mot.lastRetargetAt=now;
+      s.activity=a.label;
+    }
+    return;
+  }
+
+  // Recovery fallback if an object was removed or state was old.
+  mot.phase=null;
 }
 function sanctuaryDraw(){
   const c=document.getElementById("sanctuaryCanvas");
@@ -2743,7 +2834,7 @@ function sanctuaryDraw(){
   state.pets.slice(0,24).forEach((p,i)=>{
     const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
     sanctuaryTargetFor(p,i);
-    const speed=SANCTUARY_SIM.perf==="full"?.0026:.0017;
+    const speed=SANCTUARY_SIM.perf==="full"?.00040:.00027;
     mot.x += (mot.tx-mot.x)*speed*16;
     mot.y += (mot.ty-mot.y)*speed*16;
     const x=mot.x*w,y=mot.y*h;
@@ -2817,14 +2908,45 @@ function sanctuaryDragMove(ev){
   const x=Math.max(.04,Math.min(.96,(ev.clientX-r.left)/r.width));
   const y=Math.max(.07,Math.min(.93,(ev.clientY-r.top)/r.height));
   const o=SANCTUARY_SIM.objects.find(x=>x.id===SANCTUARY_SIM.dragObject);
-  if(o){o.x=x;o.y=y;ev.currentTarget.setAttribute("transform",`translate(${x*1000} ${y*560})`);}
+  if(o){
+    o.x=x;o.y=y;
+    ev.currentTarget.setAttribute("transform",`translate(${x*1000} ${y*560})`);
+    SANCTUARY_SIM.lureObjectId=o.id;
+    SANCTUARY_SIM.lureUntil=Date.now()+22000;
+    state.pets.slice(0,24).forEach((p,i)=>{
+      const mot=sanctuaryEnsureMotion(p,i);
+      mot.targetObjectId=o.id;
+      mot.lingerUntil=0;
+      mot.tx=x;
+      mot.ty=y;
+      const s=ensurePetSim(p);
+      s.activity=`Following the moving ${o.label}`;
+    });
+  }
 }
 function sanctuaryEndDrag(ev){
   ev.preventDefault();ev.stopPropagation();
   const id=SANCTUARY_SIM.dragObject;
   ev.currentTarget.removeEventListener("pointermove",sanctuaryDragMove);
   SANCTUARY_SIM.dragObject=null;
-  if(id && !SANCTUARY_SIM.dragMoved)sanctuaryUseObject(id);
+  if(id && SANCTUARY_SIM.dragMoved){
+    SANCTUARY_SIM.lureObjectId=id;
+    SANCTUARY_SIM.lureUntil=Date.now()+18000;
+    const o=SANCTUARY_SIM.objects.find(x=>x.id===id);
+    state.pets.slice(0,24).forEach((p,i)=>{
+      const mot=sanctuaryEnsureMotion(p,i),s=ensurePetSim(p);
+      mot.targetObjectId=id;
+      mot.tx=o?o.x:mot.tx; mot.ty=o?o.y:mot.ty;
+      mot.phase="travel";
+      mot.activityType=o?o.type:null;
+      mot.activityTravel=o?`Following ${o.label}`:"Following moved object";
+      mot.activityDoing=o?`Spending time at ${o.label}`:"Spending time there";
+      mot.lingerUntil=0;
+      s.activity=mot.activityTravel;
+    });
+  }else if(id){
+    sanctuaryUseObject(id);
+  }
   if(typeof saveGame==="function")try{saveGame("Sanctuary layout",true)}catch(e){}
 }
 
