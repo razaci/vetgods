@@ -559,42 +559,9 @@ input,select,textarea{
 @media(max-width:760px){.care-pillar-wrap{grid-template-columns:1fr}}
 
 
-/* ===== CLICKABLE ANIMAL DETAILS + REWARD FX ===== */
-.animal-clickable{cursor:pointer;transition:transform .14s ease,box-shadow .14s ease}
-.animal-clickable:active{transform:scale(.97)}
-.animal-clickable:hover{box-shadow:0 10px 24px rgba(0,0,0,.18)}
-#animalDetailOverlay{
- position:fixed;inset:0;background:rgba(4,12,18,.74);z-index:9998;
- display:none;align-items:flex-end;justify-content:center;padding:12px
-}
-#animalDetailOverlay.open{display:flex}
-.animal-detail-sheet{
- width:min(720px,100%);max-height:88vh;overflow:auto;border-radius:24px 24px 14px 14px;
- background:#132a34;border:1px solid rgba(255,255,255,.12);padding:14px;
- box-shadow:0 -20px 50px rgba(0,0,0,.35)
-}
-.animal-detail-head{display:flex;gap:12px;align-items:center}
-.animal-detail-head img{width:92px;height:92px;object-fit:contain;border-radius:18px;background:#0d2028}
-.animal-detail-name{font-size:20px;font-weight:900}
-.animal-detail-sub{font-size:10px;opacity:.75}
-.animal-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
-.animal-detail-box{padding:10px;border-radius:14px;background:#0f232b;font-size:10px;line-height:1.45}
-.animal-detail-box b{display:block;margin-bottom:4px;font-size:11px}
-.close-animal-detail{width:100%;margin-top:10px}
-.reward-burst{
- position:fixed;left:50%;top:22%;transform:translate(-50%,-50%) scale(.85);
- z-index:10050;pointer-events:none;padding:10px 16px;border-radius:999px;
- background:#173a32;border:1px solid rgba(255,255,255,.17);font-weight:900;font-size:14px;
- box-shadow:0 14px 34px rgba(0,0,0,.28);animation:rewardPop 1.15s ease forwards
-}
-@keyframes rewardPop{
- 0%{opacity:0;transform:translate(-50%,-35%) scale(.75)}
- 15%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
- 75%{opacity:1;transform:translate(-50%,-65%) scale(1)}
- 100%{opacity:0;transform:translate(-50%,-90%) scale(.96)}
-}
-.reward-mini{font-size:9px;opacity:.75;display:block;margin-top:2px}
-@media(max-width:600px){.animal-detail-grid{grid-template-columns:1fr}.animal-detail-head img{width:78px;height:78px}}
+.save-panel details{background:rgba(0,0,0,.12);border-radius:14px;padding:8px}
+.save-panel summary{cursor:pointer;font-weight:800}
+.save-archive{display:grid;gap:7px;margin-top:8px}
 
 </style>
 </head>
@@ -992,7 +959,7 @@ function renderPets(){
     <h2>My Pets · Forever Home</h2>
     <p class="small">Basic care is easy. Trust, recovery, memories, and bonding happen one animal at a time.</p>
     ${state.pets.length?`<div class="pet-home-grid">${state.pets.map(p=>petSimHTML(p)).join("")}</div>`:`<div class="empty">No pets are home yet. Successfully discharge an animal from Recovery to bring them here.</div>`}
-  </div>`;
+  </div>${persistentSavePanel()}`;
 }
 function renderStatus(){
   status.innerHTML=`<div class="panel"><h2>Hospital Status</h2>
@@ -1577,48 +1544,16 @@ function treeAction(id,action){
  if(action==="surgery"){t.stage="surgery";route(p,"Surgery");treeNote(p,"Transferred into surgical pathway");return}
  if(action==="medical"){t.readyRecovery=true;t.stage="recover";route(p,"Recovery");treeNote(p,"Transferred for medical recovery");return}
  if(action==="opstep"){p.surgeryStep=(p.surgeryStep||0)+1;p.bleeding=Math.max(0,(p.bleeding||30)-8);p.shock=Math.max(0,(p.shock||30)-5);treeNote(p,"Surgical step "+p.surgeryStep+" completed");if(p.surgeryStep>=5){t.stage="recover";t.readyRecovery=true;route(p,"Recovery");return}}
- if(action==="rest"){
-  const l=ensureLongPatient(p);l.rests++;l.recoveryDays=Math.max(l.recoveryDays,1);
-  p.stress=Math.max(0,(p.stress||40)-15);
-  t.fear=Math.max(0,t.fear-8);
-  p.pain=Math.max(0,(p.pain||30)-4);
-  resolveComplication(p);
-  treeNote(p,"Rested quietly");
-}
- if(action==="eat"){
-  const l=ensureLongPatient(p);l.meals++;l.recoveryDays=Math.max(l.recoveryDays,1);
-  t.appetite=Math.min(100,t.appetite+22);
-  t.trust=Math.min(100,t.trust+4);
-  resolveComplication(p);
-  treeNote(p,"Ate during recovery");
-}
- if(action==="hydrate"){
-  const l=ensureLongPatient(p);l.recoveryDays=Math.max(l.recoveryDays,1);
-  t.hydration=Math.min(100,t.hydration+24);
-  resolveComplication(p);
-  treeNote(p,"Hydration improved");
-}
- if(action==="walk"){
-  const l=ensureLongPatient(p);l.walks++;l.recoveryDays=Math.max(l.recoveryDays,1);
-  t.mobility=Math.min(100,t.mobility+18);
-  p.pain=Math.max(0,(p.pain||25)-5);
-  resolveComplication(p);
-  treeNote(p,"Completed a gentle mobility check");
-}
+ if(action==="rest"){ensureLongPatient(p).rests++;p.stress=Math.max(0,(p.stress||40)-15);t.fear=Math.max(0,t.fear-8);resolveComplication(p);treeNote(p,"Rested quietly")}
+ if(action==="eat"){ensureLongPatient(p).meals++;t.appetite=Math.min(100,t.appetite+18);t.trust+=4;resolveComplication(p);treeNote(p,"Ate during recovery")}
+ if(action==="hydrate"){t.hydration=Math.min(100,t.hydration+20);treeNote(p,"Hydration improved")}
+ if(action==="walk"){ensureLongPatient(p).walks++;t.mobility=Math.min(100,t.mobility+14);p.pain=Math.max(0,(p.pain||25)-3);resolveComplication(p);treeNote(p,"Completed a gentle mobility check")}
  if(action==="bond"){t.trust=Math.min(100,t.trust+12);t.fear=Math.max(0,t.fear-10);treeNote(p,"Chose to stay close")}
  if(action==="clear"){
-  const l=ensureLongPatient(p);
-  l.rechecks++;
-  resolveComplication(p);
+  const l=ensureLongPatient(p);l.rechecks++;
   const score=dischargeScore(p);
-  const medicallyReady=(p.pain||0)<50 && t.hydration>=55 && t.appetite>=55 && t.mobility>=50;
-  if((score>=65 || medicallyReady) && !l.complication){
-    t.readyHome=true;
-    t.stage="home";
-    treeNote(p,"Final check passed. Ready for discharge.");
-  }else{
-    treeNote(p,"Final check: continue recovery care ("+score+"% ready)");
-  }
+  if(score>=82 && l.recoveryDays>=2 && !l.complication){t.readyHome=true;t.stage="home";treeNote(p,"Cleared to leave the ward")}
+  else{treeNote(p,"Final check: more recovery time is needed ("+score+"% ready)")}
 }
  if(action==="mypets"){lifeBookRecord(p,"HOME ❤️");discharge(p);return}
  if(action==="sanctuary"){p.admitted=false;p.department="Sanctuary";EXP.sanctuary.push({...p});lifeBookRecord(p,"SANCTUARY");state.screen="sanctuary";treeNote(p,"Moved into long-term sanctuary care");render();return}
@@ -1638,9 +1573,9 @@ function treeActions(p){
  }
  if(t.stage==="surgery")return [["Next Surgical Step","opstep"],["Comfort Before Step","comfort"],["Stabilize","stabilize"]];
  if(t.stage==="recover"){
-  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"],["Recovery Recheck","clear"]];
+  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
   const l=ensureLongPatient(p);
-  if(t.appetite>=55&&t.hydration>=55&&t.mobility>=50&&(p.pain||0)<50&&l.recoveryDays>=1)a.push(["Final Check","clear"]);
+  if(t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40&&l.recoveryDays>=2&&l.rechecks>=1)a.push(["Final Check","clear"]);
   return a;
  }
  if(t.stage==="home")return [["Bring to My Pets","mypets"],["Long-Term Sanctuary","sanctuary"],["Family Adoption","adopt"]];
@@ -1664,6 +1599,7 @@ function animalTreeUI(p){
     <div class="small">Trust ${t.trust}% · Fear ${t.fear}% · Appetite ${t.appetite}% · Hydration ${t.hydration}% · Mobility ${t.mobility}%</div>
    </div></div>
    <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
+   ${threePillarCareHTML(p)}
   </div>
   <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div>${longPatientPanel(p)}</div>
  </div>`;
@@ -2107,113 +2043,141 @@ function threePillarCareHTML(p){
  </div>`;
 }
 
-/* ===== ANIMAL DETAIL PANEL + REWARD SOUND SYSTEM ===== */
-let AUDIOCTX=null;
-function ensureAudio(){
- try{
-  if(!AUDIOCTX)AUDIOCTX=new (window.AudioContext||window.webkitAudioContext)();
-  if(AUDIOCTX.state==="suspended")AUDIOCTX.resume();
- }catch(e){}
+/* ===== PERSISTENT SAVE SYSTEM ===== */
+const SAVE_KEY="VET_GODS_PERSISTENT_SAVE_V2";
+const SAVE_ARCHIVE_KEY="VET_GODS_SAVE_ARCHIVE_V2";
+let SAVE_READY=false;
+let SAVE_STATUS="Not saved yet";
+
+function snapshotGame(){
+  return {
+    version:2,
+    savedAt:new Date().toISOString(),
+    state:JSON.parse(JSON.stringify(state)),
+    econ:JSON.parse(JSON.stringify(ECON)),
+    exp:JSON.parse(JSON.stringify(EXP)),
+    longsim:JSON.parse(JSON.stringify(LONGSIM))
+  };
 }
-function tone(freq=520,dur=.08,type="sine",gain=.035,delay=0){
- try{
-  ensureAudio(); if(!AUDIOCTX)return;
-  const o=AUDIOCTX.createOscillator(),g=AUDIOCTX.createGain();
-  o.type=type;o.frequency.value=freq;
-  g.gain.setValueAtTime(0.0001,AUDIOCTX.currentTime+delay);
-  g.gain.exponentialRampToValueAtTime(gain,AUDIOCTX.currentTime+delay+.01);
-  g.gain.exponentialRampToValueAtTime(0.0001,AUDIOCTX.currentTime+delay+dur);
-  o.connect(g);g.connect(AUDIOCTX.destination);
-  o.start(AUDIOCTX.currentTime+delay);o.stop(AUDIOCTX.currentTime+delay+dur+.02);
- }catch(e){}
+function applySavedObject(target,source){
+  if(!source||typeof source!=="object")return;
+  Object.keys(target).forEach(k=>delete target[k]);
+  Object.assign(target,source);
 }
-function rewardSound(kind="good"){
- if(kind==="good"){tone(520,.08,"sine",.035,0);tone(690,.09,"sine",.03,.07);tone(860,.12,"sine",.025,.14)}
- else if(kind==="soft"){tone(420,.08,"triangle",.025,0);tone(560,.10,"triangle",.02,.07)}
- else{tone(240,.10,"square",.018,0);tone(190,.12,"square",.014,.08)}
-}
-function rewardBurst(text,sub="",kind="good"){
- const d=document.createElement("div");
- d.className="reward-burst";
- d.innerHTML=`${text}${sub?`<span class="reward-mini">${sub}</span>`:""}`;
- document.body.appendChild(d);rewardSound(kind);
- setTimeout(()=>d.remove(),1200);
-}
-function animalById(id){
- return state.patients.find(p=>String(p.id)===String(id))||
-        state.pets.find(p=>String(p.id)===String(id));
-}
-function animalImageFor(p){
- return p.image||p.img||p.thumb||p.photo||"";
-}
-function openAnimalDetail(id){
- const p=animalById(id);if(!p)return;
- state.activeId=p.id;
- const t=ensureTree(p),l=ensureLongPatient(p);
- const sim=p.sim?ensurePetSim(p):null;
- const sheet=document.getElementById("animalDetailSheet");
- if(!sheet)return;
- const img=animalImageFor(p);
- sheet.innerHTML=`
-  <div class="animal-detail-head">
-   ${img?`<img src="${img}" alt="${p.name}">`:""}
-   <div>
-    <div class="animal-detail-name">${p.name||"Animal"}</div>
-    <div class="animal-detail-sub">${p.species||"Animal"} · ${p.breed||"Patient"} · ${p.status||p.location||"Hospital"}</div>
-    <div class="animal-detail-sub">${p.condition||p.problem||p.diagnosis||"Under veterinary care"}</div>
-   </div>
-  </div>
-  <div class="animal-detail-grid">
-   <div class="animal-detail-box"><b>Medical</b>
-    Pain: ${Math.round(p.pain||0)}<br>
-    Oxygen: ${Math.round(p.oxygen||0)}<br>
-    Hydration: ${Math.round(t.hydration||0)}<br>
-    Mobility: ${Math.round(t.mobility||0)}<br>
-    Appetite: ${Math.round(t.appetite||0)}
-   </div>
-   <div class="animal-detail-box"><b>Emotional</b>
-    Fear: ${Math.round(t.fear||0)}<br>
-    Trust: ${Math.round(t.trust||0)}<br>
-    Stress: ${Math.round(p.stress||0)}
-    ${sim?`<br>Loneliness: ${Math.round(sim.loneliness||0)}<br>Happiness: ${Math.round(sim.happiness||0)}`:""}
-   </div>
-   <div class="animal-detail-box"><b>Case Progress</b>
-    Stage: ${t.stage||"care"}<br>
-    Recovery time: ${l.recoveryDays||0}<br>
-    Rechecks: ${l.rechecks||0}<br>
-    Discharge readiness: ${typeof dischargeScore==="function"?dischargeScore(p):0}%
-   </div>
-   <div class="animal-detail-box"><b>Story</b>
-    ${p.backstory||p.story||l.storyBeat||"This animal is still writing its recovery story."}
-   </div>
-  </div>
-  <button class="action close-animal-detail" onclick="closeAnimalDetail()">CLOSE</button>`;
- document.getElementById("animalDetailOverlay").classList.add("open");
- rewardSound("soft");
-}
-function closeAnimalDetail(){
- const el=document.getElementById("animalDetailOverlay");if(el)el.classList.remove("open");
-}
-function wireAnimalClicks(){
- const selectors=[".animal-card",".animal-tile",".resident-animal",".pet-card",".patient-card",".ward-animal",".animal-strip-item"];
- document.querySelectorAll(selectors.join(",")).forEach(el=>{
-  if(el.dataset.animalWired)return;
-  const btn=el.querySelector("[onclick*='activeId'],[onclick*='select'],[onclick*='open']");
-  let id=el.dataset.id||el.dataset.animalId||el.getAttribute("data-patient");
-  if(!id){
-   const txt=el.textContent||"";
-   const p=state.patients.concat(state.pets||[]).find(x=>x.name&&txt.includes(x.name));
-   if(p)id=p.id;
+function saveGame(label="Auto Save",silent=true){
+  try{
+    const snap=snapshotGame();
+    localStorage.setItem(SAVE_KEY,JSON.stringify(snap));
+    let archive=[];
+    try{archive=JSON.parse(localStorage.getItem(SAVE_ARCHIVE_KEY)||"[]")}catch(e){}
+    if(!Array.isArray(archive))archive=[];
+    if(label!=="Auto Save"){
+      archive.unshift({
+        label,
+        savedAt:snap.savedAt,
+        pets:snap.state.pets,
+        inventory:snap.econ.inventory,
+        saved:snap.state.saved,
+        mercy:snap.state.mercy,
+        lifeBook:snap.exp.lifeBook,
+        sanctuary:snap.exp.sanctuary,
+        day:snap.longsim.day,
+        chapter:snap.longsim.chapter
+      });
+      archive=archive.slice(0,12);
+      localStorage.setItem(SAVE_ARCHIVE_KEY,JSON.stringify(archive));
+    }
+    SAVE_STATUS=`${label} · ${new Date(snap.savedAt).toLocaleString()}`;
+    if(!silent)render();
+    return true;
+  }catch(e){
+    SAVE_STATUS="Save failed: "+e.message;
+    return false;
   }
-  if(id){
-   el.classList.add("animal-clickable");
-   el.dataset.animalWired="1";
-   el.addEventListener("click",e=>{
-    if(e.target.closest("button"))return;
-    openAnimalDetail(id);
-   });
+}
+function loadGame(){
+  try{
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw)return false;
+    const snap=JSON.parse(raw);
+    if(!snap||!snap.state)return false;
+    applySavedObject(state,snap.state);
+    if(snap.econ)applySavedObject(ECON,snap.econ);
+    if(snap.exp)applySavedObject(EXP,snap.exp);
+    if(snap.longsim)applySavedObject(LONGSIM,snap.longsim);
+    SAVE_STATUS=`Loaded · ${snap.savedAt?new Date(snap.savedAt).toLocaleString():"previous save"}`;
+    return true;
+  }catch(e){
+    SAVE_STATUS="Could not load save: "+e.message;
+    return false;
   }
- });
+}
+function saveNow(){
+  saveGame("Manual Save",false);
+}
+function getSaveArchive(){
+  try{
+    const a=JSON.parse(localStorage.getItem(SAVE_ARCHIVE_KEY)||"[]");
+    return Array.isArray(a)?a:[];
+  }catch(e){return []}
+}
+function exportSave(){
+  const snap=snapshotGame();
+  const blob=new Blob([JSON.stringify(snap,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="VET_GODS_SAVE_"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  SAVE_STATUS="Exported backup";
+  render();
+}
+function importSaveFile(input){
+  const file=input.files&&input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const snap=JSON.parse(reader.result);
+      if(!snap||!snap.state)throw new Error("Not a VET GODS save file");
+      applySavedObject(state,snap.state);
+      if(snap.econ)applySavedObject(ECON,snap.econ);
+      if(snap.exp)applySavedObject(EXP,snap.exp);
+      if(snap.longsim)applySavedObject(LONGSIM,snap.longsim);
+      saveGame("Imported Save",true);
+      SAVE_STATUS="Imported backup successfully";
+      render();
+    }catch(e){
+      SAVE_STATUS="Import failed: "+e.message;render();
+    }
+  };
+  reader.readAsText(file);
+}
+function archiveHTML(){
+  const a=getSaveArchive();
+  if(!a.length)return `<div class="small">No manual save snapshots yet. Press <b>Save Everything</b> to create one.</div>`;
+  return `<div class="save-archive">${a.map((s,i)=>`
+    <div class="memory">
+      <b>${s.label||"Save"} ${i+1}</b><br>
+      ${new Date(s.savedAt).toLocaleString()} · Day ${s.day||1} · Chapter ${s.chapter||1}<br>
+      Pets: ${(s.pets||[]).length} · Saved animals: ${s.saved||0}<br>
+      Inventory: ${Object.entries(s.inventory||{}).map(([k,v])=>`${k} ${v}`).join(" · ")||"none"}
+    </div>`).join("")}</div>`;
+}
+function persistentSavePanel(){
+  return `<div class="panel save-panel">
+    <h3>💾 Forever Save</h3>
+    <div class="small">My Pets, their memories and trust, inventory, sanctuary animals, Life Book, admitted patients, hospital day/chapter, and progress are stored on this device.</div>
+    <div class="controls" style="margin-top:8px">
+      <button class="action green" onclick="saveNow()">Save Everything</button>
+      <button class="action" onclick="exportSave()">Export Backup</button>
+      <label class="action" style="display:inline-flex;align-items:center;justify-content:center;cursor:pointer">
+        Import Backup<input type="file" accept=".json,application/json" onchange="importSaveFile(this)" style="display:none">
+      </label>
+    </div>
+    <div class="small" style="margin-top:7px">${SAVE_STATUS}</div>
+    <details style="margin-top:8px"><summary>Look Back at Saved Snapshots</summary>${archiveHTML()}</details>
+  </div>`;
 }
 function render(){
   state.patients.filter(p=>p.admitted).forEach(applyMeterInteractions);
@@ -2243,26 +2207,23 @@ function render(){
   const target=document.getElementById(state.screen)||document.getElementById("clinic");
   if(target)target.classList.add("active");
   state.patients.forEach(updateMeterHistory);
+  if(SAVE_READY)saveGame("Auto Save",true);
 }
 document.querySelectorAll("[data-screen]").forEach(b=>b.addEventListener("click",()=>{state.screen=b.dataset.screen;render()}));
 
-// Start with exactly one admitted patient.
-const starter=makePatient(0);
-starter.stress=62;starter.pain=48;starter.shock=34;starter.bleeding=22;starter.infection=12;starter.oxygen=82;state.patients.push(starter);state.activeId=starter.id;addLog(starter.name+" admitted to Clinic");
+// Load persistent game first. Only create the starter patient on a truly new game.
+const hadSave=loadGame();
+if(!hadSave){
+  const starter=makePatient(0);
+  starter.stress=62;starter.pain=48;starter.shock=34;starter.bleeding=22;starter.infection=12;starter.oxygen=82;
+  state.patients.push(starter);state.activeId=starter.id;addLog(starter.name+" admitted to Clinic");
+  SAVE_STATUS="New game · autosave active";
+}
+SAVE_READY=true;
 render();
 
-const __vetGodsOriginalRender=render;
-render=function(){
- __vetGodsOriginalRender();
- setTimeout(wireAnimalClicks,0);
-};
-setTimeout(wireAnimalClicks,0);
-document.addEventListener("pointerdown",()=>ensureAudio(),{once:true});
+window.addEventListener("beforeunload",()=>{if(SAVE_READY)saveGame("Auto Save",true)});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&SAVE_READY)saveGame("Auto Save",true)});
 </script>
-
-<div id="animalDetailOverlay" onclick="if(event.target===this)closeAnimalDetail()">
-  <div class="animal-detail-sheet" id="animalDetailSheet"></div>
-</div>
-
 </body>
 </html>
