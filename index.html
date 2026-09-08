@@ -746,6 +746,13 @@ body::before,body::after,.screen::before,.screen::after{pointer-events:none !imp
   border-color:#9fbfca !important;
 }
 
+
+/* VET GODS · EXOTIC WING */
+.vg-exotic-note{
+  margin-top:8px;padding:8px 10px;border-radius:10px;
+  background:#d9e7ef;border:1px solid #9fb9c8;color:#203040;
+}
+
 </style>
 </head>
 <body>
@@ -2814,7 +2821,10 @@ document.addEventListener("keydown",ev=>{if(ev.key==="Escape")setGameMenu(false)
 
 const VG_SPECIES = [
   "Dog","Cat","Rabbit","Guinea Pig","Hamster","Ferret","Goat","Sheep","Pig","Mini Horse",
-  "Chicken","Duck","Parrot","Cockatiel","Tortoise","Bearded Dragon","Gecko","Chinchilla","Rat","Mouse"
+  "Chicken","Duck","Parrot","Cockatiel","Tortoise","Bearded Dragon","Gecko","Chinchilla","Rat","Mouse",
+  "Tarantula","Jumping Spider","Orb Weaver","Scorpion","Praying Mantis","Stick Insect","Leaf Insect",
+  "Beetle","Millipede","Centipede","Giant Land Snail","Hermit Crab","Freshwater Crab","Axolotl",
+  "Tree Frog","Pacman Frog","Newt","Salamander"
 ];
 
 const VG_BREEDS = {
@@ -2837,7 +2847,25 @@ const VG_BREEDS = {
   "Gecko":["Leopard Gecko","Crested Gecko"],
   "Chinchilla":["Standard Grey","Mosaic"],
   "Rat":["Fancy Rat","Dumbo Rat"],
-  "Mouse":["Fancy Mouse","Satin"]
+  "Mouse":["Fancy Mouse","Satin"],
+  "Tarantula":["Chilean Rose","Curly Hair","Mexican Red Knee","Brazilian Black"],
+  "Jumping Spider":["Regal Jumper","Bold Jumper","Phidippus Mix"],
+  "Orb Weaver":["Garden Orb Weaver","Golden Orb Weaver","Cross Orb Weaver"],
+  "Scorpion":["Emperor Scorpion","Asian Forest Scorpion","Desert Hairy Scorpion"],
+  "Praying Mantis":["Chinese Mantis","Ghost Mantis","Orchid Mantis"],
+  "Stick Insect":["Indian Stick Insect","Giant Prickly Stick Insect"],
+  "Leaf Insect":["Giant Leaf Insect","Philippine Leaf Insect"],
+  "Beetle":["Blue Death-Feigning Beetle","Rhinoceros Beetle","Stag Beetle","Darkling Beetle"],
+  "Millipede":["Giant African Millipede","Ivory Millipede"],
+  "Centipede":["Vietnamese Centipede","Desert Centipede"],
+  "Giant Land Snail":["Giant African Land Snail","Garden Snail"],
+  "Hermit Crab":["Caribbean Hermit Crab","Ecuadorian Hermit Crab"],
+  "Freshwater Crab":["Vampire Crab","Thai Micro Crab"],
+  "Axolotl":["Wild Type","Leucistic","Golden Albino","Melanoid"],
+  "Tree Frog":["White's Tree Frog","Red-Eyed Tree Frog","Green Tree Frog"],
+  "Pacman Frog":["Green Pacman Frog","Albino Pacman Frog"],
+  "Newt":["Fire-Bellied Newt","Eastern Newt"],
+  "Salamander":["Tiger Salamander","Spotted Salamander"]
 };
 
 const VG_NAMES = [
@@ -2878,7 +2906,18 @@ const VG_PROBLEMS = [
   {key:"hearing_loss",name:"Reduced hearing",severity:1,solution:"Use visual or vibration cues and avoid startling the animal; keep routines predictable.",search:"pet vibration tag safety light training clicker"},
   {key:"recovery_rest",name:"Needs protected rest",severity:1,solution:"Provide a quiet low-traffic resting place with soft bedding and easy access to water.",search:"pet crate cover orthopedic bed soft blanket"},
   {key:"stress_eating",name:"Stress-related eating changes",severity:2,solution:"Use a calm feeding area and predictable schedule; persistent refusal to eat needs veterinary evaluation.",search:"pet lick mat slow feeder quiet feeding bowl"},
-  {key:"skin_dryness",name:"Dry skin / coat",severity:1,solution:"Improve grooming and humidity as appropriate and have persistent flaking, sores, or hair loss evaluated.",search:"pet grooming brush humidifier pet shampoo hypoallergenic"}
+  {key:"skin_dryness",name:"Dry skin / coat",severity:1,solution:"Improve grooming and humidity as appropriate and have persistent flaking, sores, or hair loss evaluated.",search:"pet grooming brush humidifier pet shampoo hypoallergenic"},
+  {key:"bad_molt",name:"Incomplete / difficult molt",severity:3,solution:"Stabilize humidity and minimize handling. Failed molts can damage limbs or breathing structures and may need an exotic-animal veterinarian.",search:"terrarium hygrometer reptile mister substrate moss hide"},
+  {key:"low_humidity",name:"Low habitat humidity",severity:2,solution:"Adjust enclosure humidity gradually using species-appropriate substrate, hides, water dishes, or misting.",search:"terrarium hygrometer mister coco fiber sphagnum moss"},
+  {key:"high_humidity",name:"Excess habitat humidity",severity:2,solution:"Improve ventilation and reduce over-wetting while keeping the species' safe humidity range.",search:"terrarium ventilation mesh hygrometer enclosure fan"},
+  {key:"substrate_issue",name:"Unsafe / unsuitable substrate",severity:2,solution:"Replace with a species-appropriate substrate and provide adequate depth for burrowing or molting where needed.",search:"terrarium substrate coco fiber leaf litter reptile soil"},
+  {key:"shell_damage",name:"Shell / exoskeleton damage",severity:3,solution:"Reduce handling, keep the enclosure clean, and seek exotic veterinary help for deep cracks, exposed tissue, or worsening damage.",search:"hermit crab shells calcium cuttlebone terrarium hide"},
+  {key:"grip_weakness",name:"Weak grip / climbing difficulty",severity:2,solution:"Provide safe climbing structures and review hydration, nutrition, temperature, and molt stage.",search:"terrarium climbing branches cork bark vines"},
+  {key:"water_quality",name:"Poor water quality",severity:3,solution:"Correct temperature, dechlorination, filtration, and water parameters appropriate to the species.",search:"aquarium water conditioner test kit sponge filter thermometer"},
+  {key:"calcium_need",name:"Calcium / mineral support need",severity:2,solution:"Offer a species-appropriate calcium source and correct diet or lighting requirements.",search:"reptile calcium powder cuttlebone mineral block UVB lamp"},
+  {key:"wrong_temperature",name:"Incorrect enclosure temperature",severity:3,solution:"Correct the thermal gradient gradually and verify it with reliable thermometers; avoid sudden heating or cooling.",search:"terrarium digital thermometer thermostat heat mat"},
+  {key:"ventilation_issue",name:"Poor enclosure ventilation",severity:2,solution:"Improve airflow without creating unsafe drafts or excessive drying.",search:"terrarium mesh lid ventilation enclosure hygrometer"},
+  {key:"molt_rest",name:"Pre-molt stress",severity:1,solution:"Reduce handling and disturbance, maintain stable conditions, and avoid unnecessary feeding during vulnerable molt periods.",search:"terrarium hide hygrometer water dish substrate"}
 ];
 
 function vgHash(i,a,b){ return (i*37 + a*17 + b*11) % 9973; }
@@ -2898,12 +2937,17 @@ function vgOpenExternal(url){
 function vgEscape(s){
   return String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 }
-function vgProblemCombo(i){
-  const one=VG_PROBLEMS[i % VG_PROBLEMS.length];
-  let two=VG_PROBLEMS[(i*7+11)%VG_PROBLEMS.length];
-  let three=VG_PROBLEMS[(i*13+5)%VG_PROBLEMS.length];
-  if(two.key===one.key)two=VG_PROBLEMS[(i*7+12)%VG_PROBLEMS.length];
-  if(three.key===one.key||three.key===two.key)three=VG_PROBLEMS[(i*13+7)%VG_PROBLEMS.length];
+function vgProblemCombo(i,species=null){
+  const exoticKeys=["bad_molt","low_humidity","high_humidity","substrate_issue","shell_damage","grip_weakness","water_quality","calcium_need","wrong_temperature","ventilation_issue","molt_rest"];
+  const exoticSet=new Set(["Tarantula","Jumping Spider","Orb Weaver","Scorpion","Praying Mantis","Stick Insect","Leaf Insect","Beetle","Millipede","Centipede","Giant Land Snail","Hermit Crab","Freshwater Crab","Axolotl","Tree Frog","Pacman Frog","Newt","Salamander"]);
+  const pool=exoticSet.has(species)
+    ? VG_PROBLEMS.filter(p=>exoticKeys.includes(p.key) || ["dehydration","poor_appetite","anxiety","recovery_rest"].includes(p.key))
+    : VG_PROBLEMS.filter(p=>!exoticKeys.includes(p.key));
+  const one=pool[i % pool.length];
+  let two=pool[(i*7+11)%pool.length];
+  let three=pool[(i*13+5)%pool.length];
+  if(two.key===one.key)two=pool[(i*7+12)%pool.length];
+  if(three.key===one.key||three.key===two.key)three=pool[(i*13+7)%pool.length];
   const count=1+(i%3);
   return [one,two,three].slice(0,count);
 }
@@ -2911,7 +2955,7 @@ function vgMakeDatabaseAnimal(i){
   const species=VG_SPECIES[i%VG_SPECIES.length];
   const breed=vgPick(VG_BREEDS[species]||["Mixed"],i,3);
   const name=VG_NAMES[i%VG_NAMES.length] + (i>=VG_NAMES.length ? " "+(Math.floor(i/VG_NAMES.length)+1) : "");
-  const problems=vgProblemCombo(i);
+  const problems=vgProblemCombo(i,species);
   const maxSeverity=Math.max(...problems.map(p=>p.severity));
   const adoptChance=(i*19+27)%100;
   const disposition=adoptChance<58?"Eligible for My Pets after recovery":adoptChance<80?"Sanctuary / foster candidate":"Return-home / release candidate";
@@ -2941,7 +2985,7 @@ function vgMakeDatabaseAnimal(i){
     maxSeverity
   };
 }
-const VG_ANIMAL_DATABASE = Array.from({length:500},(_,i)=>vgMakeDatabaseAnimal(i));
+const VG_ANIMAL_DATABASE = Array.from({length:650},(_,i)=>vgMakeDatabaseAnimal(i));
 
 function vgDatabaseAnimalToPatient(db){
   const idx=parseInt(db.dbId.slice(2),10)-1;
@@ -2998,7 +3042,7 @@ function admitDatabaseAnimal(dbId){
   state.patients.push(p);
   state.activeId=p.id;
   state.screen="clinic";
-  addLog(`${p.name} admitted from the 500-animal database`);
+  addLog(`${p.name} admitted from the 650-animal database`);
   if(typeof saveGame==="function")try{saveGame("Animal admitted",true)}catch(e){}
   render();
 }
@@ -3060,7 +3104,7 @@ function vgRenderDatabaseBrowser(){
     </div>`;
 }
 
-/* Patch the Admit screen to include the searchable 500-animal database. */
+/* Patch the Admit screen to include the searchable 650-animal database. */
 const _vgOriginalRenderAdmit = typeof renderAdmit==="function" ? renderAdmit : null;
 renderAdmit=function(){
   const el=document.getElementById("admit");
@@ -3068,7 +3112,7 @@ renderAdmit=function(){
   el.innerHTML=`
     <div class="panel">
       <h2>🐾 Admit Animal</h2>
-      <p class="small">Choose from 500 distinct animal cases. Each animal has its own problem mix, care notes, likely outcome, and supply-search links.</p>
+      <p class="small">Choose from 650 distinct animal cases, including exotic invertebrates and amphibians. Each animal has its own problem mix, care notes, likely outcome, and supply-search links.</p>
       <div class="small"><b>Important:</b> Product links are for finding general care supplies. Serious or worsening symptoms still need a veterinarian. Amazon searches open outside the game page.</div>
     </div>
     <div class="panel" id="vgAnimalDatabase"></div>`;
@@ -3088,7 +3132,12 @@ const VG_SPECIES_GROUP = {
   Ferret:"small_mammal", Chinchilla:"small_mammal", Rat:"small_mammal", Mouse:"small_mammal",
   Parrot:"bird", Cockatiel:"bird", Chicken:"bird", Duck:"bird",
   Tortoise:"reptile", "Bearded Dragon":"reptile", Gecko:"reptile",
-  Goat:"farm", Sheep:"farm", Pig:"farm", "Mini Horse":"farm"
+  Goat:"farm", Sheep:"farm", Pig:"farm", "Mini Horse":"farm",
+  "Tarantula":"arachnid","Jumping Spider":"arachnid","Orb Weaver":"arachnid","Scorpion":"arachnid",
+  "Praying Mantis":"insect","Stick Insect":"insect","Leaf Insect":"insect","Beetle":"insect",
+  "Millipede":"myriapod","Centipede":"myriapod","Giant Land Snail":"mollusk",
+  "Hermit Crab":"crustacean","Freshwater Crab":"crustacean",
+  "Axolotl":"amphibian","Tree Frog":"amphibian","Pacman Frog":"amphibian","Newt":"amphibian","Salamander":"amphibian"
 };
 
 const VG_CARE_GROUPS = {
@@ -3121,6 +3170,36 @@ const VG_CARE_GROUPS = {
     discovery:["Observe Standing","Watch Gait","Check Breathing","Inspect Feet","Check Hydration","Listen to Gut"],
     treatment:["Rest Stall","Fresh Water","Pain Support","Clean Bedding","Feed Support","Movement Support"],
     recovery:["Quiet Rest","Offer Feed","Fresh Water","Short Walk","Clean Bedding","Recheck Mobility"]
+  },
+  arachnid:{
+    discovery:["Observe Web / Posture","Check Leg Position","Inspect Abdomen","Check Molt Status","Check Humidity","Watch Feeding Response"],
+    treatment:["Adjust Humidity","Reduce Vibration","Provide Hide","Correct Substrate","Offer Water Dish","Pause Feeding Near Molt"],
+    recovery:["Dark Quiet Rest","Mist Habitat Lightly","Fresh Water Dish","No Handling","Check Molt Progress","Recheck Posture"]
+  },
+  insect:{
+    discovery:["Observe Grip","Check Antennae","Inspect Exoskeleton","Check Molt Stage","Check Humidity","Watch Feeding"],
+    treatment:["Adjust Humidity","Add Climbing Surface","Fresh Food","Reduce Handling","Correct Ventilation","Provide Molt Space"],
+    recovery:["Quiet Enclosure","Fresh Food","Light Mist","No Handling","Recheck Grip","Check Molt"]
+  },
+  myriapod:{
+    discovery:["Observe Curling","Check Segments","Inspect Legs","Check Substrate Moisture","Check Ventilation","Watch Movement"],
+    treatment:["Moisten Substrate","Add Leaf Litter","Reduce Handling","Correct Depth","Fresh Vegetables","Improve Ventilation"],
+    recovery:["Burrow Rest","Fresh Food","Moist Substrate","No Handling","Recheck Movement","Check Segments"]
+  },
+  mollusk:{
+    discovery:["Observe Tentacles","Inspect Shell","Check Foot","Check Moisture","Check Feeding","Inspect Habitat"],
+    treatment:["Mist Habitat","Calcium Source","Soft Substrate","Fresh Greens","Repair Safe Shelter","Reduce Handling"],
+    recovery:["Humid Rest","Fresh Greens","Calcium Access","Clean Habitat","Recheck Shell","Recheck Activity"]
+  },
+  crustacean:{
+    discovery:["Check Shell / Carapace","Observe Climbing","Check Molt Signs","Check Humidity / Water","Inspect Limbs","Watch Feeding"],
+    treatment:["Correct Humidity","Provide Shell Choices","Fresh Water","Saltwater Dish if Needed","Deep Substrate","Reduce Handling"],
+    recovery:["Burrow Rest","Fresh Water","Shell Check","Quiet Habitat","Recheck Limbs","Monitor Molt"]
+  },
+  amphibian:{
+    discovery:["Observe Skin","Watch Breathing","Check Gait / Swim","Check Water Quality","Check Appetite","Inspect Eyes"],
+    treatment:["Correct Water Quality","Adjust Humidity","Cool Quiet Habitat","Fresh Dechlorinated Water","Reduce Handling","Safe Feeding"],
+    recovery:["Low-Stress Rest","Fresh Water","Recheck Skin","Offer Food","Check Activity","Monitor Breathing"]
   }
 };
 
@@ -3274,6 +3353,61 @@ const VG_PROBLEM_PATHS = {
     discover:["Inspect Skin","Check Flaking","Check Coat"],
     treat:["Gentle Grooming","Humidity Support","Clean Bedding"],
     recover:["Brush Coat","Fresh Bedding","Recheck Skin"]
+  },
+  bad_molt:{
+    discover:["Check Molt Line","Inspect Limbs","Check Humidity"],
+    treat:["Stabilize Humidity","Reduce Handling","Provide Safe Molt Space"],
+    recover:["No Handling","Recheck Molt","Quiet Habitat"]
+  },
+  low_humidity:{
+    discover:["Check Hygrometer","Inspect Skin / Exoskeleton","Check Water Source"],
+    treat:["Light Mist","Moisture Hide","Adjust Substrate"],
+    recover:["Recheck Humidity","Fresh Water","Quiet Habitat"]
+  },
+  high_humidity:{
+    discover:["Check Condensation","Check Ventilation","Inspect Substrate"],
+    treat:["Improve Ventilation","Dry Surface Layer","Reduce Misting"],
+    recover:["Recheck Humidity","Clean Habitat","Quiet Rest"]
+  },
+  substrate_issue:{
+    discover:["Inspect Substrate","Check Burrowing","Check Skin / Feet"],
+    treat:["Replace Substrate","Add Safe Depth","Add Leaf Litter"],
+    recover:["Burrow Rest","Recheck Movement","Habitat Check"]
+  },
+  shell_damage:{
+    discover:["Inspect Shell","Check Exposed Tissue","Check Mobility"],
+    treat:["Protect From Handling","Clean Habitat","Calcium Support"],
+    recover:["Quiet Rest","Recheck Shell","Fresh Water"]
+  },
+  grip_weakness:{
+    discover:["Watch Climbing","Check Feet / Tarsi","Check Molt Stage"],
+    treat:["Add Climbing Surface","Adjust Humidity","Reduce Handling"],
+    recover:["Recheck Grip","Quiet Enclosure","Fresh Food"]
+  },
+  water_quality:{
+    discover:["Test Water","Check Temperature","Inspect Gills / Skin"],
+    treat:["Condition Water","Correct Temperature","Improve Filtration"],
+    recover:["Fresh Water","Recheck Skin","Monitor Activity"]
+  },
+  calcium_need:{
+    discover:["Inspect Shell / Bones","Review Diet","Check Lighting"],
+    treat:["Calcium Support","Correct Diet","Lighting Check"],
+    recover:["Recheck Strength","Offer Food","Quiet Rest"]
+  },
+  wrong_temperature:{
+    discover:["Check Thermometer","Watch Activity","Inspect Heat Zone"],
+    treat:["Adjust Thermostat","Correct Heat Gradient","Reduce Stress"],
+    recover:["Recheck Temperature","Quiet Rest","Monitor Activity"]
+  },
+  ventilation_issue:{
+    discover:["Check Airflow","Check Condensation","Inspect Habitat"],
+    treat:["Improve Ventilation","Open Air Path","Reduce Excess Moisture"],
+    recover:["Recheck Airflow","Quiet Habitat","Monitor Activity"]
+  },
+  molt_rest:{
+    discover:["Check Molt Signs","Watch Feeding","Check Posture"],
+    treat:["Stop Disturbance","Stabilize Habitat","Provide Water"],
+    recover:["No Handling","Quiet Rest","Recheck Molt"]
   }
 };
 
