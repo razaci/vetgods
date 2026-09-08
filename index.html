@@ -1254,6 +1254,110 @@ body{
 button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
 .world-pet{pointer-events:auto;cursor:pointer}
 
+
+/* CLINIC ARRIVAL + ADOPTION OWNERSHIP */
+.clinic-arrival-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.clinic-arrival-head h3{margin:0}.clinic-arrival-head>span{font-size:.55rem;opacity:.6}
+.clinic-arrival-card{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center;margin:10px 0;padding:9px;border:1px solid #35566a;border-radius:9px;background:#0b1923}
+.clinic-arrival-card img{width:92px;height:72px;object-fit:contain;border-radius:7px;background:#061018}
+.clinic-arrival-card b,.clinic-arrival-card span,.clinic-arrival-card small{display:block}
+.clinic-arrival-card b{font-size:.78rem}.clinic-arrival-card span{font-size:.6rem;opacity:.75;margin-top:3px}.clinic-arrival-card small{font-size:.55rem;margin-top:5px;color:#b8dded}
+.ownership-rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.ownership-rules>div,.ownership-story{padding:9px;border:1px solid #355365;border-radius:8px;background:#0b1821}
+.ownership-rules b,.ownership-rules span,.ownership-story b,.ownership-story span,.ownership-story small{display:block}
+.ownership-rules b,.ownership-story b{font-size:.62rem}.ownership-rules span,.ownership-story span{font-size:.56rem;opacity:.74;margin-top:4px;line-height:1.4}
+.ownership-story{margin-top:9px}.ownership-story.hardship{border-color:#835d63;background:#241316}.ownership-story.family{border-color:#3d6255;background:#0e1d19}
+.ownership-story small{font-size:.52rem;opacity:.6;margin-top:5px}
+.adoption-decision{border:2px solid #8a6b7b;background:linear-gradient(180deg,#24131e,#0d1720)}
+.adoption-banner{font-size:.58rem;letter-spacing:.12em;font-weight:900;opacity:.8}
+.adoption-decision h2{margin:7px 0}.adoption-decision p{font-size:.64rem;line-height:1.45;opacity:.8}
+.adoption-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.adoption-choice-grid button{padding:12px;border:1px solid #496273;border-radius:9px;background:#102331;color:inherit;text-align:left}
+.adoption-choice-grid button b,.adoption-choice-grid button span{display:block}
+.adoption-choice-grid button b{font-size:.66rem}.adoption-choice-grid button span{font-size:.54rem;opacity:.7;margin-top:5px;line-height:1.35}
+.adoption-choice-grid .adopt-me{border-color:#8b5265;background:#321826}
+@media(max-width:560px){
+ .ownership-rules,.adoption-choice-grid{grid-template-columns:1fr}
+ .clinic-arrival-card{grid-template-columns:74px 1fr}.clinic-arrival-card img{width:74px;height:66px}
+}
+
+
+/* ANIMAL CARE CODEX */
+.codex-panel{margin-top:12px}
+.codex-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.codex-title h2{margin:0 0 3px}.codex-title>span{font-size:.54rem;letter-spacing:.12em;opacity:.65}
+.codex-toolbar{display:grid;grid-template-columns:2fr 1fr;gap:7px;margin-top:10px}
+.codex-toolbar input,.codex-toolbar select{width:100%;padding:9px;border:1px solid #365365;border-radius:7px;background:#091720;color:inherit}
+.codex-count{font-size:.55rem;opacity:.6;margin:8px 0}
+.codex-shell{display:grid;grid-template-columns:minmax(250px,.8fr) minmax(0,1.6fr);gap:9px}
+.codex-list{display:grid;gap:5px;align-content:start}
+.codex-card{width:100%;padding:8px;border:1px solid #2b4859;border-radius:7px;background:#091720;color:inherit;text-align:left}
+.codex-card:hover,.codex-card:focus{border-color:#6fadc9;background:#102532}
+.codex-card-top{display:flex;justify-content:space-between;gap:6px}.codex-card-top b{font-size:.63rem}.codex-card-top span{font-size:.48rem;opacity:.5}
+.codex-card>div:nth-child(2){font-size:.54rem;opacity:.72;margin-top:2px}.codex-card small{display:block;font-size:.49rem;opacity:.55;margin-top:3px}
+.codex-detail{border:1px solid #35596c;border-radius:10px;background:#08131b;overflow:hidden}
+.codex-hero{display:flex;justify-content:space-between;gap:10px;padding:12px;background:linear-gradient(135deg,#112a39,#09131d)}
+.codex-hero h3{margin:3px 0;font-size:1rem}.codex-hero p{margin:0;font-size:.58rem;opacity:.68}.codex-id{font-size:.5rem;opacity:.5}
+.codex-badge{font-size:.55rem;font-weight:900;letter-spacing:.08em;text-align:right;border:1px solid #526875;padding:6px 8px;border-radius:6px;height:max-content}.codex-badge small{font-size:.43rem;opacity:.65}
+.codex-backstory{padding:10px 12px;border-bottom:1px solid #213b49;font-size:.61rem;line-height:1.45;opacity:.78}
+.codex-readout{padding:10px}
+.codex-statusbar{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:8px}.codex-statusbar span{font-size:.47rem;padding:6px;border:1px solid #29495a;border-radius:5px;background:#0b1b25;text-align:center}
+.codex-grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.codex-block{border:1px solid #2a4b5d;border-radius:7px;background:#0a1822;padding:8px}.codex-block h4{font-size:.55rem;letter-spacing:.08em;margin:0 0 6px;color:#cdefff}
+.readout-line{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.045)}.readout-line b,.readout-line span{display:block}.readout-line b{font-size:.54rem}.readout-line span{font-size:.49rem;opacity:.62;margin-top:2px;line-height:1.35}
+.codex-amazon-title{margin-top:10px;padding:7px;border:1px solid #5d673d;border-radius:6px;background:#181d12;font-size:.58rem;font-weight:900;letter-spacing:.06em}
+.codex-amazon-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.codex-amazon-grid .silly-supply{border-color:#66537a;background:#21182a}.codex-amazon-grid .silly-supply b{color:#eadcff}.codex-amazon-grid em{display:block;font-size:.45rem;opacity:.55;margin-top:3px;font-style:normal;line-height:1.25}
+@media(max-width:760px){
+ .codex-shell{grid-template-columns:1fr}.codex-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .codex-grid3,.codex-amazon-grid{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+ .codex-toolbar{grid-template-columns:1fr}.codex-list{grid-template-columns:1fr}
+ .codex-title{flex-direction:column}.codex-statusbar{grid-template-columns:1fr}
+}
+
+
+/* AMAZON SUPPLY TERMINAL V2 */
+.amazon-terminal{margin-top:10px;border:1px solid #667044;border-radius:10px;background:#0d140d;overflow:hidden}
+.amazon-terminal-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;background:linear-gradient(135deg,#1b2515,#0c1714)}
+.terminal-kicker{font-size:.46rem;letter-spacing:.16em;opacity:.58}.amazon-terminal-head h3{margin:3px 0;font-size:.82rem}.amazon-terminal-head p{margin:0;font-size:.51rem;opacity:.62}
+.terminal-count{min-width:68px;text-align:center;border:1px solid #6d754b;border-radius:8px;padding:7px}.terminal-count b{display:block;font-size:1.05rem}.terminal-count span{display:block;font-size:.42rem;opacity:.58}
+.terminal-meter{display:flex;align-items:center;gap:5px;padding:7px 10px;border-top:1px solid #26331f;border-bottom:1px solid #26331f;font-size:.42rem;letter-spacing:.06em;overflow:hidden}
+.terminal-meter i{height:2px;flex:1;min-width:8px;background:#53623c}
+.amazon-bays{padding:8px;display:grid;gap:6px}
+.amazon-bay{border:1px solid #33442c;border-radius:7px;background:#111b10;overflow:hidden}
+.amazon-bay summary{display:flex;justify-content:space-between;gap:8px;padding:8px;cursor:pointer}.amazon-bay summary b{font-size:.57rem}.amazon-bay summary span{font-size:.44rem;opacity:.5}
+.amazon-bay-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:0 7px 7px}
+.amazon-bay-grid button{padding:8px;border:1px solid #405437;border-radius:6px;background:#172316;color:inherit;text-align:left}
+.amazon-bay-grid button b,.amazon-bay-grid button span,.amazon-bay-grid button small{display:block}
+.amazon-bay-grid button b{font-size:.57rem;color:#e1f1cc}.amazon-bay-grid button span{font-size:.49rem;opacity:.68;margin-top:2px;line-height:1.3}.amazon-bay-grid button small{font-size:.42rem;opacity:.42;margin-top:5px;line-height:1.25}
+.amazon-bay-grid button:active{transform:translateY(1px);border-color:#91ad70}
+.terminal-note{padding:8px 10px;border-top:1px solid #26331f;font-size:.46rem;line-height:1.4;opacity:.52}
+.amazon-pet-terminal>.amazon-terminal{border:0;margin:0;border-radius:0}
+@media(max-width:560px){
+ .amazon-bay-grid{grid-template-columns:1fr}
+ .amazon-terminal-head{align-items:flex-start}
+ .terminal-meter span:nth-of-type(n+4),.terminal-meter i:nth-of-type(n+4){display:none}
+}
+
+
+/* MY PETS SHOPPING LIST */
+.mypets-shop{border-color:#5d6842;background:linear-gradient(180deg,#101810,#081219)}
+.mypets-shop-title{display:flex;justify-content:space-between;gap:12px;align-items:center}.mypets-shop-title h2{margin:3px 0}.mypets-shop-title p{margin:0;font-size:.56rem;opacity:.62}
+.shop-pets-count{min-width:62px;text-align:center;border:1px solid #647047;border-radius:8px;padding:7px}.shop-pets-count b,.shop-pets-count span{display:block}.shop-pets-count b{font-size:1rem}.shop-pets-count span{font-size:.43rem;opacity:.55}
+.shop-legend{display:flex;gap:6px;flex-wrap:wrap;margin:9px 0}.shop-legend span{font-size:.44rem;border:1px solid #40513a;border-radius:20px;padding:4px 7px;opacity:.7}
+.pet-shop-cards{display:grid;gap:7px}.pet-shop-card{border:1px solid #3b5136;border-radius:8px;background:#0d180e;overflow:hidden}
+.pet-shop-card>summary{display:flex;justify-content:space-between;gap:8px;padding:9px;cursor:pointer}.pet-shop-card>summary span{font-size:.63rem;font-weight:900}.pet-shop-card>summary em{font-size:.46rem;font-style:normal;opacity:.58}
+.pet-shop-head{padding:0 9px 8px}.pet-shop-head b,.pet-shop-head span{display:block}.pet-shop-head b{font-size:.55rem}.pet-shop-head span{font-size:.48rem;opacity:.55}
+.shop-progress{height:4px;background:#172217;border-radius:5px;overflow:hidden;margin-top:6px}.shop-progress i{display:block;height:100%;background:#82965c}
+.pet-shop-list{display:grid;gap:4px;padding:0 7px 7px}.shop-row{display:grid;grid-template-columns:32px 1fr auto;gap:6px;align-items:center;border:1px solid #2e412b;border-radius:6px;background:#111e12;padding:5px}
+.shop-row.got-it{opacity:.55}.shop-row.got-it .shop-copy b{text-decoration:line-through}
+.shop-check{width:30px;height:30px;border-radius:50%;border:1px solid #617052;background:#162316;color:inherit;font-size:.8rem}
+.shop-copy b,.shop-copy span{display:block}.shop-copy b{font-size:.55rem}.shop-copy span{font-size:.45rem;opacity:.56;margin-top:2px}
+.shop-amazon{padding:7px;border:1px solid #687142;border-radius:5px;background:#202718;color:#e6efcf;font-size:.46rem;font-weight:900}
+@media(max-width:520px){.shop-row{grid-template-columns:30px 1fr}.shop-amazon{grid-column:2;width:100%}.mypets-shop-title{align-items:flex-start}}
+
 </style>
 </head>
 <body>
@@ -2591,7 +2695,7 @@ function sanctuaryCanvasHTML(){
         <span id="sanctuaryFPS">FPS ${Math.round(SANCTUARY_SIM.fps)}</span>
       </div>
     </div>
-    <div class="sanctuary-help small">Drag habitat objects. Tap a moving pet to open its profile. Needs, routines, quiet time, sleep, personality, and random wandering influence where they go. Sleeping pets always follow the movable bed.</div>
+    <div class="sanctuary-help small">Drag habitat objects. Tap a moving pet to open its profile. Their needs and memories influence where they go.</div>
   </div>`;
 }
 function sanctuaryEnsureMotion(p,i){
@@ -2602,150 +2706,25 @@ function sanctuaryEnsureMotion(p,i){
   }
   return s.motion;
 }
-function sanctuaryRoutinePhase(){
-  const d=sanctuaryDaypart();
-  if(d==="Night")return "sleep";
-  if(d==="Evening")return "quiet";
-  if(d==="Morning")return "active";
-  return "free";
-}
-function sanctuaryStation(type){
-  return SANCTUARY_SIM.objects.find(o=>o.type===type);
-}
-function sanctuaryPetOffset(i,type){
-  const ring=(i%6), ang=(ring/6)*Math.PI*2 + ((i%3)*.23);
-  const radius=(type==="bed"||type==="hide")?.035:.05;
-  return {x:Math.cos(ang)*radius,y:Math.sin(ang)*radius};
-}
-function sanctuarySetTarget(p,i,type,holdMs){
-  const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
-  const o=sanctuaryStation(type);
-  if(!o)return false;
-  const off=sanctuaryPetOffset(i,type);
-  mot.stationType=type;
-  mot.stationId=o.id;
-  mot.tx=Math.max(.05,Math.min(.95,o.x+off.x));
-  mot.ty=Math.max(.08,Math.min(.92,o.y+off.y));
-  mot.nextDecision=Date.now()+holdMs;
-  const labels={
-    bed:["Heading to sleep","Sleeping at the rest station"],
-    hide:["Heading to quiet mode","Settling in the quiet station"],
-    food:["Heading for food","Eating at the food station"],
-    water:["Heading for water","Drinking at the water station"],
-    toy:["Heading to play","Playing with the toy"],
-    care:["Heading to care","Checking in at the care station"]
-  };
-  s.activity=(labels[type]||["Moving","Resting"])[0];
-  s.room=(o.label||type);
-  return true;
-}
-function sanctuarySetWander(p,i,holdMs=5000){
-  const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
-  mot.stationType="wander";
-  mot.stationId=null;
-  mot.tx=.10+Math.random()*.80;
-  mot.ty=.14+Math.random()*.72;
-  mot.nextDecision=Date.now()+holdMs;
-  s.activity=Math.random()<.5?"Wandering around the sanctuary":"Exploring the habitat";
-  s.room="Open Sanctuary";
-}
-function sanctuaryArrived(p,i){
-  const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
-  const near=Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.035;
-  if(!near)return;
-  const labels={
-    bed:"Sleeping peacefully",
-    hide:"Quiet resting",
-    food:"Eating at the food station",
-    water:"Drinking fresh water",
-    toy:"Playing with enrichment",
-    care:"Visiting the care station",
-    wander:"Looking around"
-  };
-  if(labels[mot.stationType])s.activity=labels[mot.stationType];
-  if(near && (!mot.arrivedAt || Date.now()-mot.arrivedAt>1000)){
-    mot.arrivedAt=Date.now();
-    const stay={
-      bed:30000,
-      hide:24000,
-      food:18000,
-      water:15000,
-      toy:20000,
-      care:17000,
-      wander:10000
-    };
-    mot.nextDecision=Math.max(mot.nextDecision||0,Date.now()+(stay[mot.stationType]||16000));
-  }
-}
 function sanctuaryTargetFor(p,i){
   const s=ensurePetSim(p),m=ensurePetMind(p),mot=sanctuaryEnsureMotion(p,i);
-  const now=Date.now(),phase=sanctuaryRoutinePhase();
-
-  // Sleep is an absolute priority and always tracks the movable bed.
-  const mustSleep=(p.energy||0)<28 || (s.sleep||0)<30 || phase==="sleep";
-  if(mustSleep){
-    const bed=sanctuaryStation("bed")||sanctuaryStation("hide");
-    if(bed){
-      const off=sanctuaryPetOffset(i,bed.type);
-      mot.stationType=bed.type;mot.stationId=bed.id;
-      mot.tx=Math.max(.05,Math.min(.95,bed.x+off.x));
-      mot.ty=Math.max(.08,Math.min(.92,bed.y+off.y));
-      mot.nextDecision=now+22000;
-      s.activity=Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.04?"Sleeping peacefully":"Going to the sleep station";
-      s.room=bed.label||"Sleep Station";
-      return;
-    }
+  let target=null;
+  if((p.hunger||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="food");
+  else if((p.water||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="water");
+  else if((p.energy||0)<30 || (s.sleep||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="bed")||SANCTUARY_SIM.objects.find(o=>o.type==="hide");
+  else if((p.fear||0)>55)target=SANCTUARY_SIM.objects.find(o=>o.type==="hide");
+  else if((s.enrichment||0)<45)target=SANCTUARY_SIM.objects.find(o=>o.type==="toy");
+  else if(m.favoriteRoom && Math.random()<.1){
+    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
   }
-
-  // Strong physical needs override casual activities.
-  if((p.hunger||0)<28){sanctuarySetTarget(p,i,"food",15000);return;}
-  if((p.water||0)<28){sanctuarySetTarget(p,i,"water",12000);return;}
-  if((p.fear||0)>62){sanctuarySetTarget(p,i,"hide",18000);return;}
-
-  // During the shared quiet phase, residents drift toward calm stations.
-  if(phase==="quiet" && mot.stationType!=="hide" && Math.random()<.018){
-    sanctuarySetTarget(p,i,"hide",16000+Math.random()*9000);return;
+  if(!target && (Math.random()<.02 || Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.03)){
+    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
   }
-
-  // Keep following a station if the player drags it to a new location.
-  if(mot.stationId && mot.stationType!=="wander"){
-    const live=SANCTUARY_SIM.objects.find(o=>o.id===mot.stationId);
-    if(live){
-      const off=sanctuaryPetOffset(i,mot.stationType);
-      mot.tx=Math.max(.05,Math.min(.95,live.x+off.x));
-      mot.ty=Math.max(.08,Math.min(.92,live.y+off.y));
-    }
+  if(target){
+    mot.tx=Math.max(.05,Math.min(.95,target.x+(Math.random()-.5)*.08));
+    mot.ty=Math.max(.08,Math.min(.92,target.y+(Math.random()-.5)*.08));
   }
-
-  sanctuaryArrived(p,i);
-
-  // Stay committed to the current activity long enough to see it happen.
-  if((mot.nextDecision||0)>now)return;
-
-  let choices=[];
-  const push=(type,weight)=>{for(let n=0;n<weight;n++)choices.push(type);};
-
-  if(phase==="active"){
-    push("wander",6);push("toy",3);push("food",2);push("water",2);push("care",1);push("hide",1);
-  }else if(phase==="quiet"){
-    push("hide",7);push("bed",3);push("wander",2);push("water",1);push("toy",1);
-  }else{
-    push("wander",8);push("hide",3);push("toy",3);push("water",2);push("food",2);push("care",1);push("bed",1);
-  }
-
-  if((s.enrichment||50)<38)push("toy",2);
-  if((p.hunger||50)<48)push("food",3);
-  if((p.water||50)<48)push("water",3);
-  if((p.energy||50)<48)push("bed",3);
-  if((p.fear||0)>35)push("hide",3);
-  if(m.traits && m.traits.curiosity>60)push("wander",3);
-  if(m.traits && m.traits.independence>60){push("wander",2);push("hide",1);}
-
-  const choice=choices[Math.floor(Math.random()*choices.length)]||"wander";
-  if(choice==="wander")sanctuarySetWander(p,i,9000+Math.random()*12000);
-  else sanctuarySetTarget(p,i,choice,13000+Math.random()*14000);
 }
-
 function sanctuaryDraw(){
   const c=document.getElementById("sanctuaryCanvas");
   if(!c)return;
@@ -2764,10 +2743,9 @@ function sanctuaryDraw(){
   state.pets.slice(0,24).forEach((p,i)=>{
     const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
     sanctuaryTargetFor(p,i);
-    const baseSpeed=SANCTUARY_SIM.perf==="full"?.00105:.00078;
-    const petSpeed=baseSpeed*(.82+(i%5)*.055);
-    mot.x += (mot.tx-mot.x)*petSpeed*16;
-    mot.y += (mot.ty-mot.y)*petSpeed*16;
+    const speed=SANCTUARY_SIM.perf==="full"?.0026:.0017;
+    mot.x += (mot.tx-mot.x)*speed*16;
+    mot.y += (mot.ty-mot.y)*speed*16;
     const x=mot.x*w,y=mot.y*h;
     ctx.save();
     ctx.shadowBlur=SANCTUARY_SIM.perf==="full"?14:0;
@@ -3182,6 +3160,854 @@ function vgAmazonSpeciesPopup(species){
   document.body.appendChild(modal);
 }
 
+
+/* =========================================================
+   VET GODS · CLINIC ARRIVAL + OWNERSHIP / ADOPTION SYSTEM
+   Patients come through Clinic. Normal discharge returns home.
+   Only relinquished hardship cases can be adopted into My Pets.
+   ========================================================= */
+
+function ensureClinicIntakeState(){
+  if(!Array.isArray(state.usedClinicDbIds))state.usedClinicDbIds=[];
+  if(!state.nextClinicPreviewId)state.nextClinicPreviewId=null;
+  return state.usedClinicDbIds;
+}
+
+function vgClinicPoolAvailable(){
+  ensureClinicIntakeState();
+  return VG_ANIMAL_DATABASE.filter(a=>!state.usedClinicDbIds.includes(a.dbId));
+}
+
+function vgResetClinicPoolIfNeeded(){
+  ensureClinicIntakeState();
+  if(state.usedClinicDbIds.length>=VG_ANIMAL_DATABASE.length){
+    state.usedClinicDbIds=[];
+    state.nextClinicPreviewId=null;
+    addLog("Clinic intake cycle renewed after every animal had appeared once.");
+  }
+}
+
+function vgNextClinicDatabaseAnimal(){
+  vgResetClinicPoolIfNeeded();
+  const available=vgClinicPoolAvailable();
+  if(!available.length)return null;
+  if(state.nextClinicPreviewId){
+    const keep=available.find(a=>a.dbId===state.nextClinicPreviewId);
+    if(keep)return keep;
+  }
+  // Deterministic but spread species around instead of repeatedly showing nearby records.
+  const seed=(state.nextCase||0)*37 + (state.patients?.length||0)*11 + state.usedClinicDbIds.length*17;
+  const db=available[Math.abs(seed)%available.length];
+  state.nextClinicPreviewId=db.dbId;
+  return db;
+}
+
+function vgNeedsMajorSurgery(p,db){
+  if(p.surgeryRequired)return true;
+  const serious=db && db.maxSeverity>=3;
+  const keys=(p.dbProblems||[]).join(" ");
+  return !!(serious || /wound|mobility|fracture|foreign|trauma|shell|exoskeleton|respiratory/i.test(keys+" "+(p.condition||"")));
+}
+
+function vgAssignOwnershipOutcome(p,db){
+  if(p.ownershipCase)return p.ownershipCase;
+  const idx=parseInt((p.dbId||"VG1").replace(/\D/g,""),10)||1;
+  const needsSurgery=vgNeedsMajorSurgery(p,db);
+  // About one third of major-surgery arrivals become relinquishment/adoption cases.
+  const hardship=needsSurgery && ((idx*7 + (p.name||"").length*3)%10<4);
+  p.ownershipCase={
+    needsSurgery,
+    hardship,
+    status:hardship?"guardian_cannot_continue":"family_home",
+    resolved:false,
+    adopted:false,
+    note:hardship
+      ?"Guardian cannot afford the required surgery and has signed a fictional hospital relinquishment. After recovery, you may adopt this animal yourself."
+      :"This patient has a home to return to. Successful discharge returns the animal to its family/caretaker."
+  };
+  p.canBecomePet=hardship;
+  return p.ownershipCase;
+}
+
+function vgAdmitNextClinicArrival(){
+  const db=vgNextClinicDatabaseAnimal();
+  if(!db)return;
+  const p=vgDatabaseAnimalToPatient(db);
+  vgAssignOwnershipOutcome(p,db);
+  if(!state.usedClinicDbIds.includes(db.dbId))state.usedClinicDbIds.push(db.dbId);
+  state.nextClinicPreviewId=null;
+  state.patients.push(p);
+  state.activeId=p.id;
+  state.screen="clinic";
+  addLog(`${p.name} arrived through Clinic intake · ${p.species}`);
+  if(p.ownershipCase.hardship)addLog(`${p.name} · guardian unable to continue surgery care · adoption may become available after recovery`);
+  if(typeof saveGame==="function")try{saveGame("Clinic arrival",true)}catch(e){}
+  render();
+}
+
+function vgSkipClinicPreview(){
+  const db=vgNextClinicDatabaseAnimal();
+  if(!db)return;
+  // Skipping does NOT consume the animal; it stays in the future pool.
+  state.nextClinicPreviewId=null;
+  state.nextCase=(state.nextCase||0)+1;
+  render();
+}
+
+function vgClinicArrivalHTML(){
+  const db=vgNextClinicDatabaseAnimal();
+  if(!db)return `<div class="panel"><h3>Clinic Intake</h3><div class="small">No new arrivals available.</div></div>`;
+  const needs=(db.maxSeverity>=3);
+  return `<div class="panel clinic-arrival">
+    <div class="clinic-arrival-head">
+      <div>
+        <h3>🚑 Next Clinic Arrival</h3>
+        <div class="small">Animals now enter the game as hospital patients. There is no giant animal-picker list.</div>
+      </div>
+      <span>${state.usedClinicDbIds.length}/${VG_ANIMAL_DATABASE.length} seen this cycle</span>
+    </div>
+    <div class="clinic-arrival-card">
+      <img src="${THUMBS[(parseInt(db.dbId.replace(/\D/g,""),10)-1)%THUMBS.length]}" alt="${vgEscape(db.name)}">
+      <div>
+        <b>${vgEscape(db.name)}</b>
+        <span>${vgEscape(db.species)} · ${vgEscape(db.breed)} · ${vgEscape(db.ageLabel)}</span>
+        <span>${vgEscape(db.problems.slice(0,2).map(x=>x.name).join(" · "))}</span>
+        <small>${needs?"Possible surgical/advanced-care case":"Clinic evaluation case"}</small>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="action green" onclick="vgAdmitNextClinicArrival()">ADMIT INTO CLINIC</button>
+      <button class="action" onclick="vgSkipClinicPreview()">Next Arrival Preview</button>
+    </div>
+  </div>`;
+}
+
+/* Replace the old 654-animal chooser. The database remains fully in the game,
+   but patients are encountered through the Clinic intake stream. */
+renderAdmit=function(){
+  const el=document.getElementById("admit");
+  if(!el)return;
+  el.innerHTML=`<div class="panel">
+    <h2>🐾 Clinic Intake</h2>
+    <p class="small">You no longer choose a permanent pet from a catalog. Treat animals as they arrive. If a surgical patient is relinquished because the guardian cannot continue care, adoption can become available after successful recovery.</p>
+  </div>
+  ${vgClinicArrivalHTML()}
+  <div class="panel">
+    <h3>How ownership works</h3>
+    <div class="ownership-rules">
+      <div><b>🏠 Family Patient</b><span>Complete treatment → discharge home → not added to My Pets.</span></div>
+      <div><b>💔 Relinquished Surgery Case</b><span>Complete surgery/recovery → choose Adopt Myself or place through Sanctuary.</span></div>
+      <div><b>🐾 My Pets</b><span>Contains animals you personally adopted, not every patient you successfully treated.</span></div>
+    </div>
+  </div>`;
+};
+
+function vgOwnershipStoryHTML(p){
+  if(!p)return "";
+  const db=p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null;
+  const o=vgAssignOwnershipOutcome(p,db);
+  return `<div class="ownership-story ${o.hardship?"hardship":"family"}">
+    <b>${o.hardship?"💔 ADOPTION MAY BECOME AVAILABLE":"🏠 FAMILY / CARETAKER PATIENT"}</b>
+    <span>${o.note}</span>
+    ${o.hardship?`<small>Treat first. Adoption unlocks only after the animal is medically ready to leave Recovery.</small>`:""}
+  </div>`;
+}
+
+function vgCompleteNormalDischarge(p){
+  if(!p)return;
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  p.admitted=false;p.department="Home";p.location="Home";
+  o.resolved=true;o.adopted=false;
+  state.saved=(state.saved||0)+1;
+  if(typeof lifeBookRecord==="function")lifeBookRecord(p,"Returned home after successful treatment");
+  if(typeof EXP!=="undefined"){
+    EXP.lifeBook=EXP.lifeBook||[];
+  }
+  addLog(`${p.name} completed care and returned home. Not added to My Pets.`);
+  state.screen="clinic";
+  state.activeId=dept("Clinic")[0]?.id||null;
+  if(typeof saveGame==="function")try{saveGame("Patient discharged home",true)}catch(e){}
+  render();
+}
+
+function vgOfferAdoptionDecision(p){
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  p.awaitingAdoption=true;
+  p.admitted=false;
+  p.department="Adoption";
+  p.location="Adoption";
+  o.resolved=false;
+  addLog(`${p.name} is medically ready · adoption decision available`);
+  state.activeId=p.id;
+  state.screen="recovery";
+  if(typeof saveGame==="function")try{saveGame("Adoption decision",true)}catch(e){}
+  render();
+}
+
+function vgAdoptRecoveredPet(id){
+  const p=state.patients.find(x=>x.id===id);
+  if(!p)return;
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  if(!o.hardship || !p.awaitingAdoption)return;
+  p.awaitingAdoption=false;p.admitted=false;p.department="Home";p.location="Home";
+  o.resolved=true;o.adopted=true;
+  ensurePetSim(p);ensurePetMind(p);
+  if(!state.pets.some(x=>x.id===p.id))state.pets.push(p);
+  state.saved=(state.saved||0)+1;
+  petMilestone(p,"adopted_from_hospital",`${p.name} was adopted from VET GODS after recovery.`);
+  addLog(`${p.name} was adopted by you and joined My Pets`);
+  state.screen="pets";
+  if(typeof saveGame==="function")try{saveGame("Pet adopted",true)}catch(e){}
+  render();
+}
+
+function vgPlaceRecoveredPet(id){
+  const p=state.patients.find(x=>x.id===id);
+  if(!p)return;
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  p.awaitingAdoption=false;p.admitted=false;p.department="Sanctuary";p.location="Sanctuary";
+  o.resolved=true;o.adopted=false;
+  if(typeof EXP!=="undefined"){
+    EXP.sanctuary=EXP.sanctuary||[];
+    if(!EXP.sanctuary.some(x=>x.id===p.id))EXP.sanctuary.push(p);
+  }
+  addLog(`${p.name} transferred to Sanctuary placement instead of My Pets`);
+  state.screen="sanctuary";
+  if(typeof saveGame==="function")try{saveGame("Sanctuary placement",true)}catch(e){}
+  render();
+}
+
+function vgAdoptionDecisionHTML(p){
+  if(!p || !p.awaitingAdoption)return "";
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  if(!o.hardship)return "";
+  return `<div class="panel adoption-decision">
+    <div class="adoption-banner">🐾 ADOPTION DECISION</div>
+    <h2>${vgEscape(p.name)} can leave the hospital.</h2>
+    <p>${vgEscape(p.name)}'s guardian could not continue the required surgical care and relinquished the animal to the hospital. You treated ${vgEscape(p.name)} successfully. Now you decide where this animal goes.</p>
+    <div class="adoption-choice-grid">
+      <button class="adopt-me" onclick="vgAdoptRecoveredPet('${p.id}')"><b>❤️ ADOPT ${vgEscape(p.name).toUpperCase()}</b><span>Keep this animal permanently and move them into My Pets.</span></button>
+      <button onclick="vgPlaceRecoveredPet('${p.id}')"><b>🏡 SANCTUARY PLACEMENT</b><span>Do not keep the animal yourself. Move them into placement/sanctuary care.</span></button>
+    </div>
+  </div>`;
+}
+
+/* Override BOTH legacy discharge routes. */
+discharge=function(p){
+  if(!p)return;
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  if(o.hardship)vgOfferAdoptionDecision(p);
+  else vgCompleteNormalDischarge(p);
+};
+
+dischargeRecoveredPet=function(id){
+  const p=state.patients.find(x=>x.id===id);if(!p)return;
+  const f=ensureFlow(p);
+  if(!f.dischargeReady){render();return}
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  if(o.hardship)vgOfferAdoptionDecision(p);
+  else vgCompleteNormalDischarge(p);
+};
+
+/* Dynamic cases obey the same ownership rule. */
+vgFinishDynamicCase=function(id){
+  const p=state.patients.find(x=>x.id===id);
+  if(!p)return;
+  const d=vgEnsureDynamicCare(p);
+  if(!d.completed)return;
+  const o=vgAssignOwnershipOutcome(p,p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null);
+  if(o.hardship)vgOfferAdoptionDecision(p);
+  else vgCompleteNormalDischarge(p);
+};
+
+/* Recovery renderer: keep working recovery panels, remove automatic My Pets wording,
+   and show adoption decisions even after the patient leaves the active census. */
+const _vgOwnershipRenderRecovery=renderRecovery;
+renderRecovery=function(){
+  _vgOwnershipRenderRecovery();
+  const el=document.getElementById("recovery");
+  if(!el)return;
+
+  // Fix legacy text/buttons left in generated recovery HTML.
+  el.querySelectorAll("button").forEach(b=>{
+    if(/Discharge to My Pets/i.test(b.textContent))b.textContent="Complete Discharge";
+  });
+
+  const pending=state.patients.filter(p=>p.awaitingAdoption);
+  if(pending.length){
+    el.insertAdjacentHTML("afterbegin",pending.map(vgAdoptionDecisionHTML).join(""));
+  }
+
+  const current=state.patients.find(p=>p.id===state.activeId);
+  if(current && current.admitted && !current.awaitingAdoption){
+    const first=el.querySelector(".panel");
+    if(first)first.insertAdjacentHTML("beforeend",vgOwnershipStoryHTML(current));
+  }
+};
+
+
+const _vgOwnershipRenderClinic=renderClinic;
+renderClinic=function(){
+  _vgOwnershipRenderClinic();
+  const el=document.getElementById("clinic");
+  if(!el)return;
+  const p=state.patients.find(x=>x.id===state.activeId && x.admitted);
+  if(p){
+    const first=el.querySelector(".panel");
+    if(first)first.insertAdjacentHTML("beforeend",vgOwnershipStoryHTML(p));
+  }
+};
+
+
+/* =========================================================
+   VET GODS · ANIMAL CARE CODEX + INTENSE AMAZON READOUT
+   Browse all animals for care reference only.
+   No direct adoption or intake from this catalog.
+   ========================================================= */
+
+let VG_CODEX_PAGE=0;
+let VG_CODEX_FILTER="";
+let VG_CODEX_SPECIES="All";
+let VG_CODEX_SELECTED_ID=null;
+
+function vgCodexSpeciesOptions(){
+  return [...new Set(VG_ANIMAL_DATABASE.map(a=>a.species).filter(Boolean))].sort();
+}
+
+function vgSillyCareIdeas(a){
+  const s=(a.species||"Animal").toLowerCase();
+  const p=(a.personality||"curious").toLowerCase();
+  const ideas=[];
+
+  const add=(label,q,note)=>ideas.push({label,q,note});
+
+  if(/dog/.test(s)){
+    add("Snuffle Quest Mat","dog snuffle mat enrichment","Turns mealtime into a little treasure hunt.");
+    add("Car Adventure Nest","dog car seat bed travel","For fictional road-trip comfort between rescue missions.");
+    add("Window Watch Perch","dog window perch bed","For pets who supervise the whole neighborhood.");
+    add("Thunder Cave","dog calming cave bed","A cozy hide-style bed for dramatic storm nights.");
+    add("Treat Puzzle Vault","dog puzzle treat toy","A tiny puzzle dungeon for snacks.");
+  } else if(/cat/.test(s)){
+    add("Royal Observation Tower","cat window perch tower","A throne for monitoring humans and suspicious birds.");
+    add("Cardboard Fortress","cat cardboard scratch house","A disposable kingdom.");
+    add("Moonlight Tunnel","cat play tunnel","For ambushes, zoomies and mysterious disappearances.");
+    add("Snack Puzzle Shrine","cat treat puzzle","Makes treats feel like an ancient feline ritual.");
+    add("Travel Cocoon","cat soft carrier cozy","A softer-looking transport setup.");
+  } else if(/rabbit/.test(s)){
+    add("Bunny Dig Kingdom","rabbit digging box enrichment","A legal place to commit enthusiastic excavation.");
+    add("Hay Castle","rabbit hay feeder castle","Combines food and architecture.");
+    add("Tunnel Village","rabbit tunnel enrichment","A miniature underground city.");
+    add("Chew Orchard","rabbit chew sticks apple willow","Safe-style chew enrichment search.");
+    add("Soft Hide Fortress","rabbit hide house","A retreat for shy or cautious rabbits.");
+  } else if(/guinea pig|hamster|chinchilla|ferret|rat|mouse/.test(s)){
+    add("Tiny Tunnel Network",`${a.species} tunnel enrichment`,"A whole transportation system for a very small citizen.");
+    add("Forage Puzzle",`${a.species} forage enrichment toy`,"Makes food gathering more interesting.");
+    add("Cozy Hide Village",`${a.species} hide house`,"Multiple little places to retreat.");
+    add("Adventure Carrier",`${a.species} travel carrier`,"For safe-looking transport setups.");
+    add("Snack Station",`${a.species} feeder enrichment`,"A more entertaining feeding station.");
+  } else if(/tarantula|spider|scorpion|vinegaroon/.test(s)){
+    add("Cork Bark Castle",`${a.species} cork bark hide`,"A dramatic little fortress for an invertebrate.");
+    add("Moon Cave",`${a.species} hide cave enclosure`,"A dark retreat for shy nighttime residents.");
+    add("Observation Deck",`${a.species} clear terrarium enclosure`,"A clearer habitat for fictional research-deck viewing.");
+    add("Feeder Drop Station",`${a.species} feeding tongs feeder insects`,"A tidy feeding setup.");
+    add("Humidity Command Gauge",`${a.species} digital hygrometer terrarium`,"Turns enclosure climate into a command-console readout.");
+  } else if(/mantis|stick insect|leaf insect|beetle/.test(s)){
+    add("Vertical Jungle Tower",`${a.species} tall mesh enclosure`,"More climbing room for an arboreal-style setup.");
+    add("Molt Observatory",`${a.species} molt enclosure branches mesh`,"A dramatic fictional name for proper climbing/molt space.");
+    add("Micro Jungle Kit",`${a.species} terrarium plants branches`,"Makes the enclosure feel like a tiny planet.");
+    add("Feeder Flight Bay",`${a.species} feeder flies insects`,"Food delivery, but make it sci-fi.");
+    add("Mist Command Bottle","fine mist terrarium spray bottle","For controlled habitat misting.");
+  } else if(/ant colony|isopod|roach colony/.test(s)){
+    add("Colony Command Center",`${a.species} observation colony habitat`,"A transparent headquarters for the whole civilization.");
+    add("Forage Sector",`${a.species} feeding dish colony`,"A designated food sector.");
+    add("Hydration Dock",`${a.species} hydration feeder`,"A tiny water station for the colony.");
+    add("Expansion Module",`${a.species} modular habitat expansion`,"For when the civilization starts getting ideas.");
+    add("Dark Nest Zone",`${a.species} nest habitat`,"A protected resting/nesting sector.");
+  } else if(/axolotl|frog|newt|salamander/.test(s)){
+    add("Underwater Hide City",`${a.species} aquarium vivarium hides`,"A miniature city of safe hiding places.");
+    add("Moon Pool",`${a.species} aquatic habitat decor`,"A dramatic name for a calmer-looking water area.");
+    add("Climate Command Meter",`${a.species} aquarium thermometer hygrometer`,"Makes habitat monitoring feel like mission control.");
+    add("Feeding Dock",`${a.species} feeding dish tongs`,"A tidy feeding station.");
+    add("Plant Jungle",`${a.species} aquarium vivarium plants`,"Adds cover and visual enrichment.");
+  } else if(/snail/.test(s)){
+    add("Snail Garden","land snail terrarium plants moss","A tiny wandering garden.");
+    add("Calcium Shrine","snail calcium cuttlebone","A dramatic name for a basic mineral source.");
+    add("Mist Station","terrarium fine mist spray bottle","For keeping the fictional cloud forest running.");
+    add("Climbing Branches","snail terrarium cork bark branches","A little vertical adventure.");
+    add("Observation Dome","land snail clear terrarium","For maximum tiny-space-explorer energy.");
+  } else if(/hermit crab|crab/.test(s)){
+    add("Shell Boutique","hermit crab natural shells assorted","A wardrobe department for shell-changing citizens.");
+    add("Climbing Harbor","hermit crab climbing enrichment","A little dockyard to explore.");
+    add("Saltwater Dock","hermit crab salt water pool dish","A themed hydration area.");
+    add("Coconut Hide Port","hermit crab coconut hide","A tiny vacation hut.");
+    add("Moon Beach","hermit crab substrate sand coconut fiber","A dramatic habitat substrate theme.");
+  } else if(/tortoise|dragon|gecko|reptile/.test(s)){
+    add("Basking Throne",`${a.species} basking platform`,"A royal seat under the heat zone.");
+    add("Hide Temple",`${a.species} reptile hide cave`,"A dark retreat with unnecessary grandeur.");
+    add("Climbing Ruins",`${a.species} reptile climbing decor`,"Turns the enclosure into an expedition.");
+    add("Feeding Plaza",`${a.species} reptile feeding dish`,"A designated meal zone.");
+    add("Climate Command Console",`${a.species} thermostat thermometer hygrometer`,"Environmental numbers with spaceship energy.");
+  } else if(/bird|parrot|cockatiel|chicken|duck/.test(s)){
+    add("Foraging Arcade",`${a.species} foraging toys`,"A small puzzle arcade for food-seeking behavior.");
+    add("Perch Highway",`${a.species} natural perches`,"A whole transit network in the enclosure.");
+    add("Bath Lagoon",`${a.species} bird bath`,"A tiny resort.");
+    add("Travel Capsule",`${a.species} travel carrier`,"A sci-fi name for transport.");
+    add("Snack Puzzle",`${a.species} treat puzzle toy`,"Food plus problem solving.");
+  } else {
+    add("Comfort Nest",`${a.species} bed hide comfort supplies`,"A dedicated quiet place.");
+    add("Enrichment Station",`${a.species} enrichment toys`,"Something species-appropriate to investigate.");
+    add("Travel Capsule",`${a.species} carrier transport`,"A portable safe zone.");
+    add("Food Puzzle",`${a.species} feeding enrichment`,"Makes feeding more interesting.");
+    add("Observation Habitat",`${a.species} habitat enclosure`,"A clearer home-base setup.");
+  }
+
+  if(/shy|cautious|quiet|nervous/.test(p)){
+    add("Quiet Corner Kit",`${a.species} hide bed calming enclosure`,"Matched to this animal's cautious personality.");
+  }
+  if(/playful|curious|social/.test(p)){
+    add("Curiosity Pack",`${a.species} enrichment puzzle toy`,"Matched to this animal's more exploratory personality.");
+  }
+  return ideas.slice(0,6);
+}
+
+function vgIntenseCareReadout(a){
+  const fake={
+    species:a.species,
+    trust:50,fear:20,happiness:60,memories:[],
+    sim:{},mind:{},personality:a.personality
+  };
+  const practical=vgCareSearchSet(fake);
+  const silly=vgSillyCareIdeas(a);
+  const problems=(a.problems||[]);
+
+  return `<div class="codex-readout">
+    <div class="codex-statusbar">
+      <span>SPECIES ${vgEscape(a.species)}</span>
+      <span>CARE PROFILE ${vgEscape(a.personality||"individual").toUpperCase()}</span>
+      <span>SEVERITY ${a.maxSeverity}</span>
+    </div>
+
+    <div class="codex-grid3">
+      <div class="codex-block">
+        <h4>CARE NEEDS</h4>
+        ${problems.map(p=>`<div class="readout-line"><b>${vgEscape(p.name)}</b><span>${vgEscape(p.solution||"Supportive care pathway")}</span></div>`).join("")}
+      </div>
+      <div class="codex-block">
+        <h4>HOME / HABITAT</h4>
+        <div class="readout-line"><b>Species</b><span>${vgEscape(a.species)}</span></div>
+        <div class="readout-line"><b>Type</b><span>${vgEscape(a.breed||a.ageLabel||"Individual")}</span></div>
+        <div class="readout-line"><b>Temperament</b><span>${vgEscape(a.personality||"individual")}</span></div>
+        <div class="readout-line"><b>Likely Path</b><span>${vgEscape(a.disposition||"Care and reassessment")}</span></div>
+      </div>
+      <div class="codex-block">
+        <h4>FICTIONAL COMFORT IDEAS</h4>
+        ${silly.map(x=>`<div class="readout-line"><b>${vgEscape(x.label)}</b><span>${vgEscape(x.note)}</span></div>`).join("")}
+      </div>
+    </div>
+
+    <div class="codex-amazon-title">🛒 AMAZON CARE SEARCH ARRAY</div>
+    <div class="amazon-care-grid codex-amazon-grid">
+      ${practical.map(x=>`<button onclick="return vgAmazonGo('${x.q.replace(/'/g,"\\'")}')"><b>${vgEscape(x.k)}</b><span>${vgEscape(x.q)}</span></button>`).join("")}
+      ${silly.map(x=>`<button class="silly-supply" onclick="return vgAmazonGo('${x.q.replace(/'/g,"\\'")}')"><b>✨ ${vgEscape(x.label)}</b><span>${vgEscape(x.q)}</span><em>${vgEscape(x.note)}</em></button>`).join("")}
+    </div>
+    <div class="amazon-disclaimer">General food, habitat, transport, enrichment and comfort-supply searches only. These links are not medical treatment and do not replace veterinary/exotic-veterinary care.</div>
+  </div>`;
+}
+
+function vgCodexCard(a){
+  return `<button class="codex-card" onclick="VG_CODEX_SELECTED_ID='${a.dbId}';vgRenderAnimalCodex()">
+    <div class="codex-card-top">
+      <b>${vgEscape(a.name)}</b>
+      <span>${vgEscape(a.dbId)}</span>
+    </div>
+    <div>${vgEscape(a.species)} · ${vgEscape(a.breed||a.ageLabel||"")}</div>
+    <small>${vgEscape(a.personality||"individual")} · ${a.problems.slice(0,2).map(x=>vgEscape(x.name)).join(" / ")}</small>
+  </button>`;
+}
+
+function vgRenderAnimalCodex(){
+  const el=document.getElementById("vgAnimalCodex");
+  if(!el)return;
+  const q=(VG_CODEX_FILTER||"").trim().toLowerCase();
+  let rows=VG_ANIMAL_DATABASE.filter(a=>{
+    const hay=[a.name,a.dbId,a.species,a.breed,a.personality,...(a.problems||[]).map(p=>p.name)].join(" ").toLowerCase();
+    return (!q||hay.includes(q)) && (VG_CODEX_SPECIES==="All"||a.species===VG_CODEX_SPECIES);
+  });
+  const size=18,pages=Math.max(1,Math.ceil(rows.length/size));
+  VG_CODEX_PAGE=Math.max(0,Math.min(VG_CODEX_PAGE,pages-1));
+  const page=rows.slice(VG_CODEX_PAGE*size,(VG_CODEX_PAGE+1)*size);
+  const selected=VG_ANIMAL_DATABASE.find(a=>a.dbId===VG_CODEX_SELECTED_ID) || page[0] || rows[0];
+
+  el.innerHTML=`
+    <div class="codex-toolbar">
+      <input value="${vgEscape(VG_CODEX_FILTER)}" placeholder="Search animal, species, problem, personality…" oninput="VG_CODEX_FILTER=this.value;VG_CODEX_PAGE=0;vgRenderAnimalCodex()">
+      <select onchange="VG_CODEX_SPECIES=this.value;VG_CODEX_PAGE=0;vgRenderAnimalCodex()">
+        <option ${VG_CODEX_SPECIES==="All"?"selected":""}>All</option>
+        ${vgCodexSpeciesOptions().map(s=>`<option ${VG_CODEX_SPECIES===s?"selected":""}>${vgEscape(s)}</option>`).join("")}
+      </select>
+    </div>
+    <div class="codex-count">${rows.length} animals in reference database · page ${VG_CODEX_PAGE+1}/${pages}</div>
+    <div class="codex-shell">
+      <div class="codex-list">
+        ${page.map(vgCodexCard).join("")}
+        <div class="vg-db-pager">
+          <button onclick="VG_CODEX_PAGE=Math.max(0,VG_CODEX_PAGE-1);VG_CODEX_SELECTED_ID=null;vgRenderAnimalCodex()">← Previous</button>
+          <b>${VG_CODEX_PAGE+1} / ${pages}</b>
+          <button onclick="VG_CODEX_PAGE=Math.min(${pages-1},VG_CODEX_PAGE+1);VG_CODEX_SELECTED_ID=null;vgRenderAnimalCodex()">Next →</button>
+        </div>
+      </div>
+      <div class="codex-detail">
+        ${selected?`
+          <div class="codex-hero">
+            <div>
+              <span class="codex-id">${vgEscape(selected.dbId)}</span>
+              <h3>${vgEscape(selected.name)}</h3>
+              <p>${vgEscape(selected.species)} · ${vgEscape(selected.breed||selected.ageLabel||"")}</p>
+            </div>
+            <div class="codex-badge">REFERENCE ONLY<br><small>NOT ADOPT / NOT ADMIT</small></div>
+          </div>
+          <div class="codex-backstory">${vgEscape(selected.backstory||"No additional history recorded.")}</div>
+          ${vgIntenseCareReadout(selected)}
+        `:`<div class="small">No matching animal selected.</div>`}
+      </div>
+    </div>`;
+}
+
+function vgAnimalCodexHTML(){
+  return `<div class="panel codex-panel">
+    <div class="codex-title">
+      <div>
+        <h2>📚 Animal Care Codex</h2>
+        <div class="small">Browse the full animal database for care reference, food, habitat, enrichment and supply searches. This area does NOT admit or adopt animals.</div>
+      </div>
+      <span>654 CASE LIBRARY</span>
+    </div>
+    <div id="vgAnimalCodex"></div>
+  </div>`;
+}
+
+/* Put the full list back in Admit/Intake as a REFERENCE section only. */
+const _vgCodexRenderAdmit=renderAdmit;
+renderAdmit=function(){
+  _vgCodexRenderAdmit();
+  const el=document.getElementById("admit");
+  if(!el)return;
+  el.insertAdjacentHTML("beforeend",vgAnimalCodexHTML());
+  vgRenderAnimalCodex();
+};
+
+
+/* =========================================================
+   VET GODS · AMAZON SUPPLY TERMINAL V2
+   Deeper fictional shopping/readout layer for every animal.
+   All buttons are Amazon SEARCH links, never treatment claims.
+   ========================================================= */
+
+function vgAmazonSupplyMission(a){
+  const s=(a.species||"Animal").toLowerCase();
+  let groups=[
+    {name:"01 · FOOD BAY",icon:"🥣",items:[
+      ["Daily Food",`${a.species} food diet`,"Core feeding search"],
+      ["Feeding Station",`${a.species} food bowl feeder`,"Bowls, dishes or species-appropriate feeders"],
+      ["Treat / Forage",`${a.species} treats forage enrichment`,"Optional enrichment feeding"],
+      ["Food Storage",`${a.species} food storage container`,"Keep care supplies organized"]
+    ]},
+    {name:"02 · HABITAT BAY",icon:"🏠",items:[
+      ["Primary Habitat",`${a.species} habitat enclosure home`,"Main living-space search"],
+      ["Rest Zone",`${a.species} bed hide shelter`,"Resting or hiding options"],
+      ["Bedding / Substrate",`${a.species} bedding substrate`,"Species-specific floor material search"],
+      ["Habitat Decor",`${a.species} habitat enrichment decor`,"Climbing, cover or environmental enrichment"]
+    ]},
+    {name:"03 · CARE BAY",icon:"✚",items:[
+      ["Cleaning",`${a.species} habitat cleaning supplies pet safe`,"General cleaning equipment"],
+      ["Groom / Maintenance",`${a.species} grooming care supplies`,"Species-appropriate maintenance search"],
+      ["Observation",`${a.species} care monitor thermometer supplies`,"General observation/habitat monitoring"],
+      ["Care Organizer",`pet care supply organizer storage`,"Organize the animal's supplies"]
+    ]},
+    {name:"04 · TRAVEL BAY",icon:"🚙",items:[
+      ["Carrier",`${a.species} carrier transport`,"Transport equipment search"],
+      ["Vehicle Setup",`${a.species} car travel safety carrier`,"Vehicle/travel setup"],
+      ["Travel Water",`${a.species} travel water feeder`,"Portable feeding/hydration search"],
+      ["Travel Comfort",`${a.species} travel blanket pad carrier`,"Comfort items for transport"]
+    ]},
+    {name:"05 · ENRICHMENT BAY",icon:"🎾",items:[
+      ["Activity",`${a.species} enrichment activity toy`,"Species-appropriate activity search"],
+      ["Foraging",`${a.species} forage puzzle enrichment`,"Food-searching/enrichment ideas"],
+      ["Hide / Retreat",`${a.species} hide shelter enrichment`,"Private retreat search"],
+      ["Novelty",`${a.species} enrichment accessories`,"Additional habitat variety"]
+    ]}
+  ];
+
+  const addGroup=(name,icon,items)=>groups.push({name,icon,items});
+
+  if(/dog/.test(s)) addGroup("06 · DOG MISSION GEAR","🐕",[
+    ["Snuffle Deck","dog snuffle mat enrichment","Treasure-hunt feeding"],
+    ["Lick Station","dog lick mat enrichment","Quiet enrichment search"],
+    ["Puzzle Vault","dog puzzle feeder toy","Problem-solving activity"],
+    ["Adventure Harness","dog harness walking","Walking equipment"],
+    ["Car Command Seat","dog car seat safety harness","Vehicle travel setup"],
+    ["Backseat Protector","dog car seat cover hammock","Vehicle protection/comfort"],
+    ["Portable Water Dock","dog travel water bottle bowl","Road-trip hydration"],
+    ["Recovery Nest","dog orthopedic bed washable","Comfortable resting search"]
+  ]);
+  if(/cat/.test(s)) addGroup("06 · CAT MISSION GEAR","🐈",[
+    ["Observation Tower","cat window perch tower","High observation spot"],
+    ["Scratch Fortress","cat scratching post cardboard house","Scratch/enrichment"],
+    ["Moon Tunnel","cat play tunnel","Exploration/play"],
+    ["Puzzle Shrine","cat puzzle feeder treat toy","Food enrichment"],
+    ["Water Fountain","cat water fountain","Hydration station"],
+    ["Travel Cocoon","cat soft carrier travel","Transport setup"],
+    ["Hide Capsule","cat cave bed hide","Private resting area"],
+    ["Climbing Sector","cat wall climbing shelves tree","Vertical enrichment"]
+  ]);
+  if(/rabbit/.test(s)) addGroup("06 · RABBIT MISSION GEAR","🐇",[
+    ["Hay Command Rack","rabbit hay feeder","Hay access"],
+    ["Dig Kingdom","rabbit digging box enrichment","Digging enrichment"],
+    ["Tunnel Village","rabbit tunnel play","Exploration"],
+    ["Chew Orchard","rabbit willow apple chew sticks","Chewing enrichment"],
+    ["Litter Sector","rabbit litter box bedding","Habitat organization"],
+    ["Hide Fortress","rabbit hide house","Private retreat"],
+    ["Travel Capsule","rabbit carrier travel","Transport"],
+    ["Forage Mat","rabbit forage mat enrichment","Food-search activity"]
+  ]);
+  if(/tarantula|spider|scorpion|vinegaroon/.test(s)) addGroup("06 · ARACHNID MISSION GEAR","🕷️",[
+    ["Cork Castle",`${a.species} cork bark hide`,"Shelter structure"],
+    ["Dark Moon Cave",`${a.species} hide enclosure`,"Retreat"],
+    ["Water Micro-Dock",`${a.species} water dish`,"Hydration station"],
+    ["Climate Gauge","terrarium digital hygrometer thermometer","Environment readout"],
+    ["Feeder Bay","feeder insects crickets roaches","Feeder search"],
+    ["Long Feeding Tongs","terrarium feeding tongs","Handling distance tool"],
+    ["Transfer Cup","insect spider catch cup container","Temporary transfer search"],
+    ["Terrarium Locks","terrarium enclosure clips locks","Enclosure security search"]
+  ]);
+  if(/mantis|stick insect|leaf insect|beetle/.test(s)) addGroup("06 · INSECT MISSION GEAR","🪲",[
+    ["Vertical Jungle",`${a.species} tall mesh enclosure`,"Climbing/molt space"],
+    ["Branch Network",`${a.species} terrarium branches`,"Vertical structure"],
+    ["Mist Console","fine mist terrarium spray bottle","Misting equipment"],
+    ["Micro Plants",`${a.species} terrarium plants`,"Habitat cover"],
+    ["Feeder Bay",`${a.species} feeder insects food`,"Food search"],
+    ["Observation Dome",`clear insect terrarium enclosure`,"Viewing habitat"],
+    ["Molt Tower",`${a.species} tall enclosure mesh`,"Vertical habitat search"],
+    ["Micro Toolkit","insect terrarium feeding tongs cups","Small habitat tools"]
+  ]);
+  if(/ant colony/.test(s)) addGroup("06 · ANT CIVILIZATION","🐜",[
+    ["Formicarium Core","ant formicarium habitat","Main colony nest"],
+    ["Outworld Sector","ant outworld foraging arena","Foraging area"],
+    ["Hydration Tower","ant colony water feeder hydration","Water supply"],
+    ["Sugar Dock","ant nectar feeder sugar water feeder","Feeding equipment"],
+    ["Protein Bay","ant colony protein food feeder insects","Protein food search"],
+    ["Escape Barrier","ant escape prevention barrier","Containment supplies"],
+    ["Expansion Module","modular ant formicarium expansion","Colony expansion"],
+    ["Red Observation Light","ant observation red light","Low-disturbance viewing search"]
+  ]);
+  if(/isopod/.test(s)) addGroup("06 · ISOPOD BIOACTIVE BAY","🍂",[
+    ["Leaf Litter Vault","isopod leaf litter","Food/cover"],
+    ["Calcium Station","isopod calcium cuttlebone","Mineral source"],
+    ["Cork Bark City","isopod cork bark","Cover"],
+    ["Moss Humidity Zone","isopod sphagnum moss","Moisture zone"],
+    ["Bioactive Substrate","isopod substrate bioactive","Habitat base"],
+    ["Feeding Dish","isopod feeding dish","Organized feeding"],
+    ["Ventilated Bin","isopod enclosure ventilation","Habitat search"],
+    ["Springtail Allies","springtail culture bioactive terrarium","Bioactive companion culture"]
+  ]);
+  if(/roach colony/.test(s)) addGroup("06 · COLONY PRODUCTION BAY","🪳",[
+    ["Colony Habitat","dubia roach colony bin enclosure","Main habitat"],
+    ["Food Dish","dubia roach feeding dish","Feeding"],
+    ["Hydration Station","dubia roach hydration feeder","Hydration"],
+    ["Egg Crate Towers","roach colony egg crate flats","Climbing/hiding structure"],
+    ["Colony Food","dubia roach food chow","Food search"],
+    ["Ventilation Mesh","insect enclosure ventilation mesh","Airflow supplies"],
+    ["Sorting Cups","insect specimen cups containers","Organization"],
+    ["Heat Control","dubia roach thermostat heat mat","Environment control search"]
+  ]);
+  if(/axolotl/.test(s)) addGroup("06 · AXOLOTL WATER LAB","💧",[
+    ["Water Test Console","aquarium water test kit freshwater","Water monitoring"],
+    ["Cooling Array","aquarium cooling fan axolotl","Temperature support"],
+    ["Hide City","axolotl aquarium hides","Shelter"],
+    ["Low Flow Filter","axolotl low flow aquarium filter","Filtration search"],
+    ["Feeding Tongs","axolotl feeding tongs","Feeding equipment"],
+    ["Aquarium Thermometer","aquarium digital thermometer","Temperature readout"],
+    ["Soft Plant Sector","axolotl aquarium silk plants","Cover/decor"],
+    ["Tank Maintenance Kit","aquarium siphon cleaning kit","General tank maintenance"]
+  ]);
+  if(/frog|newt|salamander/.test(s)) addGroup("06 · AMPHIBIAN CLOUD LAB","🐸",[
+    ["Mist Array","terrarium misting system amphibian","Humidity equipment"],
+    ["Humidity Gauge","terrarium hygrometer amphibian","Environment readout"],
+    ["Water Conditioner","amphibian water conditioner","Water-care search"],
+    ["Plant Jungle","amphibian vivarium plants","Cover"],
+    ["Hide Network","amphibian vivarium hides cork","Retreats"],
+    ["Feeder Insects","amphibian feeder insects","Food search"],
+    ["Drainage Layer","vivarium drainage layer supplies","Habitat construction"],
+    ["Feeding Tongs","amphibian feeding tongs","Feeding tool"]
+  ]);
+  if(/snail/.test(s)) addGroup("06 · SNAIL CLOUD GARDEN","🐌",[
+    ["Calcium Shrine","land snail calcium cuttlebone","Mineral source"],
+    ["Moss Garden","land snail moss terrarium","Humidity/cover"],
+    ["Mist Station","terrarium fine mist bottle","Misting"],
+    ["Cork Climb","snail cork bark terrarium","Exploration"],
+    ["Food Dish","snail feeding dish","Feeding"],
+    ["Soil Sector","land snail safe substrate","Substrate search"],
+    ["Observation Dome","land snail terrarium enclosure","Habitat"],
+    ["Humidity Console","terrarium hygrometer snail","Environment readout"]
+  ]);
+  if(/hermit crab|crab/.test(s)) addGroup("06 · CRAB MOON BEACH","🦀",[
+    ["Shell Boutique","hermit crab natural shells assorted","Shell choices"],
+    ["Saltwater Dock","hermit crab salt water pool dish","Water station"],
+    ["Freshwater Dock","hermit crab fresh water pool dish","Water station"],
+    ["Climbing Harbor","hermit crab climbing enrichment","Activity"],
+    ["Coconut Port","hermit crab coconut hide","Shelter"],
+    ["Moon Beach Substrate","hermit crab sand coconut fiber substrate","Habitat base"],
+    ["Humidity Console","hermit crab hygrometer thermometer","Environment readout"],
+    ["Heat Control","hermit crab thermostat heater","Environment search"]
+  ]);
+  if(/tortoise|bearded dragon|gecko/.test(s)) addGroup("06 · REPTILE SOLAR DECK","🦎",[
+    ["Basking Throne",`${a.species} basking platform`,"Basking zone"],
+    ["UVB Array",`${a.species} UVB light fixture`,"Lighting search"],
+    ["Heat Control",`${a.species} thermostat heat lamp`,"Temperature control"],
+    ["Climate Console","reptile thermometer hygrometer digital","Environment readout"],
+    ["Hide Temple",`${a.species} reptile hide cave`,"Retreat"],
+    ["Climbing Ruins",`${a.species} climbing decor branches`,"Enrichment"],
+    ["Feeding Plaza",`${a.species} feeding dish`,"Feeding"],
+    ["Travel Habitat",`${a.species} reptile carrier travel`,"Transport"]
+  ]);
+  if(/parrot|cockatiel|bird|chicken|duck/.test(s)) addGroup("06 · AVIAN FLIGHT DECK","🦜",[
+    ["Perch Highway",`${a.species} natural perches`,"Perching variety"],
+    ["Foraging Arcade",`${a.species} foraging toys`,"Food enrichment"],
+    ["Bath Lagoon",`${a.species} bird bath`,"Bathing"],
+    ["Puzzle Feeder",`${a.species} puzzle feeder`,"Feeding enrichment"],
+    ["Travel Capsule",`${a.species} bird travel carrier`,"Transport"],
+    ["Play Gym",`${a.species} bird play gym`,"Activity"],
+    ["Cage Cover",`${a.species} cage cover`,"Rest environment search"],
+    ["Food Storage","bird food storage container","Supply organization"]
+  ]);
+
+  return groups;
+}
+
+function vgAmazonTerminalHTML(a){
+  const groups=vgAmazonSupplyMission(a);
+  const total=groups.reduce((n,g)=>n+g.items.length,0);
+  return `<div class="amazon-terminal">
+    <div class="amazon-terminal-head">
+      <div>
+        <span class="terminal-kicker">VET GODS · SUPPLY TERMINAL</span>
+        <h3>🛒 ${vgEscape(a.name)} · ${vgEscape(a.species)}</h3>
+        <p>${total} targeted supply searches loaded · practical care + habitat + fictional comfort/enrichment gear</p>
+      </div>
+      <div class="terminal-count"><b>${total}</b><span>SEARCHES</span></div>
+    </div>
+    <div class="terminal-meter">
+      <span>FOOD</span><i></i><span>HABITAT</span><i></i><span>CARE</span><i></i><span>TRAVEL</span><i></i><span>ENRICHMENT</span>
+    </div>
+    <div class="amazon-bays">
+      ${groups.map(g=>`<details class="amazon-bay" ${g.name.startsWith("01")||g.name.startsWith("06")?"open":""}>
+        <summary><b>${g.icon} ${vgEscape(g.name)}</b><span>${g.items.length} LINKS</span></summary>
+        <div class="amazon-bay-grid">
+          ${g.items.map(([label,q,note])=>`<button onclick="return vgAmazonGo('${q.replace(/'/g,"\\'")}')">
+            <b>${vgEscape(label)}</b>
+            <span>${vgEscape(note)}</span>
+            <small>AMAZON SEARCH · ${vgEscape(q)}</small>
+          </button>`).join("")}
+        </div>
+      </details>`).join("")}
+    </div>
+    <div class="terminal-note">Supply terminal links are general shopping searches for food, habitat, transport, enrichment and care equipment. Fictional names are flavor text. Products are not veterinary diagnosis or treatment.</div>
+  </div>`;
+}
+
+/* Upgrade the Care Codex detail with the new terminal while preserving the prior readout. */
+const _vgOldIntenseCareReadout=vgIntenseCareReadout;
+vgIntenseCareReadout=function(a){
+  return _vgOldIntenseCareReadout(a)+vgAmazonTerminalHTML(a);
+};
+
+/* Upgrade every My Pets Amazon panel with the same deeper species-specific terminal.
+   Keep it collapsed so the pet card remains manageable. */
+const _vgOldAmazonCarePanelHTML=vgAmazonCarePanelHTML;
+vgAmazonCarePanelHTML=function(p){
+  const db=p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null;
+  const a=db||{
+    dbId:p.dbId||"MY-PET",name:p.name||"My Pet",species:p.species||"Animal",
+    breed:p.breed||"",ageLabel:"",personality:p.personality||"individual",
+    maxSeverity:1,problems:[],disposition:"Adopted companion"
+  };
+  return `<details class="amazon-care-panel amazon-pet-terminal">
+    <summary>🛒 Expanded Supply Terminal · ${vgEscape(p.species||"Animal")}</summary>
+    ${vgAmazonTerminalHTML(a)}
+  </details>`;
+};
+
+
+/* =========================================================
+   MY PETS · PERSONAL SHOPPING LIST
+   A cool per-pet and combined care shopping checklist.
+   ========================================================= */
+function ensurePetShopping(){
+  if(!state.petShopping)state.petShopping={checked:{},custom:[]};
+  if(!state.petShopping.checked)state.petShopping.checked={};
+  if(!Array.isArray(state.petShopping.custom))state.petShopping.custom=[];
+  return state.petShopping;
+}
+function vgPetShoppingItems(p){
+  const db=p.dbId?VG_ANIMAL_DATABASE.find(a=>a.dbId===p.dbId):null;
+  const a=db||{name:p.name,species:p.species,personality:p.personality||"individual"};
+  const groups=vgAmazonSupplyMission(a);
+  let items=[];
+  groups.forEach(g=>g.items.forEach(([label,q,note])=>items.push({label,q,note,bay:g.name.replace(/^\d+\s*·\s*/,"")})));
+  const seen=new Set();
+  return items.filter(x=>{const k=(x.label+"|"+x.q).toLowerCase();if(seen.has(k))return false;seen.add(k);return true;});
+}
+function vgShopKey(p,item){return `${p.id}|${item.q}`;}
+function vgToggleShopping(id,q){
+  const sh=ensurePetShopping(),k=`${id}|${q}`;
+  sh.checked[k]=!sh.checked[k];
+  if(typeof saveGame==="function")try{saveGame("Shopping list",true)}catch(e){}
+  render();
+}
+function vgBuyShopping(id,q){
+  const p=state.pets.find(x=>x.id===id);if(!p)return false;
+  const item=vgPetShoppingItems(p).find(x=>x.q===q);if(!item)return false;
+  return vgAmazonGo(item.q);
+}
+function vgPetShoppingCard(p){
+  const sh=ensurePetShopping(),items=vgPetShoppingItems(p).slice(0,18);
+  const done=items.filter(x=>sh.checked[vgShopKey(p,x)]).length;
+  return `<details class="pet-shop-card">
+    <summary>
+      <span>🛍️ ${vgEscape(p.name)}'s Supply List</span>
+      <em>${done}/${items.length} READY</em>
+    </summary>
+    <div class="pet-shop-head">
+      <div><b>${vgEscape(p.species)}</b><span>Food · habitat · comfort · travel · enrichment</span></div>
+      <div class="shop-progress"><i style="width:${items.length?done/items.length*100:0}%"></i></div>
+    </div>
+    <div class="pet-shop-list">
+      ${items.map((x,i)=>{
+        const checked=!!sh.checked[vgShopKey(p,x)];
+        return `<div class="shop-row ${checked?"got-it":""}">
+          <button class="shop-check" onclick="event.stopPropagation();vgToggleShopping('${p.id}','${x.q.replace(/'/g,"\\'")}')">${checked?"✓":"○"}</button>
+          <div class="shop-copy"><b>${vgEscape(x.label)}</b><span>${vgEscape(x.bay)} · ${vgEscape(x.note)}</span></div>
+          <button class="shop-amazon" onclick="event.stopPropagation();return vgBuyShopping('${p.id}','${x.q.replace(/'/g,"\\'")}')">AMAZON ↗</button>
+        </div>`;
+      }).join("")}
+    </div>
+  </details>`;
+}
+function vgCombinedShoppingHTML(){
+  if(!state.pets.length)return "";
+  ensurePetShopping();
+  const cards=state.pets.map(vgPetShoppingCard).join("");
+  return `<div class="panel mypets-shop">
+    <div class="mypets-shop-title">
+      <div><span class="terminal-kicker">MY PETS · HOME SUPPLY COMMAND</span><h2>🛒 Things to Buy My Animals</h2>
+      <p>Personal shopping checklists generated from each adopted animal's species and care style.</p></div>
+      <div class="shop-pets-count"><b>${state.pets.length}</b><span>PETS</span></div>
+    </div>
+    <div class="shop-legend"><span>○ NEED</span><span>✓ HAVE IT</span><span>AMAZON ↗ SEARCH</span></div>
+    <div class="pet-shop-cards">${cards}</div>
+  </div>`;
+}
+
 function renderPets(){
   updateRealTimePetDecay();
   const el=document.getElementById("pets");
@@ -3318,6 +4144,7 @@ function renderPets(){
     ${sanctuaryCanvasHTML()}
     ${petWorldHTML()}
     ${petHomeSimReportHTML()}
+    ${vgCombinedShoppingHTML()}
     <div class="pet-care-grid">${cards}</div>
     ${vgGlobalAmazonSpeciesHTML()}
     ${typeof persistentSavePanel==="function"?persistentSavePanel():""}
