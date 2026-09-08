@@ -559,24 +559,42 @@ input,select,textarea{
 @media(max-width:760px){.care-pillar-wrap{grid-template-columns:1fr}}
 
 
-/* ===== DETAILED EXAM + VITAL READOUTS ===== */
-.exam-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
-.exam-detail-card{
-  background:#102630;border:1px solid rgba(190,230,240,.11);border-radius:15px;padding:9px
+/* ===== CLICKABLE ANIMAL DETAILS + REWARD FX ===== */
+.animal-clickable{cursor:pointer;transition:transform .14s ease,box-shadow .14s ease}
+.animal-clickable:active{transform:scale(.97)}
+.animal-clickable:hover{box-shadow:0 10px 24px rgba(0,0,0,.18)}
+#animalDetailOverlay{
+ position:fixed;inset:0;background:rgba(4,12,18,.74);z-index:9998;
+ display:none;align-items:flex-end;justify-content:center;padding:12px
 }
-.exam-detail-card h4{margin:0 0 6px;font-size:11px}
-.vital-line{display:grid;grid-template-columns:90px 1fr auto;gap:7px;align-items:center;margin:6px 0}
-.vital-name{font-size:9px}
-.vital-track{height:9px;background:#08171e;border-radius:999px;overflow:hidden}
-.vital-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#4b7f8c,#7fb8c4)}
-.vital-fill.warn{background:linear-gradient(90deg,#8b6a42,#c18d4e)}
-.vital-fill.bad{background:linear-gradient(90deg,#83484d,#c26a70)}
-.vital-value{font-size:9px;white-space:nowrap}
-.finding-box{font-size:9px;line-height:1.35;padding:7px;border-radius:11px;background:#152f39;margin-top:6px}
-.exam-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:7px}
-.exam-actions button{min-height:36px;font-size:9px;padding:6px 8px}
-.exam-expanded{margin-top:8px;padding:9px;border-radius:14px;background:#132b35;border:1px solid rgba(190,230,240,.1)}
-@media(max-width:620px){.exam-detail-grid{grid-template-columns:1fr}.vital-line{grid-template-columns:82px 1fr auto}}
+#animalDetailOverlay.open{display:flex}
+.animal-detail-sheet{
+ width:min(720px,100%);max-height:88vh;overflow:auto;border-radius:24px 24px 14px 14px;
+ background:#132a34;border:1px solid rgba(255,255,255,.12);padding:14px;
+ box-shadow:0 -20px 50px rgba(0,0,0,.35)
+}
+.animal-detail-head{display:flex;gap:12px;align-items:center}
+.animal-detail-head img{width:92px;height:92px;object-fit:contain;border-radius:18px;background:#0d2028}
+.animal-detail-name{font-size:20px;font-weight:900}
+.animal-detail-sub{font-size:10px;opacity:.75}
+.animal-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.animal-detail-box{padding:10px;border-radius:14px;background:#0f232b;font-size:10px;line-height:1.45}
+.animal-detail-box b{display:block;margin-bottom:4px;font-size:11px}
+.close-animal-detail{width:100%;margin-top:10px}
+.reward-burst{
+ position:fixed;left:50%;top:22%;transform:translate(-50%,-50%) scale(.85);
+ z-index:10050;pointer-events:none;padding:10px 16px;border-radius:999px;
+ background:#173a32;border:1px solid rgba(255,255,255,.17);font-weight:900;font-size:14px;
+ box-shadow:0 14px 34px rgba(0,0,0,.28);animation:rewardPop 1.15s ease forwards
+}
+@keyframes rewardPop{
+ 0%{opacity:0;transform:translate(-50%,-35%) scale(.75)}
+ 15%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+ 75%{opacity:1;transform:translate(-50%,-65%) scale(1)}
+ 100%{opacity:0;transform:translate(-50%,-90%) scale(.96)}
+}
+.reward-mini{font-size:9px;opacity:.75;display:block;margin-top:2px}
+@media(max-width:600px){.animal-detail-grid{grid-template-columns:1fr}.animal-detail-head img{width:78px;height:78px}}
 
 </style>
 </head>
@@ -1559,16 +1577,48 @@ function treeAction(id,action){
  if(action==="surgery"){t.stage="surgery";route(p,"Surgery");treeNote(p,"Transferred into surgical pathway");return}
  if(action==="medical"){t.readyRecovery=true;t.stage="recover";route(p,"Recovery");treeNote(p,"Transferred for medical recovery");return}
  if(action==="opstep"){p.surgeryStep=(p.surgeryStep||0)+1;p.bleeding=Math.max(0,(p.bleeding||30)-8);p.shock=Math.max(0,(p.shock||30)-5);treeNote(p,"Surgical step "+p.surgeryStep+" completed");if(p.surgeryStep>=5){t.stage="recover";t.readyRecovery=true;route(p,"Recovery");return}}
- if(action==="rest"){ensureLongPatient(p).rests++;p.stress=Math.max(0,(p.stress||40)-15);t.fear=Math.max(0,t.fear-8);resolveComplication(p);treeNote(p,"Rested quietly")}
- if(action==="eat"){ensureLongPatient(p).meals++;t.appetite=Math.min(100,t.appetite+18);t.trust+=4;resolveComplication(p);treeNote(p,"Ate during recovery")}
- if(action==="hydrate"){t.hydration=Math.min(100,t.hydration+20);treeNote(p,"Hydration improved")}
- if(action==="walk"){ensureLongPatient(p).walks++;t.mobility=Math.min(100,t.mobility+14);p.pain=Math.max(0,(p.pain||25)-3);resolveComplication(p);treeNote(p,"Completed a gentle mobility check")}
+ if(action==="rest"){
+  const l=ensureLongPatient(p);l.rests++;l.recoveryDays=Math.max(l.recoveryDays,1);
+  p.stress=Math.max(0,(p.stress||40)-15);
+  t.fear=Math.max(0,t.fear-8);
+  p.pain=Math.max(0,(p.pain||30)-4);
+  resolveComplication(p);
+  treeNote(p,"Rested quietly");
+}
+ if(action==="eat"){
+  const l=ensureLongPatient(p);l.meals++;l.recoveryDays=Math.max(l.recoveryDays,1);
+  t.appetite=Math.min(100,t.appetite+22);
+  t.trust=Math.min(100,t.trust+4);
+  resolveComplication(p);
+  treeNote(p,"Ate during recovery");
+}
+ if(action==="hydrate"){
+  const l=ensureLongPatient(p);l.recoveryDays=Math.max(l.recoveryDays,1);
+  t.hydration=Math.min(100,t.hydration+24);
+  resolveComplication(p);
+  treeNote(p,"Hydration improved");
+}
+ if(action==="walk"){
+  const l=ensureLongPatient(p);l.walks++;l.recoveryDays=Math.max(l.recoveryDays,1);
+  t.mobility=Math.min(100,t.mobility+18);
+  p.pain=Math.max(0,(p.pain||25)-5);
+  resolveComplication(p);
+  treeNote(p,"Completed a gentle mobility check");
+}
  if(action==="bond"){t.trust=Math.min(100,t.trust+12);t.fear=Math.max(0,t.fear-10);treeNote(p,"Chose to stay close")}
  if(action==="clear"){
-  const l=ensureLongPatient(p);l.rechecks++;
+  const l=ensureLongPatient(p);
+  l.rechecks++;
+  resolveComplication(p);
   const score=dischargeScore(p);
-  if(score>=82 && l.recoveryDays>=2 && !l.complication){t.readyHome=true;t.stage="home";treeNote(p,"Cleared to leave the ward")}
-  else{treeNote(p,"Final check: more recovery time is needed ("+score+"% ready)")}
+  const medicallyReady=(p.pain||0)<50 && t.hydration>=55 && t.appetite>=55 && t.mobility>=50;
+  if((score>=65 || medicallyReady) && !l.complication){
+    t.readyHome=true;
+    t.stage="home";
+    treeNote(p,"Final check passed. Ready for discharge.");
+  }else{
+    treeNote(p,"Final check: continue recovery care ("+score+"% ready)");
+  }
 }
  if(action==="mypets"){lifeBookRecord(p,"HOME ❤️");discharge(p);return}
  if(action==="sanctuary"){p.admitted=false;p.department="Sanctuary";EXP.sanctuary.push({...p});lifeBookRecord(p,"SANCTUARY");state.screen="sanctuary";treeNote(p,"Moved into long-term sanctuary care");render();return}
@@ -1588,9 +1638,9 @@ function treeActions(p){
  }
  if(t.stage==="surgery")return [["Next Surgical Step","opstep"],["Comfort Before Step","comfort"],["Stabilize","stabilize"]];
  if(t.stage==="recover"){
-  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
+  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"],["Recovery Recheck","clear"]];
   const l=ensureLongPatient(p);
-  if(t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40&&l.recoveryDays>=2&&l.rechecks>=1)a.push(["Final Check","clear"]);
+  if(t.appetite>=55&&t.hydration>=55&&t.mobility>=50&&(p.pain||0)<50&&l.recoveryDays>=1)a.push(["Final Check","clear"]);
   return a;
  }
  if(t.stage==="home")return [["Bring to My Pets","mypets"],["Long-Term Sanctuary","sanctuary"],["Family Adoption","adopt"]];
@@ -1614,7 +1664,6 @@ function animalTreeUI(p){
     <div class="small">Trust ${t.trust}% · Fear ${t.fear}% · Appetite ${t.appetite}% · Hydration ${t.hydration}% · Mobility ${t.mobility}%</div>
    </div></div>
    <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
-   ${threePillarCareHTML(p)}
   </div>
   <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div>${longPatientPanel(p)}</div>
  </div>`;
@@ -2023,12 +2072,6 @@ function careChoice(id,type,key){
   if(key==="emotionalmed"){t.fear=Math.max(0,t.fear-20);p.stress=Math.max(0,(p.stress||50)-15)}
  }
 
- const vv=ensureVitals(p);
- vv.painScore=Number(p.pain||vv.painScore);
- vv.mobilityScore=Number(t.mobility||vv.mobilityScore);
- vv.behaviorScore=Math.max(0,100-Number(t.fear||0));
- vv.hydration=Number(t.hydration||vv.hydration);
- vv.spo2=Number(p.oxygen||vv.spo2);
  c.lastOutcome=`${item[1]} completed for ${p.name}.`;
  treeNote(p,`${type.toUpperCase()} · ${item[1]}`);
  if(c[doneKey].length>=2 && c[levelKey]<1)c[levelKey]=1;
@@ -2044,15 +2087,13 @@ function careChoice(id,type,key){
 }
 function carePillarHTML(p,type,title){
  const c=ensureCareTree(p),done=pillarDone(p,type),lvl=pillarLevel(p,type);
- const detailKeys=["observe","vitals","physical","paincheck","mobilitycheck"];
  return `<div class="care-pillar ${type}">
    <h3>${title}</h3><div class="pillar-progress">${pillarProgressText(p,type)}</div>
    <div class="choice-list">${pillarData(type).map(x=>{
       const locked=x[3]>lvl,completed=done.includes(x[0]);
       return `<button class="choice-btn ${locked?"locked":""} ${completed?"done":""}" onclick="careChoice('${p.id}','${type}','${x[0]}')">
         ${completed?"✓ ":""}${x[1]}<span class="sub">${locked?"Unlocks later":x[2]}</span>
-      </button>
-      ${type==="exam"&&detailKeys.includes(x[0])&&completed?examDetailHTML(p,x[0],x[1]):""}`;
+      </button>`;
    }).join("")}</div>
    ${c.lastOutcome?`<div class="care-outcome">${c.lastOutcome}</div>`:""}
  </div>`;
@@ -2066,130 +2107,113 @@ function threePillarCareHTML(p){
  </div>`;
 }
 
-/* ===== DETAILED EXAM/VITALS ENGINE ===== */
-function ensureVitals(p){
- if(!p.vitals)p.vitals={
-  temp: 101.2 + ((p.name.length%7)-3)*0.4,
-  pulse: 92 + (p.name.length%5)*10,
-  resp: 24 + (p.name.length%4)*6,
-  spo2: Number(p.oxygen||86),
-  hydration: Number(ensureTree(p).hydration||55),
-  capRefill: 2.2 + (p.name.length%3)*0.5,
-  painScore:Number(p.pain||45),
-  mobilityScore:Number(ensureTree(p).mobility||50),
-  behaviorScore:Math.max(0,100-Number(ensureTree(p).fear||60)),
-  updated:0
- };
- return p.vitals;
+/* ===== ANIMAL DETAIL PANEL + REWARD SOUND SYSTEM ===== */
+let AUDIOCTX=null;
+function ensureAudio(){
+ try{
+  if(!AUDIOCTX)AUDIOCTX=new (window.AudioContext||window.webkitAudioContext)();
+  if(AUDIOCTX.state==="suspended")AUDIOCTX.resume();
+ }catch(e){}
 }
-function clampVital(v,min,max){return Math.max(min,Math.min(max,Number(v)||0))}
-function vitalState(key,v){
- if(key==="temp"){
-  if(v<99.5||v>104.5)return "bad"; if(v<100.2||v>103.2)return "warn"; return "ok";
- }
- if(key==="pulse"){if(v<55||v>180)return "bad";if(v<70||v>150)return "warn";return "ok"}
- if(key==="resp"){if(v<10||v>60)return "bad";if(v<16||v>45)return "warn";return "ok"}
- if(key==="spo2"){if(v<88)return "bad";if(v<94)return "warn";return "ok"}
- if(key==="hydration"){if(v<35)return "bad";if(v<60)return "warn";return "ok"}
- if(key==="capRefill"){if(v>4)return "bad";if(v>2.5)return "warn";return "ok"}
- if(key==="painScore"){if(v>70)return "bad";if(v>35)return "warn";return "ok"}
- if(key==="mobilityScore"){if(v<30)return "bad";if(v<60)return "warn";return "ok"}
- if(key==="behaviorScore"){if(v<30)return "bad";if(v<60)return "warn";return "ok"}
- return "ok";
+function tone(freq=520,dur=.08,type="sine",gain=.035,delay=0){
+ try{
+  ensureAudio(); if(!AUDIOCTX)return;
+  const o=AUDIOCTX.createOscillator(),g=AUDIOCTX.createGain();
+  o.type=type;o.frequency.value=freq;
+  g.gain.setValueAtTime(0.0001,AUDIOCTX.currentTime+delay);
+  g.gain.exponentialRampToValueAtTime(gain,AUDIOCTX.currentTime+delay+.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,AUDIOCTX.currentTime+delay+dur);
+  o.connect(g);g.connect(AUDIOCTX.destination);
+  o.start(AUDIOCTX.currentTime+delay);o.stop(AUDIOCTX.currentTime+delay+dur+.02);
+ }catch(e){}
 }
-function vitalPct(key,v){
- if(key==="temp")return clampVital((v-96)/10*100,0,100);
- if(key==="pulse")return clampVital(v/200*100,0,100);
- if(key==="resp")return clampVital(v/70*100,0,100);
- if(key==="spo2")return clampVital(v,0,100);
- if(key==="hydration"||key==="painScore"||key==="mobilityScore"||key==="behaviorScore")return clampVital(v,0,100);
- if(key==="capRefill")return clampVital(v/6*100,0,100);
- return 50;
+function rewardSound(kind="good"){
+ if(kind==="good"){tone(520,.08,"sine",.035,0);tone(690,.09,"sine",.03,.07);tone(860,.12,"sine",.025,.14)}
+ else if(kind==="soft"){tone(420,.08,"triangle",.025,0);tone(560,.10,"triangle",.02,.07)}
+ else{tone(240,.10,"square",.018,0);tone(190,.12,"square",.014,.08)}
 }
-function vitalLabel(key){
- return {temp:"Temperature",pulse:"Pulse",resp:"Respiration",spo2:"Oxygen",hydration:"Hydration",capRefill:"Cap refill",painScore:"Pain",mobilityScore:"Mobility",behaviorScore:"Behavior"}[key]||key;
+function rewardBurst(text,sub="",kind="good"){
+ const d=document.createElement("div");
+ d.className="reward-burst";
+ d.innerHTML=`${text}${sub?`<span class="reward-mini">${sub}</span>`:""}`;
+ document.body.appendChild(d);rewardSound(kind);
+ setTimeout(()=>d.remove(),1200);
 }
-function vitalDisplay(key,v){
- if(key==="temp")return `${v.toFixed(1)} °F`;
- if(key==="pulse")return `${Math.round(v)} bpm`;
- if(key==="resp")return `${Math.round(v)}/min`;
- if(key==="spo2"||key==="hydration"||key==="painScore"||key==="mobilityScore"||key==="behaviorScore")return `${Math.round(v)}%`;
- if(key==="capRefill")return `${v.toFixed(1)} sec`;
- return Math.round(v);
+function animalById(id){
+ return state.patients.find(p=>String(p.id)===String(id))||
+        state.pets.find(p=>String(p.id)===String(id));
 }
-function vitalRow(key,v){
- const st=vitalState(key,v);
- return `<div class="vital-line">
-   <div class="vital-name">${vitalLabel(key)}</div>
-   <div class="vital-track"><div class="vital-fill ${st==="ok"?"":st}" style="width:${vitalPct(key,v)}%"></div></div>
-   <div class="vital-value">${vitalDisplay(key,v)}</div>
- </div>`;
+function animalImageFor(p){
+ return p.image||p.img||p.thumb||p.photo||"";
 }
-function examFinding(p,type){
- const v=ensureVitals(p),t=ensureTree(p);
- if(type==="observe")return t.fear>65?`${p.name} is tense, watchful, and slow to accept handling.`:t.trust>60?`${p.name} is relaxed enough for close handling.`:`${p.name} is cautious but engaging.`;
- if(type==="vitals")return v.temp>103.2?`Temperature is elevated; pulse and respiration should be rechecked after calming.`:v.spo2<94?`Oxygenation is below ideal and needs support.`:`Vital signs are currently stable enough to continue assessment.`;
- if(type==="physical")return (p.infection||0)>35?`Physical exam suggests inflammation or infection.`:(p.bleeding||0)>30?`Active tissue injury is still evident.`:`Physical exam is mostly stable with localized concerns.`;
- if(type==="paincheck")return v.painScore>60?`Pain remains significant and is affecting handling.`:v.painScore>30?`Mild-to-moderate pain is present.`:`Pain is well controlled.`;
- if(type==="mobilitycheck")return v.mobilityScore<40?`Mobility is poor; weight-bearing is limited.`:v.mobilityScore<65?`Mobility is reduced but improving.`:`Mobility is functional.`;
- return "Assessment available.";
-}
-function examVitalSet(type,p){
- const v=ensureVitals(p);
- const sets={
-  observe:["temp","pulse","resp","behaviorScore"],
-  vitals:["temp","pulse","resp","spo2","hydration","capRefill"],
-  physical:["temp","pulse","hydration","capRefill"],
-  paincheck:["temp","pulse","resp","painScore"],
-  mobilitycheck:["pulse","resp","mobilityScore","painScore"]
- };
- return sets[type]||["temp","pulse","resp"];
-}
-function examDetailHTML(p,type,title){
- const v=ensureVitals(p);
- return `<div class="exam-expanded">
-  <h4>${title} · Detailed Readout</h4>
-  ${examVitalSet(type,p).map(k=>vitalRow(k,v[k])).join("")}
-  <div class="finding-box">${examFinding(p,type)}</div>
-  <div class="exam-actions">
-   ${type==="observe"?`
-    <button onclick="examIntervention('${p.id}','calm')">Calm Environment</button>
-    <button onclick="examIntervention('${p.id}','trust')">Slow Approach</button>`:""}
-   ${type==="vitals"?`
-    <button onclick="examIntervention('${p.id}','cool')">Temperature Care</button>
-    <button onclick="examIntervention('${p.id}','oxygen')">Oxygen Support</button>
-    <button onclick="examIntervention('${p.id}','fluids')">Give Fluids</button>
-    <button onclick="examIntervention('${p.id}','rest')">Quiet Recheck</button>`:""}
-   ${type==="physical"?`
-    <button onclick="examIntervention('${p.id}','wound')">Treat Wound</button>
-    <button onclick="examIntervention('${p.id}','antiinflam')">Reduce Swelling</button>`:""}
-   ${type==="paincheck"?`
-    <button onclick="examIntervention('${p.id}','painmed')">Pain Relief</button>
-    <button onclick="examIntervention('${p.id}','comfort')">Comfort + Reassess</button>`:""}
-   ${type==="mobilitycheck"?`
-    <button onclick="examIntervention('${p.id}','supportwalk')">Supported Walk</button>
-    <button onclick="examIntervention('${p.id}','restlimb')">Rest Limb</button>`:""}
+function openAnimalDetail(id){
+ const p=animalById(id);if(!p)return;
+ state.activeId=p.id;
+ const t=ensureTree(p),l=ensureLongPatient(p);
+ const sim=p.sim?ensurePetSim(p):null;
+ const sheet=document.getElementById("animalDetailSheet");
+ if(!sheet)return;
+ const img=animalImageFor(p);
+ sheet.innerHTML=`
+  <div class="animal-detail-head">
+   ${img?`<img src="${img}" alt="${p.name}">`:""}
+   <div>
+    <div class="animal-detail-name">${p.name||"Animal"}</div>
+    <div class="animal-detail-sub">${p.species||"Animal"} · ${p.breed||"Patient"} · ${p.status||p.location||"Hospital"}</div>
+    <div class="animal-detail-sub">${p.condition||p.problem||p.diagnosis||"Under veterinary care"}</div>
+   </div>
   </div>
- </div>`;
+  <div class="animal-detail-grid">
+   <div class="animal-detail-box"><b>Medical</b>
+    Pain: ${Math.round(p.pain||0)}<br>
+    Oxygen: ${Math.round(p.oxygen||0)}<br>
+    Hydration: ${Math.round(t.hydration||0)}<br>
+    Mobility: ${Math.round(t.mobility||0)}<br>
+    Appetite: ${Math.round(t.appetite||0)}
+   </div>
+   <div class="animal-detail-box"><b>Emotional</b>
+    Fear: ${Math.round(t.fear||0)}<br>
+    Trust: ${Math.round(t.trust||0)}<br>
+    Stress: ${Math.round(p.stress||0)}
+    ${sim?`<br>Loneliness: ${Math.round(sim.loneliness||0)}<br>Happiness: ${Math.round(sim.happiness||0)}`:""}
+   </div>
+   <div class="animal-detail-box"><b>Case Progress</b>
+    Stage: ${t.stage||"care"}<br>
+    Recovery time: ${l.recoveryDays||0}<br>
+    Rechecks: ${l.rechecks||0}<br>
+    Discharge readiness: ${typeof dischargeScore==="function"?dischargeScore(p):0}%
+   </div>
+   <div class="animal-detail-box"><b>Story</b>
+    ${p.backstory||p.story||l.storyBeat||"This animal is still writing its recovery story."}
+   </div>
+  </div>
+  <button class="action close-animal-detail" onclick="closeAnimalDetail()">CLOSE</button>`;
+ document.getElementById("animalDetailOverlay").classList.add("open");
+ rewardSound("soft");
 }
-function examIntervention(id,action){
- const p=state.patients.find(x=>x.id===id);if(!p)return;
- const v=ensureVitals(p),t=ensureTree(p);
- if(action==="calm"){t.fear=Math.max(0,t.fear-12);p.stress=Math.max(0,(p.stress||45)-10);v.pulse-=8;v.resp-=4;v.behaviorScore+=10}
- if(action==="trust"){t.trust=Math.min(100,t.trust+10);t.fear=Math.max(0,t.fear-6);v.behaviorScore+=8}
- if(action==="cool"){if(v.temp>102.5)v.temp-=0.8;else if(v.temp<100)v.temp+=0.5;v.pulse-=4}
- if(action==="oxygen"){v.spo2=Math.min(100,v.spo2+8);p.oxygen=v.spo2;v.resp=Math.max(10,v.resp-3)}
- if(action==="fluids"){v.hydration=Math.min(100,v.hydration+14);t.hydration=v.hydration;v.capRefill=Math.max(1.2,v.capRefill-0.5)}
- if(action==="rest"){v.pulse=Math.max(55,v.pulse-6);v.resp=Math.max(10,v.resp-3);p.stress=Math.max(0,(p.stress||40)-5)}
- if(action==="wound"){p.bleeding=Math.max(0,(p.bleeding||25)-15);p.infection=Math.max(0,(p.infection||20)-8);v.temp=Math.max(100,v.temp-0.2)}
- if(action==="antiinflam"){p.pain=Math.max(0,(p.pain||45)-8);v.painScore=p.pain;v.temp=Math.max(100,v.temp-0.2)}
- if(action==="painmed"){p.pain=Math.max(0,(p.pain||45)-18);v.painScore=p.pain;v.pulse=Math.max(55,v.pulse-5);v.resp=Math.max(10,v.resp-2)}
- if(action==="comfort"){t.fear=Math.max(0,t.fear-8);t.trust=Math.min(100,t.trust+6);v.behaviorScore=Math.min(100,v.behaviorScore+7);v.pulse=Math.max(55,v.pulse-3)}
- if(action==="supportwalk"){t.mobility=Math.min(100,t.mobility+10);v.mobilityScore=t.mobility;v.painScore=Math.max(0,v.painScore-2)}
- if(action==="restlimb"){p.pain=Math.max(0,(p.pain||40)-6);v.painScore=p.pain;v.mobilityScore=Math.min(100,v.mobilityScore+3)}
- v.updated++;
- treeNote(p,"Vitals updated after "+action);
- render();
+function closeAnimalDetail(){
+ const el=document.getElementById("animalDetailOverlay");if(el)el.classList.remove("open");
+}
+function wireAnimalClicks(){
+ const selectors=[".animal-card",".animal-tile",".resident-animal",".pet-card",".patient-card",".ward-animal",".animal-strip-item"];
+ document.querySelectorAll(selectors.join(",")).forEach(el=>{
+  if(el.dataset.animalWired)return;
+  const btn=el.querySelector("[onclick*='activeId'],[onclick*='select'],[onclick*='open']");
+  let id=el.dataset.id||el.dataset.animalId||el.getAttribute("data-patient");
+  if(!id){
+   const txt=el.textContent||"";
+   const p=state.patients.concat(state.pets||[]).find(x=>x.name&&txt.includes(x.name));
+   if(p)id=p.id;
+  }
+  if(id){
+   el.classList.add("animal-clickable");
+   el.dataset.animalWired="1";
+   el.addEventListener("click",e=>{
+    if(e.target.closest("button"))return;
+    openAnimalDetail(id);
+   });
+  }
+ });
 }
 function render(){
   state.patients.filter(p=>p.admitted).forEach(applyMeterInteractions);
@@ -2226,6 +2250,19 @@ document.querySelectorAll("[data-screen]").forEach(b=>b.addEventListener("click"
 const starter=makePatient(0);
 starter.stress=62;starter.pain=48;starter.shock=34;starter.bleeding=22;starter.infection=12;starter.oxygen=82;state.patients.push(starter);state.activeId=starter.id;addLog(starter.name+" admitted to Clinic");
 render();
+
+const __vetGodsOriginalRender=render;
+render=function(){
+ __vetGodsOriginalRender();
+ setTimeout(wireAnimalClicks,0);
+};
+setTimeout(wireAnimalClicks,0);
+document.addEventListener("pointerdown",()=>ensureAudio(),{once:true});
 </script>
+
+<div id="animalDetailOverlay" onclick="if(event.target===this)closeAnimalDetail()">
+  <div class="animal-detail-sheet" id="animalDetailSheet"></div>
+</div>
+
 </body>
 </html>
