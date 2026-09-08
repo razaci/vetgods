@@ -923,9 +923,85 @@ body::before,body::after,.screen::before,.screen::after{pointer-events:none !imp
 @media(max-width:540px){.mixed-care-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:390px){.mixed-care-grid{grid-template-columns:1fr}}
 
+
+/* VET GODS · REAL-TIME PET CLOCK */
+.pet-time-box{
+  display:flex;flex-direction:column;gap:2px;margin-top:8px;
+  padding:7px 9px;border:1px solid var(--line,#2a3b45);
+  border-radius:7px;background:rgba(255,255,255,.025);
+}
+.pet-time-box b{font-size:.78rem}
+.pet-time-box span{font-size:.72rem;opacity:.78}
+
+
+/* VET GODS · EXOTIC-FIRST ADMIT */
+.vg-exotic-intake{margin-bottom:10px}
+.vg-exotic-strip{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:8px;
+}
+.vg-exotic-pick{
+  display:flex;flex-direction:column;align-items:flex-start;gap:3px;
+  min-height:92px;padding:8px;border-radius:7px;
+  border:1px solid var(--line,#2a3b45);
+  background:var(--panel2,#172229);color:inherit;text-align:left;
+}
+.vg-exotic-pick b{font-size:.8rem}
+.vg-exotic-pick span{font-size:.74rem;opacity:.9}
+.vg-exotic-pick small{font-size:.66rem;opacity:.7}
+.vg-exotic-pick em{font-style:normal;font-size:.64rem;font-weight:900;margin-top:auto;opacity:.85}
+@media(max-width:640px){.vg-exotic-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+/* =========================================================
+   VET GODS · BASE64 OUTER SPACE GODS WAR THEME
+   ========================================================= */
+.vg-space-masthead{
+  position:relative;max-width:1180px;margin:8px auto 10px;padding:0 8px;
+}
+.vg-space-masthead img{
+  display:block;width:100%;aspect-ratio:2.5/1;object-fit:cover;
+  border-radius:14px;border:1px solid #2d4d67;background:#050812;
+}
+.vg-space-masthead-copy{
+  position:absolute;left:24px;right:24px;bottom:20px;
+  padding:8px 10px;border-radius:8px;
+  background:rgba(3,8,18,.72);backdrop-filter:none;
+  border:1px solid rgba(112,217,255,.25);
+}
+.vg-space-masthead-copy b{display:block;font-size:.95rem;letter-spacing:.08em}
+.vg-space-masthead-copy span{display:block;font-size:.72rem;opacity:.82;margin-top:2px}
+.vg-space-war-panel{
+  display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center;
+  border-color:#34546b !important;
+  background:linear-gradient(135deg,rgba(13,29,47,.96),rgba(21,18,42,.96)) !important;
+}
+.vg-space-war-panel img{
+  width:100%;aspect-ratio:1.9/1;object-fit:contain;border-radius:8px;
+}
+.vg-space-war-panel h3{margin:0 0 5px}
+.vg-god-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.vg-god-tags span{
+  font-size:.61rem;font-weight:800;letter-spacing:.05em;padding:4px 6px;border-radius:5px;
+  border:1px solid #315368;background:rgba(255,255,255,.025);
+}
+@media(max-width:560px){
+  .vg-space-masthead-copy{left:16px;right:16px;bottom:14px}
+  .vg-space-masthead-copy span{display:none}
+  .vg-space-war-panel{grid-template-columns:1fr}
+  .vg-space-war-panel img{max-height:115px}
+}
+
 </style>
 </head>
 <body>
+<div class="vg-space-masthead">
+  <img src="data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTQwMCA1NjAiPgo8ZGVmcz4KIDxyYWRpYWxHcmFkaWVudCBpZD0iYmciIGN4PSI1MCUiIGN5PSI0NSUiIHI9Ijc1JSI+CiAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMTkyNTQ4Ii8+CiAgPHN0b3Agb2Zmc2V0PSIuNTUiIHN0b3AtY29sb3I9IiMwODBkMWMiLz4KICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMwMjA0MGEiLz4KIDwvcmFkaWFsR3JhZGllbnQ+CiA8bGluZWFyR3JhZGllbnQgaWQ9ImEiIHgxPSIwIiB4Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iIzcwZDlmZiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzI0NDZkOCIvPjwvbGluZWFyR3JhZGllbnQ+CiA8bGluZWFyR3JhZGllbnQgaWQ9ImIiIHgxPSIwIiB4Mj0iMSI+PHN0b3Agc3RvcC1jb2xvcj0iI2ZmODQ2YiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzlkMTAyMCIvPjwvbGluZWFyR3JhZGllbnQ+CiA8ZmlsdGVyIGlkPSJnIj48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSIxMCIvPjwvZmlsdGVyPgo8L2RlZnM+CjxyZWN0IHdpZHRoPSIxNDAwIiBoZWlnaHQ9IjU2MCIgZmlsbD0idXJsKCNiZykiLz4KPGcgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjgiPgogPGNpcmNsZSBjeD0iMTAwIiBjeT0iNzAiIHI9IjIiLz48Y2lyY2xlIGN4PSIyMjAiIGN5PSIxNTAiIHI9IjEuOCIvPjxjaXJjbGUgY3g9IjM1MCIgY3k9IjQ1IiByPSIxLjQiLz4KIDxjaXJjbGUgY3g9IjUyMCIgY3k9Ijk1IiByPSIyLjIiLz48Y2lyY2xlIGN4PSI3MjAiIGN5PSI0NSIgcj0iMS42Ii8+PGNpcmNsZSBjeD0iODYwIiBjeT0iMTIwIiByPSIyIi8+CiA8Y2lyY2xlIGN4PSIxMDgwIiBjeT0iNjUiIHI9IjEuNiIvPjxjaXJjbGUgY3g9IjEyNjAiIGN5PSIxNDUiIHI9IjIuMiIvPjxjaXJjbGUgY3g9IjEzMzAiIGN5PSI2NSIgcj0iMS4zIi8+CiA8Y2lyY2xlIGN4PSIxMTYwIiBjeT0iMzYwIiByPSIxLjQiLz48Y2lyY2xlIGN4PSIzMDAiIGN5PSIzOTAiIHI9IjEuNyIvPjxjaXJjbGUgY3g9IjYyMCIgY3k9IjQ0MCIgcj0iMS41Ii8+CjwvZz4KPGVsbGlwc2UgY3g9IjcwMCIgY3k9IjMxMCIgcng9IjIxMCIgcnk9IjEyNSIgZmlsbD0iIzY2ZDlmZiIgb3BhY2l0eT0iLjA4IiBmaWx0ZXI9InVybCgjZykiLz4KPGVsbGlwc2UgY3g9IjcwMCIgY3k9IjMxMCIgcng9IjEwNSIgcnk9IjEwNSIgZmlsbD0iI2ZmZDc3MCIgb3BhY2l0eT0iLjA4IiBmaWx0ZXI9InVybCgjZykiLz4KPCEtLSBsZWZ0IGdvZCAtLT4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoOTAgODUpIj4KIDxwYXRoIGQ9Ik0xODAgNDBjODUgMzAgMTIwIDExMCA5NSAxOTAtMjAgNjQtNyAxMTIgNjAgMTYwSDEwYzY3LTQ4IDgwLTk2IDYwLTE2MEM0NSAxNTAgODAgNzAgMTgwIDQweiIgZmlsbD0idXJsKCNhKSIgb3BhY2l0eT0iLjMiLz4KIDxjaXJjbGUgY3g9IjE4MCIgY3k9IjExMCIgcj0iNTQiIGZpbGw9IiM4M2U0ZmYiIG9wYWNpdHk9Ii41NSIvPgogPHBhdGggZD0iTTEyNSAxNzBoMTEwbDcwIDIyMEg1NXoiIGZpbGw9IiMxNDJlNjciLz4KIDxwYXRoIGQ9Ik0xNzggMTE4bC0zNSAxNiAyOCA4LTEwIDM2IDQ1LTQ4LTI3LTN6IiBmaWxsPSIjZmZmIiBvcGFjaXR5PSIuOCIvPgogPHRleHQgeD0iMTgwIiB5PSI0MzAiIGZpbGw9IiM5ZGVhZmYiIGZvbnQtc2l6ZT0iMjgiIGZvbnQtZmFtaWx5PSJzYW5zLXNlcmlmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5BU1RSQUVMPC90ZXh0Pgo8L2c+CjwhLS0gcmlnaHQgZ29kIC0tPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg5NjUgODUpIj4KIDxwYXRoIGQ9Ik0xODAgNDBjODUgMzAgMTIwIDExMCA5NSAxOTAtMjAgNjQtNyAxMTIgNjAgMTYwSDEwYzY3LTQ4IDgwLTk2IDYwLTE2MEM0NSAxNTAgODAgNzAgMTgwIDQweiIgZmlsbD0idXJsKCNiKSIgb3BhY2l0eT0iLjM1Ii8+CiA8Y2lyY2xlIGN4PSIxODAiIGN5PSIxMTAiIHI9IjU0IiBmaWxsPSIjZmY4MjZmIiBvcGFjaXR5PSIuNTgiLz4KIDxwYXRoIGQ9Ik0xMjUgMTcwaDExMGw3MCAyMjBINTV6IiBmaWxsPSIjNTExNjI0Ii8+CiA8cGF0aCBkPSJNMTQ1IDEyMmw3MCAwLTIwIDE4IDIwIDMwLTM4LTE1LTM1IDI0IDEwLTM4eiIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iLjcyIi8+CiA8dGV4dCB4PSIxODAiIHk9IjQzMCIgZmlsbD0iI2ZmOWE4ZCIgZm9udC1zaXplPSIyOCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPktIQVJPUzwvdGV4dD4KPC9nPgo8IS0tIGNlbnRlciBwZXQgbGlmZSBzcGFya3MgLS0+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDU2NSAxODUpIj4KIDxjaXJjbGUgY3g9IjEzNSIgY3k9IjEyNSIgcj0iMTE4IiBmaWxsPSIjZmZkODZlIiBvcGFjaXR5PSIuMTIiLz4KIDxjaXJjbGUgY3g9IjEzNSIgY3k9IjEyNSIgcj0iODIiIGZpbGw9IiM4MGU2ZmYiIG9wYWNpdHk9Ii4xIi8+CiA8IS0tIGRvZyAtLT4KIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDQ1IDgwKSIgZmlsbD0iI2YyZjZmZiI+CiAgPGNpcmNsZSBjeD0iNjUiIGN5PSI1NSIgcj0iMzMiLz4KICA8cGF0aCBkPSJNMzYgNDZMNSAyMGwxNSA0OHpNOTQgNDZsMzEtMjYtMTUgNDh6Ii8+CiAgPHJlY3QgeD0iNTAiIHk9IjgyIiB3aWR0aD0iMzAiIGhlaWdodD0iNTUiIHJ4PSIxNCIvPgogIDxjaXJjbGUgY3g9IjUzIiBjeT0iNTMiIHI9IjQiIGZpbGw9IiMxMDE1MjIiLz48Y2lyY2xlIGN4PSI3NiIgY3k9IjUzIiByPSI0IiBmaWxsPSIjMTAxNTIyIi8+CiAgPGNpcmNsZSBjeD0iNjUiIGN5PSI2NSIgcj0iNSIgZmlsbD0iIzEwMTUyMiIvPgogPC9nPgogPCEtLSBjYXQgLS0+CiA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMzAgOTUpIiBmaWxsPSIjZmZlOWI3Ij4KICA8Y2lyY2xlIGN4PSI1NSIgY3k9IjQ1IiByPSIyOSIvPgogIDxwYXRoIGQ9Ik0zMCAyNUwyMCAwbDI4IDE2ek03OSAyNUw5MCAwIDYzIDE2eiIvPgogIDxyZWN0IHg9IjQ0IiB5PSI3MCIgd2lkdGg9IjIzIiBoZWlnaHQ9IjQ4IiByeD0iMTEiLz4KICA8Y2lyY2xlIGN4PSI0NSIgY3k9IjQzIiByPSIzLjUiIGZpbGw9IiMxMTEiLz48Y2lyY2xlIGN4PSI2NSIgY3k9IjQzIiByPSIzLjUiIGZpbGw9IiMxMTEiLz4KIDwvZz4KIDx0ZXh0IHg9IjEzNSIgeT0iMjM1IiBmaWxsPSIjZmZlNjlhIiBmb250LXNpemU9IjI1IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC13ZWlnaHQ9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+TElGRSBTUEFSS1M8L3RleHQ+CjwvZz4KPCEtLSBlbmVyZ3kgYmVhbXMgLS0+CjxwYXRoIGQ9Ik0zOTAgMjcwQzUwMCAyMzAgNTU1IDIzNSA2MjUgMjc1IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NWQ5ZmYiIHN0cm9rZS13aWR0aD0iNyIgb3BhY2l0eT0iLjQ1Ii8+CjxwYXRoIGQ9Ik0xMDEwIDI3MEM5MDAgMjMwIDg0NSAyMzUgNzc1IDI3NSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmY2MjU4IiBzdHJva2Utd2lkdGg9IjciIG9wYWNpdHk9Ii40NSIvPgo8dGV4dCB4PSI3MDAiIHk9IjUwNSIgZmlsbD0iI2ZmZiIgZm9udC1zaXplPSIzOCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI3MDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGxldHRlci1zcGFjaW5nPSI1Ij5WRVQgR09EUyDCtyBXQVIgRk9SIFRIRSBQRVRTPC90ZXh0Pgo8L3N2Zz4K" alt="Vet Gods outer space war over pets">
+  <div class="vg-space-masthead-copy">
+    <b>VET GODS · WAR FOR THE PETS</b>
+    <span>The Space Gods are fighting over every animal Life Spark. Protect them.</span>
+  </div>
+</div>
+
 <div id="app">
   <div class="top">
     <div class="brand">
@@ -1506,7 +1582,97 @@ function trustStage(p){
   return "Still afraid";
 }
 
+
+/* =========================================================
+   VET GODS · REAL-TIME MY PETS DECAY
+   Needs change according to actual elapsed wall-clock hours.
+   The timestamp lives inside saved state, so closing/reopening
+   the HTML does not reset the clock.
+   ========================================================= */
+const PET_DECAY = {
+  intervalMs: 60*60*1000,   // one real hour
+  maxCatchupHours: 72,      // prevents extreme damage after long absences
+  perHour:{
+    hunger:-3.0,            // "fed" meter drops
+    water:-4.0,
+    comfort:-2.0,
+    happiness:-2.2,
+    cleanliness:-1.2,
+    energy:-1.5,
+    trust:-0.35
+  }
+};
+
+function clampPetStat(v){ return Math.max(0,Math.min(100,Number(v)||0)); }
+
+function applyPetHourlyDecay(p,hours){
+  ensurePet(p);
+  const d=PET_DECAY.perHour;
+  p.hunger=clampPetStat(p.hunger+d.hunger*hours);
+  p.water=clampPetStat(p.water+d.water*hours);
+  p.comfort=clampPetStat(p.comfort+d.comfort*hours);
+  p.happiness=clampPetStat(p.happiness+d.happiness*hours);
+  p.cleanliness=clampPetStat(p.cleanliness+d.cleanliness*hours);
+  p.energy=clampPetStat(p.energy+d.energy*hours);
+  p.trust=clampPetStat(p.trust+d.trust*hours);
+
+  // Consequences become stronger only when needs are genuinely neglected.
+  let neglect=0;
+  if(p.hunger<35) neglect+=1;
+  if(p.water<35) neglect+=1.25;
+  if(p.comfort<35) neglect+=0.8;
+  if(p.happiness<30) neglect+=0.65;
+  if(p.cleanliness<25) neglect+=0.45;
+
+  if(neglect>0){
+    p.loneliness=clampPetStat((p.loneliness||0)+(0.7*neglect*hours));
+    p.fear=clampPetStat((p.fear||0)+(0.35*neglect*hours));
+    if(p.water<20 || p.hunger<20){
+      p.pain=clampPetStat((p.pain||0)+(0.18*neglect*hours));
+    }
+  }else{
+    // Well-cared-for animals very slowly settle while you're away.
+    p.fear=clampPetStat((p.fear||0)-(0.15*hours));
+  }
+}
+
+function updateRealTimePetDecay(){
+  if(!state || !Array.isArray(state.pets))return 0;
+  const now=Date.now();
+
+  if(!state.lastPetDecayAt){
+    state.lastPetDecayAt=now;
+    return 0;
+  }
+
+  const elapsed=Math.max(0,now-state.lastPetDecayAt);
+  const wholeHours=Math.floor(elapsed/PET_DECAY.intervalMs);
+  if(wholeHours<1)return 0;
+
+  const appliedHours=Math.min(wholeHours,PET_DECAY.maxCatchupHours);
+  state.pets.forEach(p=>applyPetHourlyDecay(p,appliedHours));
+
+  // Preserve leftover partial hour instead of resetting it.
+  state.lastPetDecayAt += wholeHours*PET_DECAY.intervalMs;
+  state.lastPetDecayHours=appliedHours;
+
+  if(typeof saveGame==="function"){
+    try{saveGame("Hourly pet needs update",true)}catch(e){}
+  }
+  return appliedHours;
+}
+
+function petDecayStatusHTML(){
+  const last=state.lastPetDecayAt ? new Date(state.lastPetDecayAt) : new Date();
+  return `<div class="pet-time-box">
+    <b>⏱ Real-Time Care</b>
+    <span>Needs change every real hour · last check ${last.toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}</span>
+  </div>`;
+}
+
+
 function renderPets(){
+  updateRealTimePetDecay();
   const el=document.getElementById("pets");
   if(!el)return;
 
@@ -1624,6 +1790,7 @@ function renderPets(){
         <div>
           <h2>🐾 My Pets · Interactive Care Deck</h2>
           <div class="small">Each need has its own control instead of every action being the same.</div>
+          ${petDecayStatusHTML()}
         </div>
         <button class="action" onclick="petCareAllSliders()">Care for All Pets</button>
       </div>
@@ -3184,8 +3351,23 @@ function renderAnimalProfile(){
   const p=state.patients.find(x=>x.id===state.activeId) || state.pets.find(x=>x.id===state.activeId) || (EXP.sanctuary||[]).find(x=>x.id===state.activeId);
   el.innerHTML=animalProfileHTML(p);
 }
+
+function vgSpaceGodsLoreHTML(){
+  return `<div class="panel vg-space-war-panel">
+    <img src="data:image/svg+xml;base64,CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDIwIDIyMCI+CjxyZWN0IHdpZHRoPSI0MjAiIGhlaWdodD0iMjIwIiByeD0iMjQiIGZpbGw9IiMwNzEwMWQiLz4KPGNpcmNsZSBjeD0iMjEwIiBjeT0iMTEwIiByPSI4NCIgZmlsbD0iIzEwMmU0OCIvPgo8Y2lyY2xlIGN4PSIyMTAiIGN5PSIxMTAiIHI9IjYzIiBmaWxsPSIjMTYzZDVmIi8+CjxwYXRoIGQ9Ik0xMjAgMTEwaDE4MCIgc3Ryb2tlPSIjNzBkOWZmIiBzdHJva2Utd2lkdGg9IjYiIG9wYWNpdHk9Ii41NSIvPgo8cGF0aCBkPSJNMjEwIDMwdjE2MCIgc3Ryb2tlPSIjZmY2YjYxIiBzdHJva2Utd2lkdGg9IjYiIG9wYWNpdHk9Ii4zNSIvPgo8ZyBmaWxsPSIjZmZmIj4KIDxjaXJjbGUgY3g9IjE5MCIgY3k9IjEwMiIgcj0iMjIiLz4KIDxwYXRoIGQ9Ik0xNzAgODlsLTE1LTE4IDUgMjl6TTIxMCA4OWwxNS0xOC01IDI5eiIvPgogPHJlY3QgeD0iMTgyIiB5PSIxMjIiIHdpZHRoPSIxNiIgaGVpZ2h0PSIzNSIgcng9IjgiLz4KIDxjaXJjbGUgY3g9IjI0MiIgY3k9IjExMiIgcj0iMTciLz4KIDxwYXRoIGQ9Ik0yMjggMTAxbC04LTE1IDE3IDh6TTI1NiAxMDFsOC0xNS0xNyA4eiIvPgogPHJlY3QgeD0iMjM2IiB5PSIxMjgiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNyIgcng9IjYiLz4KPC9nPgo8dGV4dCB4PSIyMTAiIHk9IjE5NSIgZmlsbD0iI2ZmZDg3OCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZvbnQtd2VpZ2h0PSI3MDAiPlBST1RFQ1QgVEhFIExJRkUgU1BBUks8L3RleHQ+Cjwvc3ZnPgo=" alt="Life Spark emblem">
+    <div>
+      <h3>⚔️ Space Gods Conflict</h3>
+      <div class="small"><b>Astrael</b> protects returning animal Life Sparks. <b>Kharos</b> wants them claimed by the Red Orbit. Every rescued patient shifts the balance of the war.</div>
+      <div class="vg-god-tags">
+        <span>ASTRAEL · MERCY</span><span>VEYRA · WATCH</span><span>KHAROS · WAR</span><span>SOLENNE · HEART</span><span>NYM · HUNT</span>
+      </div>
+    </div>
+  </div>`;
+}
+
 function render(){
   try{
+    if(typeof updateRealTimePetDecay==="function")updateRealTimePetDecay();
     if(!Array.isArray(state.patients))state.patients=[];
     if(!Array.isArray(state.pets))state.pets=[];
     if(!Array.isArray(state.log))state.log=[];
@@ -3551,6 +3733,49 @@ let VG_DB_PAGE=0;
 let VG_DB_FILTER="";
 let VG_DB_SPECIES="All";
 
+
+const VG_EXOTIC_FIRST_SPECIES = [
+  "Tarantula","Jumping Spider","Orb Weaver","Scorpion","Vinegaroon",
+  "Praying Mantis","Stick Insect","Leaf Insect","Beetle",
+  "Ant Colony","Isopod Colony","Dubia Roach Colony",
+  "Millipede","Centipede","Giant Land Snail","Hermit Crab",
+  "Axolotl","Tree Frog","Pacman Frog","Newt","Salamander"
+];
+
+function vgIsImmediateExotic(a){
+  return a && VG_EXOTIC_FIRST_SPECIES.includes(a.species);
+}
+
+function vgFeaturedExoticsHTML(){
+  if(typeof VG_ANIMAL_DATABASE==="undefined")return "";
+  const picks=[];
+  for(const species of VG_EXOTIC_FIRST_SPECIES){
+    const found=VG_ANIMAL_DATABASE.find(a=>a.species===species && !state.patients.some(p=>p.databaseId===a.id));
+    if(found)picks.push(found);
+    if(picks.length>=8)break;
+  }
+  if(!picks.length)return "";
+  return `<div class="panel vg-exotic-intake">
+    <div class="vg-exotic-head">
+      <div>
+        <h3>🕷️🐜 Exotic Intake · Available Now</h3>
+        <div class="small">Spiders, insects, colonies and other exotics are available immediately.</div>
+      </div>
+    </div>
+    <div class="vg-exotic-strip">
+      ${picks.map(a=>{
+        const pr=(a.problemKeys||[]).map(k=>VG_PROBLEMS.find(x=>x.key===k)).filter(Boolean)[0];
+        return `<button class="vg-exotic-pick" onclick="event.stopPropagation();vgAdmitDatabaseAnimal('${a.id}')">
+          <b>${vgEscape(a.species)}</b>
+          <span>${vgEscape(a.name)}</span>
+          <small>${pr?vgEscape(pr.name):"Exotic care case"}</small>
+          <em>ADMIT</em>
+        </button>`;
+      }).join("")}
+    </div>
+  </div>`;
+}
+
 function vgRenderDatabaseBrowser(){
   const el=document.getElementById("vgAnimalDatabase");
   if(!el)return;
@@ -3587,7 +3812,7 @@ renderAdmit=function(){
   if(!el)return;
   el.innerHTML=`
     <div class="panel">
-      <h2>🐾 Admit Animal</h2>
+      <h2>🐾 Admit Animal</h2>${vgFeaturedExoticsHTML()}
       <p class="small">Choose from 654 distinct animal cases, including exotic invertebrates and amphibians. Each animal has its own problem mix, care notes, likely outcome, and supply-search links.</p>
       <div class="small"><b>Important:</b> Product links are for finding general care supplies. Serious or worsening symptoms still need a veterinarian. Amazon searches open outside the game page.</div>
     </div>
@@ -4233,6 +4458,16 @@ render();
 
 window.addEventListener("beforeunload",()=>{if(SAVE_READY)saveGame("Auto Save",true)});
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&SAVE_READY)saveGame("Auto Save",true)});
+
+/* Add the Space Gods war panel to Clinic without replacing gameplay. */
+const _vgSpaceGodsRenderClinic = renderClinic;
+renderClinic=function(){
+  _vgSpaceGodsRenderClinic();
+  const el=document.getElementById("clinic");
+  if(el && !el.querySelector(".vg-space-war-panel")){
+    el.insertAdjacentHTML("afterbegin",vgSpaceGodsLoreHTML());
+  }
+};
 </script>
 </body>
 </html>
