@@ -568,374 +568,11 @@ input,select,textarea{
 .clickable-animal:active{transform:scale(.985)}
 .animal-profile .tree-patient{padding:10px;border-radius:18px;background:rgba(255,255,255,.04)}
 
-/* =========================================================
-   VET GODS · CARTOON FX OVERHAUL
-   Presentation-only layer. Existing gameplay remains intact.
-   ========================================================= */
-:root{
- --ink:#273d4a;
- --cream:#fff8df;
- --sky:#b9ebff;
- --sky2:#65c9ed;
- --mint:#aeeac4;
- --mint2:#52b77d;
- --peach:#ffc893;
- --pink:#ffc0cf;
- --lav:#d6c8ff;
- --sun:#ffd96a;
- --cartoon-shadow:0 8px 0 rgba(37,69,82,.18),0 14px 28px rgba(27,61,75,.16);
- --cartoon-line:3px solid rgba(39,61,74,.78);
-}
-html{background:#bfeeff}
-body{
- min-height:100vh;
- color:var(--ink);
- background:
- radial-gradient(circle at 12% 8%,rgba(255,255,255,.95) 0 4%,transparent 4.2%),
- radial-gradient(circle at 87% 13%,rgba(255,255,255,.8) 0 5%,transparent 5.2%),
- linear-gradient(180deg,#9fe2fb 0,#d9f5ff 34%,#e8f7d7 34%,#b9e39e 100%);
- background-attachment:scroll;
- overflow-x:hidden;
-}
-body:before,body:after{
- content:"";
- position:fixed;
- z-index:-1;
- pointer-events:none;
- border-radius:50%;
- filter:blur(.2px);
- opacity:.55;
- 
-}
-body:before{width:180px;height:72px;background:white;left:-35px;top:16vh;box-shadow:85px 18px 0 10px white,155px -2px 0 -5px white}
-body:after{width:150px;height:62px;background:white;right:-45px;top:29vh;box-shadow:-75px 14px 0 6px white,-140px -3px 0 -8px white;}
-@keyframes cloudDrift{to{transform:translateX(24px) translateY(5px)}}
 
-#app{max-width:1180px;padding:12px 12px 88px;position:relative}
-.top{gap:12px;align-items:stretch}
-.brand{
- position:relative;overflow:hidden;min-height:104px;
- background:
- radial-gradient(circle at 84% 22%,rgba(255,255,255,.68) 0 7%,transparent 7.3%),
- linear-gradient(135deg,#fff5bb,#ffd777 48%,#ffbd8b);
- border:var(--cartoon-line);
- border-radius:30px;
- padding:18px 22px;
- box-shadow:var(--cartoon-shadow);
- transform:rotate(-.25deg);
-}
-.brand:before{pointer-events:none;
- content:"🐶  🐱  🐰";
- position:absolute;right:18px;bottom:5px;
- font-size:44px;letter-spacing:4px;
- filter:drop-shadow(0 5px 0 rgba(48,71,80,.16));
- transform:rotate(2deg);
-}
-.brand:after{pointer-events:none;
- content:"✦";
- position:absolute;right:205px;top:10px;font-size:34px;color:white;
- animation:sparkle 1.6s ease-in-out infinite;
-}
-@keyframes sparkle{50%{transform:scale(1.35) rotate(16deg);opacity:.5}}
-.brand h1{
- margin:0;color:#2c6277;
- font-size:clamp(30px,6vw,52px);
- line-height:.9;letter-spacing:.025em;
- font-weight:1000;
- text-shadow:0 3px 0 #fff,0 6px 0 rgba(44,98,119,.13);
-}
-.brand p{color:#765d49;font-weight:800;max-width:600px;margin-top:9px}
-.stats{align-content:center;max-width:360px}
-.chip{
- color:var(--ink);
- background:#fffdf3;
- border:2px solid rgba(39,61,74,.68);
- border-radius:18px;
- padding:10px 13px;
- box-shadow:0 5px 0 rgba(39,61,74,.14);
- font-weight:900;
-}
-.chip:nth-child(2){background:#ffe1ec}
-.chip:nth-child(3){background:#d8f4d8}
-
-.nav{
- position:sticky;top:6px;z-index:30;
- grid-template-columns:repeat(8,minmax(0,1fr));
- gap:7px;
- padding:8px;
- background:rgba(255,250,226,.91);
- border:2px solid rgba(39,61,74,.68);
- border-radius:22px;
- box-shadow:0 7px 0 rgba(39,61,74,.13),0 12px 30px rgba(39,61,74,.12);
- 
-}
-.nav button{
- position:relative;
- min-height:50px;
- padding:8px 5px;
- color:var(--ink);
- background:linear-gradient(#fff,#e9f7ff);
- border:2px solid rgba(39,61,74,.42);
- border-radius:15px;
- font-size:10px;font-weight:950;
- box-shadow:0 4px 0 rgba(39,61,74,.16);
- transition:transform .12s ease,box-shadow .12s ease,background .2s ease;
-}
-.nav button:active{transform:translateY(4px) scale(.98);box-shadow:0 0 0 rgba(39,61,74,.12)}
-.nav button.active{
- color:#23444f;
- background:linear-gradient(#fff8b8,#ffd563);
- border-color:#6f6030;
- transform:translateY(-2px);
- box-shadow:0 6px 0 rgba(111,96,48,.23),0 9px 17px rgba(39,61,74,.12);
-}
-
-.screen.active{animation:screenPop .24s cubic-bezier(.2,.9,.25,1.2)}
-@keyframes screenPop{
- from{opacity:0;transform:translateY(7px) scale(.992)}
- to{opacity:1;transform:none}
-}
-
-.panel{
- position:relative;
- color:var(--ink);
- background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(246,252,248,.98));
- border:var(--cartoon-line);
- border-radius:25px;
- padding:15px;
- margin-bottom:12px;
- box-shadow:var(--cartoon-shadow);
- overflow:hidden;
-}
-.panel:before{pointer-events:none;
- content:"";
- position:absolute;left:16px;right:16px;top:0;height:5px;
- background:linear-gradient(90deg,#69cbee,#7ad7a0,#ffd46d,#ff9faf,#b8a7ff);
- border-radius:0 0 8px 8px;opacity:.9;
-}
-.panel h2,.panel h3{color:#315866;font-weight:1000;letter-spacing:.01em}
-.small{color:#667b80;font-weight:650}
-
-#clinic .panel{background:linear-gradient(180deg,#fff,#eefaff)}
-#surgery .panel{background:linear-gradient(180deg,#fff,#f5efff)}
-#recovery .panel{background:linear-gradient(180deg,#fff,#effbf0)}
-#pets .panel{background:linear-gradient(180deg,#fff,#fff6e9)}
-#sanctuary .panel{background:linear-gradient(180deg,#fff,#f0fae8)}
-#research .panel,#carelab .panel{background:linear-gradient(180deg,#fff,#f2f3ff)}
-#ambulance .panel{background:linear-gradient(180deg,#fff,#fff0f0)}
-
-.hero,.tree-patient,.patient-hero{
- background:linear-gradient(135deg,#effaff,#fff9e5);
- border:2px solid rgba(39,61,74,.25);
- border-radius:22px;
- padding:10px;
-}
-.hero img,.patient-card img,.dept-card img,.tree-patient img,.pet-top img,.patient-hero img{
- border:3px solid #fff;
- outline:2px solid rgba(39,61,74,.28);
- background:
- radial-gradient(circle at 50% 32%,#fff 0 22%,transparent 22.5%),
- linear-gradient(#d7f4ff,#f8fff0);
- box-shadow:0 6px 0 rgba(39,61,74,.14);
- transition:transform .18s cubic-bezier(.2,.9,.3,1.3),filter .18s;
-}
-.clickable-animal:hover img,.patient-card:hover img,.dept-card:hover img{transform:translateY(-3px) rotate(-1deg) scale(1.025)}
-.clickable-animal:active img{transform:translateY(2px) scale(.97)}
-
-.patient-card,.dept-card,.pet-sim,.memory,.animal-tile,.roster-card{
- color:var(--ink);
- background:linear-gradient(180deg,#fff,#f4fbff);
- border:2px solid rgba(39,61,74,.34);
- border-radius:20px;
- box-shadow:0 5px 0 rgba(39,61,74,.12);
- transition:transform .15s ease,box-shadow .15s ease;
-}
-.patient-card:hover,.dept-card:hover,.pet-sim:hover,.animal-tile:hover,.roster-card:hover{
- transform:translateY(-3px);
- box-shadow:0 8px 0 rgba(39,61,74,.13),0 12px 20px rgba(39,61,74,.1);
-}
-
-button,.action,.patient-card button,.dept-card button,.pet-actions button,.choice-btn{
- position:relative;
- color:#274550!important;
- background:linear-gradient(#fff,#dff4ff)!important;
- border:2px solid rgba(39,61,74,.58)!important;
- border-radius:15px!important;
- font-weight:950!important;
- box-shadow:0 5px 0 rgba(39,61,74,.16)!important;
- transition:transform .11s ease,box-shadow .11s ease,filter .15s ease!important;
- overflow:hidden;
-}
-button:hover,.action:hover{filter:brightness(1.035)}
-button:active,.action:active{
- transform:translateY(4px) scale(.985)!important;
- box-shadow:0 1px 0 rgba(39,61,74,.16)!important;
-}
-.action.green{background:linear-gradient(#dcffe8,#8ce0ae)!important}
-.action.gold{background:linear-gradient(#fff4b6,#ffd760)!important}
-.action.red{background:linear-gradient(#ffd7da,#ff9ca5)!important}
-
-.controls{gap:9px}
-.controls button{min-height:64px}
-
-.meter{
- position:relative;height:16px;
- background:#e3eef0;border:2px solid rgba(39,61,74,.4);
- box-shadow:inset 0 2px 0 rgba(39,61,74,.12);
-}
-.meter i{
- position:relative;
- background:linear-gradient(90deg,#60cf94 0 45%,#ffd765 65%,#ff878f 100%);
- transition:width .45s cubic-bezier(.2,.8,.2,1);
-}
-.meter i:after{
- content:"";position:absolute;inset:1px 6px auto 6px;height:4px;border-radius:10px;background:rgba(255,255,255,.52)
-}
-.meter-row{padding:5px 0}
-.meter-label,.meter-value{font-weight:900;color:#42616b}
-
-.empty{
- color:#687e82;
- background:rgba(255,255,255,.62);
- border:3px dashed rgba(66,111,126,.35);
- border-radius:20px;
-}
-
-.care-pillar{border:2px solid rgba(39,61,74,.4)!important;border-radius:22px!important;box-shadow:0 5px 0 rgba(39,61,74,.12)}
-.care-pillar.exam{background:linear-gradient(#eaf8ff,#d4f0ff)!important}
-.care-pillar.medical{background:linear-gradient(#f0fff3,#d8f2df)!important}
-.care-pillar.emotional{background:linear-gradient(#fff0f7,#ffddea)!important}
-.care-outcome,.exam-expanded,.finding-box{
- color:var(--ink)!important;
- background:rgba(255,255,255,.72)!important;
- border:1px solid rgba(39,61,74,.16);
-}
-
-.pet-sim{background:linear-gradient(180deg,#fffef4,#fff3d7)}
-.pet-home-toolbar{
- position:sticky;top:84px;z-index:12;
- background:rgba(255,249,220,.92);
- border:2px solid rgba(39,61,74,.32);
- border-radius:18px;padding:8px;
- 
-}
-
-.dept-counts .chip{background:#effaff}
-.log{
- background:#f4fbfd;
- border:2px solid rgba(39,61,74,.18);
- border-radius:16px;
- padding:9px;
-}
-
-.fx-paw{
- position:fixed;z-index:9999;pointer-events:none;
- font-size:20px;
- animation:pawPop .72s cubic-bezier(.2,.8,.3,1) forwards;
- filter:drop-shadow(0 3px 0 rgba(39,61,74,.18));
-}
-@keyframes pawPop{
- 0%{opacity:0;transform:translate(-50%,-20%) scale(.4) rotate(-18deg)}
- 18%{opacity:1;transform:translate(-50%,-80%) scale(1.2) rotate(7deg)}
- 100%{opacity:0;transform:translate(-50%,-210%) scale(.82) rotate(24deg)}
-}
-.fx-toast{
- position:fixed;z-index:9998;left:50%;bottom:92px;transform:translateX(-50%);
- max-width:min(86vw,420px);
- padding:10px 15px;
- color:#2d4d57;background:#fff7bd;
- border:2px solid rgba(39,61,74,.7);
- border-radius:999px;
- box-shadow:0 6px 0 rgba(39,61,74,.16);
- font-size:12px;font-weight:950;
- animation:toastIn 1.25s ease forwards;
- pointer-events:none;
-}
-@keyframes toastIn{
- 0%{opacity:0;transform:translate(-50%,15px) scale(.85)}
- 15%,75%{opacity:1;transform:translate(-50%,0) scale(1)}
- 100%{opacity:0;transform:translate(-50%,-8px) scale(.98)}
-}
-
-
-@media(max-width:900px){
- .nav{grid-template-columns:repeat(5,minmax(0,1fr))}
- .brand:before{font-size:36px;opacity:.74}
-}
-@media(max-width:760px){
- #app{padding:8px 8px 94px}
- .top{margin-bottom:8px}
- .brand{min-height:98px;border-radius:24px;padding:15px}
- .brand h1{font-size:36px}
- .brand p{font-size:10px;max-width:62%}
- .brand:before{right:8px;font-size:30px}
- .stats{display:grid;grid-template-columns:repeat(3,1fr);max-width:none}
- .chip{padding:8px 7px;text-align:center;font-size:10px}
- .nav{
-   position:fixed;left:7px;right:7px;bottom:7px;top:auto;
-   margin:0;
-   grid-template-columns:repeat(5,1fr);
-   max-height:78px;
-   overflow-x:auto;overflow-y:hidden;
-   padding:7px;
-   border-radius:22px;
- }
- .nav button{min-width:78px;min-height:58px;font-size:9px}
- .panel{border-radius:21px;padding:12px}
- .roster{grid-template-columns:repeat(2,minmax(0,1fr))}
- .controls{grid-template-columns:repeat(2,1fr)}
- .controls button{min-height:58px}
- .pet-home-grid{grid-template-columns:1fr}
- .pet-home-toolbar{top:8px}
-}
-
-
-
-/* VET GODS · ORIGINAL BRIGHT COLOR SCENE + CARTOON STYLE */
-body{
- color:#173047 !important;
- background:linear-gradient(180deg,#dff3ff 0%,#edf9ff 48%,#e8f7ef 100%) !important;
- background-attachment:scroll !important;
-}
-.screen,.screen.active{color:#173047 !important}
-.panel,.tree-stage,.dept-scene,.story-panel,.animal-focus-card,.patient-card,
-.ward-animal,.animal-tile,.pet-card,.econ-card,.case-test,.care-outcome,.memory,.sim-event{
- color:#173047 !important;
- background:rgba(248,252,255,.95) !important;
- border-color:#b9d8e5 !important;
-}
-.small,.screen .small,.meter-label,.condition-summary{color:#52677d !important}
-h1,h2,h3,h4,.screen h1,.screen h2,.screen h3,.screen h4,b,strong,label,
-.resident-label,.tree-observation,.objective,.relationship,.complication{color:#173047 !important}
-.chip,.sim-chip,.chapter-pill,.animal-status{
- color:#244057 !important;background:#edf7fb !important;border-color:#c4dfe9 !important;
-}
-input,select,textarea{
- color:#173047 !important;background:#fff !important;border-color:#b7d1dc !important;
-}
-.meter{background:#dceaf0 !important}
-button,.action,.nav button{
- color:#173047 !important;text-shadow:none !important;
- background:linear-gradient(180deg,#fff,#dff1f8) !important;border-color:#9fc7d7 !important;
-}
-.action.green{
- color:#153b2a !important;background:linear-gradient(180deg,#dff8e9,#bfe8cf) !important;border-color:#82c7a0 !important;
-}
-.action.gold{
- color:#543c12 !important;background:linear-gradient(180deg,#fff6d8,#f2d98f) !important;border-color:#d7b95d !important;
-}
-.action.red{
- color:#612b32 !important;background:linear-gradient(180deg,#ffe8e8,#f3bfc4) !important;border-color:#d68e96 !important;
-}
-.nav{background:rgba(244,251,255,.96) !important;border-color:#b9d8e5 !important}
-.nav button.active{
- color:#123b54 !important;background:linear-gradient(180deg,#dff5ff,#bfe8f7) !important;border-color:#76bad3 !important;
-}
-.dept-scene{
- background:linear-gradient(180deg,rgba(222,244,255,.96),rgba(239,250,246,.96)) !important;
-}
-body::before,body::after,.screen::before,.screen::after{opacity:.18 !important;pointer-events:none !important}
-img{filter:none !important}
+/* VET GODS · PERFORMANCE ONLY — ORIGINAL VISUALS PRESERVED */
+body{background-attachment:scroll !important;}
+*{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
+body::before,body::after,.screen::before,.screen::after{pointer-events:none !important;}
 
 </style>
 </head>
@@ -944,33 +581,33 @@ img{filter:none !important}
   <div class="top">
     <div class="brand">
       <h1>VET GODS</h1>
-      <p>Cartoon Animal Hospital · heal them · comfort them · bring them home</p>
+      <p>Animal hospital simulator · clean rebuild · one patient state system</p>
     </div>
     <div class="stats">
-      <div class="chip day-chip">🐾 VET GODS</div>
+      <div class="chip">Credits <b id="credits"></b></div>
       <div class="chip">Mercy <b id="mercy"></b></div>
       <div class="chip">Lives Saved <b id="saved"></b></div>
     </div>
   </div>
 
   <div class="nav">
-    <button data-screen="clinic">🩺 Clinic</button>
-    <button data-screen="surgery">⚕️ Surgery</button>
-    <button data-screen="recovery">🛏️ Recovery</button>
-    <button data-screen="animalprofile">🐾 Animal</button>
-      <button data-screen="carelab">🔬 Care Lab</button>
-      <button data-screen="pets">🏡 My Pets</button>
-    <button data-screen="status">📋 Status</button>
-    <button data-screen="admit">🚑 Admit</button>
+    <button data-screen="clinic">Clinic</button>
+    <button data-screen="surgery">Surgery</button>
+    <button data-screen="recovery">Recovery</button>
+    <button data-screen="animalprofile">Animal Profile</button>
+      <button data-screen="carelab">Care Lab</button>
+      <button data-screen="pets">My Pets</button>
+    <button data-screen="status">Status</button>
+    <button data-screen="admit">Admit Patient</button>
 
-    <button data-screen="hospital">🏥 Hospital</button>
-    <button data-screen="sanctuary">🌿 Sanctuary</button>
-    <button data-screen="world">🌎 World</button>
-    <button data-screen="lifebook">📖 Life Book</button>
+    <button data-screen="hospital">Hospital+</button>
+    <button data-screen="sanctuary">Sanctuary</button>
+    <button data-screen="world">World</button>
+    <button data-screen="lifebook">Life Book</button>
 
-    <button data-screen="reception">🔔 Reception</button>
-    <button data-screen="ambulance">🚨 Rescue</button>
-    <button data-screen="research">🧪 Research</button>
+    <button data-screen="reception">Reception</button>
+    <button data-screen="ambulance">Ambulance</button>
+    <button data-screen="research">Research</button>
 
 
   </div>
@@ -1263,30 +900,11 @@ function roster(list,deptName){
     </div>`).join("")}</div>`;
 }
 function renderClinic(){
-  const el=document.getElementById("clinic");
-  if(!el)return;
-
-  const list=dept("Clinic");
-  const p=list.find(x=>x.id===state.activeId)||list[0]||null;
+  const p=dept("Clinic").find(x=>x.id===state.activeId)||dept("Clinic")[0]||null;
   if(p)state.activeId=p.id;
-
-  let hero="";
-  try{ hero=patientHero(p); }
-  catch(e){
-    console.warn("patientHero failed",e);
-    hero=p?`<div class="hero"><img src="${p.image||""}" alt="${p.name||"Patient"}"><div><h2>${p.name||"Patient"}</h2><div class="small">${p.species||"Animal"} · ${p.condition||"Needs care"} · Clinic</div></div></div>`:`<div class="empty">No active patient in Clinic.</div>`;
-  }
-
-  let rosterHTML="";
-  try{ rosterHTML=roster(list,"Clinic"); }
-  catch(e){
-    console.warn("roster failed",e);
-    rosterHTML=`<div class="roster">${list.map(x=>`<div class="patient-card clickable-animal" onclick="openAnimalProfile('${x.id}')"><img src="${x.image||""}" alt="${x.name||"Patient"}"><b>${x.name||"Patient"}</b><div class="small">${x.species||"Animal"} · ${x.condition||"Needs care"}</div></div>`).join("")}</div>`;
-  }
-
-  el.innerHTML=`
+  clinic.innerHTML=`
     <div class="grid2">
-      <div class="panel">${hero}
+      <div class="panel">${patientHero(p)}
         ${p?`<div class="controls" style="margin-top:12px">
           <button class="action" onclick="treat(active(),12)">Gentle Care</button>
           <button class="action green" onclick="treat(active(),24)">Standard Care</button>
@@ -1296,19 +914,16 @@ function renderClinic(){
       <div class="panel">
         <h3>Hospital Census</h3>
         <div class="dept-counts">
-          <div class="chip">Clinic <b>${list.length}</b></div>
+          <div class="chip">Clinic <b>${dept("Clinic").length}</b></div>
           <div class="chip">Surgery <b>${dept("Surgery").length}</b></div>
           <div class="chip">Recovery <b>${dept("Recovery").length}</b></div>
         </div>
         <p class="small">Only admitted patients count. The roster below is live.</p>
       </div>
     </div>
-    <div class="panel"><h3>Clinic Patients</h3>${rosterHTML}</div>`;
+    <div class="panel"><h3>Clinic Patients</h3>${roster(dept("Clinic"),"Clinic")}</div>`;
 
-  if(p){
-    try{ el.innerHTML+=clinicEconomyHTML(p); }
-    catch(e){ console.warn("clinic actions panel skipped",e); }
-  }
+if(p)clinic.innerHTML+=clinicEconomyHTML(p);
 }
 function renderSurgery(){
   const list=dept("Surgery");
@@ -1388,20 +1003,8 @@ function renderAdmit(){
   </div>`;
 }
 function admitOne(){
-  const p=makePatient(state.nextCase++);
-  p.admitted=true;
-  p.department="Clinic";
-  p.location="Clinic";
-  ensureClinical(p);
-  ensureTree(p);
-  ensureLongPatient(p);
-  ensureFlow(p);
-  ensureMeterHistory(p);
-  state.patients.push(p);
-  state.activeId=p.id;
-  state.screen="clinic";
-  addLog(p.name+" admitted to Clinic");
-  render();
+  const p=expPatient(state.nextCase++);
+  state.patients.push(p);state.activeId=p.id;state.screen="clinic";addLog(p.name+" admitted to Clinic");render();
 }
 
 
@@ -1718,7 +1321,7 @@ function renderLifeBook(){
 function renderReception(){
  ensureQueue();
  reception.innerHTML=`<div class="panel"><h2>Reception / Intake</h2><p class="small">Choose where each arrival goes. Capacity and money now matter.</p>
- ${ECON.queue.map(q=>`<div class="queue-row"><span><span class="badge ${q.tone}">${q.type}</span><b>${q.species}</b> · ${q.reason}</span><span><button onclick="receptionAction('${q.id}','admit')">Admit</button> <button onclick="receptionAction('${q.id}','refer')">Refer</button> <button onclick="receptionAction('${q.id}','sanctuary')">🌿 Sanctuary</button></span></div>`).join("")}</div>`;
+ ${ECON.queue.map(q=>`<div class="queue-row"><span><span class="badge ${q.tone}">${q.type}</span><b>${q.species}</b> · ${q.reason}</span><span><button onclick="receptionAction('${q.id}','admit')">Admit</button> <button onclick="receptionAction('${q.id}','refer')">Refer</button> <button onclick="receptionAction('${q.id}','sanctuary')">Sanctuary</button></span></div>`).join("")}</div>`;
 }
 
 function animalRescueMission(type,cases,species){
@@ -1853,7 +1456,7 @@ function liveDeptAnimals(deptName){
  const actual=state.patients.filter(p=>p.admitted && p.department===deptName);
  return actual.slice(0,8).map(p=>{
    const mood=(p.stress||0)>60?"frightened":(p.pain||0)>50?"uncomfortable":"settling in";
-   return `<div class="animal-tile clickable-animal" onclick="openAnimalProfile('${p.id||p.name}')">
+   return `<div class="animal-tile clickable-animal" onclick="openAnimalProfile('${a.id||a.name}')">
      <img src="${p.image}" alt="${p.name}">
      <b>${p.name}</b><div class="small">${p.species} · ${p.condition}</div>
      <div class="animal-status ${(p.stress||0)>60?"alert":"calm"}">${mood}</div>
@@ -1921,22 +1524,12 @@ function prependAnimalScene(screenId,key,deptName){
 
 /* ===== DYNAMIC ANIMAL GAMEPLAY TREE ENGINE ===== */
 function ensureTree(p){
- if(!p.tree||typeof p.tree!=="object")p.tree={};
- const t=p.tree;
- if(!t.stage)t.stage="observe";
- if(!Array.isArray(t.discovered))t.discovered=[];
- if(!Array.isArray(t.completed))t.completed=[];
- if(!Array.isArray(t.history))t.history=[];
- if(!Number.isFinite(Number(t.appetite)))t.appetite=55;
- if(!Number.isFinite(Number(t.trust)))t.trust=22;
- if(!Number.isFinite(Number(t.fear)))t.fear=65;
- if(!Number.isFinite(Number(t.hydration)))t.hydration=55;
- if(!Number.isFinite(Number(t.mobility)))t.mobility=50;
- if(typeof t.diagnosis==="undefined")t.diagnosis=false;
- if(typeof t.stable==="undefined")t.stable=false;
- if(typeof t.readyRecovery==="undefined")t.readyRecovery=false;
- if(typeof t.readyHome==="undefined")t.readyHome=false;
- return t;
+ if(!p.tree)p.tree={
+  stage:"observe",discovered:[],completed:[],history:[],
+  appetite:55,trust:22,fear:65,hydration:55,mobility:50,
+  diagnosis:false,stable:false,readyRecovery:false,readyHome:false
+ };
+ return p.tree;
 }
 function treeNote(p,text){
  const t=ensureTree(p);t.history.unshift(text);t.history=t.history.slice(0,8);addLog(p.name+" · "+text);
@@ -2049,40 +1642,15 @@ function applyTreeDepartmentUI(){
   const map={clinic:"Clinic",surgery:"Surgery",recovery:"Recovery"};
   const d=map[state.screen];
   if(!d)return;
-
   const el=document.getElementById(state.screen);
   if(!el)return;
-
   const p=active();
   const selected=p&&p.department===d?p:(dept(d)[0]||null);
   if(selected)state.activeId=selected.id;
-
-  // Build each advanced widget independently. A bad optional widget
-  // never destroys the working department screen.
-  let campaign="";
-  let ward="";
-  let tree="";
-  let residents="";
-
-  try{ if(d==="Clinic")campaign=campaignPanel(); }
-  catch(e){ console.warn("campaign panel skipped",e); }
-
-  try{ ward=wardBoard(d); }
-  catch(e){ console.warn("ward board skipped",e); }
-
-  try{ tree=animalTreeUI(selected); }
-  catch(e){
-    console.warn("animal tree skipped",e);
-    tree=selected?`<div class="panel"><h2>${selected.name}</h2><div class="small">${selected.species} · ${selected.condition} · ${d}</div><div class="controls" style="margin-top:10px"><button class="action green" onclick="openAnimalProfile('${selected.id}')">Open Animal Profile</button></div></div>`:`<div class="panel"><div class="empty">No animal selected.</div></div>`;
-  }
-
-  try{ residents=residentStrip(state.screen,null); }
-  catch(e){ console.warn("resident strip skipped",e); }
-
-  // Preserve the stable clinic base if the advanced tree is unavailable.
-  if(campaign||ward||tree||residents){
-    el.innerHTML=campaign+ward+tree+residents;
-  }
+  el.innerHTML=(d==="Clinic"&&typeof campaignPanel==="function"?campaignPanel():"")
+    +(typeof wardBoard==="function"?wardBoard(d):"")
+    +(typeof animalTreeUI==="function"?animalTreeUI(selected):"")
+    +(typeof residentStrip==="function"?residentStrip(state.screen,null):"");
 }
 
 /* ===== SMART METER ENGINE ===== */
@@ -2230,19 +1798,15 @@ const LONGSIM={
  recentEvents:[]
 };
 function ensureLongPatient(p){
- if(!p.long||typeof p.long!=="object")p.long={};
- const l=p.long;
- if(!Number.isFinite(Number(l.admittedDay)))l.admittedDay=LONGSIM.day||1;
- if(!Number.isFinite(Number(l.admittedShift)))l.admittedShift=LONGSIM.totalShifts||0;
- for(const k of ["recoveryDays","rechecks","meds","meals","rests","walks","dischargeScore"]){
-   if(!Number.isFinite(Number(l[k])))l[k]=0;
- }
- if(typeof l.complication==="undefined")l.complication=null;
- if(typeof l.secondary==="undefined")l.secondary=null;
- if(typeof l.relationship==="undefined")l.relationship=null;
- if(!Array.isArray(l.schedule))l.schedule=["Vitals","Meal","Rest","Reassessment"];
- if(!l.storyBeat)l.storyBeat="Arrived at the hospital";
- return l;
+ if(!p.long)p.long={
+   admittedDay:LONGSIM.day,admittedShift:LONGSIM.totalShifts,
+   recoveryDays:0,rechecks:0,meds:0,meals:0,rests:0,walks:0,
+   complication:null,secondary:null,relationship:null,
+   schedule:["Vitals","Meal","Rest","Reassessment"],
+   storyBeat:"Arrived at the hospital",
+   dischargeScore:0
+ };
+ return p.long;
 }
 function shiftName(){return ["Morning","Afternoon","Evening","Night"][LONGSIM.shiftIndex%4]}
 function longEvent(text){LONGSIM.recentEvents.unshift(`Day ${LONGSIM.day} · ${shiftName()} — ${text}`);LONGSIM.recentEvents=LONGSIM.recentEvents.slice(0,8)}
@@ -2280,31 +1844,15 @@ function longPatientPanel(p){
  </div>`;
 }
 function campaignPanel(){
-  // Legacy-save safe: older builds may have chapter values outside the current campaign.
-  if(!Array.isArray(LONGSIM.chapters)||!LONGSIM.chapters.length){
-    LONGSIM.chapters=[
-      ["The First Rescues","Learn the hospital and complete patient stories."],
-      ["Free Play","The hospital continues as an open animal simulation."]
-    ];
-  }
-  let chapterNum=Number(LONGSIM.chapter);
-  if(!Number.isFinite(chapterNum))chapterNum=1;
-  chapterNum=Math.max(1,Math.min(LONGSIM.chapters.length,Math.floor(chapterNum)));
-  LONGSIM.chapter=chapterNum;
-  if(!Array.isArray(LONGSIM.recentEvents))LONGSIM.recentEvents=[];
-  if(!Number.isFinite(Number(LONGSIM.day)))LONGSIM.day=1;
-  if(!Number.isFinite(Number(LONGSIM.shiftIndex)))LONGSIM.shiftIndex=0;
-  if(!Number.isFinite(Number(LONGSIM.totalShifts)))LONGSIM.totalShifts=0;
-
-  const c=LONGSIM.chapters[chapterNum-1]||LONGSIM.chapters[0];
-  return `<div class="story-panel">
-   <div class="chapter-track">${LONGSIM.chapters.map((x,i)=>`<span class="chapter-pill ${i+1<chapterNum?"done":i+1===chapterNum?"active":""}">${i+1}. ${(x&&x[0])||"Chapter"}</span>`).join("")}</div>
-   <h3>Chapter ${chapterNum} · ${(c&&c[0])||"Hospital Story"}</h3><div class="small">${(c&&c[1])||"Continue caring for the animals."}</div>
+ const c=LONGSIM.chapters[LONGSIM.chapter-1];
+ return `<div class="story-panel">
+   <div class="chapter-track">${LONGSIM.chapters.map((x,i)=>`<span class="chapter-pill ${i+1<LONGSIM.chapter?"done":i+1===LONGSIM.chapter?"active":""}">${i+1}. ${x[0]}</span>`).join("")}</div>
+   <h3>Chapter ${LONGSIM.chapter} · ${c[0]}</h3><div class="small">${c[1]}</div>
    <div class="sim-ribbon">
     <div class="sim-chip"><b>Day ${LONGSIM.day}</b>Hospital Day</div>
     <div class="sim-chip"><b>${shiftName()}</b>Current Shift</div>
     <div class="sim-chip"><b>${admitted().length}</b>Patients</div>
-    <div class="sim-chip"><b>${state.saved||0}</b>Stories Completed</div>
+    <div class="sim-chip"><b>${state.saved}</b>Stories Completed</div>
    </div>
    <div class="shift-actions">
     <button onclick="advanceHospitalShift()">Advance Shift</button>
@@ -2987,20 +2535,10 @@ function renderAnimalProfile(){
 }
 function render(){
   try{
-    // Repair legacy persistent-save shapes before any room renders.
-    if(typeof LONGSIM!=="undefined"){
-      if(!Array.isArray(LONGSIM.recentEvents))LONGSIM.recentEvents=[];
-      const maxChapter=Array.isArray(LONGSIM.chapters)&&LONGSIM.chapters.length?LONGSIM.chapters.length:1;
-      let ch=Number(LONGSIM.chapter);
-      if(!Number.isFinite(ch))ch=1;
-      LONGSIM.chapter=Math.max(1,Math.min(maxChapter,Math.floor(ch)));
-      if(!Number.isFinite(Number(LONGSIM.day)))LONGSIM.day=1;
-      if(!Number.isFinite(Number(LONGSIM.shiftIndex)))LONGSIM.shiftIndex=0;
-      if(!Number.isFinite(Number(LONGSIM.totalShifts)))LONGSIM.totalShifts=0;
-    }
     if(!Array.isArray(state.patients))state.patients=[];
     if(!Array.isArray(state.pets))state.pets=[];
     if(!Array.isArray(state.log))state.log=[];
+
     const validScreens=["clinic","surgery","recovery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile"];
     if(!validScreens.includes(state.screen))state.screen="clinic";
 
@@ -3016,7 +2554,9 @@ function render(){
     if(target)target.classList.add("active");
 
     const ap=active();
-    if(ap&&ap.admitted)applyMeterInteractions(ap);
+    if(ap&&ap.admitted){
+      try{applyMeterInteractions(ap)}catch(e){console.warn("meter interactions skipped",e)}
+    }
 
     const renderers={
       clinic:renderClinic,
@@ -3032,62 +2572,39 @@ function render(){
       reception:renderReception,
       ambulance:renderAmbulance,
       research:renderResearch,
-      carelab:renderCareLab,
-      animalprofile:renderAnimalProfile
+      carelab:typeof renderCareLab==="function"?renderCareLab:null,
+      animalprofile:typeof renderAnimalProfile==="function"?renderAnimalProfile:null
     };
 
-    (renderers[state.screen]||renderClinic)();
+    const fn=renderers[state.screen]||renderClinic;
+    if(typeof fn==="function")fn();
 
-    const sceneMap={
-      clinic:["clinic","Clinic"],
-      surgery:["surgery","Surgery"],
-      recovery:["recovery","Recovery"],
-      reception:["reception","Reception"],
-      ambulance:["ambulance","Rescue"],
-      sanctuary:["sanctuary","Sanctuary"],
-      research:["research","Research"],
-      hospital:["hospital","Hospital"]
-    };
-    if(sceneMap[state.screen]){
-      const [key,title]=sceneMap[state.screen];
-      prependAnimalScene(state.screen,key,title);
+    if(typeof applyTreeDepartmentUI==="function" && ["clinic","surgery","recovery"].includes(state.screen)){
+      applyTreeDepartmentUI();
     }
 
-    if(ap){
-      if(state.screen==="clinic"){
-        const el=document.getElementById("clinic");
-        if(el)el.innerHTML=animalFocusPanel(ap,"Current Clinic Patient")+el.innerHTML;
-      }
-      if(state.screen==="surgery"){
-        const el=document.getElementById("surgery");
-        if(el)el.innerHTML=animalFocusPanel(ap,"Current Surgical Patient")+el.innerHTML;
-      }
-      if(state.screen==="recovery"){
-        const el=document.getElementById("recovery");
-        if(el)el.innerHTML=animalFocusPanel(ap,"Current Recovery Patient")+el.innerHTML;
-      }
+    if(ap&&typeof updateMeterHistory==="function"){
+      try{updateMeterHistory(ap)}catch(e){console.warn("meter history skipped",e)}
     }
 
-    if(["clinic","surgery","recovery"].includes(state.screen))applyTreeDepartmentUI();
-    if(ap)updateMeterHistory(ap);
-    if(SAVE_READY)saveGame("Auto Save",true);
+    if(typeof SAVE_READY!=="undefined" && SAVE_READY && typeof saveGame==="function"){
+      try{saveGame("Auto Save",true)}catch(e){console.warn("autosave skipped",e)}
+    }
   }catch(err){
     console.error("VET GODS render error:",err);
     const target=document.getElementById(state.screen)||document.getElementById("clinic");
     if(target){
       target.classList.add("active");
-      target.innerHTML=`<div class="panel"><h2>🐾 VET GODS</h2><p class="small">This room hit a display error, but your save is still safe.</p><div class="small" style="opacity:.75;margin:8px 0">Error: ${String(err&&err.message?err.message:err)}</div><button class="action green" onclick="state.screen='clinic';render()">Return to Clinic</button></div>`;
+      target.innerHTML=`<div class="panel">
+        <h2>🐾 VET GODS</h2>
+        <p class="small">This room hit a display error, but your save is still safe.</p>
+        <div class="small" style="opacity:.75;margin:8px 0">Error: ${String(err&&err.message?err.message:err)}</div>
+        <button class="action green" onclick="state.screen='clinic';render()">Return to Clinic</button>
+      </div>`;
     }
   }
 }
-document.querySelectorAll("[data-screen]").forEach(b=>{
-  b.addEventListener("click",ev=>{
-    ev.preventDefault();
-    ev.stopPropagation();
-    state.screen=b.dataset.screen||"clinic";
-    render();
-  });
-});
+document.querySelectorAll("[data-screen]").forEach(b=>b.addEventListener("click",()=>{state.screen=b.dataset.screen;render()}));
 
 // Load persistent game first. Only create the starter patient on a truly new game.
 const hadSave=loadGame();
