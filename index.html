@@ -1495,6 +1495,17 @@ function petTrustMoment(id){
   petCareMutate(p);
 }
 
+
+function trustStage(p){
+  const t=Math.max(0,Math.min(100,Number((p&&p.trust)!=null?p.trust:0)));
+  if(t>=90)return "I KNOW I'M HOME";
+  if(t>=75)return "Deeply bonded";
+  if(t>=60)return "Feels safe with you";
+  if(t>=40)return "Starting to trust you";
+  if(t>=20)return "Tolerates your presence";
+  return "Still afraid";
+}
+
 function renderPets(){
   const el=document.getElementById("pets");
   if(!el)return;
