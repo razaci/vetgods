@@ -946,6 +946,11 @@ function renderRecovery(){
   </div><div class="panel"><h3>Recovery Patients</h3>${roster(list,"Recovery")}</div>`;
 
 if(p)recovery.innerHTML+=recoveryEconomyHTML(p);
+  const rp=state.patients.filter(x=>x.location==="Recovery");
+  if(rp.length){
+    recovery.innerHTML += rp.map(p=>recoveryFlowHTML(p)).join("");
+  }
+
 }
 function recoveryAction(){
   const p=active();if(!p)return;
@@ -1601,6 +1606,7 @@ function animalTreeUI(p){
     <div class="small">Trust ${t.trust}% · Fear ${t.fear}% · Appetite ${t.appetite}% · Hydration ${t.hydration}% · Mobility ${t.mobility}%</div>
    </div></div>
    <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
+   ${p.location==="Clinic"?clinicFlowHTML(p):""}
   </div>
   <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div>${longPatientPanel(p)}</div>
  </div>`;
@@ -2194,6 +2200,182 @@ function renderCareLab(){
    <div class="tree-patient"><img src="${p.img}" alt="${p.name}"><div><h2>${p.name}</h2><div class="small">${p.species} · ${p.condition} · ${p.location}</div></div></div>
    ${threePillarCareHTML(p)}
  </div>`:`<div class="panel"><div class="empty">No active patient is available for detailed care.</div></div>`}`;
+}
+
+/* ===== GUARANTEED CLINIC -> RECOVERY -> HOME FLOW ===== */
+function ensureFlow(p){
+ if(!p.flow)p.flow={
+   clinicProgress:0,
+   stabilized:false,
+   treatmentChosen:false,
+   readyForRecovery:false,
+   recoveryProgress:0,
+   dischargeReady:false,
+   outcomeNote:""
+ };
+ return p.flow;
+}
+function syncFlowFromPatient(p){
+ const f=ensureFlow(p),t=ensureTree(p);
+ let score=0;
+ if((p.pain||50)<=45)score+=20;
+ if((p.oxygen||85)>=90)score+=20;
+ if((t.hydration||55)>=60)score+=20;
+ if((p.bleeding||20)<=20)score+=20;
+ if((p.shock||30)<=25)score+=20;
+ f.clinicProgress=Math.max(f.clinicProgress,score);
+ if(score>=60)f.stabilized=true;
+ if(f.stabilized&&f.treatmentChosen)f.readyForRecovery=true;
+ return f;
+}
+function clinicFlowHTML(p){
+ const f=syncFlowFromPatient(p);
+ return `<div class="panel" style="margin-top:10px">
+   <h3>🐾 Patient Path</h3>
+   <div class="small">${p.name} must move forward through the hospital. Clinic is only the first step.</div>
+   <div class="meter-row" style="margin-top:8px">
+     <div class="meter-label">Clinic stabilization</div>
+     <div class="meter"><i style="width:${Math.min(100,f.clinicProgress)}%"></i></div>
+     <div class="meter-value">${Math.min(100,f.clinicProgress)}%</div>
+   </div>
+   <div class="controls" style="margin-top:8px">
+     ${!f.stabilized?`
+       <button class="action green" onclick="stabilizeForRecovery('${p.id}')">Stabilize Patient</button>
+     `:""}
+     ${f.stabilized&&!f.treatmentChosen?`
+       <button class="action" onclick="chooseClinicTreatment('${p.id}','medical')">Choose Medical Treatment</button>
+       <button class="action" onclick="chooseClinicTreatment('${p.id}','supportive')">Choose Supportive Care</button>
+     `:""}
+     ${f.readyForRecovery?`
+       <button class="action green" onclick="sendPatientToRecovery('${p.id}')">Send to Recovery</button>
+     `:""}
+   </div>
+   <div class="small" style="margin-top:7px">${f.outcomeNote||(
+     !f.stabilized?"Treat pain, hydration, oxygen, bleeding, and shock enough to stabilize.":
+     !f.treatmentChosen?"Now choose a treatment plan.":
+     "Patient is ready to leave Clinic."
+   )}</div>
+ </div>`;
+}
+function stabilizeForRecovery(id){
+ const p=state.patients.find(x=>x.id===id); if(!p)return;
+ const t=ensureTree(p),f=ensureFlow(p);
+ p.pain=Math.max(0,(p.pain||50)-18);
+ p.oxygen=Math.min(100,(p.oxygen||84)+10);
+ p.bleeding=Math.max(0,(p.bleeding||25)-12);
+ p.shock=Math.max(0,(p.shock||35)-15);
+ t.hydration=Math.min(100,(t.hydration||50)+18);
+ f.clinicProgress=Math.max(65,f.clinicProgress);
+ f.stabilized=true;
+ f.outcomeNote=`${p.name} is stabilized. Choose the treatment plan, then move to Recovery.`;
+ treeNote(p,"Clinic stabilization completed");
+ saveGame("Auto Save",true);
+ render();
+}
+function chooseClinicTreatment(id,kind){
+ const p=state.patients.find(x=>x.id===id); if(!p)return;
+ const f=ensureFlow(p);
+ f.treatmentChosen=true;
+ f.readyForRecovery=true;
+ f.outcomeNote=kind==="medical"
+   ?`${p.name} received the medical treatment plan and is ready for Recovery.`
+   :`${p.name} received supportive treatment and is ready for Recovery.`;
+ treeNote(p,"Treatment plan chosen: "+kind);
+ saveGame("Auto Save",true);
+ render();
+}
+function sendPatientToRecovery(id){
+ const p=state.patients.find(x=>x.id===id); if(!p)return;
+ const f=ensureFlow(p),t=ensureTree(p);
+ f.readyForRecovery=false;
+ f.recoveryProgress=Math.max(10,f.recoveryProgress);
+ p.location="Recovery";
+ t.stage="recover";
+ ensureLongPatient(p).recoveryDays=Math.max(0,ensureLongPatient(p).recoveryDays);
+ f.outcomeNote=`${p.name} transferred to Recovery.`;
+ addLog(`${p.name} transferred from Clinic to Recovery`);
+ state.screen="recovery";
+ saveGame("Auto Save",true);
+ render();
+}
+function recoveryFlowHTML(p){
+ const f=ensureFlow(p),t=ensureTree(p),l=ensureLongPatient(p);
+ let score=0;
+ if((p.pain||50)<=30)score+=20;
+ if((t.hydration||55)>=70)score+=20;
+ if((t.appetite||50)>=65)score+=20;
+ if((t.mobility||50)>=60)score+=20;
+ if((t.fear||50)<=40)score+=20;
+ f.recoveryProgress=Math.max(f.recoveryProgress,score);
+ if(l.recoveryDays>=2 && f.recoveryProgress>=80)f.dischargeReady=true;
+ return `<div class="panel" style="margin-top:10px">
+   <h3>🛏 Recovery Path</h3>
+   <div class="small">${p.name} is recovering. Advance care and time until discharge is safe.</div>
+   <div class="meter-row" style="margin-top:8px">
+     <div class="meter-label">Recovery readiness</div>
+     <div class="meter"><i style="width:${Math.min(100,f.recoveryProgress)}%"></i></div>
+     <div class="meter-value">${Math.min(100,f.recoveryProgress)}%</div>
+   </div>
+   <div class="controls" style="margin-top:8px">
+     <button class="action" onclick="recoveryCare('${p.id}','rest')">Rest + Monitor</button>
+     <button class="action" onclick="recoveryCare('${p.id}','feed')">Food + Water</button>
+     <button class="action" onclick="recoveryCare('${p.id}','walk')">Mobility Check</button>
+     <button class="action" onclick="recoveryCare('${p.id}','comfort')">Comfort</button>
+     <button class="action" onclick="recoveryCare('${p.id}','advance')">Advance Recovery Shift</button>
+     ${f.dischargeReady?`<button class="action green" onclick="dischargeRecoveredPet('${p.id}')">Discharge to My Pets</button>`:""}
+   </div>
+   <div class="small" style="margin-top:7px">${f.dischargeReady
+      ?`${p.name} is ready to go home.`
+      :`Needs strong pain control, hydration, appetite, mobility, low fear, and at least 2 recovery shifts.`}</div>
+ </div>`;
+}
+function recoveryCare(id,action){
+ const p=state.patients.find(x=>x.id===id); if(!p)return;
+ const t=ensureTree(p),f=ensureFlow(p),l=ensureLongPatient(p);
+ if(action==="rest"){
+   p.pain=Math.max(0,(p.pain||45)-8);
+   t.fear=Math.max(0,(t.fear||50)-5);
+   l.rests++;
+ }
+ if(action==="feed"){
+   t.hydration=Math.min(100,(t.hydration||55)+14);
+   t.appetite=Math.min(100,(t.appetite||45)+16);
+   l.meals++;
+ }
+ if(action==="walk"){
+   t.mobility=Math.min(100,(t.mobility||45)+14);
+   p.pain=Math.max(0,(p.pain||40)-3);
+   l.walks++;
+ }
+ if(action==="comfort"){
+   t.fear=Math.max(0,(t.fear||50)-14);
+   t.trust=Math.min(100,(t.trust||40)+10);
+ }
+ if(action==="advance"){
+   l.recoveryDays++;
+   l.rechecks++;
+   t.appetite=Math.min(100,(t.appetite||50)+5);
+   t.hydration=Math.min(100,(t.hydration||55)+4);
+   p.pain=Math.max(0,(p.pain||40)-4);
+ }
+ f.recoveryProgress=0; // force recalculation
+ treeNote(p,"Recovery care: "+action);
+ saveGame("Auto Save",true);
+ render();
+}
+function dischargeRecoveredPet(id){
+ const p=state.patients.find(x=>x.id===id); if(!p)return;
+ const f=ensureFlow(p);
+ if(!f.dischargeReady){render();return}
+ p.location="Home";
+ ensureTree(p).stage="home";
+ if(!state.pets.some(x=>x.id===p.id))state.pets.push(p);
+ state.saved=(state.saved||0)+1;
+ f.outcomeNote=`${p.name} completed recovery and went home.`;
+ addLog(`${p.name} completed Recovery and joined My Pets`);
+ state.screen="pets";
+ saveGame("Manual Save",true);
+ render();
 }
 function render(){
   state.patients.filter(p=>p.admitted).forEach(applyMeterInteractions);
