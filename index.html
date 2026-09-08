@@ -837,6 +837,92 @@ body::before,body::after,.screen::before,.screen::after{pointer-events:none !imp
 .vg-habitat-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 @media(max-width:560px){.vg-habitat-grid,.vg-habitat-mini-grid{grid-template-columns:1fr}}
 
+
+/* VET GODS · MY PETS SLIDER CARE */
+.pet-care-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pet-care-console{padding:10px}
+.pet-care-head{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.pet-care-head img{
+  width:86px;height:86px;object-fit:contain;border-radius:10px;
+  border:1px solid var(--line,#2a3b45);background:rgba(0,0,0,.08);
+}
+.pet-care-head h3{margin:0 0 3px}
+.pet-care-meters{display:grid;gap:9px}
+.pet-slider-row{
+  display:block;padding:8px;border:1px solid var(--line,#2a3b45);
+  border-radius:8px;background:rgba(255,255,255,.025);
+}
+.pet-slider-label{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.pet-slider-row input[type="range"]{width:100%;margin:0;touch-action:pan-y}
+.pet-care-status{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;
+}
+.pet-care-status>div{
+  border:1px solid var(--line,#2a3b45);border-radius:7px;padding:6px;text-align:center;
+}
+.pet-care-status b,.pet-care-status span{display:block;font-size:.78rem}
+.pet-care-status span{font-size:1rem;margin-top:2px}
+.pet-care-footer{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+@media(max-width:700px){.pet-care-grid{grid-template-columns:1fr}}
+@media(max-width:420px){
+  .pet-care-status{grid-template-columns:repeat(2,1fr)}
+  .pet-care-footer{grid-template-columns:1fr}
+}
+
+
+/* VET GODS · MIXED HTML CARE CONTROLS */
+.mixed-care-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.care-module{
+  border:1px solid var(--line,#2a3b45);border-radius:9px;padding:9px;
+  background:rgba(255,255,255,.025);min-height:118px;
+}
+.care-title{font-weight:800;margin-bottom:7px}
+.comfort-radar{
+  position:relative;width:92px;height:92px;border-radius:50%;display:block;margin:0 auto 6px;
+  border:1px solid var(--line,#2a3b45);background:radial-gradient(circle,rgba(115,199,230,.18),rgba(0,0,0,.12));
+  overflow:hidden;color:inherit;
+}
+.radar-ring{position:absolute;border:1px solid rgba(115,199,230,.35);border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.r1{width:28%;height:28%}.r2{width:55%;height:55%}.r3{width:82%;height:82%}
+.radar-sweep{position:absolute;left:50%;top:50%;width:44%;height:2px;background:currentColor;transform-origin:left center;animation:vgSweep 3s linear infinite;opacity:.55}
+.comfort-radar b{position:relative;z-index:2}
+@keyframes vgSweep{to{transform:rotate(360deg)}}
+
+.seg-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+.seg-buttons button,.activity-console button{
+  padding:8px 5px;border-radius:6px;border:1px solid var(--line,#2a3b45);
+  background:rgba(255,255,255,.035);color:inherit;
+}
+.food-readout{text-align:center;font-size:1.15rem;font-weight:900;margin:8px 0}
+
+.water-tank{position:relative;width:70px;height:95px;margin:0 auto 5px;display:block;overflow:hidden;border:1px solid var(--line,#2a3b45);border-radius:10px;background:rgba(0,0,0,.12);color:inherit}
+.water-fill{position:absolute;left:0;right:0;bottom:0;background:rgba(115,199,230,.28)}
+.water-tank b{position:relative;z-index:2}
+
+.brush-track{position:relative;width:100%;height:48px;border:1px solid var(--line,#2a3b45);border-radius:8px;overflow:hidden;background:rgba(0,0,0,.12)}
+.brush-progress{position:absolute;left:0;top:0;bottom:0;background:rgba(115,199,230,.16)}
+.brush-icon{position:relative;font-size:1.5rem}
+
+.play-pad{width:100%;min-height:70px;border-radius:12px;border:1px dashed var(--line,#2a3b45);background:rgba(255,255,255,.025);color:inherit;display:flex;align-items:center;justify-content:center;gap:10px}
+.play-pad span{font-size:1.8rem}.play-pad b{font-size:1.1rem}
+
+.activity-console{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:6px;align-items:center}
+.activity-core{min-height:56px;font-weight:900}
+
+.trust-ring{
+  --trust:0deg;width:90px;height:90px;border-radius:50%;display:block;margin:0 auto 5px;border:0;
+  background:conic-gradient(currentColor var(--trust),rgba(255,255,255,.08) 0);padding:7px;color:inherit;
+}
+.trust-ring span{width:100%;height:100%;border-radius:50%;background:var(--panel2,#172229);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.trust-ring small{font-size:.6rem;letter-spacing:.08em}
+
+.status-bars{display:grid;gap:8px}
+.status-bars div{display:grid;grid-template-columns:58px 1fr;gap:6px;align-items:center}
+.status-bars progress{width:100%;height:12px}
+
+@media(max-width:540px){.mixed-care-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:390px){.mixed-care-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1236,16 +1322,304 @@ function recoveryAction(){
   p.recoveryStep++;p.pain=Math.max(0,p.pain-15);p.stress=Math.max(0,p.stress-18);p.oxygen=Math.min(100,p.oxygen+8);
   addLog(p.name+" completed recovery care "+p.recoveryStep);render();
 }
+
+function ensurePet(p){
+  if(p.hunger==null)p.hunger=70;
+  if(p.water==null)p.water=70;
+  if(p.comfort==null)p.comfort=65;
+  if(p.cleanliness==null)p.cleanliness=70;
+  if(p.energy==null)p.energy=60;
+  if(p.trust==null)p.trust=40;
+  if(p.loneliness==null)p.loneliness=35;
+  if(p.fear==null)p.fear=35;
+  if(p.happiness==null)p.happiness=60;
+  if(p.petDay==null)p.petDay=1;
+  if(!p.memories)p.memories=[];
+}
+
+function petCareSliderHTML(p,key,label,icon){
+  const value=Math.max(0,Math.min(100,Number(p[key]??50)));
+  return `<label class="pet-slider-row">
+    <div class="pet-slider-label"><span>${icon} ${label}</span><b id="pet_${p.id}_${key}_value">${Math.round(value)}%</b></div>
+    <input type="range" min="0" max="100" step="1" value="${value}"
+      oninput="petSliderPreview('${p.id}','${key}',this.value)"
+      onchange="petSliderCommit('${p.id}','${key}',this.value)">
+  </label>`;
+}
+
+function petSliderPreview(id,key,value){
+  const n=document.getElementById(`pet_${id}_${key}_value`);
+  if(n)n.textContent=Math.round(value)+"%";
+}
+
+function petSliderCommit(id,key,value){
+  const p=state.pets.find(x=>x.id===id);
+  if(!p)return;
+  ensurePet(p);
+  const old=Number(p[key]??0);
+  const v=Math.max(0,Math.min(100,Number(value)));
+  p[key]=v;
+
+  const gain=Math.max(0,v-old);
+  if(gain>0){
+    if(key==="hunger"){
+      p.happiness=Math.min(100,(p.happiness||50)+gain*.10);
+      if(v>75)petMemory(p,"Shared a meal at home");
+    }
+    if(key==="water"){
+      p.energy=Math.min(100,(p.energy||50)+gain*.08);
+    }
+    if(key==="comfort"){
+      p.fear=Math.max(0,(p.fear||30)-gain*.18);
+      p.loneliness=Math.max(0,(p.loneliness||30)-gain*.22);
+      p.trust=Math.min(100,(p.trust||40)+gain*.16);
+      if(v>80)petMemory(p,"You stayed when they were scared");
+    }
+    if(key==="happiness"){
+      p.loneliness=Math.max(0,(p.loneliness||30)-gain*.15);
+      p.trust=Math.min(100,(p.trust||40)+gain*.10);
+    }
+    if(key==="cleanliness"){
+      p.comfort=Math.min(100,(p.comfort||60)+gain*.08);
+    }
+    if(key==="energy"){
+      p.happiness=Math.min(100,(p.happiness||50)+gain*.10);
+      p.trust=Math.min(100,(p.trust||40)+gain*.06);
+      if(v>75)petMemory(p,"First safe walk");
+    }
+  }
+
+  if(typeof saveGame==="function")try{saveGame("Pet slider care",true)}catch(e){}
+  render();
+}
+
+function petMemory(p,text){
+  p.memories=p.memories||[];
+  if(!p.memories.includes(text))p.memories.push(text);
+}
+
+function petQuickCare(id){
+  const p=state.pets.find(x=>x.id===id);
+  if(!p)return;
+  ensurePet(p);
+  p.hunger=Math.min(100,p.hunger+18);
+  p.water=Math.min(100,p.water+18);
+  p.comfort=Math.min(100,p.comfort+18);
+  p.happiness=Math.min(100,p.happiness+14);
+  p.cleanliness=Math.min(100,p.cleanliness+12);
+  p.energy=Math.min(100,p.energy+10);
+  p.fear=Math.max(0,p.fear-8);
+  p.loneliness=Math.max(0,p.loneliness-10);
+  p.trust=Math.min(100,p.trust+8);
+  petMemory(p,"You stayed when they were scared");
+  if(typeof saveGame==="function")try{saveGame("Quick pet care",true)}catch(e){}
+  render();
+}
+
+function petCareAllSliders(){
+  state.pets.forEach(p=>petQuickCareSilent(p));
+  if(typeof saveGame==="function")try{saveGame("Care for all pets",true)}catch(e){}
+  render();
+}
+
+function petQuickCareSilent(p){
+  ensurePet(p);
+  p.hunger=Math.min(100,p.hunger+14);
+  p.water=Math.min(100,p.water+14);
+  p.comfort=Math.min(100,p.comfort+14);
+  p.happiness=Math.min(100,p.happiness+12);
+  p.cleanliness=Math.min(100,p.cleanliness+10);
+  p.energy=Math.min(100,p.energy+8);
+  p.fear=Math.max(0,p.fear-6);
+  p.loneliness=Math.max(0,p.loneliness-8);
+  p.trust=Math.min(100,p.trust+6);
+}
+
+
+
+function petCareMutate(p){
+  if(typeof saveGame==="function")try{saveGame("Interactive pet care",true)}catch(e){}
+  render();
+}
+function petRadarComfort(id){
+  const p=state.pets.find(x=>x.id===id); if(!p)return; ensurePet(p);
+  p.comfort=Math.min(100,p.comfort+12);
+  p.fear=Math.max(0,p.fear-8);
+  p.loneliness=Math.max(0,p.loneliness-10);
+  p.trust=Math.min(100,p.trust+5);
+  petMemory(p,"You stayed when they were scared");
+  petCareMutate(p);
+}
+function petFoodChoice(id,amt,label){
+  const p=state.pets.find(x=>x.id===id); if(!p)return; ensurePet(p);
+  p.hunger=Math.min(100,p.hunger+amt);
+  p.happiness=Math.min(100,p.happiness+(label==="Favorite"?9:4));
+  if(p.hunger>80)petMemory(p,"Shared a meal at home");
+  petCareMutate(p);
+}
+function petFillWater(id){
+  const p=state.pets.find(x=>x.id===id); if(!p)return; ensurePet(p);
+  p.water=Math.min(100,p.water+20);
+  p.energy=Math.min(100,p.energy+4);
+  petCareMutate(p);
+}
+function petBrush(id){
+  const p=state.pets.find(x=>x.id===id); if(!p)return; ensurePet(p);
+  p.cleanliness=Math.min(100,p.cleanliness+14);
+  p.comfort=Math.min(100,p.comfort+5);
+  p.trust=Math.min(100,p.trust+3);
+  petCareMutate(p);
+}
+function petPlayTap(id){
+  const p=state.pets.find(x=>x.id===id); if(!p)return; ensurePet(p);
+  p.happiness=Math.min(100,p.happiness+12);
+  p.loneliness=Math.max(0,p.loneliness-7);
+  p.energy=Math.max(0,p.energy-3);
+  p.trust=Math.min(100,p.trust+4);
+  petCareMutate(p);
+}
+function petActivity(id,amt){
+  const p=state.pets.find(x=>x.id===id); if(!p)return; ensurePet(p);
+  p.energy=Math.min(100,p.energy+amt);
+  p.happiness=Math.min(100,p.happiness+5);
+  p.trust=Math.min(100,p.trust+2);
+  if(p.energy>75)petMemory(p,"First safe walk");
+  petCareMutate(p);
+}
+function petTrustMoment(id){
+  const p=state.pets.find(x=>x.id===id); if(!p)return; ensurePet(p);
+  p.trust=Math.min(100,p.trust+8);
+  p.fear=Math.max(0,p.fear-5);
+  p.loneliness=Math.max(0,p.loneliness-5);
+  p.comfort=Math.min(100,p.comfort+5);
+  petCareMutate(p);
+}
+
 function renderPets(){
-  pets.innerHTML=`<div class="panel">
-    <div class="pet-home-toolbar">
-      <button class="action green" onclick="careForAllPets()">Care for All Pets</button>
-      <button class="action" onclick="nextPetDay()">Start Next Day</button>
+  const el=document.getElementById("pets");
+  if(!el)return;
+
+  if(!state.pets.length){
+    el.innerHTML=`<div class="panel"><h2>🐾 My Pets</h2><p>No recovered pets are home yet. Complete a case and send an eligible animal home.</p></div>`;
+    return;
+  }
+
+  const cards=state.pets.map(p=>{
+    ensurePet(p);
+    const comfort=Math.round(p.comfort||0);
+    const trust=Math.round(p.trust||0);
+    const water=Math.round(p.water||0);
+    const hunger=Math.round(p.hunger||0);
+    const clean=Math.round(p.cleanliness||0);
+    const happy=Math.round(p.happiness||0);
+    const energy=Math.round(p.energy||0);
+
+    return `<div class="pet-card mixed-care-card clickable-animal" onclick="if(!event.target.closest('button,input,.care-touch'))openAnimalProfile('${p.id}')">
+      <div class="pet-care-head">
+        <img src="${p.image}" alt="${p.name}">
+        <div>
+          <h3>${p.name}</h3>
+          <div class="small">${p.species}${p.breed?` · ${p.breed}`:""} · ${trustStage(p)}</div>
+          <div class="small">${p.condition||"Recovered"} · Home day ${p.petDay||1}</div>
+        </div>
+      </div>
+
+      <div class="mixed-care-grid">
+
+        <div class="care-module comfort-module">
+          <div class="care-title">🫶 Comfort Radar</div>
+          <button class="comfort-radar care-touch" onclick="event.stopPropagation();petRadarComfort('${p.id}')" aria-label="Increase comfort">
+            <span class="radar-ring r1"></span><span class="radar-ring r2"></span><span class="radar-ring r3"></span>
+            <span class="radar-sweep"></span>
+            <b>${comfort}%</b>
+          </button>
+          <div class="small">Tap radar to sit nearby and calm them.</div>
+        </div>
+
+        <div class="care-module food-module">
+          <div class="care-title">🍽️ Food Station</div>
+          <div class="food-readout">${hunger}% fed</div>
+          <div class="seg-buttons">
+            <button onclick="event.stopPropagation();petFoodChoice('${p.id}',10,'Snack')">Snack</button>
+            <button onclick="event.stopPropagation();petFoodChoice('${p.id}',20,'Meal')">Meal</button>
+            <button onclick="event.stopPropagation();petFoodChoice('${p.id}',28,'Favorite')">Favorite</button>
+          </div>
+        </div>
+
+        <div class="care-module water-module">
+          <div class="care-title">💧 Water Tank</div>
+          <button class="water-tank care-touch" onclick="event.stopPropagation();petFillWater('${p.id}')">
+            <span class="water-fill" style="height:${water}%"></span>
+            <b>${water}%</b>
+          </button>
+          <div class="small">Tap the tank to refill.</div>
+        </div>
+
+        <div class="care-module groom-module">
+          <div class="care-title">🧼 Grooming Brush</div>
+          <button class="brush-track care-touch" onclick="event.stopPropagation();petBrush('${p.id}')">
+            <span class="brush-progress" style="width:${clean}%"></span>
+            <span class="brush-icon">🪮</span>
+          </button>
+          <div class="small">${clean}% clean · brush repeatedly.</div>
+        </div>
+
+        <div class="care-module play-module">
+          <div class="care-title">🎾 Play Pad</div>
+          <button class="play-pad care-touch" onclick="event.stopPropagation();petPlayTap('${p.id}')">
+            <span>🐾</span><b>${happy}%</b>
+          </button>
+          <div class="small">Tap for play and enrichment.</div>
+        </div>
+
+        <div class="care-module exercise-module">
+          <div class="care-title">🕹️ Activity Control</div>
+          <div class="activity-console">
+            <button onclick="event.stopPropagation();petActivity('${p.id}',8)">◀</button>
+            <button class="activity-core" onclick="event.stopPropagation();petActivity('${p.id}',12)">${energy}%</button>
+            <button onclick="event.stopPropagation();petActivity('${p.id}',8)">▶</button>
+          </div>
+          <div class="small">Short controlled exercise.</div>
+        </div>
+
+        <div class="care-module trust-module">
+          <div class="care-title">💛 Trust Ring</div>
+          <button class="trust-ring care-touch" style="--trust:${trust*3.6}deg" onclick="event.stopPropagation();petTrustMoment('${p.id}')">
+            <span><b>${trust}%</b><small>TRUST</small></span>
+          </button>
+          <div class="small">Tap for a gentle bonding moment.</div>
+        </div>
+
+        <div class="care-module status-module">
+          <div class="care-title">📟 Emotional Monitor</div>
+          <div class="status-bars">
+            <div><span>Pain</span><progress max="100" value="${Math.round(p.pain||0)}"></progress></div>
+            <div><span>Fear</span><progress max="100" value="${Math.round(p.fear||0)}"></progress></div>
+            <div><span>Lonely</span><progress max="100" value="${Math.round(p.loneliness||0)}"></progress></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pet-care-footer">
+        <button class="action" onclick="event.stopPropagation();petQuickCare('${p.id}')">Care for This Pet</button>
+        <button class="action" onclick="event.stopPropagation();openAnimalProfile('${p.id}')">Open Pet Page</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  el.innerHTML=`
+    <div class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div>
+          <h2>🐾 My Pets · Interactive Care Deck</h2>
+          <div class="small">Each need has its own control instead of every action being the same.</div>
+        </div>
+        <button class="action" onclick="petCareAllSliders()">Care for All Pets</button>
+      </div>
     </div>
-    <h2>My Pets · Forever Home</h2>
-    <p class="small">Basic care is easy. Trust, recovery, memories, and bonding happen one animal at a time.</p>
-    ${state.pets.length?`<div class="pet-home-grid">${state.pets.map(p=>petSimHTML(p)).join("")}</div>`:`<div class="empty">No pets are home yet. Successfully discharge an animal from Recovery to bring them here.</div>`}
-  </div>${persistentSavePanel()}`;
+    <div class="pet-care-grid">${cards}</div>
+    ${typeof persistentSavePanel==="function"?persistentSavePanel():""}
+  `;
 }
 function renderStatus(){
   status.innerHTML=`<div class="panel"><h2>Hospital Status</h2>
