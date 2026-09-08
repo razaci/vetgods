@@ -1243,6 +1243,17 @@ body{
   .amazon-species-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
+
+/* MY PETS INTERACTION FIX */
+#sanctuaryCanvas{z-index:1;pointer-events:auto;touch-action:manipulation;cursor:pointer}
+.sanctuary-svg{pointer-events:none}
+.sanctuary-object{pointer-events:all;cursor:pointer}
+.sanctuary-object rect,.sanctuary-object text{pointer-events:all}
+.sanctuary-object:active rect{stroke:#8fe8ff;stroke-width:3}
+.world-zone{cursor:pointer;color:#bfefff;text-align:left;touch-action:manipulation}
+button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
+.world-pet{pointer-events:auto;cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -2237,7 +2248,14 @@ function petWorldHTML(){
    return `<button class="world-pet" style="left:${q.x}%;top:${q.y}%" onclick="event.stopPropagation();openAnimalProfile('${p.id}')"><span>${petWorldIcon(p)}</span><b>${p.name}</b><small>${s.activity}</small></button>`;
  }).join("");
  return `<div class="panel living-habitat"><div class="living-head"><div><h3>🏠 Living Habitat</h3><div class="small">Watch rescued animals follow their own routines.</div></div><button class="action" onclick="toggleObservationMode()">${PET_WORLD.observation?"■ STOP WATCHING":"👁 WATCH MY PETS"}</button></div>
- <div class="habitat-world"><div class="world-zone z-rest">REST 🛏️</div><div class="world-zone z-feed">FOOD 🥣</div><div class="world-zone z-water">WATER 💧</div><div class="world-zone z-activity">ACTIVITY 🎾</div><div class="world-zone z-social">SOCIAL 🐾</div><div class="world-zone z-medical">CARE ✚</div>${pets}</div>${PET_WORLD.observation?observationFeedHTML():""}</div>`;
+ <div class="habitat-world">
+ <button class="world-zone z-rest" onclick="sanctuaryUseObject('bed1')">REST 🛏️</button>
+ <button class="world-zone z-feed" onclick="sanctuaryUseObject('food1')">FOOD 🥣</button>
+ <button class="world-zone z-water" onclick="sanctuaryUseObject('water1')">WATER 💧</button>
+ <button class="world-zone z-activity" onclick="sanctuaryUseObject('toy1')">ACTIVITY 🎾</button>
+ <button class="world-zone z-social" onclick="sanctuaryOpenSelected()">SOCIAL 🐾</button>
+ <button class="world-zone z-medical" onclick="sanctuaryUseObject('care1')">CARE ✚</button>
+ ${pets}</div>${PET_WORLD.observation?observationFeedHTML():""}</div>`;
 }
 function observationTick(){
  if(!PET_WORLD.observation||!state.pets.length)return;
@@ -2512,6 +2530,9 @@ const SANCTUARY_SIM = {
   perf:"full",
   selectedPetId:null,
   dragObject:null,
+  dragMoved:false,
+  dragStartX:0,
+  dragStartY:0,
   lastFrame:0,
   fps:60,
   objects:[
@@ -2550,15 +2571,16 @@ function sanctuaryCanvasHTML(){
       <div class="sanctuary-actions">
         <button class="action" onclick="sanctuaryToggleRun()">${SANCTUARY_SIM.running?"■ Pause":"▶ Run Sim"}</button>
         <button class="action" onclick="sanctuaryFullscreen()">⛶ Watch Mode</button>
+        <button class="action" onclick="sanctuaryOpenSelected()">🐾 Selected Pet</button>
         <button class="action" onclick="sanctuaryTogglePerf()">⚙ ${SANCTUARY_SIM.perf==="full"?"Full FX":"Battery"}</button>
       </div>
     </div>
     <div id="sanctuaryStage" class="sanctuary-stage">
-      <canvas id="sanctuaryCanvas" width="1000" height="560"></canvas>
+      <canvas id="sanctuaryCanvas" width="1000" height="560" onclick="sanctuaryCanvasTap(event)"></canvas>
       <svg id="sanctuaryObjects" class="sanctuary-svg" viewBox="0 0 1000 560" preserveAspectRatio="none">
         ${SANCTUARY_SIM.objects.map(o=>`
           <g class="sanctuary-object" data-id="${o.id}" transform="translate(${o.x*1000} ${o.y*560})"
-             onpointerdown="sanctuaryBeginDrag(event,'${o.id}')">
+             onpointerdown="sanctuaryBeginDrag(event,'${o.id}')" role="button" tabindex="0">
             <rect x="-42" y="-26" width="84" height="52" rx="10"></rect>
             <text text-anchor="middle" y="-2" class="obj-icon">${sanctuaryObjectIcon(o.type)}</text>
             <text text-anchor="middle" y="16" class="obj-label">${o.label}</text>
@@ -2624,8 +2646,8 @@ function sanctuaryDraw(){
     ctx.save();
     ctx.shadowBlur=SANCTUARY_SIM.perf==="full"?14:0;
     ctx.shadowColor="rgba(100,220,255,.35)";
-    ctx.fillStyle="#102b3d";
-    ctx.beginPath();ctx.arc(x,y,22,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=(SANCTUARY_SIM.selectedPetId===p.id)?"#1b5367":"#102b3d";
+    ctx.beginPath();ctx.arc(x,y,(SANCTUARY_SIM.selectedPetId===p.id)?27:22,0,Math.PI*2);ctx.fill();
     ctx.shadowBlur=0;
     ctx.font="24px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
     ctx.fillText(petWorldIcon(p),x,y-2);
@@ -2672,25 +2694,121 @@ function sanctuaryFullscreen(){
   else if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});
 }
 function sanctuaryBeginDrag(ev,id){
+  ev.preventDefault();ev.stopPropagation();
   SANCTUARY_SIM.dragObject=id;
+  SANCTUARY_SIM.dragMoved=false;
+  SANCTUARY_SIM.dragStartX=ev.clientX;
+  SANCTUARY_SIM.dragStartY=ev.clientY;
   try{ev.currentTarget.setPointerCapture(ev.pointerId)}catch(e){}
   ev.currentTarget.addEventListener("pointermove",sanctuaryDragMove);
   ev.currentTarget.addEventListener("pointerup",sanctuaryEndDrag,{once:true});
+  ev.currentTarget.addEventListener("pointercancel",sanctuaryEndDrag,{once:true});
 }
 function sanctuaryDragMove(ev){
   if(!SANCTUARY_SIM.dragObject)return;
+  if(Math.hypot(ev.clientX-SANCTUARY_SIM.dragStartX,ev.clientY-SANCTUARY_SIM.dragStartY)>8)SANCTUARY_SIM.dragMoved=true;
   const svg=document.getElementById("sanctuaryObjects");
   if(!svg)return;
   const r=svg.getBoundingClientRect();
-  const x=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));
-  const y=Math.max(0,Math.min(1,(ev.clientY-r.top)/r.height));
+  const x=Math.max(.04,Math.min(.96,(ev.clientX-r.left)/r.width));
+  const y=Math.max(.07,Math.min(.93,(ev.clientY-r.top)/r.height));
   const o=SANCTUARY_SIM.objects.find(x=>x.id===SANCTUARY_SIM.dragObject);
   if(o){o.x=x;o.y=y;ev.currentTarget.setAttribute("transform",`translate(${x*1000} ${y*560})`);}
 }
 function sanctuaryEndDrag(ev){
+  ev.preventDefault();ev.stopPropagation();
+  const id=SANCTUARY_SIM.dragObject;
   ev.currentTarget.removeEventListener("pointermove",sanctuaryDragMove);
   SANCTUARY_SIM.dragObject=null;
+  if(id && !SANCTUARY_SIM.dragMoved)sanctuaryUseObject(id);
   if(typeof saveGame==="function")try{saveGame("Sanctuary layout",true)}catch(e){}
+}
+
+
+function sanctuarySelectedPet(){
+  let p=state.pets.find(x=>x.id===SANCTUARY_SIM.selectedPetId);
+  if(p)return p;
+  if(!state.pets.length)return null;
+  // choose the pet with the strongest current need
+  p=[...state.pets].sort((a,b)=>{
+    const needA=Math.min(a.hunger??100,a.water??100,a.energy??100,a.comfort??100,100-(a.fear??0));
+    const needB=Math.min(b.hunger??100,b.water??100,b.energy??100,b.comfort??100,100-(b.fear??0));
+    return needA-needB;
+  })[0];
+  SANCTUARY_SIM.selectedPetId=p.id;
+  return p;
+}
+function sanctuaryUseObject(id){
+  const o=SANCTUARY_SIM.objects.find(x=>x.id===id);
+  const p=sanctuarySelectedPet();
+  if(!o||!p)return;
+  const s=ensurePetSim(p),m=ensurePetMind(p);
+  let msg="";
+  if(o.type==="food"){
+    p.hunger=Math.min(100,(p.hunger||50)+22);
+    p.happiness=Math.min(100,(p.happiness||50)+3);
+    s.activity="Eating at the food station"; s.room="Feeding Station";
+    petMindAfterCare(p,"food");
+    msg=`${p.name} ate at the Food Station.`;
+  }else if(o.type==="water"){
+    p.water=Math.min(100,(p.water||50)+28);
+    s.activity="Drinking fresh water"; s.room="Water Station";
+    petMindAfterCare(p,"water");
+    msg=`${p.name} drank fresh water.`;
+  }else if(o.type==="bed"){
+    p.energy=Math.min(100,(p.energy||50)+16);
+    p.comfort=Math.min(100,(p.comfort||50)+12);
+    s.sleep=Math.min(100,(s.sleep||50)+15);
+    s.activity="Resting in the soft bed"; s.room="Rest Area";
+    petMindAfterCare(p,"comfort");
+    msg=`${p.name} curled up in the Soft Bed.`;
+  }else if(o.type==="toy"){
+    s.enrichment=Math.min(100,(s.enrichment||50)+18);
+    p.happiness=Math.min(100,(p.happiness||50)+10);
+    p.energy=Math.max(0,(p.energy||50)-3);
+    s.activity="Playing with enrichment"; s.room="Play Area";
+    petMindAfterCare(p,"play");
+    msg=`${p.name} used the enrichment toy.`;
+  }else if(o.type==="hide"){
+    p.fear=Math.max(0,(p.fear||0)-14);
+    p.comfort=Math.min(100,(p.comfort||50)+9);
+    s.activity="Settling in the quiet hide"; s.room="Hide Area";
+    petMindAfterCare(p,"quiet nearby");
+    msg=`${p.name} settled into the Quiet Hide.`;
+  }else if(o.type==="care"){
+    p.pain=Math.max(0,(p.pain||0)-2);
+    p.comfort=Math.min(100,(p.comfort||50)+4);
+    s.activity="Receiving a gentle care check"; s.room="Medical Corner";
+    petMindAfterCare(p,"care");
+    msg=`${p.name} received a gentle care check.`;
+  }
+  petSimLog(p,msg);
+  PET_WORLD.feed.unshift({time:new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),text:msg});
+  PET_WORLD.feed=PET_WORLD.feed.slice(0,12);
+  if(typeof saveGame==="function")try{saveGame("Sanctuary care",true)}catch(e){}
+  render();
+  setTimeout(()=>{if(typeof sanctuaryDraw==="function")sanctuaryDraw();},0);
+}
+function sanctuaryCanvasTap(ev){
+  const c=document.getElementById("sanctuaryCanvas");
+  if(!c||!state.pets.length)return;
+  const r=c.getBoundingClientRect();
+  const x=(ev.clientX-r.left)/r.width, y=(ev.clientY-r.top)/r.height;
+  let best=null,bestD=999;
+  state.pets.slice(0,24).forEach((p,i)=>{
+    const mot=sanctuaryEnsureMotion(p,i);
+    const d=Math.hypot(mot.x-x,mot.y-y);
+    if(d<bestD){bestD=d;best=p;}
+  });
+  if(best && bestD<.075){
+    SANCTUARY_SIM.selectedPetId=best.id;
+    petSimLog(best,`${best.name} got your attention in the sanctuary.`);
+    render();setTimeout(sanctuaryDraw,0);
+  }
+}
+function sanctuaryOpenSelected(){
+  const p=sanctuarySelectedPet();
+  if(p)openAnimalProfile(p.id);
 }
 
 function petLifeBookHTML(p){
