@@ -574,6 +574,40 @@ body{background-attachment:scroll !important;}
 *{backdrop-filter:none !important;-webkit-backdrop-filter:none !important;}
 body::before,body::after,.screen::before,.screen::after{pointer-events:none !important;}
 
+
+/* VET GODS · COMPACT GAME MENU */
+.menu-toggle{
+  position:sticky;top:8px;z-index:90;display:inline-flex;align-items:center;gap:7px;
+  margin:8px 10px;padding:10px 14px;border-radius:14px;font-weight:800;letter-spacing:.04em;
+  background:#f4f8fa;color:#203040;border:1px solid #c4d5dc;box-shadow:0 4px 12px rgba(20,40,60,.12);
+}
+.menu-toggle span{font-size:.86rem}
+.game-menu{
+  position:fixed;z-index:120;top:0;left:0;width:min(88vw,360px);height:100dvh;overflow-y:auto;
+  padding:14px;background:#f8fbfc;border-right:1px solid #cbdce3;box-shadow:12px 0 30px rgba(20,40,60,.24);
+  transform:translateX(-105%);transition:transform .18s ease;
+}
+.game-menu.open{transform:translateX(0)}
+.menu-backdrop{
+  position:fixed;z-index:110;inset:0;background:rgba(18,34,48,.36);opacity:0;pointer-events:none;transition:opacity .18s ease;
+}
+.menu-backdrop.open{opacity:1;pointer-events:auto}
+.game-menu-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 2px 12px;color:#203040}
+.menu-close{
+  width:42px;height:42px;border-radius:12px;font-weight:900;background:#fff;color:#203040;border:1px solid #c4d5dc;
+}
+.game-menu-nav.nav{
+  position:static !important;display:grid !important;grid-template-columns:1fr 1fr;gap:8px;
+  padding:0 !important;margin:0 !important;background:transparent !important;border:0 !important;
+  box-shadow:none !important;overflow:visible !important;
+}
+.game-menu-nav.nav button{width:100%;min-height:46px;white-space:normal}
+.game-menu-nav.nav button.active{outline:2px solid rgba(70,130,160,.2)}
+@media(max-width:520px){
+  .menu-toggle{top:6px;margin:6px 8px;padding:9px 12px}
+  .game-menu{width:88vw}
+}
+
 </style>
 </head>
 <body>
@@ -590,27 +624,21 @@ body::before,body::after,.screen::before,.screen::after{pointer-events:none !imp
     </div>
   </div>
 
-  <div class="nav">
-    <button data-screen="clinic">Clinic</button>
-    <button data-screen="surgery">Surgery</button>
-    <button data-screen="recovery">Recovery</button>
-    <button data-screen="animalprofile">Animal Profile</button>
-      <button data-screen="carelab">Care Lab</button>
-      <button data-screen="pets">My Pets</button>
-    <button data-screen="status">Status</button>
-    <button data-screen="admit">Admit Patient</button>
-
-    <button data-screen="hospital">Hospital+</button>
-    <button data-screen="sanctuary">Sanctuary</button>
-    <button data-screen="world">World</button>
-    <button data-screen="lifebook">Life Book</button>
-
-    <button data-screen="reception">Reception</button>
-    <button data-screen="ambulance">Ambulance</button>
-    <button data-screen="research">Research</button>
-
-
+  
+<button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="gameMenu">
+  ☰ <span>MENU</span>
+</button>
+<div id="menuBackdrop" class="menu-backdrop" aria-hidden="true"></div>
+<div id="gameMenu" class="game-menu" aria-hidden="true">
+  <div class="game-menu-head">
+    <div><b>🐾 VET GODS</b><div class="small">Hospital Areas</div></div>
+    <button id="menuClose" class="menu-close" type="button" aria-label="Close menu">✕</button>
   </div>
+  <div class="nav game-menu-nav">
+    <button data-screen="clinic">Clinic</button><button data-screen="surgery">Surgery</button><button data-screen="recovery">Recovery</button><button data-screen="animalprofile">Animal Profile</button><button data-screen="carelab">Care Lab</button><button data-screen="pets">My Pets</button><button data-screen="status">Status</button><button data-screen="admit">Admit Patient</button><button data-screen="hospital">Hospital+</button><button data-screen="sanctuary">Sanctuary</button><button data-screen="world">World</button><button data-screen="lifebook">Life Book</button><button data-screen="reception">Reception</button><button data-screen="ambulance">Ambulance</button><button data-screen="research">Research</button>
+  </div>
+</div>
+
 
   <section id="clinic" class="screen"></section>
   <section id="surgery" class="screen"></section>
@@ -2604,7 +2632,32 @@ function render(){
     }
   }
 }
-document.querySelectorAll("[data-screen]").forEach(b=>b.addEventListener("click",()=>{state.screen=b.dataset.screen;render()}));
+
+function setGameMenu(open){
+  const menu=document.getElementById("gameMenu");
+  const back=document.getElementById("menuBackdrop");
+  const toggle=document.getElementById("menuToggle");
+  if(!menu||!back||!toggle)return;
+  menu.classList.toggle("open",!!open);
+  back.classList.toggle("open",!!open);
+  menu.setAttribute("aria-hidden",open?"false":"true");
+  back.setAttribute("aria-hidden",open?"false":"true");
+  toggle.setAttribute("aria-expanded",open?"true":"false");
+}
+document.getElementById("menuToggle")?.addEventListener("click",()=>setGameMenu(true));
+document.getElementById("menuClose")?.addEventListener("click",()=>setGameMenu(false));
+document.getElementById("menuBackdrop")?.addEventListener("click",()=>setGameMenu(false));
+document.querySelectorAll("[data-screen]").forEach(b=>{
+  b.addEventListener("click",ev=>{
+    ev.preventDefault();
+    ev.stopPropagation();
+    state.screen=b.dataset.screen||"clinic";
+    setGameMenu(false);
+    render();
+  });
+});
+document.addEventListener("keydown",ev=>{if(ev.key==="Escape")setGameMenu(false);});
+
 
 // Load persistent game first. Only create the starter patient on a truly new game.
 const hadSave=loadGame();
