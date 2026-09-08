@@ -79,6 +79,113 @@ h2,h3{margin:0 0 8px}
   .hero{grid-template-columns:1fr}
   .roster{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+
+.pet-home-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pet-sim{
+  background:linear-gradient(180deg,#0c2433,#091924);
+  border:1px solid rgba(91,198,238,.22);border-radius:16px;padding:12px
+}
+.pet-top{display:grid;grid-template-columns:150px 1fr;gap:12px}
+.pet-top img{width:100%;aspect-ratio:1.2/1;object-fit:contain;background:#081822;border-radius:12px}
+.pet-needs{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}
+.need{font-size:11px}
+.pet-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.pet-actions button{min-height:46px}
+.memory-list,.relationship-list{display:grid;gap:6px;margin-top:8px}
+.memory{
+  padding:8px;border-radius:10px;background:#0a1b27;border:1px solid rgba(91,198,238,.16);
+  font-size:11px
+}
+.today-box{
+  background:#081c29;border-left:3px solid var(--gold);padding:10px;border-radius:10px;margin:8px 0
+}
+.trust-stage{font-size:12px;color:var(--gold);font-weight:700}
+.pet-alert{font-size:11px;color:#ffd8a0}
+.pet-good{font-size:11px;color:#aaf2cf}
+.pet-home-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+@media(max-width:760px){
+ .pet-home-grid{grid-template-columns:1fr}
+ .pet-top{grid-template-columns:1fr}
+ .pet-actions{grid-template-columns:repeat(2,1fr)}
+}
+
+
+.exp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.exp-card{background:#0a1d2a;border:1px solid rgba(91,198,238,.2);border-radius:13px;padding:11px;min-width:0}
+.exp-card h3{font-size:14px}
+.exp-card button{width:100%;min-height:44px;margin-top:7px;border:1px solid rgba(91,198,238,.28);background:#123148;color:var(--text);border-radius:9px}
+.case-test{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.book-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.book-entry{background:#091b27;border-left:3px solid var(--green);padding:10px;border-radius:10px;font-size:12px}
+.progressbar{height:8px;background:#06121b;border-radius:9px;overflow:hidden;margin:5px 0}.progressbar i{display:block;height:100%;background:#54b8d9}
+.event-banner{border:1px solid rgba(239,196,94,.4);background:#352b12;border-radius:12px;padding:12px;margin-bottom:10px}
+.staff-row,.upgrade-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-bottom:1px solid rgba(255,255,255,.07);padding:8px 0}
+@media(max-width:760px){.exp-grid,.book-grid{grid-template-columns:1fr}.case-test{grid-template-columns:1fr}.nav{grid-template-columns:repeat(2,1fr)}}
+
+
+.econ-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.econ-card{background:#0a1d2a;border:1px solid rgba(91,198,238,.2);border-radius:13px;padding:11px}
+.queue-row,.inventory-row,.finance-row,.research-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+.badge{display:inline-block;padding:3px 7px;border-radius:999px;background:#173246;font-size:11px;margin-right:5px}
+.badge.urgent{background:#6a2a2e}.badge.good{background:#164d38}.badge.gold{background:#5d4b18}
+.report{background:#071823;border:1px solid rgba(91,198,238,.18);border-radius:12px;padding:12px;line-height:1.55}
+@media(max-width:760px){.econ-grid{grid-template-columns:1fr}}
+
+
+/* ===== ANIMAL-FIRST SIM LAYER ===== */
+.animal-world{display:grid;gap:10px}
+.animal-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px}
+.animal-tile{
+  background:linear-gradient(180deg,#0b2230,#081822);
+  border:1px solid rgba(120,210,235,.18);
+  border-radius:14px;padding:8px;min-width:0;position:relative
+}
+.animal-tile img{width:100%;aspect-ratio:1.25/1;object-fit:contain;background:#06131c;border-radius:10px}
+.animal-tile b{display:block;margin-top:5px;font-size:12px}
+.animal-tile .small{font-size:10px}
+.animal-status{margin-top:5px;padding:5px 7px;border-radius:8px;background:#102b38;font-size:10px}
+.animal-status.alert{background:#43262b}
+.animal-status.calm{background:#14372f}
+.dept-scene{
+  border:1px solid rgba(120,210,235,.18);
+  border-radius:16px;padding:12px;margin-bottom:10px;
+  background:linear-gradient(180deg,#0a202d,#071720)
+}
+.dept-scene h3{margin:0 0 8px}
+.sim-event{
+  border-left:3px solid var(--gold);padding:8px 10px;margin:7px 0;
+  background:#10222d;border-radius:8px;font-size:11px
+}
+.animal-care-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.animal-care-grid button{min-height:44px}
+.resident-label{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.animal-focus-card{display:grid;grid-template-columns:150px 1fr;gap:12px}
+.animal-focus-card img{width:100%;aspect-ratio:1.25/1;object-fit:contain;border-radius:12px;background:#06131c}
+@media(max-width:760px){
+ .animal-focus-card{grid-template-columns:1fr}
+ .animal-care-grid{grid-template-columns:repeat(2,1fr)}
+}
+
+
+/* ===== GAMEPLAY TREE UI ===== */
+.tree-shell{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,.7fr);gap:10px}
+.tree-stage{background:linear-gradient(180deg,#0a202d,#071720);border:1px solid rgba(120,210,235,.2);border-radius:16px;padding:12px}
+.tree-patient{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:start}
+.tree-patient img{width:100%;aspect-ratio:1.2/1;object-fit:contain;background:#06131c;border-radius:13px}
+.tree-observation{font-size:14px;line-height:1.5;padding:10px;border-radius:10px;background:#0e2734;margin:8px 0}
+.tree-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.tree-actions button{min-height:52px}
+.tree-log{display:grid;gap:6px}
+.tree-log div{font-size:11px;padding:7px;background:#091b27;border-radius:8px}
+.tree-path{display:flex;gap:5px;flex-wrap:wrap;margin:8px 0}
+.tree-node{font-size:10px;padding:5px 7px;border-radius:999px;background:#173040}
+.tree-node.done{background:#184638}.tree-node.now{background:#5a4819}
+.ward-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:7px}
+.ward-animal{padding:8px;background:#091c28;border-radius:12px;border:1px solid rgba(120,210,235,.16)}
+.ward-animal img{width:100%;aspect-ratio:1.25/1;object-fit:contain;border-radius:8px;background:#06131c}
+.ward-animal button{width:100%;margin-top:5px;min-height:38px}
+@media(max-width:760px){.tree-shell,.tree-patient{grid-template-columns:1fr}.tree-actions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -102,6 +209,17 @@ h2,h3{margin:0 0 8px}
     <button data-screen="pets">My Pets</button>
     <button data-screen="status">Status</button>
     <button data-screen="admit">Admit Patient</button>
+
+    <button data-screen="hospital">Hospital+</button>
+    <button data-screen="sanctuary">Sanctuary</button>
+    <button data-screen="world">World</button>
+    <button data-screen="lifebook">Life Book</button>
+
+    <button data-screen="reception">Reception</button>
+    <button data-screen="ambulance">Ambulance</button>
+    <button data-screen="research">Research</button>
+
+
   </div>
 
   <section id="clinic" class="screen"></section>
@@ -110,6 +228,13 @@ h2,h3{margin:0 0 8px}
   <section id="pets" class="screen"></section>
   <section id="status" class="screen"></section>
   <section id="admit" class="screen"></section>
+  <section id="hospital" class="screen"></section>
+  <section id="sanctuary" class="screen"></section>
+  <section id="world" class="screen"></section>
+  <section id="lifebook" class="screen"></section>
+  <section id="reception" class="screen"></section>
+  <section id="ambulance" class="screen"></section>
+  <section id="research" class="screen"></section>
 </div>
 
 <script>
@@ -119,8 +244,166 @@ const SPECIES=["Dog","Cat","Rabbit","Fox"];
 const CONDITIONS=["Fracture","Respiratory Crisis","Deep Wound","Foreign Body","Infection","Toxin Exposure","Eye Trauma","Heat Emergency"];
 
 const state={
-  credits:1200,mercy:300,saved:0,screen:"clinic",nextCase:1,patients:[],pets:[],log:[]
+  care:0,mercy:300,saved:0,screen:"clinic",nextCase:1,patients:[],pets:[],log:[]
 };
+
+const TRAUMA_TRAITS=[
+  "Waits by the door because someone once never came back.",
+  "Guards food after going hungry for too long.",
+  "Startles when keys jingle near the doorway.",
+  "Sleeps facing the exit so nothing can surprise them.",
+  "Needs someone nearby before finishing a meal.",
+  "Hides when a room suddenly gets quiet.",
+  "Carries one old blanket everywhere.",
+  "Checks the food bowl even when it is full.",
+  "Whimpers when left alone for too long.",
+  "Freezes when a leash first comes out."
+];
+
+function ensurePetSim(p){
+  if(!p.sim){
+    const seed=(p.name||"pet").split("").reduce((a,c)=>a+c.charCodeAt(0),0);
+    p.sim={
+      hunger:65,water:68,comfort:58,cleanliness:72,pain:Math.max(5,p.pain||12),
+      energy:62,trust:28,loneliness:48,fear:55,happiness:42,
+      day:1,
+      trauma:TRAUMA_TRAITS[seed%TRAUMA_TRAITS.length],
+      personality:["Shy","Clingy","Playful","Gentle","Curious","Protective","Sleepy","Mischievous"][seed%8],
+      memories:["Came home from the hospital"],
+      friendships:{},
+      bedtime:false,
+      medicineDue:(p.condition||"").match(/Fracture|Wound|Infection|Eye|Respiratory/i)?true:false
+    };
+  }
+  return p.sim;
+}
+function clampPet(v){return Math.max(0,Math.min(100,Math.round(v)))}
+function petTrustStage(v){
+  if(v<20)return "Still afraid";
+  if(v<40)return "Tolerates your presence";
+  if(v<60)return "Starting to trust you";
+  if(v<80)return "Feels safe with you";
+  if(v<100)return "Deeply bonded";
+  return "I KNOW I'M HOME";
+}
+function addMemory(p,text){
+  const s=ensurePetSim(p);
+  if(!s.memories.includes(text))s.memories.unshift(text);
+  s.memories=s.memories.slice(0,12);
+}
+function petAction(id,action){
+  const p=state.pets.find(x=>x.id===id); if(!p)return;
+  const s=ensurePetSim(p);
+  const before=s.trust;
+  if(action==="feed"){s.hunger+=26;s.happiness+=4;if(s.fear>60)s.hunger+=4;addMemory(p,"Shared a meal at home")}
+  if(action==="water"){s.water+=30;s.comfort+=3}
+  if(action==="brush"){s.cleanliness+=20;s.comfort+=8;s.trust+=4}
+  if(action==="medicine"){s.pain-=22;s.medicineDue=false;s.trust+=2;addMemory(p,"Took medicine without hiding")}
+  if(action==="play"){s.energy-=14;s.happiness+=24;s.loneliness-=14;s.trust+=6;addMemory(p,"Played without watching the door")}
+  if(action==="walk"){s.energy-=12;s.happiness+=18;s.fear-=10;s.trust+=5;addMemory(p,"First safe walk")}
+  if(action==="hold"){s.comfort+=18;s.loneliness-=16;s.fear-=8;s.trust+=7;addMemory(p,"Let you hold them")}
+  if(action==="talk"){s.comfort+=10;s.loneliness-=12;s.fear-=6;s.trust+=5}
+  if(action==="sleep"){s.energy+=30;s.comfort+=12;s.fear-=5;s.bedtime=true;addMemory(p,"Slept peacefully through the night")}
+  if(action==="sit"){s.loneliness-=22;s.fear-=14;s.trust+=8;s.happiness+=6;addMemory(p,"You stayed when they were scared")}
+  if(action==="bath"){s.cleanliness+=32;s.comfort-=4;s.trust+=2}
+  if(action==="treat"){s.pain-=15;s.comfort+=10;s.trust+=3}
+  for(const k of ["hunger","water","comfort","cleanliness","pain","energy","trust","loneliness","fear","happiness"])s[k]=clampPet(s[k]);
+  if(before<100 && s.trust===100)addMemory(p,"I KNOW I'M HOME");
+  state.mercy+=2;
+  addLog(p.name+" · "+action+" at home");
+  render();
+}
+function careForAllPets(){
+  state.pets.forEach(p=>{
+    const s=ensurePetSim(p);
+    s.hunger=clampPet(s.hunger+20);s.water=clampPet(s.water+20);
+    s.cleanliness=clampPet(s.cleanliness+10);s.comfort=clampPet(s.comfort+8);
+    s.loneliness=clampPet(s.loneliness-6);
+  });
+  addLog("Basic care completed for all pets");
+  render();
+}
+function nextPetDay(){
+  state.pets.forEach(p=>{
+    const s=ensurePetSim(p);
+    s.day++;
+    s.hunger=clampPet(s.hunger-12);
+    s.water=clampPet(s.water-15);
+    s.cleanliness=clampPet(s.cleanliness-8);
+    s.energy=clampPet(s.energy-5);
+    s.loneliness=clampPet(s.loneliness+9);
+    s.fear=clampPet(s.fear+(s.loneliness>65?6:-2));
+    s.happiness=clampPet(s.happiness-6);
+    if(s.medicineDue)s.pain=clampPet(s.pain+8);
+    s.bedtime=false;
+  });
+  addLog("A new day begins in My Pets");
+  render();
+}
+function petTodayText(p){
+  const s=ensurePetSim(p);
+  const lines=[];
+  if(s.hunger<40)lines.push(p.name+" did not finish breakfast and keeps checking the bowl.");
+  else if(s.hunger<65)lines.push(p.name+" is getting hungry.");
+  if(s.loneliness>65)lines.push("They keep looking toward the doorway when you leave.");
+  if(s.fear>65)lines.push("A small sound made them freeze for a moment.");
+  if(s.pain>35)lines.push("Their old injury seems to be bothering them today.");
+  if(s.trust>75)lines.push("They followed you from room to room this morning.");
+  if(s.happiness>75)lines.push("They brought a toy over on their own.");
+  if(!lines.length)lines.push("Today feels quiet. "+p.name+" seems comfortable and safe.");
+  return lines.slice(0,4);
+}
+function petNeed(label,val,invert=false){
+  const pct=invert?100-val:val;
+  return `<div class="need"><b>${label}</b> ${Math.round(val)}
+    <div class="meter"><i style="width:${clampPet(pct)}%"></i></div></div>`;
+}
+function petSimHTML(p){
+  const s=ensurePetSim(p);
+  return `<div class="pet-sim">
+    <div class="pet-top">
+      <img src="${p.image}" alt="${p.name}">
+      <div>
+        <h3>${p.name}</h3>
+        <div class="small">${p.species} · ${s.personality} · Day ${s.day} home</div>
+        <div class="trust-stage">${petTrustStage(s.trust)}</div>
+        <div class="today-box">${petTodayText(p).map(x=>`<div>${x}</div>`).join("")}</div>
+        <div class="pet-alert">${s.trauma}</div>
+      </div>
+    </div>
+    <div class="pet-needs">
+      ${petNeed("Hunger",s.hunger)}
+      ${petNeed("Water",s.water)}
+      ${petNeed("Comfort",s.comfort)}
+      ${petNeed("Cleanliness",s.cleanliness)}
+      ${petNeed("Energy",s.energy)}
+      ${petNeed("Trust",s.trust)}
+      ${petNeed("Loneliness",s.loneliness,true)}
+      ${petNeed("Fear",s.fear,true)}
+      ${petNeed("Happiness",s.happiness)}
+      ${petNeed("Pain",s.pain,true)}
+    </div>
+    <div class="pet-actions">
+      <button onclick="petAction('${p.id}','feed')">Offer Food</button>
+      <button onclick="petAction('${p.id}','water')">Fresh Water</button>
+      <button onclick="petAction('${p.id}','sit')">Sit With Them</button>
+      <button onclick="petAction('${p.id}','play')">Play</button>
+      <button onclick="petAction('${p.id}','walk')">Short Walk</button>
+      <button onclick="petAction('${p.id}','talk')">Talk Softly</button>
+      <button onclick="petAction('${p.id}','hold')">Hold / Comfort</button>
+      <button onclick="petAction('${p.id}','brush')">Brush</button>
+      <button onclick="petAction('${p.id}','bath')">Clean Up</button>
+      <button onclick="petAction('${p.id}','medicine')">${s.medicineDue?"Give Medicine":"Check Medicine"}</button>
+      <button onclick="petAction('${p.id}','treat')">Home Treatment</button>
+      <button onclick="petAction('${p.id}','sleep')">Bedtime</button><button onclick="sendSanctuary('${p.id}')">Move to Sanctuary</button>
+    </div>
+    <div class="memory-list">
+      <b>Memories</b>
+      ${s.memories.slice(0,5).map(x=>`<div class="memory">${x}</div>`).join("")}
+    </div>
+  </div>`;
+}
+
 
 function makePatient(index){
   const i=index%NAMES.length;
@@ -161,8 +444,8 @@ function route(p,where){
 }
 function discharge(p){
   p.admitted=false;p.department="Home";state.saved++;state.credits+=125;
-  state.pets.push({...p});
-  addLog(p.name+" discharged successfully");
+  const homePet={...p}; ensurePetSim(homePet); state.pets.push(homePet);
+  lifeBookRecord(homePet,"HOME ❤️"); EXP.lifeSparks+=5; EXP.xp+=12; expProgress(); addLog(p.name+" discharged successfully");
   state.screen="clinic";state.activeId=dept("Clinic")[0]?.id||null;render();
 }
 function severity(p){
@@ -237,6 +520,8 @@ function renderClinic(){
       </div>
     </div>
     <div class="panel"><h3>Clinic Patients</h3>${roster(dept("Clinic"),"Clinic")}</div>`;
+
+if(p)clinic.innerHTML+=clinicEconomyHTML(p);
 }
 function renderSurgery(){
   const list=dept("Surgery");
@@ -249,6 +534,8 @@ function renderSurgery(){
       <button class="action red" onclick="route(active(),'Clinic')">Return to Clinic</button>
     </div>`:""}
   </div><div class="panel"><h3>Surgery Patients</h3>${roster(list,"Surgery")}</div>`;
+
+if(p)surgery.innerHTML+=surgeryEconomyHTML(p);
 }
 function surgeryAction(){
   const p=active();if(!p)return;
@@ -268,6 +555,8 @@ function renderRecovery(){
       <button class="action gold" onclick="discharge(active())">Discharge Home</button>
     </div>`:""}
   </div><div class="panel"><h3>Recovery Patients</h3>${roster(list,"Recovery")}</div>`;
+
+if(p)recovery.innerHTML+=recoveryEconomyHTML(p);
 }
 function recoveryAction(){
   const p=active();if(!p)return;
@@ -275,7 +564,15 @@ function recoveryAction(){
   addLog(p.name+" completed recovery care "+p.recoveryStep);render();
 }
 function renderPets(){
-  pets.innerHTML=`<div class="panel"><h2>My Pets</h2>${state.pets.length?roster(state.pets,"My Pets"):`<div class="empty">No adopted/discharged pets yet.</div>`}</div>`;
+  pets.innerHTML=`<div class="panel">
+    <div class="pet-home-toolbar">
+      <button class="action green" onclick="careForAllPets()">Care for All Pets</button>
+      <button class="action" onclick="nextPetDay()">Start Next Day</button>
+    </div>
+    <h2>My Pets · Forever Home</h2>
+    <p class="small">Basic care is easy. Trust, recovery, memories, and bonding happen one animal at a time.</p>
+    ${state.pets.length?`<div class="pet-home-grid">${state.pets.map(p=>petSimHTML(p)).join("")}</div>`:`<div class="empty">No pets are home yet. Successfully discharge an animal from Recovery to bring them here.</div>`}
+  </div>`;
 }
 function renderStatus(){
   status.innerHTML=`<div class="panel"><h2>Hospital Status</h2>
@@ -299,20 +596,658 @@ function renderAdmit(){
   </div>`;
 }
 function admitOne(){
-  const p=makePatient(state.nextCase++);
+  const p=expPatient(state.nextCase++);
   state.patients.push(p);state.activeId=p.id;state.screen="clinic";addLog(p.name+" admitted to Clinic");render();
 }
+
+
+/* ===== ECONOMY / DEPARTMENT OPTIONS EXPANSION ===== */
+const ECON={
+ donations:400,research:0,loan:0,loanPayment:0,utilitiesBase:55,
+ payrollBase:0,lastReport:null,queue:[],
+ inventory:{bandages:24,iv:16,oxygen:80,painMeds:18,antibiotics:14,sutures:18,blood:4,surgicalKits:6,food:28,blankets:12},
+ prices:{bandages:8,iv:14,oxygen:2,painMeds:11,antibiotics:13,sutures:9,blood:45,surgicalKits:35,food:6,blankets:10},
+ supplier:"Mercy Medical Supply",shortage:null
+};
+const RESEARCH_TREE=[
+ ["Advanced Imaging",35,"imaging"],
+ ["Stable Anesthesia",45,"anesthesia"],
+ ["Trauma Protocols",40,"trauma"],
+ ["Wildlife Medicine",50,"wildlife"],
+ ["Neonatal Care",45,"neonatal"],
+ ["Behavior Therapy",40,"behavior"],
+ ["Infection Control",35,"infection"],
+ ["Life Spark Medicine",75,"cosmic"]
+];
+const RECEPTION_TYPES=[
+ ["Emergency","Hit by vehicle","urgent"],
+ ["Urgent","Breathing difficulty","urgent"],
+ ["Routine","Vaccination / wellness","good"],
+ ["Follow-up","Fracture recheck",""],
+ ["Rescue","Abandoned animal","gold"]
+];
+function ensureQueue(){
+ if(ECON.queue.length<4){
+  for(let i=ECON.queue.length;i<4;i++){
+   let q=RECEPTION_TYPES[(EXP.shift+i)%RECEPTION_TYPES.length];
+   ECON.queue.push({id:"Q"+EXP.shift+"_"+i,type:q[0],reason:q[1],tone:q[2],species:EXP_SPECIES[(EXP.shift+i)%EXP_SPECIES.length]});
+  }
+ }
+}
+function consumeSupply(key,n=1){
+ if((ECON.inventory[key]||0)<n)return false;
+ ECON.inventory[key]-=n;return true;
+}
+function clinicAction(id,action){
+ const p=state.patients.find(x=>x.id===id);if(!p)return;
+ const map={
+  fluids:["iv",1,10],oxygen:["oxygen",8,10],pain:["painMeds",1,14],antibiotic:["antibiotics",1,12],
+  wound:["bandages",2,15],splint:["bandages",2,10],comfort:["blankets",1,8],feed:["food",1,5]
+ };
+ const x=map[action];if(!x)return;
+ if(!consumeSupply(x[0],x[1])){addLog("Supply shortage: "+x[0]);render();return}
+ if(action==="fluids"){p.shock=Math.max(0,p.shock-16);p.oxygen=Math.min(100,p.oxygen+5)}
+ if(action==="oxygen"){p.oxygen=Math.min(100,p.oxygen+18)}
+ if(action==="pain"){p.pain=Math.max(0,p.pain-22)}
+ if(action==="antibiotic"){p.infection=Math.max(0,p.infection-20)}
+ if(action==="wound"){p.bleeding=Math.max(0,p.bleeding-22)}
+ if(action==="splint"){p.pain=Math.max(0,p.pain-12);p.bleeding=Math.max(0,p.bleeding-6)}
+ if(action==="comfort"){p.stress=Math.max(0,p.stress-18)}
+ if(action==="feed"){p.stress=Math.max(0,p.stress-6)}
+ EXP.xp+=4;state.mercy+=2;addLog(p.name+" · "+action+" completed");render();
+}
+function surgerySupplyAction(id,action){
+ const p=state.patients.find(x=>x.id===id);if(!p)return;
+ const needs={
+  prep:["surgicalKits",1],anesthesia:["painMeds",1],incision:["surgicalKits",1],repair:["sutures",2],bleeding:["blood",1],close:["sutures",2],wake:["oxygen",5]
+ };
+ const n=needs[action];if(n&&!consumeSupply(n[0],n[1])){addLog("Surgery halted — missing "+n[0]);render();return}
+ p.surgeryStep=(p.surgeryStep||0)+1;
+ p.bleeding=Math.max(0,p.bleeding-12);p.shock=Math.max(0,p.shock-8);
+ EXP.xp+=6;ECON.research+=2;addLog(p.name+" surgery: "+action);
+ if(p.surgeryStep>=7)route(p,"Recovery");else render();
+}
+function recoveryCare(id,action){
+ const p=state.patients.find(x=>x.id===id);if(!p)return;
+ const need=action==="meds"?["painMeds",1]:action==="food"?["food",1]:action==="dress"?["bandages",1]:null;
+ if(need&&!consumeSupply(need[0],need[1])){addLog("Recovery missing "+need[0]);render();return}
+ if(action==="meds")p.pain=Math.max(0,p.pain-20);
+ if(action==="food")p.stress=Math.max(0,p.stress-8);
+ if(action==="dress")p.infection=Math.max(0,p.infection-12);
+ if(action==="comfort")p.stress=Math.max(0,p.stress-15);
+ if(action==="vitals")p.oxygen=Math.min(100,p.oxygen+4);
+ p.recoveryStep=(p.recoveryStep||0)+1;state.mercy+=1;render();
+}
+function receptionAction(qid,action){
+ ensureQueue();const q=ECON.queue.find(x=>x.id===qid);if(!q)return;
+ if(action==="admit"){
+  const p=expPatient(state.nextCase++);p.species=q.species;p.condition=q.reason;state.patients.push(p);state.activeId=p.id;state.screen="clinic";addLog(q.type+" intake admitted");
+ }
+ if(action==="refer"){ECON.donations+=10;EXP.reputation=Math.max(0,EXP.reputation-1);addLog("Patient referred to partner hospital")}
+ if(action==="sanctuary"){
+  const p=expPatient(state.nextCase++);p.admitted=false;p.department="Sanctuary";EXP.sanctuary.push(p);state.mercy+=8;addLog("Rescue routed directly to Sanctuary")
+ }
+ ECON.queue=ECON.queue.filter(x=>x.id!==qid);render();
+}
+function buySupply(key,qty=5,mode="standard"){
+ const base=ECON.prices[key]||10;let mult=mode==="cheap"?.8:mode==="premium"?1.35:mode==="emergency"?1.8:1;
+ if(ECON.shortage===key)mult*=1.35;
+ const cost=Math.round(base*qty*mult);if(state.credits<cost)return;
+ state.credits-=cost;ECON.inventory[key]=(ECON.inventory[key]||0)+qty;
+ addLog("Ordered "+qty+" "+key+" from "+ECON.supplier+" for $"+cost);render();
+}
+function setSupplier(name){ECON.supplier=name;render()}
+function takeLoan(amount){
+ if(ECON.loan>0)return;ECON.loan=amount;ECON.loanPayment=Math.ceil(amount/8);state.credits+=amount;addLog("Hospital loan received: $"+amount);render();
+}
+function fundraiser(){
+ const gain=100+EXP.reputation*5;ECON.donations+=gain;state.credits+=Math.round(gain*.35);addLog("Public fundraiser raised $"+gain);render();
+}
+function applyGrant(){
+ if(EXP.reputation<20)return;
+ const gain=350+EXP.hospitalTier*75;state.credits+=gain;ECON.donations+=gain;addLog("Animal welfare grant awarded: $"+gain);render();
+}
+function researchUnlock(name,cost,key){
+ if(ECON.research<cost)return;ECON.research-=cost;
+ if(!EXP.researchUnlocked)EXP.researchUnlocked=[];
+ if(!EXP.researchUnlocked.includes(key))EXP.researchUnlocked.push(key);
+ addLog("Research unlocked: "+name);render();
+}
+function dispatchMission(type,cost,reward,cases){
+ if(state.credits<cost)return;state.credits-=cost;
+ for(let i=0;i<cases;i++){const p=expPatient(state.nextCase++);state.patients.push(p);state.activeId=p.id}
+ state.credits+=reward;EXP.xp+=10*cases;ECON.research+=3*cases;
+ addLog(type+" completed · "+cases+" case(s) recovered");state.screen="clinic";render();
+}
+function fullShiftReport(){
+ const payroll=EXP.staff.filter(x=>x.hired).reduce((a,s)=>a+60+s.skill*20,0);
+ const sanctuaryCost=EXP.sanctuary.length*8;
+ const foodCost=state.pets.length*4+EXP.nursery.length*5;
+ const utilities=ECON.utilitiesBase+EXP.hospitalTier*8;
+ const suppliesUsed=40+dept("Clinic").length*10+dept("Surgery").length*25;
+ const revenue=state.saved*55+dept("Clinic").length*20+Math.round(ECON.donations*.05);
+ const donationIncome=Math.round(ECON.donations*.08);
+ const expenses=payroll+sanctuaryCost+foodCost+utilities+suppliesUsed+(ECON.loanPayment||0);
+ const net=revenue+donationIncome-expenses;
+ state.credits+=net;
+ if(ECON.loan>0){ECON.loan=Math.max(0,ECON.loan-ECON.loanPayment);if(!ECON.loan)ECON.loanPayment=0}
+ ECON.lastReport={shift:EXP.shift,revenue,donationIncome,payroll,sanctuaryCost,foodCost,utilities,suppliesUsed,loan:ECON.loanPayment||0,net};
+ return ECON.lastReport;
+}
+/* ===== VET GODS COMPLETE EXPANSION LAYER ===== */
+const EXP={
+ shift:1,time:"Night",weather:"Clear",reputation:0,xp:0,level:1,
+ hospitalTier:1,lifeSparks:0,event:null,eventTurns:0,
+ upgrades:{icu:0,imaging:0,surgery:0,recovery:0,lab:0,ambulance:0,nursery:0,sanctuary:0},
+ staff:[
+  {name:"Dr. Mara Vale",role:"Veterinarian",skill:2,hired:true},
+  {name:"Juno Reed",role:"Technician",skill:1,hired:false},
+  {name:"Eli Cross",role:"Nurse",skill:1,hired:false},
+  {name:"Dr. Soren Pike",role:"Surgeon",skill:3,hired:false}
+ ],
+ sanctuary:[],nursery:[],adoptions:[],lifeBook:[],achievements:[],
+ gods:{Solenne:0,Kharos:0,Nym:0,Astrael:0,Veyra:0},
+ relics:[],population:500
+};
+const EXP_SPECIES=["Dog","Cat","Rabbit","Fox","Parrot","Cockatiel","Tortoise","Gecko","Goat","Pig","Horse","Ferret","Hedgehog","Owl","Hawk","Raccoon","Otter","Duck","Guinea Pig","Chinchilla"];
+const TESTS=[
+ ["Physical Exam",12],["Bloodwork",30],["X-Ray",45],["Ultrasound",55],["Heart / Lung Exam",22],["Wound Inspection",18]
+];
+const UPGRADES=[
+ ["icu","ICU Beds",350],["imaging","Advanced Imaging",450],["surgery","Surgical Theater",600],
+ ["recovery","Recovery Kennels",400],["lab","Laboratory",500],["ambulance","Ambulance Capacity",550],
+ ["nursery","Nursery Wing",500],["sanctuary","Sanctuary Habitats",650]
+];
+const EVENTS=[
+ "MASS CASUALTY NIGHT","BLACKOUT SURGERY","PLAGUE WARD","SANCTUARY FIRE","WILDFIRE EVACUATION","WINTER RESCUE"
+];
+function ensureClinical(p){
+ if(!p.clinical)p.clinical={
+  age:1+(p.name.length%13),weight:3+(p.name.length*4)%42,temperament:["Shy","Gentle","Nervous","Curious","Protective"][p.name.length%5],
+  allergy:["None","Penicillin","Unknown"][p.name.length%3],history:[],tests:[],diagnosisKnown:false,
+  ownerStatus:["Rescue","Stray","Family transfer","Wildlife intake"][p.name.length%4],visits:1
+ };
+ return p.clinical;
+}
+function expPatient(index){
+ const p=makePatient(index);
+ p.species=EXP_SPECIES[index%EXP_SPECIES.length];
+ p.image=THUMBS[index%THUMBS.length];
+ ensureClinical(p);
+ return p;
+}
+function runTest(id,name,cost){
+ const p=state.patients.find(x=>x.id===id);if(!p||state.credits<cost)return;
+ const c=ensureClinical(p);state.credits-=cost;if(!c.tests.includes(name))c.tests.push(name);
+ if(c.tests.length>=2)c.diagnosisKnown=true;
+ state.mercy+=2;EXP.xp+=5;addLog(p.name+" · "+name+" completed");expProgress();render();
+}
+function expProgress(){
+ EXP.level=1+Math.floor(EXP.xp/100);
+ EXP.reputation=Math.min(100,Math.floor((state.saved*3+EXP.xp/15)));
+ EXP.hospitalTier=1+Math.min(8,Math.floor(EXP.reputation/13));
+}
+function buyUpgrade(key,cost){
+ if(state.credits<cost)return;
+ state.credits-=cost;EXP.upgrades[key]++;EXP.xp+=15;addLog("Hospital upgraded: "+key);expProgress();render();
+}
+function hireStaff(i){
+ const s=EXP.staff[i];if(!s||s.hired||state.credits<250)return;
+ state.credits-=250;s.hired=true;EXP.xp+=10;addLog(s.name+" joined the hospital");render();
+}
+function endShift(){
+ const report=fullShiftReport();
+
+ EXP.shift++;EXP.time=EXP.time==="Night"?"Day":"Night";
+ const weather=["Clear","Rain","Heat Wave","Winter Storm","Wildfire Smoke"][EXP.shift%5];EXP.weather=weather;
+ const hired=EXP.staff.filter(x=>x.hired).length;
+
+ EXP.xp+=10;
+ // Staff automates gentle stabilization without moving patients unexpectedly.
+ dept("Clinic").slice(0,Math.max(0,hired-1)).forEach(p=>{
+   p.pain=clampPet(p.pain-5);p.stress=clampPet(p.stress-5);
+ });
+ if(EXP.shift%4===0){EXP.event=EVENTS[(EXP.shift/4)%EVENTS.length|0];EXP.eventTurns=2;}
+ else if(EXP.eventTurns>0){EXP.eventTurns--;if(!EXP.eventTurns)EXP.event=null}
+ if(EXP.shift%3===0){let keys=Object.keys(ECON.inventory);ECON.shortage=keys[EXP.shift%keys.length]}else if(EXP.shift%3===1)ECON.shortage=null;
+ expProgress();addLog("Shift "+EXP.shift+" began · "+weather+" · Net "+(report.net>=0?"+":"")+"$"+report.net);render();
+}
+function triggerAmbulance(){
+ const count=EXP.upgrades.ambulance?2:1;
+ for(let n=0;n<count;n++){const p=expPatient(state.nextCase++);state.patients.push(p);state.activeId=p.id}
+ EXP.event="TRAUMA INBOUND";EXP.eventTurns=1;addLog("Emergency ambulance arrival");state.screen="clinic";render();
+}
+function godChoice(god){
+ EXP.gods[god]=(EXP.gods[god]||0)+5;EXP.lifeSparks+=10;state.mercy+=10;
+ if(EXP.lifeSparks>=50 && !EXP.relics.includes("Mercy Shard"))EXP.relics.push("Mercy Shard");
+ addLog(god+" answered the hospital");render();
+}
+function sendSanctuary(id){
+ const p=state.pets.find(x=>x.id===id);if(!p)return;
+ state.pets=state.pets.filter(x=>x.id!==id);EXP.sanctuary.push(p);addLog(p.name+" moved to Sanctuary");render();
+}
+function adoptionOffer(id){
+ const p=EXP.sanctuary.find(x=>x.id===id);if(!p)return;
+ const families=["The Hart Family","Mina & Jo","The Rivera Home","Cedar Farm","Willow House"];
+ EXP.adoptions=[{petId:id,family:families[(p.name.length+EXP.shift)%families.length],fit:65+(p.name.length*3)%35}];
+ render();
+}
+function acceptAdoption(id){
+ const o=EXP.adoptions.find(x=>x.petId===id);const p=EXP.sanctuary.find(x=>x.id===id);if(!o||!p)return;
+ EXP.sanctuary=EXP.sanctuary.filter(x=>x.id!==id);EXP.adoptions=[];
+ EXP.lifeBook.unshift({name:p.name,species:p.species,outcome:"Adopted by "+o.family,visits:ensureClinical(p).visits,trust:ensurePetSim(p).trust});
+ state.mercy+=25;EXP.reputation=Math.min(100,EXP.reputation+3);addLog(p.name+" found a forever home");render();
+}
+function addNursery(){
+ if(EXP.nursery.length>=2+EXP.upgrades.nursery*2)return;
+ const i=state.nextCase++;EXP.nursery.push({name:"Baby "+NAMES[i%NAMES.length],species:EXP_SPECIES[i%EXP_SPECIES.length],warmth:65,hunger:55,weight:1.2,image:THUMBS[i%THUMBS.length]});render();
+}
+function nurseryCare(i){
+ const b=EXP.nursery[i];if(!b)return;b.warmth=Math.min(100,b.warmth+20);b.hunger=Math.min(100,b.hunger+25);b.weight=Math.round((b.weight+.1)*10)/10;state.mercy+=3;render();
+}
+function checkAchievements(){
+ const tests=[
+  ["FIRST LIFE",state.saved>=1],["TEN LIVES",state.saved>=10],["TRUST EARNED",state.pets.some(p=>ensurePetSim(p).trust>=80)],
+  ["HOSPITAL BUILDER",Object.values(EXP.upgrades).some(v=>v>=1)],["DIVINE NOTICE",Object.values(EXP.gods).some(v=>v>=5)],
+  ["SANCTUARY KEEPER",EXP.sanctuary.length>=1],["VETERAN",EXP.shift>=10]
+ ];
+ tests.forEach(([n,ok])=>{if(ok&&!EXP.achievements.includes(n))EXP.achievements.push(n)});
+}
+function lifeBookRecord(p,outcome){
+ const c=ensureClinical(p);const sim=p.sim?ensurePetSim(p):{trust:0};
+ const old=EXP.lifeBook.find(x=>x.name===p.name&&x.species===p.species);
+ if(old){old.visits++;old.outcome=outcome;old.trust=sim.trust;return}
+ EXP.lifeBook.unshift({name:p.name,species:p.species,outcome,visits:c.visits,trust:sim.trust,condition:p.condition});
+}
+function returningPatient(){
+ if(!EXP.lifeBook.length)return triggerAmbulance();
+ const rec=EXP.lifeBook[EXP.shift%EXP.lifeBook.length];
+ const p=expPatient(state.nextCase++);p.name=rec.name;p.species=rec.species;ensureClinical(p).visits=(rec.visits||1)+1;
+ state.patients.push(p);state.activeId=p.id;state.screen="clinic";addLog(p.name+" returned and recognizes the hospital");render();
+}
+
+function endAnimalShift(){
+ EXP.shift++;EXP.time=EXP.time==="Night"?"Day":"Night";
+ EXP.weather=["Clear","Rain","Heat Wave","Winter Storm","Wildfire Smoke"][EXP.shift%5];
+ dept("Clinic").forEach(p=>{p.stress=Math.max(0,(p.stress||45)-4)});
+ dept("Recovery").forEach(p=>{p.pain=Math.max(0,(p.pain||30)-3);p.stress=Math.max(0,(p.stress||35)-6)});
+ state.pets.forEach(p=>{const s=ensurePetSim(p);s.hunger=clampPet(s.hunger-6);s.water=clampPet(s.water-7);s.loneliness=clampPet(s.loneliness+4)});
+ if(EXP.shift%4===0){EXP.event=EVENTS[(EXP.shift/4)%EVENTS.length|0];EXP.eventTurns=2}
+ else if(EXP.eventTurns>0){EXP.eventTurns--;if(!EXP.eventTurns)EXP.event=null}
+ addLog("A new animal-care shift begins · "+EXP.weather);render();
+}
+function renderHospitalPlus(){
+ const p=active(); if(p)ensureClinical(p); checkAchievements();
+ hospital.innerHTML=`
+ ${EXP.event?`<div class="event-banner"><b>⚠ ${EXP.event}</b><div class="small">The event changes what animals arrive and how the wards behave.</div></div>`:""}
+ <div class="exp-grid">
+  <div class="exp-card"><h3>Hospital Animal Census</h3><div><b>${admitted().length}</b> admitted animals</div><div class="small">Clinic ${dept("Clinic").length} · Surgery ${dept("Surgery").length} · Recovery ${dept("Recovery").length}</div></div>
+  <div class="exp-card"><h3>Shift Rhythm</h3><div>Shift ${EXP.shift} · ${EXP.time}</div><div class="small">${EXP.weather}</div><button onclick="endAnimalShift()">Begin Next Animal-Care Shift</button></div>
+  <div class="exp-card"><h3>Hospital Mood</h3><div class="small">${animalDepartmentEvent("hospital")}</div></div>
+ </div>
+ <div class="panel"><h2>Current Animal ${p?"· "+p.name:""}</h2>${p?`
+  <div class="animal-focus-card"><img src="${p.image}"><div><b>${p.name}</b><div class="small">${p.species} · ${p.condition}</div>
+  <p>${p.name} is being followed across departments as one continuous animal story.</p></div></div>`:'<div class="empty">No active animal selected.</div>'}</div>`;
+}
+function renderSanctuary(){
+ sanctuary.innerHTML=`<div class="panel"><h2>Sanctuary & Adoption</h2><p class="small">Long-term residents live here while you build trust and find compatible homes.</p>
+ <div class="pet-home-toolbar"><button class="action" onclick="addNursery()">Receive Nursery Rescue</button></div>
+ ${EXP.sanctuary.length?`<div class="roster">${EXP.sanctuary.map(p=>`<div class="dept-card"><img src="${p.image}"><b>${p.name}</b><div class="small">${p.species}</div><button onclick="adoptionOffer('${p.id}')">Review Adoption Family</button></div>`).join("")}</div>`:'<div class="empty">No sanctuary residents yet. My Pets can be moved here for adoption.</div>'}
+ ${EXP.adoptions.map(o=>{let p=EXP.sanctuary.find(x=>x.id===o.petId);return p?`<div class="event-banner"><b>${o.family}</b> wants to adopt ${p.name}. Compatibility ${o.fit}%<button class="action green" onclick="acceptAdoption('${p.id}')">Approve Forever Home</button></div>`:""}).join("")}
+ </div>
+ <div class="panel"><h2>Nursery</h2>${EXP.nursery.length?`<div class="roster">${EXP.nursery.map((b,i)=>`<div class="dept-card"><img src="${b.image}"><b>${b.name}</b><div class="small">Warmth ${b.warmth} · Fed ${b.hunger} · ${b.weight} kg</div><button onclick="nurseryCare(${i})">Bottle Feed + Warm</button></div>`).join("")}</div>`:'<div class="empty">Nursery is quiet.</div>'}</div>`;
+}
+function renderWorld(){
+ world.innerHTML=`<div class="exp-grid">
+  <div class="exp-card"><h3>Regional Conditions</h3><b>${EXP.weather}</b><p class="small">${EXP.weather==="Heat Wave"?"Heat emergencies are more likely.":EXP.weather==="Winter Storm"?"Cold exposure cases are increasing.":EXP.weather==="Wildfire Smoke"?"Respiratory and evacuation cases are rising.":"Normal regional intake."}</p></div>
+  <div class="exp-card"><h3>Space Gods</h3><div>Life Sparks ${EXP.lifeSparks}</div>${Object.entries(EXP.gods).map(([g,v])=>`<button onclick="godChoice('${g}')">${g} · Rep ${v}</button>`).join("")}</div>
+  <div class="exp-card"><h3>Relics</h3>${EXP.relics.map(x=>`<div class="memory">${x}</div>`).join("")||'<div class="small">The gods have not granted a relic yet.</div>'}</div>
+ </div>
+ <div class="panel"><h2>Living Population</h2><p>The regional simulation tracks <b>${EXP.population}</b> possible animals without rendering them all at once.</p><p class="small">Rare wildlife, birds, reptiles, farm animals and exotic rescues unlock naturally through intake.</p></div>`;
+}
+function renderLifeBook(){
+ checkAchievements();
+ lifebook.innerHTML=`<div class="panel"><h2>🐾 The Life Book</h2><p class="small">Permanent stories of animals whose lives crossed your hospital.</p>
+ ${EXP.lifeBook.length?`<div class="book-grid">${EXP.lifeBook.map(x=>`<div class="book-entry"><b>${x.name}</b><br>${x.species}${x.condition?" · "+x.condition:""}<br>Visits: ${x.visits||1}<br>Trust: ${x.trust||0}%<br><b>${x.outcome}</b></div>`).join("")}</div>`:'<div class="empty">The first page is waiting to be written.</div>'}</div>`;
+}
+
+function renderReception(){
+ ensureQueue();
+ reception.innerHTML=`<div class="panel"><h2>Reception / Intake</h2><p class="small">Choose where each arrival goes. Capacity and money now matter.</p>
+ ${ECON.queue.map(q=>`<div class="queue-row"><span><span class="badge ${q.tone}">${q.type}</span><b>${q.species}</b> · ${q.reason}</span><span><button onclick="receptionAction('${q.id}','admit')">Admit</button> <button onclick="receptionAction('${q.id}','refer')">Refer</button> <button onclick="receptionAction('${q.id}','sanctuary')">Sanctuary</button></span></div>`).join("")}</div>`;
+}
+
+function animalRescueMission(type,cases,species){
+ for(let i=0;i<cases;i++){
+  const p=expPatient(state.nextCase++);
+  if(species!=="Mixed")p.species=species;
+  p.condition=type;
+  p.stress=65+((i*7)%20);
+  state.patients.push(p);state.activeId=p.id;
+ }
+ EXP.xp+=8*cases;state.mercy+=5*cases;
+ addLog(type+" · "+cases+" animal(s) brought safely into care");
+ state.screen="clinic";render();
+}
+
+function renderAmbulance(){
+ ambulance.innerHTML=`<div class="panel"><h2>Animal Rescue Bay</h2><p class="small">Choose the kind of animals the rescue team is responding to. No cash rewards — the reward is what comes back through the doors.</p><div class="econ-grid">
+ <div class="econ-card"><h3>Stray Animal Call</h3><p class="small">A frightened domestic animal is waiting near a roadway.</p><button onclick="animalRescueMission('Stray Animal Call',1,'Dog')">Send Rescue Team</button></div>
+ <div class="econ-card"><h3>Highway Trauma</h3><p class="small">A critical animal needs immediate transport.</p><button onclick="animalRescueMission('Highway Trauma',1,'Cat')">Open Trauma Bay</button></div>
+ <div class="econ-card"><h3>Wildlife Rescue</h3><p class="small">A wild patient needs quiet transport and rehabilitation.</p><button onclick="animalRescueMission('Wildlife Rescue',1,'Owl')">Prepare Wildlife Carrier</button></div>
+ <div class="econ-card"><h3>Disaster Response</h3><p class="small">Several animals are being evacuated together.</p><button onclick="animalRescueMission('Disaster Response',3,'Mixed')">Receive Evacuation</button></div>
+ </div></div>`;
+}
+function renderSupplies(){
+ supplies.innerHTML=`<div class="panel"><h2>Supply Room</h2><div class="small">Supplier: ${ECON.supplier}${ECON.shortage?` · SHORTAGE: ${ECON.shortage.toUpperCase()} +35%`:""}</div>
+ <div class="econ-grid">
+ ${Object.entries(ECON.inventory).map(([k,v])=>`<div class="econ-card"><h3>${k}</h3><b>${v}</b> in stock<div class="small">$${ECON.prices[k]||10} base each</div><button onclick="buySupply('${k}',5,'cheap')">Cheap ×5</button><button onclick="buySupply('${k}',5,'standard')">Standard ×5</button><button onclick="buySupply('${k}',5,'premium')">Premium ×5</button><button onclick="buySupply('${k}',5,'emergency')">Emergency ×5</button></div>`).join("")}
+ </div></div>
+ <div class="panel"><h3>Suppliers</h3><div class="dept-counts"><button onclick="setSupplier('Mercy Medical Supply')">Mercy Medical</button><button onclick="setSupplier('Red Orbit Surgical')">Red Orbit</button><button onclick="setSupplier('Paws Wholesale')">Paws Wholesale</button><button onclick="setSupplier('Nebula Biomedical')">Nebula Biomedical</button></div></div>`;
+}
+function renderFinance(){
+ const r=ECON.lastReport;
+ finance.innerHTML=`<div class="econ-grid">
+ <div class="econ-card"><h3>Hospital Status</h3><b>$${state.credits}</b><div class="small">Community support $${ECON.donations} · Loan $${ECON.loan}</div></div>
+ <div class="econ-card"><h3>Support</h3><button onclick="fundraiser()">Run Fundraiser</button><button onclick="applyGrant()">Apply for Grant</button><button onclick="takeLoan(1000)">Take $1,000 Loan</button></div>
+ <div class="econ-card"><h3>Economy</h3><div class="small">Staff load, sanctuary upkeep, utilities, food, supplies, and debt are charged each shift.</div></div>
+ </div>
+ <div class="panel"><h2>Last Shift Report</h2>${r?`<div class="report">
+ Care completed +$${r.revenue}<br>Community support +$${r.donationIncome}<br>Staff load -$${r.payroll}<br>Sanctuary -$${r.sanctuaryCost}<br>Food -$${r.foodCost}<br>Utilities -$${r.utilities}<br>Care stock -$${r.suppliesUsed}<br>Loan -$${r.loan}<hr><b>Net ${r.net>=0?"+":""}$${r.net}</b>
+ </div>`:'<div class="empty">Finish a shift to generate the first financial report.</div>'}</div>`;
+}
+function renderResearch(){
+ research.innerHTML=`<div class="panel"><h2>Animal Care & Behavior Lab</h2><p class="small">This area watches how animals recover, bond, eat, sleep, move, and respond to care.</p>
+ <div class="econ-grid">
+  <div class="econ-card"><h3>Behavior Observation</h3><p>Watch a nervous animal settle over time.</p><button onclick="state.mercy+=3;addLog('Behavior observation completed');render()">Observe Quietly</button></div>
+  <div class="econ-card"><h3>Recovery Study</h3><p>Compare rest, comfort, and activity patterns.</p><button onclick="state.mercy+=3;addLog('Recovery behavior recorded');render()">Record Recovery</button></div>
+  <div class="econ-card"><h3>Trust Study</h3><p>Learn which forms of attention help frightened animals feel safe.</p><button onclick="state.mercy+=4;addLog('Trust response recorded');render()">Sit With Animal</button></div>
+ </div></div>`;
+}
+function clinicEconomyHTML(p){
+ if(!p)return "";
+ return `<div class="panel"><h3>Clinical Actions</h3><div class="case-test">
+ <button class="action" onclick="clinicAction('${p.id}','fluids')">IV Fluids</button>
+ <button class="action" onclick="clinicAction('${p.id}','oxygen')">Oxygen</button>
+ <button class="action" onclick="clinicAction('${p.id}','pain')">Pain Control</button>
+ <button class="action" onclick="clinicAction('${p.id}','antibiotic')">Antibiotics</button>
+ <button class="action" onclick="clinicAction('${p.id}','wound')">Wound Care</button>
+ <button class="action" onclick="clinicAction('${p.id}','splint')">Splint</button>
+ <button class="action" onclick="clinicAction('${p.id}','comfort')">Comfort / Warm</button>
+ <button class="action" onclick="clinicAction('${p.id}','feed')">Feed</button>
+ </div></div>`;
+}
+function surgeryEconomyHTML(p){
+ if(!p)return "";
+ const steps=["prep","anesthesia","incision","repair","bleeding","close","wake"];
+ return `<div class="panel"><h3>Operating Sequence</h3><div class="case-test">${steps.map(s=>`<button class="action" onclick="surgerySupplyAction('${p.id}','${s}')">${s.toUpperCase()}</button>`).join("")}</div></div>`;
+}
+function recoveryEconomyHTML(p){
+ if(!p)return "";
+ return `<div class="panel"><h3>Ward Orders</h3><div class="case-test">
+ <button class="action" onclick="recoveryCare('${p.id}','meds')">Medication</button>
+ <button class="action" onclick="recoveryCare('${p.id}','food')">Feed</button>
+ <button class="action" onclick="recoveryCare('${p.id}','dress')">Change Dressing</button>
+ <button class="action" onclick="recoveryCare('${p.id}','comfort')">Comfort</button>
+ <button class="action" onclick="recoveryCare('${p.id}','vitals')">Check Vitals</button>
+ </div></div>`;
+}
+
+/* ===== ANIMAL-CENTERED DEPARTMENT SIMULATION ===== */
+const DEPT_RESIDENTS={
+ clinic:[
+  {name:"Miso",species:"Cat",mood:"watching the treatment room",trait:"likes warm towels"},
+  {name:"Pip",species:"Rabbit",mood:"nibbling hay beside intake",trait:"calms nervous arrivals"}
+ ],
+ surgery:[
+  {name:"Bruno",species:"Dog",mood:"sleeping near the scrub room",trait:"retired blood donor"},
+  {name:"Luma",species:"Cat",mood:"curled beneath a warming blanket",trait:"quiet OR mascot"}
+ ],
+ recovery:[
+  {name:"Sunny",species:"Dog",mood:"walking slowly between kennels",trait:"comforts frightened patients"},
+  {name:"Peach",species:"Rabbit",mood:"resting in a soft recovery pen",trait:"loves nose rubs"}
+ ],
+ reception:[
+  {name:"Bean",species:"Guinea Pig",mood:"squeaking when new animals arrive",trait:"front-desk celebrity"},
+  {name:"Scout",species:"Dog",mood:"watching the entrance",trait:"greets rescues gently"}
+ ],
+ ambulance:[
+  {name:"Echo",species:"Dog",mood:"waiting beside the rescue bay",trait:"rides on calm rescue calls"},
+  {name:"Moth",species:"Owl",mood:"perched in the wildlife carrier room",trait:"rehab resident"}
+ ],
+ sanctuary:[
+  {name:"Willow",species:"Goat",mood:"wandering near the habitat gate",trait:"follows keepers everywhere"},
+  {name:"Nibbles",species:"Rabbit",mood:"digging in a blanket pile",trait:"permanent sanctuary resident"}
+ ],
+ research:[
+  {name:"Clover",species:"Cat",mood:"sleeping beside the observation window",trait:"former difficult case"},
+  {name:"Rune",species:"Tortoise",mood:"slowly inspecting the lab floor",trait:"long-term rehab resident"}
+ ],
+ hospital:[
+  {name:"Atlas",species:"Dog",mood:"carrying a toy through the hall",trait:"hospital ambassador"},
+  {name:"Koda",species:"Rabbit",mood:"resting beside the nurses station",trait:"permanent hospital resident"}
+ ]
+};
+function animalImg(name){
+  const seed=[...name].reduce((a,c)=>a+c.charCodeAt(0),0);
+  return THUMBS[seed%THUMBS.length];
+}
+function deptAnimalTile(a){
+ return `<div class="animal-tile">
+   <img src="${animalImg(a.name)}" alt="${a.name}">
+   <b>${a.name}</b>
+   <div class="small">${a.species}</div>
+   <div class="animal-status calm">${a.mood}</div>
+   <div class="small">${a.trait}</div>
+ </div>`;
+}
+function liveDeptAnimals(deptName){
+ const actual=state.patients.filter(p=>p.admitted && p.department===deptName);
+ return actual.slice(0,8).map(p=>{
+   const mood=(p.stress||0)>60?"frightened":(p.pain||0)>50?"uncomfortable":"settling in";
+   return `<div class="animal-tile">
+     <img src="${p.image}" alt="${p.name}">
+     <b>${p.name}</b><div class="small">${p.species} · ${p.condition}</div>
+     <div class="animal-status ${(p.stress||0)>60?"alert":"calm"}">${mood}</div>
+   </div>`;
+ }).join("");
+}
+function residentStrip(key,deptName){
+ const residents=(DEPT_RESIDENTS[key]||[]).map(deptAnimalTile).join("");
+ const live=deptName?liveDeptAnimals(deptName):"";
+ return `<div class="dept-scene"><div class="resident-label">Animals here right now</div>
+   <div class="animal-strip">${live||residents}</div>
+   ${live?`<div class="resident-label" style="margin-top:8px">Resident companions</div><div class="animal-strip">${residents}</div>`:""}
+ </div>`;
+}
+function simCarePatient(id,action){
+ const p=state.patients.find(x=>x.id===id); if(!p)return;
+ if(action==="comfort"){p.stress=Math.max(0,(p.stress||40)-18)}
+ if(action==="water"){p.stress=Math.max(0,(p.stress||40)-5);p.oxygen=Math.min(100,(p.oxygen||80)+3)}
+ if(action==="blanket"){p.stress=Math.max(0,(p.stress||40)-12);p.pain=Math.max(0,(p.pain||30)-5)}
+ if(action==="quiet"){p.stress=Math.max(0,(p.stress||40)-15)}
+ if(action==="visit"){p.stress=Math.max(0,(p.stress||40)-10);state.mercy+=2}
+ if(action==="snack"){p.stress=Math.max(0,(p.stress||40)-7)}
+ addLog(p.name+" · "+action+" care");render();
+}
+function animalFocusPanel(p,title){
+ if(!p)return "";
+ const mood=(p.stress||0)>65?"scared and watching the room":(p.pain||0)>55?"uncomfortable but responsive":"calm enough to engage";
+ return `<div class="dept-scene">
+  <div class="animal-focus-card">
+   <img src="${p.image}" alt="${p.name}">
+   <div><h3>${title||p.name}</h3>
+    <b>${p.name}</b> · ${p.species}
+    <div class="small">${p.condition}</div>
+    <div class="sim-event">${p.name} is ${mood}. The department reacts to the animal, not the other way around.</div>
+    <div class="animal-care-grid">
+      <button onclick="simCarePatient('${p.id}','comfort')">Comfort ${p.name}</button>
+      <button onclick="simCarePatient('${p.id}','water')">Offer Water</button>
+      <button onclick="simCarePatient('${p.id}','blanket')">Warm Blanket</button>
+      <button onclick="simCarePatient('${p.id}','quiet')">Quiet the Room</button>
+      <button onclick="simCarePatient('${p.id}','visit')">Stay Nearby</button>
+      <button onclick="simCarePatient('${p.id}','snack')">Small Snack</button>
+    </div>
+   </div>
+  </div>
+ </div>`;
+}
+function animalDepartmentEvent(key){
+ const pools={
+  clinic:["A nervous patient is hiding behind the exam towel.","Two recovering animals are sniffing each other through adjacent doors.","A rabbit finally starts eating after the room becomes quiet."],
+  surgery:["The warming area is occupied by a sleepy post-op patient.","A donor dog rests near the surgical prep room.","A frightened cat relaxes when the lights are dimmed."],
+  recovery:["One patient starts wagging when a familiar staff member approaches.","Two animals fall asleep facing each other across the ward.","A rabbit finishes its first full meal since surgery."],
+  reception:["A new rescue presses against the carrier door when Scout approaches.","Bean squeaks loudly when the intake room opens.","A stray animal watches every person who walks past the desk."],
+  ambulance:["The rescue bay doors open and every resident animal looks up.","A wildlife carrier arrives covered with a blanket.","Echo lies down beside a frightened transport patient."],
+  sanctuary:["Several residents gather when the habitat gate opens.","A shy animal leaves its shelter for the first time today.","Two long-term residents choose to nap beside each other."],
+  research:["A former patient recognizes the observation room and settles quickly.","Rune slowly crosses the room during a behavior study.","Clover falls asleep during a quiet observation session."],
+  hospital:["Atlas carries a toy toward a nervous newcomer.","Koda settles beside the nurses station during rounds.","Several hospital animals gather near the recovery doors."]
+ };
+ const arr=pools[key]||pools.hospital;
+ return arr[(EXP.shift+key.length)%arr.length];
+}
+function prependAnimalScene(screenId,key,deptName){
+ const el=document.getElementById(screenId);if(!el)return;
+ el.innerHTML=residentStrip(key,deptName)+`<div class="sim-event">${animalDepartmentEvent(key)}</div>`+el.innerHTML;
+}
+
+/* ===== DYNAMIC ANIMAL GAMEPLAY TREE ENGINE ===== */
+function ensureTree(p){
+ if(!p.tree)p.tree={
+  stage:"observe",discovered:[],completed:[],history:[],
+  appetite:55,trust:22,fear:65,hydration:55,mobility:50,
+  diagnosis:false,stable:false,readyRecovery:false,readyHome:false
+ };
+ return p.tree;
+}
+function treeNote(p,text){
+ const t=ensureTree(p);t.history.unshift(text);t.history=t.history.slice(0,8);addLog(p.name+" · "+text);
+}
+function treeObservation(p){
+ const t=ensureTree(p);
+ if(t.stage==="observe")return `${p.name} is watching the room. ${t.fear>60?"Their body stays tense whenever someone gets close.":"They seem willing to engage."}`;
+ if(t.stage==="approach")return t.trust<35?`${p.name} keeps a little distance, but no longer retreats immediately.`:`${p.name} allows you to remain close.`;
+ if(t.stage==="exam")return `${p.name}'s exam is revealing what needs attention. ${t.fear>55?"Fear is still making handling difficult.":""}`;
+ if(t.stage==="diagnose")return `You have enough observations to choose the next medical path for ${p.name}.`;
+ if(t.stage==="treat")return `${p.name} is responding to treatment. Pain ${Math.round(p.pain||0)} · Stress ${Math.round(p.stress||0)}.`;
+ if(t.stage==="surgery")return `${p.name} is in the surgical pathway. Keep the animal stable and move one careful step at a time.`;
+ if(t.stage==="recover")return `${p.name} is recovering. Appetite, comfort, trust, mobility and rest now matter.`;
+ if(t.stage==="home")return `${p.name} is medically ready. The next branch decides where their life continues.`;
+ return `${p.name} is waiting for care.`;
+}
+function unlock(t,n){if(!t.discovered.includes(n))t.discovered.push(n)}
+function complete(t,n){if(!t.completed.includes(n))t.completed.push(n)}
+function treeAction(id,action){
+ const p=state.patients.find(x=>x.id===id);if(!p)return;const t=ensureTree(p);
+ if(action==="observe"){unlock(t,"behavior");unlock(t,"breathing");t.stage="approach";treeNote(p,"Observed quietly before touching")}
+ if(action==="space"){t.fear=Math.max(0,t.fear-12);p.stress=Math.max(0,(p.stress||45)-10);t.trust+=5;treeNote(p,"Given time and space")}
+ if(action==="comfort"){t.fear=Math.max(0,t.fear-15);t.trust+=10;p.stress=Math.max(0,(p.stress||45)-14);treeNote(p,"Accepted gentle comfort")}
+ if(action==="approach"){if(t.fear>65){t.fear-=8;treeNote(p,"Backed away; approach slowed down")}else{t.trust+=8;t.stage="exam";treeNote(p,"Allowed a gentle approach")}}
+ if(action==="exam"){unlock(t,"pain");unlock(t,"mobility");complete(t,"exam");t.stage="diagnose";treeNote(p,"Physical exam completed")}
+ if(action==="heart"){unlock(t,"oxygen");unlock(t,"breathing");t.trust+=2;treeNote(p,"Heart and lungs checked")}
+ if(action==="leg"){unlock(t,"mobility");unlock(t,"pain");t.fear+=4;treeNote(p,"Limb examined carefully")}
+ if(action==="diagnose"){t.diagnosis=true;complete(t,"diagnosis");t.stage="treat";treeNote(p,"Care pathway identified")}
+ if(action==="stabilize"){p.shock=Math.max(0,(p.shock||40)-20);p.oxygen=Math.min(100,(p.oxygen||75)+10);p.pain=Math.max(0,(p.pain||45)-8);t.stable=true;treeNote(p,"Stabilized")}
+ if(action==="pain"){p.pain=Math.max(0,(p.pain||45)-22);t.trust+=4;treeNote(p,"Pain brought under better control")}
+ if(action==="wound"){p.bleeding=Math.max(0,(p.bleeding||35)-25);p.infection=Math.max(0,(p.infection||25)-10);treeNote(p,"Wound cleaned and protected")}
+ if(action==="surgery"){t.stage="surgery";route(p,"Surgery");treeNote(p,"Transferred into surgical pathway");return}
+ if(action==="medical"){t.readyRecovery=true;t.stage="recover";route(p,"Recovery");treeNote(p,"Transferred for medical recovery");return}
+ if(action==="opstep"){p.surgeryStep=(p.surgeryStep||0)+1;p.bleeding=Math.max(0,(p.bleeding||30)-8);p.shock=Math.max(0,(p.shock||30)-5);treeNote(p,"Surgical step "+p.surgeryStep+" completed");if(p.surgeryStep>=5){t.stage="recover";t.readyRecovery=true;route(p,"Recovery");return}}
+ if(action==="rest"){p.stress=Math.max(0,(p.stress||40)-15);t.fear=Math.max(0,t.fear-8);treeNote(p,"Rested quietly")}
+ if(action==="eat"){t.appetite=Math.min(100,t.appetite+18);t.trust+=4;treeNote(p,"Ate during recovery")}
+ if(action==="hydrate"){t.hydration=Math.min(100,t.hydration+20);treeNote(p,"Hydration improved")}
+ if(action==="walk"){t.mobility=Math.min(100,t.mobility+14);p.pain=Math.max(0,(p.pain||25)-3);treeNote(p,"Completed a gentle mobility check")}
+ if(action==="bond"){t.trust=Math.min(100,t.trust+12);t.fear=Math.max(0,t.fear-10);treeNote(p,"Chose to stay close")}
+ if(action==="clear"){t.readyHome=true;t.stage="home";treeNote(p,"Cleared to leave the ward")}
+ if(action==="mypets"){lifeBookRecord(p,"HOME ❤️");discharge(p);return}
+ if(action==="sanctuary"){p.admitted=false;p.department="Sanctuary";EXP.sanctuary.push({...p});lifeBookRecord(p,"SANCTUARY");state.screen="sanctuary";treeNote(p,"Moved into long-term sanctuary care");render();return}
+ if(action==="adopt"){p.admitted=false;lifeBookRecord(p,"FAMILY HOME");state.saved++;state.screen="lifebook";treeNote(p,"Matched to a family home");render();return}
+ t.trust=clampPet(t.trust);t.fear=clampPet(t.fear);render();
+}
+function treeActions(p){
+ const t=ensureTree(p);
+ if(t.stage==="observe")return [["Observe Quietly","observe"],["Give Space","space"],["Speak Softly","comfort"]];
+ if(t.stage==="approach")return [["Approach Slowly","approach"],["Sit Nearby","comfort"],["Give More Space","space"]];
+ if(t.stage==="exam")return [["Physical Exam","exam"],["Heart + Lungs","heart"],["Examine Limb","leg"]];
+ if(t.stage==="diagnose")return [["Build Care Plan","diagnose"],["Heart + Lungs","heart"],["Recheck Mobility","leg"]];
+ if(t.stage==="treat"){
+  let a=[["Stabilize","stabilize"],["Pain Care","pain"],["Wound Care","wound"]];
+  if(t.stable||((p.shock||0)<30))a.push(["Surgical Path","surgery"],["Medical Recovery","medical"]);
+  return a.slice(0,5);
+ }
+ if(t.stage==="surgery")return [["Next Surgical Step","opstep"],["Comfort Before Step","comfort"],["Stabilize","stabilize"]];
+ if(t.stage==="recover"){
+  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
+  if(t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40)a.push(["Final Check","clear"]);
+  return a;
+ }
+ if(t.stage==="home")return [["Bring to My Pets","mypets"],["Long-Term Sanctuary","sanctuary"],["Family Adoption","adopt"]];
+ return [["Observe","observe"]];
+}
+function treePath(p){
+ const t=ensureTree(p),nodes=["observe","approach","exam","diagnose","treat",p.surgeryRequired?"surgery":null,"recover","home"].filter(Boolean);
+ const ci=nodes.indexOf(t.stage);
+ return `<div class="tree-path">${nodes.map((n,i)=>`<span class="tree-node ${i<ci?"done":i===ci?"now":""}">${n.toUpperCase()}</span>`).join("")}</div>`;
+}
+function animalTreeUI(p){
+ if(!p)return `<div class="tree-stage"><div class="empty">Select an animal to begin its care story.</div></div>`;
+ const t=ensureTree(p),acts=treeActions(p);
+ return `<div class="tree-shell">
+  <div class="tree-stage">
+   ${treePath(p)}
+   <div class="tree-patient"><img src="${p.image}" alt="${p.name}"><div>
+    <h2>${p.name}</h2><div class="small">${p.species} · ${p.condition}</div>
+    <div class="tree-observation">${treeObservation(p)}</div>
+    <div class="small">Trust ${t.trust}% · Fear ${t.fear}% · Appetite ${t.appetite}% · Hydration ${t.hydration}% · Mobility ${t.mobility}%</div>
+   </div></div>
+   <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
+  </div>
+  <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div></div>
+ </div>`;
+}
+function wardBoard(deptName){
+ const list=dept(deptName);
+ return `<div class="dept-scene"><div class="resident-label">${deptName} ward · ${list.length} animal${list.length===1?"":"s"}</div>
+ <div class="ward-board">${list.map(p=>`<div class="ward-animal"><img src="${p.image}" alt="${p.name}"><b>${p.name}</b><div class="small">${p.species}<br>${treeObservation(p)}</div><button onclick="state.activeId='${p.id}';state.screen='${deptName.toLowerCase()}';render()">Care for ${p.name}</button></div>`).join("")||'<div class="small">No animals in this ward.</div>'}</div></div>`;
+}
+function applyTreeDepartmentUI(){
+ const p=active();
+ ["Clinic","Surgery","Recovery"].forEach(d=>{
+   const el=document.getElementById(d.toLowerCase());if(!el)return;
+   const selected=p&&p.department===d?p:(dept(d)[0]||null);
+   if(selected)state.activeId=selected.id;
+   el.innerHTML=wardBoard(d)+animalTreeUI(selected)+residentStrip(d.toLowerCase(),null);
+ });
+}
 function render(){
-  credits.textContent=state.credits;mercy.textContent=state.mercy;saved.textContent=state.saved;
+  care.textContent=state.credits;mercy.textContent=state.mercy;saved.textContent=state.saved;
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.screen===state.screen));
   renderClinic();renderSurgery();renderRecovery();renderPets();renderStatus();renderAdmit();
-  document.getElementById(state.screen).classList.add("active");
+  renderHospitalPlus();renderSanctuary();renderWorld();renderLifeBook();renderReception();renderAmbulance();renderResearch();
+  prependAnimalScene("clinic","clinic","Clinic");
+  prependAnimalScene("surgery","surgery","Surgery");
+  prependAnimalScene("recovery","recovery","Recovery");
+  prependAnimalScene("reception","reception");
+  prependAnimalScene("ambulance","ambulance");
+  prependAnimalScene("sanctuary","sanctuary");
+  prependAnimalScene("research","research");
+  prependAnimalScene("hospital","hospital");
+  const ap=active();
+  if(ap){
+    if(state.screen==="clinic")clinic.innerHTML=animalFocusPanel(ap,"Current Clinic Patient")+clinic.innerHTML;
+    if(state.screen==="surgery")surgery.innerHTML=animalFocusPanel(ap,"Current Surgical Patient")+surgery.innerHTML;
+    if(state.screen==="recovery")recovery.innerHTML=animalFocusPanel(ap,"Current Recovery Patient")+recovery.innerHTML;
+  }
+  applyTreeDepartmentUI();
+  const target=document.getElementById(state.screen)||document.getElementById("clinic");
+  target.classList.add("active");
 }
 document.querySelectorAll("[data-screen]").forEach(b=>b.addEventListener("click",()=>{state.screen=b.dataset.screen;render()}));
 
 // Start with exactly one admitted patient.
-const starter=makePatient(0);state.patients.push(starter);state.activeId=starter.id;addLog(starter.name+" admitted to Clinic");
+const starter=makePatient(0);
+starter.stress=62;starter.pain=48;starter.shock=34;starter.bleeding=22;starter.infection=12;starter.oxygen=82;state.patients.push(starter);state.activeId=starter.id;addLog(starter.name+" admitted to Clinic");
 render();
 </script>
 </body>
