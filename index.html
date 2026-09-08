@@ -939,6 +939,8 @@ function renderAmbulance(){
  </div></div>`;
 }
 function renderSupplies(){
+ const supplies=document.getElementById("supplies");
+ if(!supplies)return;
  supplies.innerHTML=`<div class="panel"><h2>Supply Room</h2><div class="small">Supplier: ${ECON.supplier}${ECON.shortage?` · SHORTAGE: ${ECON.shortage.toUpperCase()} +35%`:""}</div>
  <div class="econ-grid">
  ${Object.entries(ECON.inventory).map(([k,v])=>`<div class="econ-card"><h3>${k}</h3><b>${v}</b> in stock<div class="small">$${ECON.prices[k]||10} base each</div><button onclick="buySupply('${k}',5,'cheap')">Cheap ×5</button><button onclick="buySupply('${k}',5,'standard')">Standard ×5</button><button onclick="buySupply('${k}',5,'premium')">Premium ×5</button><button onclick="buySupply('${k}',5,'emergency')">Emergency ×5</button></div>`).join("")}
@@ -946,6 +948,8 @@ function renderSupplies(){
  <div class="panel"><h3>Suppliers</h3><div class="dept-counts"><button onclick="setSupplier('Mercy Medical Supply')">Mercy Medical</button><button onclick="setSupplier('Red Orbit Surgical')">Red Orbit</button><button onclick="setSupplier('Paws Wholesale')">Paws Wholesale</button><button onclick="setSupplier('Nebula Biomedical')">Nebula Biomedical</button></div></div>`;
 }
 function renderFinance(){
+ const finance=document.getElementById("finance");
+ if(!finance)return;
  const r=ECON.lastReport;
  finance.innerHTML=`<div class="econ-grid">
  <div class="econ-card"><h3>Hospital Status</h3><b>$${state.credits}</b><div class="small">Community support $${ECON.donations} · Loan $${ECON.loan}</div></div>
@@ -1220,7 +1224,10 @@ function applyTreeDepartmentUI(){
  });
 }
 function render(){
-  care.textContent=state.credits;mercy.textContent=state.mercy;saved.textContent=state.saved;
+  const mercyEl=document.getElementById("mercy");
+  const savedEl=document.getElementById("saved");
+  if(mercyEl)mercyEl.textContent=state.mercy;
+  if(savedEl)savedEl.textContent=state.saved;
   document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
   document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.screen===state.screen));
   renderClinic();renderSurgery();renderRecovery();renderPets();renderStatus();renderAdmit();
@@ -1241,7 +1248,7 @@ function render(){
   }
   applyTreeDepartmentUI();
   const target=document.getElementById(state.screen)||document.getElementById("clinic");
-  target.classList.add("active");
+  if(target)target.classList.add("active");
 }
 document.querySelectorAll("[data-screen]").forEach(b=>b.addEventListener("click",()=>{state.screen=b.dataset.screen;render()}));
 
