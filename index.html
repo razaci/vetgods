@@ -2156,11 +2156,31 @@ function petSimStep(p,hourIndex){
   const rooms=petRoomsFor(p);
   const acts=petActivityPool(p);
 
-  // Basic autonomous choice influenced by need state.
+  // Basic autonomous choice influenced by need state + real-world daypart.
+  const daypart=sanctuaryDaypart();
   let activity;
   if((p.hunger||0)<35) activity="Eating";
   else if((p.water||0)<35) activity="Drinking";
-  else if((p.energy||0)<28 || s.sleep<30) activity="Sleeping";
+  else if((p.fear||0)>65) activity="Hiding";
+  else if(daypart==="Afternoon"){
+    if((p.energy||0)<18 || s.sleep<18) activity="Short Rest";
+    else{
+      const afternoonActs=["Playing","Exploring","Foraging","Walking","Climbing","Training","Grooming","Socializing"];
+      activity=petChoose(afternoonActs,seed);
+    }
+  }
+  else if(daypart==="Morning"){
+    if((p.energy||0)<25 || s.sleep<25) activity="Resting";
+    else activity=petChoose(["Eating","Drinking","Playing","Exploring","Grooming"],seed);
+  }
+  else if(daypart==="Evening"){
+    if((p.energy||0)<30 || s.sleep<30) activity="Resting";
+    else activity=petChoose(["Playing","Foraging","Grooming","Exploring","Resting"],seed);
+  }
+  else if(daypart==="Night"){
+    if((p.energy||0)<75 || s.sleep<75) activity="Sleeping";
+    else activity=petChoose(["Resting","Drinking","Quiet Watching"],seed);
+  }
   else if((p.loneliness||0)>60 && !["arachnid","insect","myriapod","mollusk","colony"].includes(petSpeciesMode(p))) activity="Seeking company";
   else activity=petChoose(acts,seed);
 
@@ -2188,7 +2208,7 @@ function petSimStep(p,hourIndex){
   if(activity==="Drinking"){
     p.water=Math.min(100,(p.water||50)+10);
   }
-  if(activity==="Sleeping" || /Resting|Quiet|Hiding|Pre-molt/.test(activity)){
+  if(activity==="Sleeping" || /Resting|Short Rest|Quiet|Hiding|Pre-molt/.test(activity)){
     s.sleep=Math.min(100,s.sleep+8);
     p.energy=Math.min(100,(p.energy||50)+5);
     p.fear=Math.max(0,(p.fear||0)-1);
@@ -2737,21 +2757,66 @@ function sanctuaryTargetFor(p,i){
 
   const byType=t=>SANCTUARY_SIM.objects.find(o=>o.type===t);
   const chooseNextActivity=()=>{
-    // Needs decide the next real destination first.
-    if((p.water||0)<55)return {type:"water",label:"Going for a drink",doing:"Drinking fresh water"};
-    if((p.hunger||0)<55)return {type:"food",label:"Going to eat",doing:"Eating at the food station"};
-    if((p.energy||0)<45 || (s.sleep||0)<45)return {type:"bed",label:"Going to rest",doing:"Resting in the soft bed"};
-    if((p.fear||0)>45)return {type:"hide",label:"Going somewhere quiet",doing:"Settling in the quiet hide"};
-    if((s.enrichment||0)<55)return {type:"toy",label:"Going to play",doing:"Playing with enrichment"};
-    const cycle=[
-      {type:"toy",label:"Heading to play",doing:"Playing with enrichment"},
-      {type:"bed",label:"Heading to rest",doing:"Relaxing in the soft bed"},
-      {type:"water",label:"Heading for water",doing:"Drinking fresh water"},
-      {type:"food",label:"Heading for food",doing:"Eating at the food station"},
-      {type:"hide",label:"Heading to the quiet area",doing:"Resting in the quiet hide"},
-      {type:"care",label:"Heading to the care station",doing:"Visiting the care station"}
-    ];
-    return cycle[Math.floor(Math.random()*cycle.length)];
+    const daypart=sanctuaryDaypart();
+
+    // Critical needs always win.
+    if((p.water||0)<45)return {type:"water",label:"Going for a drink",doing:"Drinking fresh water"};
+    if((p.hunger||0)<45)return {type:"food",label:"Going to eat",doing:"Eating at the food station"};
+    if((p.fear||0)>65)return {type:"hide",label:"Going somewhere quiet",doing:"Settling in the quiet hide"};
+
+    // Real-time routine logic:
+    // Afternoon is ACTIVE TIME. Sleep is suppressed unless the pet is truly exhausted.
+    if(daypart==="Afternoon"){
+      if((p.energy||0)<18 || (s.sleep||0)<18){
+        return {type:"bed",label:"Going for a short recovery rest",doing:"Taking a short recovery nap"};
+      }
+
+      const activeAfternoon=[
+        {type:"toy",label:"Heading to play",doing:"Playing with enrichment"},
+        {type:"toy",label:"Going to the play area",doing:"Playing at the activity station"},
+        {type:"care",label:"Heading to the care station",doing:"Visiting the care station"},
+        {type:"food",label:"Going for an afternoon snack",doing:"Eating at the food station"},
+        {type:"water",label:"Heading for water",doing:"Drinking fresh water"},
+        {type:"toy",label:"Going exploring",doing:"Exploring around the play station"}
+      ];
+      return activeAfternoon[Math.floor(Math.random()*activeAfternoon.length)];
+    }
+
+    // Morning: wake, eat, drink, gentle play.
+    if(daypart==="Morning"){
+      if((p.energy||0)<28 || (s.sleep||0)<28){
+        return {type:"bed",label:"Finishing morning rest",doing:"Resting in the soft bed"};
+      }
+      const morning=[
+        {type:"food",label:"Going for breakfast",doing:"Eating at the food station"},
+        {type:"water",label:"Going for morning water",doing:"Drinking fresh water"},
+        {type:"toy",label:"Starting morning play",doing:"Playing with enrichment"},
+        {type:"care",label:"Heading to morning care",doing:"Visiting the care station"}
+      ];
+      return morning[Math.floor(Math.random()*morning.length)];
+    }
+
+    // Evening: wind down, but still allow play/social activity.
+    if(daypart==="Evening"){
+      if((p.energy||0)<32 || (s.sleep||0)<32){
+        return {type:"bed",label:"Settling down for the evening",doing:"Resting in the soft bed"};
+      }
+      const evening=[
+        {type:"food",label:"Going for evening food",doing:"Eating at the food station"},
+        {type:"water",label:"Going for evening water",doing:"Drinking fresh water"},
+        {type:"toy",label:"Having evening playtime",doing:"Playing with enrichment"},
+        {type:"hide",label:"Heading to a quiet corner",doing:"Relaxing in the quiet hide"}
+      ];
+      return evening[Math.floor(Math.random()*evening.length)];
+    }
+
+    // Night: rest dominates, with occasional water/food trips.
+    if((p.water||0)<60)return {type:"water",label:"Getting a nighttime drink",doing:"Drinking fresh water"};
+    if((p.hunger||0)<60)return {type:"food",label:"Getting a nighttime snack",doing:"Eating at the food station"};
+    if((p.energy||0)<70 || (s.sleep||0)<70){
+      return {type:"bed",label:"Going to sleep",doing:"Sleeping in the soft bed"};
+    }
+    return {type:"hide",label:"Settling for the night",doing:"Resting quietly in the hide"};
   };
 
   // Player-dragged lure overrides normal routine; all pets physically chase it.
