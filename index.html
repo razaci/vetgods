@@ -525,6 +525,24 @@ input,select,textarea{
   .smart-meter{grid-template-columns:minmax(78px,.9fr) 1fr auto}
 }
 
+
+/* ===== LONG-FORM HOSPITAL SIM ===== */
+.sim-ribbon{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:8px 0}
+.sim-chip{background:#132b35;border:1px solid rgba(190,230,240,.12);border-radius:14px;padding:8px;text-align:center;font-size:10px}
+.sim-chip b{display:block;font-size:13px}
+.story-panel{background:#132934;border:1px solid rgba(190,230,240,.12);border-radius:18px;padding:11px;margin:9px 0}
+.story-panel h3{margin:0 0 7px}
+.objective-list{display:grid;gap:5px}
+.objective{padding:7px 9px;border-radius:11px;background:#10232c;font-size:10px}
+.objective.done{background:#17392f;text-decoration:line-through;opacity:.75}
+.shift-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.chapter-track{display:flex;gap:5px;overflow-x:auto;padding:4px 0}
+.chapter-pill{flex:0 0 auto;padding:6px 9px;border-radius:999px;background:#17303b;font-size:9px}
+.chapter-pill.active{background:#5c4c24}.chapter-pill.done{background:#1d493c}
+.complication{padding:8px 10px;border-radius:13px;background:#3b252b;border:1px solid rgba(255,150,150,.14);font-size:10px;margin:6px 0}
+.relationship{padding:7px;border-radius:11px;background:#162d38;font-size:9px;margin-top:5px}
+@media(max-width:620px){.sim-ribbon{grid-template-columns:repeat(2,1fr)}.shift-actions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -1506,12 +1524,17 @@ function treeAction(id,action){
  if(action==="surgery"){t.stage="surgery";route(p,"Surgery");treeNote(p,"Transferred into surgical pathway");return}
  if(action==="medical"){t.readyRecovery=true;t.stage="recover";route(p,"Recovery");treeNote(p,"Transferred for medical recovery");return}
  if(action==="opstep"){p.surgeryStep=(p.surgeryStep||0)+1;p.bleeding=Math.max(0,(p.bleeding||30)-8);p.shock=Math.max(0,(p.shock||30)-5);treeNote(p,"Surgical step "+p.surgeryStep+" completed");if(p.surgeryStep>=5){t.stage="recover";t.readyRecovery=true;route(p,"Recovery");return}}
- if(action==="rest"){p.stress=Math.max(0,(p.stress||40)-15);t.fear=Math.max(0,t.fear-8);treeNote(p,"Rested quietly")}
- if(action==="eat"){t.appetite=Math.min(100,t.appetite+18);t.trust+=4;treeNote(p,"Ate during recovery")}
+ if(action==="rest"){ensureLongPatient(p).rests++;p.stress=Math.max(0,(p.stress||40)-15);t.fear=Math.max(0,t.fear-8);resolveComplication(p);treeNote(p,"Rested quietly")}
+ if(action==="eat"){ensureLongPatient(p).meals++;t.appetite=Math.min(100,t.appetite+18);t.trust+=4;resolveComplication(p);treeNote(p,"Ate during recovery")}
  if(action==="hydrate"){t.hydration=Math.min(100,t.hydration+20);treeNote(p,"Hydration improved")}
- if(action==="walk"){t.mobility=Math.min(100,t.mobility+14);p.pain=Math.max(0,(p.pain||25)-3);treeNote(p,"Completed a gentle mobility check")}
+ if(action==="walk"){ensureLongPatient(p).walks++;t.mobility=Math.min(100,t.mobility+14);p.pain=Math.max(0,(p.pain||25)-3);resolveComplication(p);treeNote(p,"Completed a gentle mobility check")}
  if(action==="bond"){t.trust=Math.min(100,t.trust+12);t.fear=Math.max(0,t.fear-10);treeNote(p,"Chose to stay close")}
- if(action==="clear"){t.readyHome=true;t.stage="home";treeNote(p,"Cleared to leave the ward")}
+ if(action==="clear"){
+  const l=ensureLongPatient(p);l.rechecks++;
+  const score=dischargeScore(p);
+  if(score>=82 && l.recoveryDays>=2 && !l.complication){t.readyHome=true;t.stage="home";treeNote(p,"Cleared to leave the ward")}
+  else{treeNote(p,"Final check: more recovery time is needed ("+score+"% ready)")}
+}
  if(action==="mypets"){lifeBookRecord(p,"HOME ❤️");discharge(p);return}
  if(action==="sanctuary"){p.admitted=false;p.department="Sanctuary";EXP.sanctuary.push({...p});lifeBookRecord(p,"SANCTUARY");state.screen="sanctuary";treeNote(p,"Moved into long-term sanctuary care");render();return}
  if(action==="adopt"){p.admitted=false;lifeBookRecord(p,"FAMILY HOME");state.saved++;state.screen="lifebook";treeNote(p,"Matched to a family home");render();return}
@@ -1531,7 +1554,8 @@ function treeActions(p){
  if(t.stage==="surgery")return [["Next Surgical Step","opstep"],["Comfort Before Step","comfort"],["Stabilize","stabilize"]];
  if(t.stage==="recover"){
   let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
-  if(t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40)a.push(["Final Check","clear"]);
+  const l=ensureLongPatient(p);
+  if(t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40&&l.recoveryDays>=2&&l.rechecks>=1)a.push(["Final Check","clear"]);
   return a;
  }
  if(t.stage==="home")return [["Bring to My Pets","mypets"],["Long-Term Sanctuary","sanctuary"],["Family Adoption","adopt"]];
@@ -1556,7 +1580,7 @@ function animalTreeUI(p){
    </div></div>
    <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
   </div>
-  <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div></div>
+  <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div>${longPatientPanel(p)}</div>
  </div>`;
 }
 function wardBoard(deptName){
@@ -1570,7 +1594,7 @@ function applyTreeDepartmentUI(){
    const el=document.getElementById(d.toLowerCase());if(!el)return;
    const selected=p&&p.department===d?p:(dept(d)[0]||null);
    if(selected)state.activeId=selected.id;
-   el.innerHTML=wardBoard(d)+animalTreeUI(selected)+residentStrip(d.toLowerCase(),null);
+   el.innerHTML=(d==="Clinic"?campaignPanel():"")+wardBoard(d)+animalTreeUI(selected)+residentStrip(d.toLowerCase(),null);
  });
 }
 
@@ -1701,6 +1725,163 @@ function applyMeterInteractions(p){
  if(s&&s.comfort>70)t.fear=Math.max(0,t.fear-2);
  if(t.hydration>70 && p.department==="Recovery")t.mobility=Math.min(100,t.mobility+1);
  if(t.trust>75)t.fear=Math.max(0,t.fear-1);
+}
+
+/* ===== LONG-FORM CAMPAIGN + MULTI-PATIENT SIM ===== */
+const LONGSIM={
+ day:1,shiftIndex:0,chapter:1,totalShifts:0,
+ chapters:[
+  ["The First Rescues","Learn the hospital and complete 2 patient stories."],
+  ["Night Shift","Overnight care, emergencies and scheduled reassessments begin."],
+  ["The Full Ward","Manage several simultaneous patients."],
+  ["Sanctuary","Long-term rehabilitation and relationships matter."],
+  ["The Lost","Rescue waves and difficult cases arrive."],
+  ["Life Spark","Recovered animals begin causing strange events."],
+  ["War of the Gods","Cosmic forces begin affecting animal care."],
+  ["Free Play","The hospital continues as an open procedural animal simulation."]
+ ],
+ recentEvents:[]
+};
+function ensureLongPatient(p){
+ if(!p.long)p.long={
+   admittedDay:LONGSIM.day,admittedShift:LONGSIM.totalShifts,
+   recoveryDays:0,rechecks:0,meds:0,meals:0,rests:0,walks:0,
+   complication:null,secondary:null,relationship:null,
+   schedule:["Vitals","Meal","Rest","Reassessment"],
+   storyBeat:"Arrived at the hospital",
+   dischargeScore:0
+ };
+ return p.long;
+}
+function shiftName(){return ["Morning","Afternoon","Evening","Night"][LONGSIM.shiftIndex%4]}
+function longEvent(text){LONGSIM.recentEvents.unshift(`Day ${LONGSIM.day} · ${shiftName()} — ${text}`);LONGSIM.recentEvents=LONGSIM.recentEvents.slice(0,8)}
+function patientObjectives(p){
+ const l=ensureLongPatient(p),t=ensureTree(p);
+ return [
+  ["Observed behavior",t.stage!=="observe"],
+  ["Completed examination",t.completed.includes("exam")],
+  ["Established diagnosis",!!t.diagnosis],
+  ["Stabilized",!!t.stable || (p.shock||0)<30],
+  ["Pain controlled",(p.pain||0)<=35],
+  ["Hydration adequate",t.hydration>=65],
+  ["Eating reliably",t.appetite>=65 || l.meals>=2],
+  ["Mobility reassessed",t.mobility>=60 || l.walks>=2],
+  ["Recovery observed across 2 shifts",l.recoveryDays>=2],
+  ["Final reassessment",l.rechecks>=2],
+  ["No unresolved complication",!l.complication]
+ ];
+}
+function dischargeScore(p){
+ const o=patientObjectives(p),done=o.filter(x=>x[1]).length;
+ ensureLongPatient(p).dischargeScore=Math.round(done/o.length*100);
+ return ensureLongPatient(p).dischargeScore;
+}
+function longPatientPanel(p){
+ const l=ensureLongPatient(p),score=dischargeScore(p);
+ return `<div class="story-panel">
+   <h3>${p.name}'s Hospital Story</h3>
+   <div class="small">${l.storyBeat}</div>
+   ${l.complication?`<div class="complication">⚠ ${l.complication}</div>`:""}
+   ${l.secondary?`<div class="sim-event">Secondary finding: ${l.secondary}</div>`:""}
+   ${l.relationship?`<div class="relationship">🐾 ${l.relationship}</div>`:""}
+   <div class="objective-list">${patientObjectives(p).map(x=>`<div class="objective ${x[1]?"done":""}">${x[1]?"✓":"○"} ${x[0]}</div>`).join("")}</div>
+   <div class="condition-summary">Discharge readiness: <b>${score}%</b> · ${score>=90?"Ready for final life-path decision":"Care story still in progress"}</div>
+ </div>`;
+}
+function campaignPanel(){
+ const c=LONGSIM.chapters[LONGSIM.chapter-1];
+ return `<div class="story-panel">
+   <div class="chapter-track">${LONGSIM.chapters.map((x,i)=>`<span class="chapter-pill ${i+1<LONGSIM.chapter?"done":i+1===LONGSIM.chapter?"active":""}">${i+1}. ${x[0]}</span>`).join("")}</div>
+   <h3>Chapter ${LONGSIM.chapter} · ${c[0]}</h3><div class="small">${c[1]}</div>
+   <div class="sim-ribbon">
+    <div class="sim-chip"><b>Day ${LONGSIM.day}</b>Hospital Day</div>
+    <div class="sim-chip"><b>${shiftName()}</b>Current Shift</div>
+    <div class="sim-chip"><b>${admitted().length}</b>Patients</div>
+    <div class="sim-chip"><b>${state.saved}</b>Stories Completed</div>
+   </div>
+   <div class="shift-actions">
+    <button onclick="advanceHospitalShift()">Advance Shift</button>
+    <button onclick="admitWave()">Admit Rescue Patient</button>
+    <button onclick="wardRounds()">Ward Rounds</button>
+   </div>
+   ${LONGSIM.recentEvents.slice(0,3).map(x=>`<div class="sim-event">${x}</div>`).join("")}
+ </div>`;
+}
+function createSecondary(p){
+ const l=ensureLongPatient(p);
+ if(l.secondary||((p.id.length+LONGSIM.totalShifts)%4!==0))return;
+ const findings=["mild dehydration","early infection","mobility weakness","stress-related appetite loss","respiratory irritation"];
+ l.secondary=findings[(LONGSIM.totalShifts+p.name.length)%findings.length];
+ l.storyBeat=`A second problem was discovered: ${l.secondary}.`;
+ if(l.secondary.includes("dehydration"))ensureTree(p).hydration=Math.max(20,ensureTree(p).hydration-18);
+ if(l.secondary.includes("infection"))p.infection=Math.min(100,(p.infection||15)+20);
+ if(l.secondary.includes("mobility"))ensureTree(p).mobility=Math.max(20,ensureTree(p).mobility-15);
+ longEvent(`${p.name}: ${l.secondary} discovered.`);
+}
+function maybeComplication(p){
+ const l=ensureLongPatient(p),t=ensureTree(p);
+ if(l.complication||p.department!=="Recovery")return;
+ const risk=(p.pain||0)+(p.stress||0)+(100-t.hydration);
+ if(risk>135 && (LONGSIM.totalShifts+p.name.length)%3===0){
+   l.complication=["post-treatment swelling","refused food after a stressful night","wound irritation","poor sleep and rising fear"][LONGSIM.totalShifts%4];
+   l.storyBeat="Recovery paused while the team handles a complication.";
+   longEvent(`${p.name} developed ${l.complication}.`);
+ }
+}
+function resolveComplication(p){
+ const l=ensureLongPatient(p);if(!l.complication)return;
+ if((p.pain||0)<40 && ensureTree(p).hydration>=60 && ensureTree(p).fear<65){
+  longEvent(`${p.name}'s complication resolved.`);l.complication=null;l.storyBeat="The setback passed and recovery resumed.";
+ }
+}
+function relationshipTick(){
+ const list=admitted().filter(p=>p.department==="Recovery");
+ if(list.length<2)return;
+ for(let i=0;i<list.length-1;i++){
+   const a=list[i],b=list[i+1],la=ensureLongPatient(a),lb=ensureLongPatient(b);
+   if(!la.relationship && ensureTree(a).fear<70 && ensureTree(b).fear<70){
+    la.relationship=`${a.name} has started settling when ${b.name} is nearby.`;
+    lb.relationship=`${b.name} recognizes ${a.name} across the recovery ward.`;
+    ensureTree(a).fear=Math.max(0,ensureTree(a).fear-5);
+    ensureTree(b).fear=Math.max(0,ensureTree(b).fear-5);
+    longEvent(`${a.name} and ${b.name} formed a recovery-room bond.`);
+   }
+ }
+}
+function progressChapter(){
+ const completed=state.saved;
+ let target=1;
+ if(completed>=2)target=2;if(completed>=4)target=3;if(LONGSIM.totalShifts>=12)target=Math.max(target,4);
+ if(completed>=8)target=Math.max(target,5);if(LONGSIM.totalShifts>=24)target=Math.max(target,6);
+ if(completed>=12)target=Math.max(target,7);if(completed>=18)target=8;
+ if(target>LONGSIM.chapter){LONGSIM.chapter=target;longEvent(`Chapter unlocked: ${LONGSIM.chapters[target-1][0]}.`)}
+}
+function advanceHospitalShift(){
+ LONGSIM.totalShifts++;LONGSIM.shiftIndex=(LONGSIM.shiftIndex+1)%4;
+ if(LONGSIM.shiftIndex===0)LONGSIM.day++;
+ admitted().forEach(p=>{
+  const l=ensureLongPatient(p),t=ensureTree(p);
+  if(p.department==="Recovery"){l.recoveryDays++;l.rests++;p.stress=Math.max(0,(p.stress||40)-4);t.fear=Math.max(0,t.fear-3)}
+  if(LONGSIM.shiftIndex===0){t.appetite=Math.max(0,t.appetite-7);t.hydration=Math.max(0,t.hydration-6)}
+  createSecondary(p);maybeComplication(p);resolveComplication(p);
+ });
+ relationshipTick();progressChapter();longEvent("The hospital moved into the next care shift.");render();
+}
+function wardRounds(){
+ admitted().forEach(p=>{
+  const l=ensureLongPatient(p),t=ensureTree(p);l.rechecks++;
+  p.stress=Math.max(0,(p.stress||40)-3);t.trust=Math.min(100,t.trust+2);
+  if(p.department==="Recovery"){l.meals++;t.appetite=Math.min(100,t.appetite+5)}
+  resolveComplication(p);
+ });
+ relationshipTick();longEvent("Ward rounds completed across every occupied department.");render();
+}
+function admitWave(){
+ const p=expPatient(state.nextCase++);state.patients.push(p);state.activeId=p.id;
+ p.stress=55+(state.nextCase%25);p.pain=30+(state.nextCase%35);p.shock=20+(state.nextCase%25);p.oxygen=75+(state.nextCase%20);
+ ensureLongPatient(p);ensureTree(p);p.long.storyBeat="Arrived during a rescue intake.";
+ longEvent(`${p.name}, a ${p.species}, arrived for ${p.condition}.`);
+ state.screen="clinic";render();
 }
 function render(){
   state.patients.filter(p=>p.admitted).forEach(applyMeterInteractions);
