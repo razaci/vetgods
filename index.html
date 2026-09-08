@@ -563,6 +563,11 @@ input,select,textarea{
 .save-panel summary{cursor:pointer;font-weight:800}
 .save-archive{display:grid;gap:7px;margin-top:8px}
 
+
+.clickable-animal{cursor:pointer}
+.clickable-animal:active{transform:scale(.985)}
+.animal-profile .tree-patient{padding:10px;border-radius:18px;background:rgba(255,255,255,.04)}
+
 </style>
 </head>
 <body>
@@ -583,7 +588,8 @@ input,select,textarea{
     <button data-screen="clinic">Clinic</button>
     <button data-screen="surgery">Surgery</button>
     <button data-screen="recovery">Recovery</button>
-    <button data-screen="carelab">Care Lab</button>
+    <button data-screen="animalprofile">Animal Profile</button>
+      <button data-screen="carelab">Care Lab</button>
       <button data-screen="pets">My Pets</button>
     <button data-screen="status">Status</button>
     <button data-screen="admit">Admit Patient</button>
@@ -603,7 +609,8 @@ input,select,textarea{
   <section id="clinic" class="screen"></section>
   <section id="surgery" class="screen"></section>
   <section id="recovery" class="screen"></section>
-  <section id="carelab" class="screen"></section>
+  <section id="animalprofile" class="screen"></section>
+<section id="carelab" class="screen"></section>
 <section id="pets" class="screen"></section>
   <section id="status" class="screen"></section>
   <section id="admit" class="screen"></section>
@@ -1431,7 +1438,7 @@ function animalImg(name){
   return THUMBS[seed%THUMBS.length];
 }
 function deptAnimalTile(a){
- return `<div class="animal-tile">
+ return `<div class="animal-tile clickable-animal" onclick="openAnimalProfile('${a.id||a.name}')">
    <img src="${animalImg(a.name)}" alt="${a.name}">
    <b>${a.name}</b>
    <div class="small">${a.species}</div>
@@ -1443,7 +1450,7 @@ function liveDeptAnimals(deptName){
  const actual=state.patients.filter(p=>p.admitted && p.department===deptName);
  return actual.slice(0,8).map(p=>{
    const mood=(p.stress||0)>60?"frightened":(p.pain||0)>50?"uncomfortable":"settling in";
-   return `<div class="animal-tile">
+   return `<div class="animal-tile clickable-animal" onclick="openAnimalProfile('${a.id||a.name}')">
      <img src="${p.image}" alt="${p.name}">
      <b>${p.name}</b><div class="small">${p.species} · ${p.condition}</div>
      <div class="animal-status ${(p.stress||0)>60?"alert":"calm"}">${mood}</div>
@@ -1551,16 +1558,23 @@ function treeAction(id,action){
  if(action==="surgery"){t.stage="surgery";route(p,"Surgery");treeNote(p,"Transferred into surgical pathway");return}
  if(action==="medical"){t.readyRecovery=true;t.stage="recover";route(p,"Recovery");treeNote(p,"Transferred for medical recovery");return}
  if(action==="opstep"){p.surgeryStep=(p.surgeryStep||0)+1;p.bleeding=Math.max(0,(p.bleeding||30)-8);p.shock=Math.max(0,(p.shock||30)-5);treeNote(p,"Surgical step "+p.surgeryStep+" completed");if(p.surgeryStep>=5){t.stage="recover";t.readyRecovery=true;route(p,"Recovery");return}}
- if(action==="rest"){ensureLongPatient(p).rests++;p.stress=Math.max(0,(p.stress||40)-15);t.fear=Math.max(0,t.fear-8);resolveComplication(p);treeNote(p,"Rested quietly")}
- if(action==="eat"){ensureLongPatient(p).meals++;t.appetite=Math.min(100,t.appetite+18);t.trust+=4;resolveComplication(p);treeNote(p,"Ate during recovery")}
- if(action==="hydrate"){t.hydration=Math.min(100,t.hydration+20);treeNote(p,"Hydration improved")}
- if(action==="walk"){ensureLongPatient(p).walks++;t.mobility=Math.min(100,t.mobility+14);p.pain=Math.max(0,(p.pain||25)-3);resolveComplication(p);treeNote(p,"Completed a gentle mobility check")}
- if(action==="bond"){t.trust=Math.min(100,t.trust+12);t.fear=Math.max(0,t.fear-10);treeNote(p,"Chose to stay close")}
+ if(action==="rest"){ensureLongPatient(p).rests++;p.stress=Math.max(0,(p.stress||40)-15);t.fear=Math.max(0,t.fear-8);resolveComplication(p);treeNote(p,"Rested quietly");advanceRecoveryFromCare(p,action)}
+ if(action==="eat"){ensureLongPatient(p).meals++;t.appetite=Math.min(100,t.appetite+18);t.trust+=4;resolveComplication(p);treeNote(p,"Ate during recovery");advanceRecoveryFromCare(p,action)}
+ if(action==="hydrate"){t.hydration=Math.min(100,t.hydration+20);treeNote(p,"Hydration improved");advanceRecoveryFromCare(p,action)}
+ if(action==="walk"){ensureLongPatient(p).walks++;t.mobility=Math.min(100,t.mobility+14);p.pain=Math.max(0,(p.pain||25)-3);resolveComplication(p);treeNote(p,"Completed a gentle mobility check");advanceRecoveryFromCare(p,action)}
+ if(action==="bond"){t.trust=Math.min(100,t.trust+12);t.fear=Math.max(0,t.fear-10);treeNote(p,"Chose to stay close");advanceRecoveryFromCare(p,action)}
  if(action==="clear"){
   const l=ensureLongPatient(p);l.rechecks++;
-  const score=dischargeScore(p);
-  if(score>=82 && l.recoveryDays>=2 && !l.complication){t.readyHome=true;t.stage="home";treeNote(p,"Cleared to leave the ward")}
-  else{treeNote(p,"Final check: more recovery time is needed ("+score+"% ready)")}
+  const f=ensureFlow(p);
+  const score=Math.max(dischargeScore(p),f.recoveryProgress||0);
+  if(score>=80 && l.recoveryDays>=2 && !l.complication){
+    t.readyHome=true;t.stage="home";f.dischargeReady=true;
+    treeNote(p,"Cleared to leave the ward");
+    dischargeRecoveredPet(p.id);
+    return;
+  } else {
+    treeNote(p,"Final check: more recovery care is needed ("+score+"% ready)");
+  }
 }
  if(action==="mypets"){lifeBookRecord(p,"HOME ❤️");discharge(p);return}
  if(action==="sanctuary"){p.admitted=false;p.department="Sanctuary";EXP.sanctuary.push({...p});lifeBookRecord(p,"SANCTUARY");state.screen="sanctuary";treeNote(p,"Moved into long-term sanctuary care");render();return}
@@ -1582,7 +1596,8 @@ function treeActions(p){
  if(t.stage==="recover"){
   let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
   const l=ensureLongPatient(p);
-  if(t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40&&l.recoveryDays>=2&&l.rechecks>=1)a.push(["Final Check","clear"]);
+  const f=ensureFlow(p);
+  if(f.dischargeReady || (t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40&&l.recoveryDays>=2&&l.rechecks>=1))a.push(["Final Check · Go Home","clear"]);
   return a;
  }
  if(t.stage==="home")return [["Bring to My Pets","mypets"],["Long-Term Sanctuary","sanctuary"],["Family Adoption","adopt"]];
@@ -1599,13 +1614,14 @@ function animalTreeUI(p){
  return `<div class="tree-shell">
   <div class="tree-stage">
    ${treePath(p)}
-   <div class="tree-patient"><img src="${p.image}" alt="${p.name}"><div>
+   <div class="tree-patient clickable-animal" onclick="openAnimalProfile('${p.id}')"><img src="${p.image}" alt="${p.name}"><div>
     <h2>${p.name}</h2><div class="small">${p.species} · ${p.condition}</div>
     ${conditionClusterHTML(p)}
     <div class="tree-observation">${treeObservation(p)}</div>
     <div class="small">Trust ${t.trust}% · Fear ${t.fear}% · Appetite ${t.appetite}% · Hydration ${t.hydration}% · Mobility ${t.mobility}%</div>
    </div></div>
    <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
+   ${t.stage==="recover"?recoveryProgressStatus(p):""}
    ${p.location==="Clinic"?clinicFlowHTML(p):""}
   </div>
   <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div>${longPatientPanel(p)}</div>
@@ -2197,7 +2213,7 @@ function renderCareLab(){
    ${candidates.length?`<div class="controls">${candidates.map(x=>`<button class="action ${p&&x.id===p.id?"green":""}" onclick="state.activeId='${x.id}';render()">${x.name} · ${x.species}</button>`).join("")}</div>`:""}
  </div>
  ${p?`<div class="panel">
-   <div class="tree-patient"><img src="${p.img}" alt="${p.name}"><div><h2>${p.name}</h2><div class="small">${p.species} · ${p.condition} · ${p.location}</div></div></div>
+   <div class="tree-patient clickable-animal" onclick="openAnimalProfile('${p.id}')"><img src="${p.img}" alt="${p.name}"><div><h2>${p.name}</h2><div class="small">${p.species} · ${p.condition} · ${p.location}</div></div></div>
    ${threePillarCareHTML(p)}
  </div>`:`<div class="panel"><div class="empty">No active patient is available for detailed care.</div></div>`}`;
 }
@@ -2377,6 +2393,135 @@ function dischargeRecoveredPet(id){
  saveGame("Manual Save",true);
  render();
 }
+
+/* ===== RECOVERY ACTIONS NOW ADVANCE TIME/PROGRESS ===== */
+function advanceRecoveryFromCare(p,action){
+ const l=ensureLongPatient(p),t=ensureTree(p),f=ensureFlow(p);
+ if(!p.recoveryActionCount)p.recoveryActionCount=0;
+ if(!p.recoveryShiftActions)p.recoveryShiftActions=[];
+ p.recoveryActionCount++;
+ p.recoveryShiftActions.push(action);
+
+ // Every 4 care actions completes one recovery shift.
+ if(p.recoveryShiftActions.length>=4){
+   l.recoveryDays++;
+   l.rechecks++;
+   p.recoveryShiftActions=[];
+   t.appetite=Math.min(100,(t.appetite||50)+4);
+   t.hydration=Math.min(100,(t.hydration||55)+4);
+   t.mobility=Math.min(100,(t.mobility||50)+3);
+   p.pain=Math.max(0,(p.pain||35)-3);
+   resolveComplication(p);
+   treeNote(p,`Recovery shift ${l.recoveryDays} completed automatically`);
+ }
+
+ // Recalculate readiness every press.
+ let score=0;
+ if((p.pain||50)<=30)score+=20;
+ if((t.hydration||55)>=70)score+=20;
+ if((t.appetite||50)>=65)score+=20;
+ if((t.mobility||50)>=60)score+=20;
+ if((t.fear||50)<=40)score+=20;
+ f.recoveryProgress=score;
+
+ // Once two shifts are complete and the animal is healthy enough,
+ // automatically unlock the final check.
+ if(l.recoveryDays>=2 && l.rechecks>=1 && score>=80){
+   f.dischargeReady=true;
+   t.readyHome=true;
+   treeNote(p,`${p.name} is ready for the final check`);
+ }
+ saveGame("Auto Save",true);
+}
+function recoveryProgressStatus(p){
+ const l=ensureLongPatient(p),f=ensureFlow(p);
+ const left=4-((p.recoveryShiftActions||[]).length);
+ return `<div class="small" style="margin-top:7px">
+   Recovery shifts: ${l.recoveryDays}/2 ·
+   Readiness: ${Math.min(100,f.recoveryProgress||0)}% ·
+   ${l.recoveryDays<2?`${left} care action${left===1?"":"s"} until next recovery shift`:
+   f.dischargeReady?"Ready for final check":"Continue care until readiness reaches 80%"}
+ </div>`;
+}
+
+/* ===== CLICK ANY ANIMAL -> ANIMAL PROFILE ===== */
+function openAnimalProfile(id){
+  const p=state.patients.find(x=>x.id===id) || state.pets.find(x=>x.id===id) || (EXP.sanctuary||[]).find(x=>x.id===id);
+  if(!p)return;
+  state.activeId=p.id;
+  state.screen="animalprofile";
+  render();
+}
+function animalProfileHTML(p){
+  if(!p)return `<div class="panel"><div class="empty">Animal not found.</div></div>`;
+  const t=ensureTree(p), l=ensureLongPatient(p), f=ensureFlow(p);
+  let pet=null;
+  try{pet=ensurePetSim(p)}catch(e){}
+  const memories=pet&&Array.isArray(pet.memories)?pet.memories:[];
+  return `
+  <div class="panel animal-profile">
+    <div class="tree-patient clickable-animal">
+      <img src="${p.img}" alt="${p.name}">
+      <div>
+        <h2>${p.name}</h2>
+        <div class="small">${p.species} · ${p.condition||"General care"}</div>
+        <div class="small">Location: ${p.location||"Unknown"} · Stage: ${t.stage||"care"}</div>
+      </div>
+    </div>
+    <div class="controls" style="margin-top:10px">
+      <button class="action" onclick="state.screen='${String(p.location||"clinic").toLowerCase()==="home"?"pets":String(p.location||"clinic").toLowerCase()}';render()">Go to ${p.location||"Clinic"}</button>
+      ${p.location==="Recovery"?`<button class="action green" onclick="state.screen='recovery';render()">Open Recovery</button>`:""}
+      ${p.location==="Clinic"?`<button class="action green" onclick="state.screen='clinic';render()">Open Clinic</button>`:""}
+      ${p.location==="Home"?`<button class="action green" onclick="state.screen='pets';render()">Open My Pets</button>`:""}
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Medical Stats</h3>
+    ${smartMeterHTML(p,"pain")}
+    ${smartMeterHTML(p,"hydration")}
+    ${smartMeterHTML(p,"oxygen")}
+    ${smartMeterHTML(p,"mobility")}
+    <div class="small" style="margin-top:7px">
+      Bleeding: ${Math.round(p.bleeding||0)} · Infection: ${Math.round(p.infection||0)} · Shock: ${Math.round(p.shock||0)}
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Emotional Stats</h3>
+    ${smartMeterHTML(p,"fear")}
+    ${smartMeterHTML(p,"trust")}
+    ${pet?smartMeterHTML(p,"loneliness"):""}
+    ${pet?smartMeterHTML(p,"comfort"):""}
+  </div>
+
+  <div class="panel">
+    <h3>Hospital Progress</h3>
+    <div class="small">
+      Clinic stabilization: ${Math.round(f.clinicProgress||0)}%<br>
+      Recovery readiness: ${Math.round(f.recoveryProgress||0)}%<br>
+      Recovery shifts: ${l.recoveryDays||0}<br>
+      Rechecks: ${l.rechecks||0}<br>
+      Meals: ${l.meals||0} · Walks: ${l.walks||0} · Rests: ${l.rests||0}
+    </div>
+    ${f.outcomeNote?`<div class="care-outcome">${f.outcomeNote}</div>`:""}
+  </div>
+
+  <div class="panel">
+    <h3>Story & History</h3>
+    <div class="small">${(t.history||[]).length?(t.history||[]).slice(-12).map(x=>`• ${x}`).join("<br>"):"No history recorded yet."}</div>
+    ${memories.length?`<div class="care-outcome"><b>Memories</b><br>${memories.slice(-10).map(x=>`• ${x}`).join("<br>")}</div>`:""}
+  </div>
+
+  ${p.location==="Clinic"?clinicFlowHTML(p):""}
+  ${p.location==="Recovery"?recoveryFlowHTML(p):""}
+  `;
+}
+function renderAnimalProfile(){
+  const el=document.getElementById("animalprofile"); if(!el)return;
+  const p=state.patients.find(x=>x.id===state.activeId) || state.pets.find(x=>x.id===state.activeId) || (EXP.sanctuary||[]).find(x=>x.id===state.activeId);
+  el.innerHTML=animalProfileHTML(p);
+}
 function render(){
   state.patients.filter(p=>p.admitted).forEach(applyMeterInteractions);
   const mercyEl=document.getElementById("mercy");
@@ -2405,6 +2550,7 @@ function render(){
   const target=document.getElementById(state.screen)||document.getElementById("clinic");
   if(target)target.classList.add("active");
   renderCareLab();
+  renderAnimalProfile();
   state.patients.forEach(updateMeterHistory);
   if(SAVE_READY)saveGame("Auto Save",true);
 }
