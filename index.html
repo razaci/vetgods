@@ -2591,7 +2591,7 @@ function sanctuaryCanvasHTML(){
         <span id="sanctuaryFPS">FPS ${Math.round(SANCTUARY_SIM.fps)}</span>
       </div>
     </div>
-    <div class="sanctuary-help small">Drag habitat objects. Tap a moving pet to open its profile. Their needs and memories influence where they go.</div>
+    <div class="sanctuary-help small">Drag habitat objects. Tap a moving pet to open its profile. Needs, routines, quiet time, sleep, personality, and random wandering influence where they go. Sleeping pets always follow the movable bed.</div>
   </div>`;
 }
 function sanctuaryEnsureMotion(p,i){
@@ -2602,25 +2602,137 @@ function sanctuaryEnsureMotion(p,i){
   }
   return s.motion;
 }
+function sanctuaryRoutinePhase(){
+  const d=sanctuaryDaypart();
+  if(d==="Night")return "sleep";
+  if(d==="Evening")return "quiet";
+  if(d==="Morning")return "active";
+  return "free";
+}
+function sanctuaryStation(type){
+  return SANCTUARY_SIM.objects.find(o=>o.type===type);
+}
+function sanctuaryPetOffset(i,type){
+  const ring=(i%6), ang=(ring/6)*Math.PI*2 + ((i%3)*.23);
+  const radius=(type==="bed"||type==="hide")?.035:.05;
+  return {x:Math.cos(ang)*radius,y:Math.sin(ang)*radius};
+}
+function sanctuarySetTarget(p,i,type,holdMs){
+  const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
+  const o=sanctuaryStation(type);
+  if(!o)return false;
+  const off=sanctuaryPetOffset(i,type);
+  mot.stationType=type;
+  mot.stationId=o.id;
+  mot.tx=Math.max(.05,Math.min(.95,o.x+off.x));
+  mot.ty=Math.max(.08,Math.min(.92,o.y+off.y));
+  mot.nextDecision=Date.now()+holdMs;
+  const labels={
+    bed:["Heading to sleep","Sleeping at the rest station"],
+    hide:["Heading to quiet mode","Settling in the quiet station"],
+    food:["Heading for food","Eating at the food station"],
+    water:["Heading for water","Drinking at the water station"],
+    toy:["Heading to play","Playing with the toy"],
+    care:["Heading to care","Checking in at the care station"]
+  };
+  s.activity=(labels[type]||["Moving","Resting"])[0];
+  s.room=(o.label||type);
+  return true;
+}
+function sanctuarySetWander(p,i,holdMs=5000){
+  const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
+  mot.stationType="wander";
+  mot.stationId=null;
+  mot.tx=.10+Math.random()*.80;
+  mot.ty=.14+Math.random()*.72;
+  mot.nextDecision=Date.now()+holdMs;
+  s.activity=Math.random()<.5?"Wandering around the sanctuary":"Exploring the habitat";
+  s.room="Open Sanctuary";
+}
+function sanctuaryArrived(p,i){
+  const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
+  const near=Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.035;
+  if(!near)return;
+  const labels={
+    bed:"Sleeping peacefully",
+    hide:"Quiet resting",
+    food:"Eating at the food station",
+    water:"Drinking fresh water",
+    toy:"Playing with enrichment",
+    care:"Visiting the care station",
+    wander:"Looking around"
+  };
+  if(labels[mot.stationType])s.activity=labels[mot.stationType];
+}
 function sanctuaryTargetFor(p,i){
   const s=ensurePetSim(p),m=ensurePetMind(p),mot=sanctuaryEnsureMotion(p,i);
-  let target=null;
-  if((p.hunger||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="food");
-  else if((p.water||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="water");
-  else if((p.energy||0)<30 || (s.sleep||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="bed")||SANCTUARY_SIM.objects.find(o=>o.type==="hide");
-  else if((p.fear||0)>55)target=SANCTUARY_SIM.objects.find(o=>o.type==="hide");
-  else if((s.enrichment||0)<45)target=SANCTUARY_SIM.objects.find(o=>o.type==="toy");
-  else if(m.favoriteRoom && Math.random()<.1){
-    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
+  const now=Date.now(),phase=sanctuaryRoutinePhase();
+
+  // Sleep is an absolute priority and always tracks the movable bed.
+  const mustSleep=(p.energy||0)<28 || (s.sleep||0)<30 || phase==="sleep";
+  if(mustSleep){
+    const bed=sanctuaryStation("bed")||sanctuaryStation("hide");
+    if(bed){
+      const off=sanctuaryPetOffset(i,bed.type);
+      mot.stationType=bed.type;mot.stationId=bed.id;
+      mot.tx=Math.max(.05,Math.min(.95,bed.x+off.x));
+      mot.ty=Math.max(.08,Math.min(.92,bed.y+off.y));
+      mot.nextDecision=now+9000;
+      s.activity=Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.04?"Sleeping peacefully":"Going to the sleep station";
+      s.room=bed.label||"Sleep Station";
+      return;
+    }
   }
-  if(!target && (Math.random()<.02 || Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.03)){
-    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
+
+  // Strong physical needs override casual activities.
+  if((p.hunger||0)<28){sanctuarySetTarget(p,i,"food",6500);return;}
+  if((p.water||0)<28){sanctuarySetTarget(p,i,"water",5200);return;}
+  if((p.fear||0)>62){sanctuarySetTarget(p,i,"hide",8000);return;}
+
+  // During the shared quiet phase, residents drift toward calm stations.
+  if(phase==="quiet" && mot.stationType!=="hide" && Math.random()<.018){
+    sanctuarySetTarget(p,i,"hide",7000+Math.random()*5000);return;
   }
-  if(target){
-    mot.tx=Math.max(.05,Math.min(.95,target.x+(Math.random()-.5)*.08));
-    mot.ty=Math.max(.08,Math.min(.92,target.y+(Math.random()-.5)*.08));
+
+  // Keep following a station if the player drags it to a new location.
+  if(mot.stationId && mot.stationType!=="wander"){
+    const live=SANCTUARY_SIM.objects.find(o=>o.id===mot.stationId);
+    if(live){
+      const off=sanctuaryPetOffset(i,mot.stationType);
+      mot.tx=Math.max(.05,Math.min(.95,live.x+off.x));
+      mot.ty=Math.max(.08,Math.min(.92,live.y+off.y));
+    }
   }
+
+  sanctuaryArrived(p,i);
+
+  // Stay committed to the current activity long enough to see it happen.
+  if((mot.nextDecision||0)>now)return;
+
+  let choices=[];
+  const push=(type,weight)=>{for(let n=0;n<weight;n++)choices.push(type);};
+
+  if(phase==="active"){
+    push("wander",6);push("toy",3);push("food",2);push("water",2);push("care",1);push("hide",1);
+  }else if(phase==="quiet"){
+    push("hide",7);push("bed",3);push("wander",2);push("water",1);push("toy",1);
+  }else{
+    push("wander",8);push("hide",3);push("toy",3);push("water",2);push("food",2);push("care",1);push("bed",1);
+  }
+
+  if((s.enrichment||50)<38)push("toy",2);
+  if((p.hunger||50)<48)push("food",3);
+  if((p.water||50)<48)push("water",3);
+  if((p.energy||50)<48)push("bed",3);
+  if((p.fear||0)>35)push("hide",3);
+  if(m.traits && m.traits.curiosity>60)push("wander",3);
+  if(m.traits && m.traits.independence>60){push("wander",2);push("hide",1);}
+
+  const choice=choices[Math.floor(Math.random()*choices.length)]||"wander";
+  if(choice==="wander")sanctuarySetWander(p,i,4200+Math.random()*6500);
+  else sanctuarySetTarget(p,i,choice,5000+Math.random()*7000);
 }
+
 function sanctuaryDraw(){
   const c=document.getElementById("sanctuaryCanvas");
   if(!c)return;
@@ -2639,9 +2751,10 @@ function sanctuaryDraw(){
   state.pets.slice(0,24).forEach((p,i)=>{
     const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
     sanctuaryTargetFor(p,i);
-    const speed=SANCTUARY_SIM.perf==="full"?.0026:.0017;
-    mot.x += (mot.tx-mot.x)*speed*16;
-    mot.y += (mot.ty-mot.y)*speed*16;
+    const baseSpeed=SANCTUARY_SIM.perf==="full"?.00105:.00078;
+    const petSpeed=baseSpeed*(.82+(i%5)*.055);
+    mot.x += (mot.tx-mot.x)*petSpeed*16;
+    mot.y += (mot.ty-mot.y)*petSpeed*16;
     const x=mot.x*w,y=mot.y*h;
     ctx.save();
     ctx.shadowBlur=SANCTUARY_SIM.perf==="full"?14:0;
