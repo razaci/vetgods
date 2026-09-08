@@ -698,6 +698,54 @@ body::before,body::after,.screen::before,.screen::after{pointer-events:none !imp
   .vg-dynamic-buttons{grid-template-columns:1fr 1fr}
 }
 
+
+/* =========================================================
+   VET GODS · DATABASE LIST CARTOON COLOR FIX
+   Remove white list/card surfaces while preserving gameplay.
+   ========================================================= */
+.vg-db-card{
+  background:linear-gradient(180deg,#dfeef3 0%,#cfe3ea 100%) !important;
+  border:1px solid #9fbfca !important;
+  color:#203040 !important;
+  box-shadow:0 3px 10px rgba(20,40,60,.08) !important;
+}
+.vg-problem{
+  background:#d8e9ef !important;
+  border-left-color:#7ea8b7 !important;
+  color:#203040 !important;
+}
+.vg-reveal-box{
+  background:#d8e9ef !important;
+  border-color:#9fbfca !important;
+  color:#203040 !important;
+}
+.vg-db-toolbar input,
+.vg-db-toolbar select{
+  background:#e8f3f6 !important;
+  color:#203040 !important;
+  border-color:#9fbfca !important;
+}
+.vg-amazon{
+  background:#cfe5ec !important;
+  color:#1f5369 !important;
+  border-color:#9fc4d0 !important;
+}
+.vg-stage-pill{
+  background:#d2e6ed !important;
+  color:#244653 !important;
+  border-color:#9fbfca !important;
+}
+.vg-db-pager button{
+  background:#d6e8ee !important;
+  color:#203040 !important;
+  border:1px solid #9fbfca !important;
+}
+#vgAnimalDatabase.panel,
+#animalprofile .vg-case-plan{
+  background:linear-gradient(180deg,#e1eff3 0%,#d2e6ec 100%) !important;
+  border-color:#9fbfca !important;
+}
+
 </style>
 </head>
 <body>
@@ -2838,6 +2886,15 @@ function vgPick(arr,i,salt){ return arr[(vgHash(i,salt,arr.length)) % arr.length
 function vgAmazonSearch(q){
   return "https://www.amazon.com/s?k="+encodeURIComponent(q);
 }
+function vgOpenExternal(url){
+  try{
+    // Best for local/single-file HTML on mobile: navigate the browser directly.
+    window.location.href=url;
+  }catch(err){
+    try{ window.open(url,"_blank"); }catch(e){}
+  }
+  return false;
+}
 function vgEscape(s){
   return String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 }
@@ -2951,7 +3008,7 @@ function vgProblemCard(pr){
   return `<div class="vg-problem">
     <div class="vg-problem-title">${serious?"⚠️":"🐾"} ${vgEscape(pr.name)}</div>
     <div class="small">${vgEscape(pr.solution)}</div>
-    <a class="vg-amazon" href="${vgAmazonSearch(pr.search)}" target="_blank" rel="noopener noreferrer">Search Amazon for supplies ↗</a>
+    <a class="vg-amazon" href="${vgAmazonSearch(pr.search)}" onclick="return vgOpenExternal(this.href)">Search Amazon for supplies ↗</a>
   </div>`;
 }
 
@@ -3012,7 +3069,7 @@ renderAdmit=function(){
     <div class="panel">
       <h2>🐾 Admit Animal</h2>
       <p class="small">Choose from 500 distinct animal cases. Each animal has its own problem mix, care notes, likely outcome, and supply-search links.</p>
-      <div class="small"><b>Important:</b> Product links are for finding general care supplies. Serious or worsening symptoms still need a veterinarian.</div>
+      <div class="small"><b>Important:</b> Product links are for finding general care supplies. Serious or worsening symptoms still need a veterinarian. Amazon searches open outside the game page.</div>
     </div>
     <div class="panel" id="vgAnimalDatabase"></div>`;
   vgRenderDatabaseBrowser();
