@@ -583,7 +583,8 @@ input,select,textarea{
     <button data-screen="clinic">Clinic</button>
     <button data-screen="surgery">Surgery</button>
     <button data-screen="recovery">Recovery</button>
-    <button data-screen="pets">My Pets</button>
+    <button data-screen="carelab">Care Lab</button>
+      <button data-screen="pets">My Pets</button>
     <button data-screen="status">Status</button>
     <button data-screen="admit">Admit Patient</button>
 
@@ -602,7 +603,8 @@ input,select,textarea{
   <section id="clinic" class="screen"></section>
   <section id="surgery" class="screen"></section>
   <section id="recovery" class="screen"></section>
-  <section id="pets" class="screen"></section>
+  <section id="carelab" class="screen"></section>
+<section id="pets" class="screen"></section>
   <section id="status" class="screen"></section>
   <section id="admit" class="screen"></section>
   <section id="hospital" class="screen"></section>
@@ -1599,7 +1601,6 @@ function animalTreeUI(p){
     <div class="small">Trust ${t.trust}% · Fear ${t.fear}% · Appetite ${t.appetite}% · Hydration ${t.hydration}% · Mobility ${t.mobility}%</div>
    </div></div>
    <div class="tree-actions">${acts.map(a=>`<button class="action" onclick="treeAction('${p.id}','${a[1]}')">${a[0]}</button>`).join("")}</div>
-   ${threePillarCareHTML(p)}
   </div>
   <div class="tree-stage"><h3>${p.name}'s Story</h3><div class="tree-log">${t.history.map(x=>`<div>${x}</div>`).join("")||"<div>The story begins here.</div>"}</div><h3>Discovered</h3><div class="tree-path">${t.discovered.map(x=>`<span class="tree-node done">${x}</span>`).join("")||'<span class="small">Observe the animal.</span>'}</div>${longPatientPanel(p)}</div>
  </div>`;
@@ -2179,6 +2180,21 @@ function persistentSavePanel(){
     <details style="margin-top:8px"><summary>Look Back at Saved Snapshots</summary>${archiveHTML()}</details>
   </div>`;
 }
+
+function renderCareLab(){
+ const candidates=state.patients.filter(x=>x.location!=="Home");
+ const p=candidates.find(x=>x.id===state.activeId)||candidates[0];
+ const el=document.getElementById("carelab"); if(!el)return;
+ el.innerHTML=`<div class="panel">
+   <h2>🩺 Care Lab</h2>
+   <p class="small">Detailed Examine, Medical, and Emotional choices have been moved out of the normal gameplay screen. Use this area whenever you want deeper hands-on care.</p>
+   ${candidates.length?`<div class="controls">${candidates.map(x=>`<button class="action ${p&&x.id===p.id?"green":""}" onclick="state.activeId='${x.id}';render()">${x.name} · ${x.species}</button>`).join("")}</div>`:""}
+ </div>
+ ${p?`<div class="panel">
+   <div class="tree-patient"><img src="${p.img}" alt="${p.name}"><div><h2>${p.name}</h2><div class="small">${p.species} · ${p.condition} · ${p.location}</div></div></div>
+   ${threePillarCareHTML(p)}
+ </div>`:`<div class="panel"><div class="empty">No active patient is available for detailed care.</div></div>`}`;
+}
 function render(){
   state.patients.filter(p=>p.admitted).forEach(applyMeterInteractions);
   const mercyEl=document.getElementById("mercy");
@@ -2206,6 +2222,7 @@ function render(){
   applyTreeDepartmentUI();
   const target=document.getElementById(state.screen)||document.getElementById("clinic");
   if(target)target.classList.add("active");
+  renderCareLab();
   state.patients.forEach(updateMeterHistory);
   if(SAVE_READY)saveGame("Auto Save",true);
 }
