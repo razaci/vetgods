@@ -1146,6 +1146,103 @@ body{
   .pet-home-report .pet-report-row{grid-template-columns:78px 1fr}
 }
 
+
+/* VET GODS · LIVING HABITAT */
+.living-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}.living-head h3{margin:0}
+.habitat-world{position:relative;min-height:370px;border:1px solid #31566b;border-radius:12px;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(55,118,145,.16),transparent 34%),linear-gradient(180deg,#0b1b28,#07121b)}
+.world-zone{position:absolute;border:1px solid rgba(120,220,255,.16);border-radius:10px;background:rgba(16,40,55,.38);padding:6px;color:#7f9dac;font-size:.55rem;letter-spacing:.06em}
+.z-rest{left:3%;top:6%;width:28%;height:34%}.z-feed{right:3%;top:6%;width:25%;height:29%}.z-water{right:3%;bottom:5%;width:25%;height:30%}.z-activity{left:35%;top:5%;width:28%;height:39%}.z-social{left:34%;bottom:5%;width:30%;height:34%}.z-medical{left:3%;bottom:5%;width:25%;height:29%}
+.world-pet{position:absolute;z-index:3;transform:translate(-50%,-50%);min-width:55px;max-width:78px;padding:4px;border-radius:9px;border:1px solid #3a667c;background:#102534;color:inherit;text-align:center;transition:left .5s ease,top .5s ease}
+.world-pet span{display:block;font-size:1.45rem}.world-pet b{display:block;font-size:.56rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.world-pet small{display:block;font-size:.45rem;opacity:.68;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.observation-feed{margin-top:8px;padding:8px;border:1px solid #2c5265;border-radius:8px;background:#07131c}.observation-feed>b{font-size:.65rem;letter-spacing:.12em;color:#7fe3c6}.observation-feed>div{display:grid;grid-template-columns:70px 1fr;gap:7px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.045)}.observation-feed time,.observation-feed span{font-size:.61rem}
+.pet-schedule{margin:7px 0 9px;padding:8px;border:1px solid #294a5d;border-radius:8px;background:#0a1721}.pet-schedule>b{display:block;font-size:.68rem;margin-bottom:6px}.pet-schedule>div{display:flex;gap:4px;overflow-x:auto}.pet-schedule span{flex:0 0 auto;padding:5px 7px;border-radius:5px;border:1px solid #29495a;font-size:.56rem;opacity:.65;background:#10202c}.pet-schedule span.now{opacity:1;border-color:#7bdcff;color:#dff9ff}
+@media(max-width:520px){.habitat-world{min-height:320px}.world-pet{min-width:46px;max-width:60px}.world-pet span{font-size:1.2rem}.world-pet small{display:none}.living-head{align-items:flex-start;flex-direction:column}}
+@media(prefers-reduced-motion:reduce){.world-pet{transition:none}}
+
+
+/* =========================================================
+   VET GODS · INDIVIDUAL PET MIND
+   ========================================================= */
+.pet-mind{
+  margin:8px 0 10px;padding:9px;border:1px solid #34566a;border-radius:9px;
+  background:linear-gradient(180deg,#0b1b29,#08141e);
+}
+.pet-mind-head{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);gap:8px;align-items:start}
+.pet-mind-head b{display:block;font-size:.76rem}
+.pet-mind-head span{display:block;font-size:.6rem;opacity:.68;margin-top:2px}
+.pet-mind-state{
+  padding:6px 7px;border:1px solid #315064;border-radius:6px;background:#102331;
+  font-size:.63rem;line-height:1.35
+}
+.pet-traits{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin:8px 0}
+.pet-traits>div{padding:5px;border:1px solid #29495b;border-radius:6px;background:#0d1d29}
+.pet-traits span{display:block;text-transform:capitalize;font-size:.54rem;margin-bottom:4px}
+.pet-traits progress{width:100%;height:8px}
+.pet-memory-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.pet-memory-columns>div{padding:7px;border:1px solid #29495b;border-radius:6px;background:#0a1822}
+.pet-memory-columns b{display:block;font-size:.61rem;margin-bottom:4px}
+.pet-memory-columns span{display:block;font-size:.57rem;opacity:.78;padding:2px 0}
+@media(max-width:560px){
+  .pet-mind-head{grid-template-columns:1fr}
+  .pet-traits{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pet-memory-columns{grid-template-columns:1fr}
+}
+
+
+/* =========================================================
+   VET GODS · CANVAS / SVG SANCTUARY ENGINE
+   ========================================================= */
+.sanctuary-engine{overflow:hidden}
+.sanctuary-toolbar{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.sanctuary-toolbar h3{margin:0 0 2px}
+.sanctuary-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.sanctuary-stage{position:relative;border:1px solid #31576e;border-radius:12px;overflow:hidden;background:#07111a;aspect-ratio:16/9;min-height:260px}
+#sanctuaryCanvas,.sanctuary-svg{position:absolute;inset:0;width:100%;height:100%}
+.sanctuary-svg{z-index:2;pointer-events:auto}
+.sanctuary-object{cursor:grab;touch-action:none}
+.sanctuary-object:active{cursor:grabbing}
+.sanctuary-object rect{fill:rgba(10,30,42,.82);stroke:#3f6f86;stroke-width:1.5}
+.sanctuary-object .obj-icon{font-size:24px;dominant-baseline:middle}
+.sanctuary-object .obj-label{font-size:10px;fill:#d9f4ff}
+.sanctuary-hud{position:absolute;z-index:3;left:8px;right:8px;top:8px;display:flex;justify-content:space-between;pointer-events:none}
+.sanctuary-hud span{font-size:.58rem;padding:4px 6px;border-radius:5px;background:rgba(5,14,22,.72);border:1px solid rgba(120,220,255,.18)}
+.sanctuary-help{margin-top:6px;opacity:.72}
+.pet-life-book{margin:8px 0;border:1px solid #2e5265;border-radius:8px;background:#091720;overflow:hidden}
+.pet-life-book summary{cursor:pointer;padding:8px 9px;font-size:.68rem;font-weight:800;background:#0e2230}
+.life-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:8px}
+.life-tabs>div{padding:7px;border:1px solid #29495b;border-radius:6px;background:#0a1822}
+.life-tabs b,.life-tabs span{display:block}.life-tabs b{font-size:.58rem}.life-tabs span{font-size:.55rem;opacity:.72;margin-top:3px}
+.life-timeline{padding:0 8px 8px}.life-timeline>div{display:grid;grid-template-columns:26px 1fr;gap:6px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.045)}
+.life-timeline b{font-size:.55rem;opacity:.55}.life-timeline span{font-size:.58rem}
+@media(max-width:560px){
+ .sanctuary-toolbar{flex-direction:column}.sanctuary-actions{justify-content:flex-start}
+ .sanctuary-stage{min-height:230px}.life-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sanctuary-object .obj-label{font-size:8px}
+}
+
+
+/* =========================================================
+   VET GODS · AMAZON CARE LINKS
+   ========================================================= */
+.amazon-care-panel{margin:8px 0;border:1px solid #4b5b3b;border-radius:8px;background:#141b12;overflow:hidden}
+.amazon-care-panel summary,.amazon-all-species summary{cursor:pointer;padding:9px;font-size:.68rem;font-weight:900}
+.amazon-disclaimer{padding:0 9px 8px;font-size:.56rem;line-height:1.4;opacity:.72}
+.amazon-care-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding:8px}
+.amazon-care-grid button{padding:7px;border-radius:7px;border:1px solid #4d663f;background:#1b2818;color:inherit;text-align:left}
+.amazon-care-grid button b{display:block;font-size:.61rem;color:#dff5c8}
+.amazon-care-grid button span{display:block;font-size:.49rem;opacity:.66;margin-top:2px;white-space:normal}
+.amazon-species-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px}
+.amazon-species-grid button{padding:7px 5px;border-radius:6px;border:1px solid #415436;background:#162015;color:inherit;font-size:.56rem}
+.amazon-modal{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:14px}
+.amazon-modal-card{width:min(720px,100%);max-height:88vh;overflow:auto;border:1px solid #547048;border-radius:12px;background:#0d160d;padding:10px}
+.amazon-modal-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 4px 8px}
+.amazon-modal-head b{display:block;font-size:.84rem}.amazon-modal-head span{display:block;font-size:.56rem;opacity:.65;margin-top:2px}
+.amazon-modal-head button{border:1px solid #4b6240;background:#192418;color:inherit;border-radius:6px;padding:6px 9px}
+@media(max-width:560px){
+  .amazon-care-grid{grid-template-columns:1fr}
+  .amazon-species-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 </style>
 </head>
 <body>
@@ -2014,7 +2111,9 @@ function petSimStep(p,hourIndex){
       }
     }
   }
+  if(typeof petMindSimTick==='function')petMindSimTick(p);
 }
+
 
 function updatePetHomeSim(){
   if(!state || !Array.isArray(state.pets))return 0;
@@ -2086,6 +2185,8 @@ function petMoveRoom(id,room){
   s.activity="Moving to "+room;
   s.routine=Math.min(100,s.routine+2);
   petSimLog(p,`${p.name} moved to ${room}.`);
+  petAssociation(p,"room_"+room,1.5,`${room} became familiar.`);
+  petMindAfterCare(p,"room");
   if(typeof saveGame==="function")try{saveGame("Pet room move",true)}catch(e){}
   render();
 }
@@ -2096,6 +2197,745 @@ function petSimManualHour(){
   state.lastPetSimAt=Date.now();
   if(typeof saveGame==="function")try{saveGame("Advance My Pets hour",true)}catch(e){}
   render();
+}
+
+
+/* VET GODS · LIVING PETS SIM */
+const PET_WORLD={observation:false,timer:null,feed:[]};
+
+function petWorldIcon(p){
+ const s=p.species||"";
+ if(/Dog/i.test(s))return "🐕"; if(/Cat/i.test(s))return "🐈"; if(/Rabbit/i.test(s))return "🐇";
+ if(/Spider|Tarantula/i.test(s))return "🕷️"; if(/Scorpion|Vinegaroon/i.test(s))return "🦂";
+ if(/Ant/i.test(s))return "🐜"; if(/Mantis|Beetle|Insect|Roach/i.test(s))return "🪲";
+ if(/Snail/i.test(s))return "🐌"; if(/Crab/i.test(s))return "🦀";
+ if(/Frog|Axolotl|Newt|Salamander/i.test(s))return "🐸"; if(/Tortoise|Gecko|Dragon/i.test(s))return "🦎";
+ if(/Bird|Parrot|Cockatiel|Chicken|Duck/i.test(s))return "🦜"; if(/Goat/i.test(s))return "🐐";
+ return "🐾";
+}
+function petZone(room){
+ room=(room||"").toLowerCase();
+ if(/feed|food|forag/.test(room))return "feed";
+ if(/water|hydrat|soak|moist/.test(room))return "water";
+ if(/yard|play|training|flight|climb|bask|enrichment/.test(room))return "activity";
+ if(/social|companion/.test(room))return "social";
+ if(/medical|observation/.test(room))return "medical";
+ return "rest";
+}
+function petWorldPos(p,i){
+ const z=petZone(ensurePetSim(p).room);
+ const q={rest:[[14,24],[25,31],[18,38]],feed:[[76,22],[86,30],[72,38]],water:[[76,72],[87,79],[69,82]],activity:[[44,22],[55,31],[48,40]],social:[[43,69],[56,77],[48,84]],medical:[[13,72],[23,81],[16,87]]}[z];
+ return {x:q[i%q.length][0],y:q[i%q.length][1]};
+}
+function observationFeedHTML(){
+ return `<div class="observation-feed"><b>LIVE OBSERVATION</b>${PET_WORLD.feed.slice(0,7).map(x=>`<div><time>${x.time}</time><span>${x.text}</span></div>`).join("")||"<div><span>Watching the habitat…</span></div>"}</div>`;
+}
+function petWorldHTML(){
+ if(!state.pets.length)return "";
+ const pets=state.pets.slice(0,18).map((p,i)=>{
+   const s=ensurePetSim(p),q=petWorldPos(p,i);
+   return `<button class="world-pet" style="left:${q.x}%;top:${q.y}%" onclick="event.stopPropagation();openAnimalProfile('${p.id}')"><span>${petWorldIcon(p)}</span><b>${p.name}</b><small>${s.activity}</small></button>`;
+ }).join("");
+ return `<div class="panel living-habitat"><div class="living-head"><div><h3>🏠 Living Habitat</h3><div class="small">Watch rescued animals follow their own routines.</div></div><button class="action" onclick="toggleObservationMode()">${PET_WORLD.observation?"■ STOP WATCHING":"👁 WATCH MY PETS"}</button></div>
+ <div class="habitat-world"><div class="world-zone z-rest">REST 🛏️</div><div class="world-zone z-feed">FOOD 🥣</div><div class="world-zone z-water">WATER 💧</div><div class="world-zone z-activity">ACTIVITY 🎾</div><div class="world-zone z-social">SOCIAL 🐾</div><div class="world-zone z-medical">CARE ✚</div>${pets}</div>${PET_WORLD.observation?observationFeedHTML():""}</div>`;
+}
+function observationTick(){
+ if(!PET_WORLD.observation||!state.pets.length)return;
+ const p=state.pets[Math.floor(Math.random()*state.pets.length)],s=ensurePetSim(p);
+ petSimStep(p,Math.floor(Math.random()*999));
+ let text=`${p.name} is ${s.activity.toLowerCase()} in ${s.room}.`;
+ if((p.hunger||0)<30)text=`${p.name} went looking for food.`;
+ else if((p.water||0)<30)text=`${p.name} moved toward the water station.`;
+ else if((p.energy||0)<25)text=`${p.name} found a quiet place to sleep.`;
+ if(s.bondedPetId&&Math.random()<.25){
+   const o=state.pets.find(x=>x.id===s.bondedPetId);
+   if(o){text=`${p.name} chose to stay beside ${o.name}.`; if(!p.memories)p.memories=[]; const mem=`Quiet time with ${o.name}`; if(!p.memories.includes(mem)){p.memories.push(mem);text+=` MEMORY CREATED — ${mem}.`;}}
+ }
+ PET_WORLD.feed.unshift({time:new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),text});
+ PET_WORLD.feed=PET_WORLD.feed.slice(0,12);
+ if(typeof saveGame==="function")try{saveGame("Observation mode",true)}catch(e){}
+ render();
+}
+function toggleObservationMode(){
+ PET_WORLD.observation=!PET_WORLD.observation;
+ if(PET_WORLD.timer){clearInterval(PET_WORLD.timer);PET_WORLD.timer=null;}
+ if(PET_WORLD.observation){
+   PET_WORLD.feed.unshift({time:new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),text:"Observation Mode started."});
+   PET_WORLD.timer=setInterval(observationTick,4200);
+ }
+ render();
+}
+function petDailyScheduleHTML(p){
+ const s=ensurePetSim(p),mode=petSpeciesMode(p);
+ const sets={
+  active:["Breakfast","Walk","Rest","Social","Dinner","Bedtime"],
+  smallpet:["Breakfast","Explore","Hide","Enrichment","Dinner","Nest"],
+  bird:["Feed","Perch","Enrichment","Rest","Feed","Sleep"],
+  arachnid:["Observe","Hide","Water","Rest","Feed","Night"],
+  insect:["Humidity","Feed","Climb","Rest","Molt Check","Night"],
+  colony:["Forage","Brood","Hydrate","Dark Rest","Food","Nest"],
+  amphibian:["Water","Hide","Feed","Soak","Rest","Night"],
+  reptile:["Warm","Bask","Explore","Cool Hide","Check","Rest"]
+ };
+ const a=sets[mode]||["Breakfast","Activity","Rest","Enrichment","Dinner","Bedtime"];
+ return `<div class="pet-schedule"><b>Daily Routine</b><div>${a.map((x,i)=>`<span class="${i===s.daypartIndex?"now":""}">${x}</span>`).join("")}</div></div>`;
+}
+
+
+/* =========================================================
+   VET GODS · INDIVIDUAL PET MEMORY / PERSONALITY EVOLUTION
+   ========================================================= */
+
+function ensurePetMind(p){
+  ensurePetSim(p);
+  if(!p.mind){
+    p.mind={
+      traits:{
+        confidence:Math.max(10,Math.min(90,45+(p.trust||0)*0.2-(p.fear||0)*0.15)),
+        curiosity:45,
+        sociability:50,
+        independence:45,
+        resilience:50
+      },
+      likes:[],
+      dislikes:[],
+      learned:[],
+      associations:{},
+      requests:[],
+      milestones:[],
+      bondPlayer:Math.max(0,Math.min(100,p.trust||0)),
+      bondPets:{},
+      behaviorState:"settling",
+      favoriteFood:null,
+      favoriteToy:null,
+      favoriteRoom:null,
+      favoriteCompanion:null,
+      avoids:null,
+      lastMindEvent:0
+    };
+  }
+  const m=p.mind;
+  for(const k of ["likes","dislikes","learned","requests","milestones"]) if(!Array.isArray(m[k]))m[k]=[];
+  if(!m.associations)m.associations={};
+  if(!m.bondPets)m.bondPets={};
+  return m;
+}
+
+function petMindClamp(v){return Math.max(0,Math.min(100,Number(v)||0));}
+function petMindAddUnique(arr,text){if(text && !arr.includes(text))arr.push(text);}
+
+function petAssociation(p,key,delta,label){
+  const m=ensurePetMind(p);
+  m.associations[key]=petMindClamp((m.associations[key]||50)+delta);
+  if(label && delta>=5)petMindAddUnique(m.learned,label);
+}
+
+function petDiscoverPreference(p,type,value,positive=true){
+  const m=ensurePetMind(p);
+  if(!value)return;
+  const target=positive?m.likes:m.dislikes;
+  const text=`${type}: ${value}`;
+  petMindAddUnique(target,text);
+  if(positive){
+    if(type==="Food")m.favoriteFood=value;
+    if(type==="Toy")m.favoriteToy=value;
+    if(type==="Room")m.favoriteRoom=value;
+    if(type==="Companion")m.favoriteCompanion=value;
+  }else if(type==="Avoids"){
+    m.avoids=value;
+  }
+}
+
+function petMilestone(p,key,text){
+  const m=ensurePetMind(p);
+  if(m.milestones.includes(key))return;
+  m.milestones.push(key);
+  petMindAddUnique(p.memories||(p.memories=[]),text);
+  petSimLog(p,text);
+}
+
+function evolvePetPersonality(p){
+  const m=ensurePetMind(p),t=m.traits;
+  const trust=p.trust||0, fear=p.fear||0, happy=p.happiness||0;
+  t.confidence=petMindClamp(t.confidence + (trust>65?0.7:0) - (fear>60?0.5:0));
+  t.curiosity=petMindClamp(t.curiosity + ((happy>65 && fear<40)?0.35:0));
+  t.sociability=petMindClamp(t.sociability + ((p.loneliness||0)<35?0.18:0));
+  t.resilience=petMindClamp(t.resilience + ((p.pain||0)<30 && trust>55?0.15:0));
+  m.bondPlayer=petMindClamp((m.bondPlayer*0.8)+(trust*0.2));
+
+  if(t.confidence<30)m.behaviorState="frightened";
+  else if(t.confidence<45)m.behaviorState="cautious";
+  else if(t.curiosity>65)m.behaviorState="curious";
+  else if(m.bondPlayer>80)m.behaviorState="bonded";
+  else m.behaviorState="settling";
+
+  if(m.bondPlayer>=90)petMilestone(p,"deep_bond",`${p.name} became deeply bonded with you.`);
+  if((p.happiness||0)>=85)petMilestone(p,"very_happy",`${p.name} learned that home can be a happy place.`);
+  if((p.fear||0)<=15)petMilestone(p,"fear_low",`${p.name} relaxed without watching every doorway.`);
+}
+
+function petMemoryInfluence(p){
+  const m=ensurePetMind(p),s=ensurePetSim(p);
+  // Learned favorites guide autonomous room/activity choices.
+  if(m.favoriteRoom && Math.random()<0.18)s.room=m.favoriteRoom;
+  if(m.favoriteCompanion && Math.random()<0.12){
+    const o=state.pets.find(x=>x.name===m.favoriteCompanion);
+    if(o)s.bondedPetId=o.id;
+  }
+  if(m.associations["leash"]>=70 && petSpeciesMode(p)==="active" && Math.random()<0.15){
+    s.activity="Waiting for a safe walk";
+  }
+  if(m.associations["quiet_room"]>=70 && (p.fear||0)>45){
+    s.room="Rest Area";
+    s.activity="Seeking the quiet room";
+  }
+}
+
+function petMindAfterCare(p,action){
+  const m=ensurePetMind(p);
+  const s=ensurePetSim(p);
+  const a=(action||"").toLowerCase();
+
+  if(/food|meal|snack/.test(a)){
+    petAssociation(p,"feeding",2,"Food station means something good is coming.");
+    if(!m.favoriteFood && Math.random()<0.16)petDiscoverPreference(p,"Food","Favorite meal",true);
+  }
+  if(/water|hydrate/.test(a))petAssociation(p,"water_station",2,"The water station is safe.");
+  if(/walk|activity/.test(a)){
+    petAssociation(p,"leash",3,"The leash means we come home again.");
+    m.traits.confidence=petMindClamp(m.traits.confidence+1);
+  }
+  if(/comfort|nearby|sit|trust/.test(a)){
+    m.bondPlayer=petMindClamp(m.bondPlayer+2.5);
+    petAssociation(p,"quiet_room",2,"Quiet company feels safe.");
+  }
+  if(/play|enrich/.test(a)){
+    m.traits.curiosity=petMindClamp(m.traits.curiosity+1.4);
+    if(!m.favoriteToy && Math.random()<0.16)petDiscoverPreference(p,"Toy","Favorite enrichment toy",true);
+  }
+  if(/brush|groom|clean/.test(a)){
+    petAssociation(p,"grooming",1.5,"Grooming can be gentle.");
+  }
+  if(s.room && Math.random()<0.08 && !m.favoriteRoom){
+    petDiscoverPreference(p,"Room",s.room,true);
+    petMilestone(p,"favorite_room",`${p.name} chose ${s.room} as a favorite place.`);
+  }
+  evolvePetPersonality(p);
+}
+
+function petBehaviorRequest(p){
+  const m=ensurePetMind(p);
+  const s=ensurePetSim(p);
+  let text="";
+  if((p.hunger||0)<35)text=`${p.name} keeps checking the feeding station.`;
+  else if((p.water||0)<35)text=`${p.name} is lingering near the water area.`;
+  else if((p.energy||0)<30)text=`${p.name} keeps returning to a quiet resting place.`;
+  else if((p.loneliness||0)>60 && !["arachnid","insect","myriapod","mollusk","colony"].includes(petSpeciesMode(p)))text=`${p.name} keeps looking for company.`;
+  else if((p.fear||0)>55)text=`${p.name} keeps watching the doorway and choosing sheltered spaces.`;
+  else if(m.traits.curiosity>65)text=`${p.name} is investigating everything in ${s.room}.`;
+  else text=`${p.name} seems comfortable with today's routine.`;
+
+  if(!m.requests.length || m.requests[0]!==text){
+    m.requests.unshift(text);
+    m.requests=m.requests.slice(0,6);
+  }
+  return text;
+}
+
+function petBondEvent(p,other,amount=2){
+  if(!other)return;
+  const m=ensurePetMind(p),om=ensurePetMind(other);
+  m.bondPets[other.id]=petMindClamp((m.bondPets[other.id]||25)+amount);
+  om.bondPets[p.id]=petMindClamp((om.bondPets[p.id]||25)+amount);
+  if(m.bondPets[other.id]>=70){
+    m.favoriteCompanion=other.name;
+    petDiscoverPreference(p,"Companion",other.name,true);
+    petMilestone(p,`bond_${other.id}`,`${p.name} formed a strong bond with ${other.name}.`);
+  }
+}
+
+function petMindSimTick(p){
+  const m=ensurePetMind(p);
+  petMemoryInfluence(p);
+  evolvePetPersonality(p);
+
+  const s=ensurePetSim(p);
+  if(s.bondedPetId){
+    const other=state.pets.find(x=>x.id===s.bondedPetId);
+    if(other)petBondEvent(p,other,0.35);
+  }
+
+  // Discover preferences gradually from repeated life.
+  if(s.simHours>0 && s.simHours%18===0 && !m.favoriteRoom)petDiscoverPreference(p,"Room",s.room,true);
+  if(s.simHours>0 && s.simHours%24===0)petBehaviorRequest(p);
+}
+
+function petMindPanelHTML(p){
+  const m=ensurePetMind(p);
+  const bonds=Object.entries(m.bondPets)
+    .map(([id,v])=>({p:state.pets.find(x=>x.id===id),v}))
+    .filter(x=>x.p)
+    .sort((a,b)=>b.v-a.v)
+    .slice(0,3);
+
+  const favoriteBits=[
+    m.favoriteFood?`Food · ${m.favoriteFood}`:null,
+    m.favoriteToy?`Toy · ${m.favoriteToy}`:null,
+    m.favoriteRoom?`Room · ${m.favoriteRoom}`:null,
+    m.favoriteCompanion?`Companion · ${m.favoriteCompanion}`:null
+  ].filter(Boolean);
+
+  return `<div class="pet-mind">
+    <div class="pet-mind-head">
+      <div><b>🧠 Individual Memory</b><span>${m.behaviorState.toUpperCase()} · Player bond ${Math.round(m.bondPlayer)}%</span></div>
+      <div class="pet-mind-state">${petBehaviorRequest(p)}</div>
+    </div>
+    <div class="pet-traits">
+      ${Object.entries(m.traits).map(([k,v])=>`<div><span>${k}</span><progress max="100" value="${Math.round(v)}"></progress></div>`).join("")}
+    </div>
+    <div class="pet-memory-columns">
+      <div><b>Favorites</b>${favoriteBits.length?favoriteBits.map(x=>`<span>★ ${x}</span>`).join(""):`<span>??? · still discovering</span>`}</div>
+      <div><b>Learned</b>${m.learned.length?m.learned.slice(-4).map(x=>`<span>✓ ${x}</span>`).join(""):`<span>Nothing learned yet</span>`}</div>
+      <div><b>Important Memories</b>${(p.memories||[]).length?(p.memories||[]).slice(-4).map(x=>`<span>• ${x}</span>`).join(""):`<span>New memories will appear here</span>`}</div>
+      <div><b>Pet Bonds</b>${bonds.length?bonds.map(x=>`<span>♥ ${x.p.name} · ${Math.round(x.v)}%</span>`).join(""):`<span>No strong pet bonds yet</span>`}</div>
+    </div>
+  </div>`;
+}
+
+
+/* =========================================================
+   VET GODS · CANVAS / SVG SANCTUARY ENGINE
+   ========================================================= */
+const SANCTUARY_SIM = {
+  running:false,
+  raf:0,
+  perf:"full",
+  selectedPetId:null,
+  dragObject:null,
+  lastFrame:0,
+  fps:60,
+  objects:[
+    {id:"bed1",type:"bed",x:.16,y:.68,label:"Soft Bed"},
+    {id:"food1",type:"food",x:.78,y:.24,label:"Food Station"},
+    {id:"water1",type:"water",x:.82,y:.68,label:"Water"},
+    {id:"toy1",type:"toy",x:.51,y:.28,label:"Play Toy"},
+    {id:"hide1",type:"hide",x:.29,y:.26,label:"Quiet Hide"},
+    {id:"care1",type:"care",x:.16,y:.22,label:"Care Station"}
+  ]
+};
+
+function sanctuaryDaypart(){
+  const p=state.pets[0];
+  if(p && p.sim)return PET_SIM.dayparts[p.sim.daypartIndex]||"Morning";
+  return "Morning";
+}
+function sanctuaryLight(){
+  const d=sanctuaryDaypart();
+  if(d==="Morning")return "rgba(110,190,255,.08)";
+  if(d==="Afternoon")return "rgba(255,220,130,.07)";
+  if(d==="Evening")return "rgba(160,90,220,.09)";
+  return "rgba(15,25,60,.22)";
+}
+function sanctuaryObjectIcon(type){
+  return {bed:"🛏️",food:"🥣",water:"💧",toy:"🎾",hide:"🪵",care:"✚"}[type]||"◆";
+}
+function sanctuaryCanvasHTML(){
+  if(!state.pets.length)return "";
+  return `<div class="panel sanctuary-engine">
+    <div class="sanctuary-toolbar">
+      <div>
+        <h3>🌌 Sanctuary Simulation Deck</h3>
+        <div class="small">${sanctuaryDaypart()} · Canvas habitat · ${state.pets.length} residents</div>
+      </div>
+      <div class="sanctuary-actions">
+        <button class="action" onclick="sanctuaryToggleRun()">${SANCTUARY_SIM.running?"■ Pause":"▶ Run Sim"}</button>
+        <button class="action" onclick="sanctuaryFullscreen()">⛶ Watch Mode</button>
+        <button class="action" onclick="sanctuaryTogglePerf()">⚙ ${SANCTUARY_SIM.perf==="full"?"Full FX":"Battery"}</button>
+      </div>
+    </div>
+    <div id="sanctuaryStage" class="sanctuary-stage">
+      <canvas id="sanctuaryCanvas" width="1000" height="560"></canvas>
+      <svg id="sanctuaryObjects" class="sanctuary-svg" viewBox="0 0 1000 560" preserveAspectRatio="none">
+        ${SANCTUARY_SIM.objects.map(o=>`
+          <g class="sanctuary-object" data-id="${o.id}" transform="translate(${o.x*1000} ${o.y*560})"
+             onpointerdown="sanctuaryBeginDrag(event,'${o.id}')">
+            <rect x="-42" y="-26" width="84" height="52" rx="10"></rect>
+            <text text-anchor="middle" y="-2" class="obj-icon">${sanctuaryObjectIcon(o.type)}</text>
+            <text text-anchor="middle" y="16" class="obj-label">${o.label}</text>
+          </g>`).join("")}
+      </svg>
+      <div class="sanctuary-hud">
+        <span>${sanctuaryDaypart()}</span>
+        <span id="sanctuaryFPS">FPS ${Math.round(SANCTUARY_SIM.fps)}</span>
+      </div>
+    </div>
+    <div class="sanctuary-help small">Drag habitat objects. Tap a moving pet to open its profile. Their needs and memories influence where they go.</div>
+  </div>`;
+}
+function sanctuaryEnsureMotion(p,i){
+  const s=ensurePetSim(p);
+  if(!s.motion){
+    const pos=petWorldPos(p,i);
+    s.motion={x:pos.x/100,y:pos.y/100,tx:pos.x/100,ty:pos.y/100,vx:0,vy:0};
+  }
+  return s.motion;
+}
+function sanctuaryTargetFor(p,i){
+  const s=ensurePetSim(p),m=ensurePetMind(p),mot=sanctuaryEnsureMotion(p,i);
+  let target=null;
+  if((p.hunger||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="food");
+  else if((p.water||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="water");
+  else if((p.energy||0)<30 || (s.sleep||0)<35)target=SANCTUARY_SIM.objects.find(o=>o.type==="bed")||SANCTUARY_SIM.objects.find(o=>o.type==="hide");
+  else if((p.fear||0)>55)target=SANCTUARY_SIM.objects.find(o=>o.type==="hide");
+  else if((s.enrichment||0)<45)target=SANCTUARY_SIM.objects.find(o=>o.type==="toy");
+  else if(m.favoriteRoom && Math.random()<.1){
+    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
+  }
+  if(!target && (Math.random()<.02 || Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.03)){
+    target=SANCTUARY_SIM.objects[Math.floor(Math.random()*SANCTUARY_SIM.objects.length)];
+  }
+  if(target){
+    mot.tx=Math.max(.05,Math.min(.95,target.x+(Math.random()-.5)*.08));
+    mot.ty=Math.max(.08,Math.min(.92,target.y+(Math.random()-.5)*.08));
+  }
+}
+function sanctuaryDraw(){
+  const c=document.getElementById("sanctuaryCanvas");
+  if(!c)return;
+  const ctx=c.getContext("2d"),w=c.width,h=c.height;
+  ctx.clearRect(0,0,w,h);
+  const g=ctx.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,"#0c1c2b"); g.addColorStop(1,"#071018");
+  ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle=sanctuaryLight(); ctx.fillRect(0,0,w,h);
+
+  // room grid / paths
+  ctx.strokeStyle="rgba(130,210,255,.08)"; ctx.lineWidth=1;
+  for(let x=0;x<w;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
+  for(let y=0;y<h;y+=70){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+
+  state.pets.slice(0,24).forEach((p,i)=>{
+    const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
+    sanctuaryTargetFor(p,i);
+    const speed=SANCTUARY_SIM.perf==="full"?.0026:.0017;
+    mot.x += (mot.tx-mot.x)*speed*16;
+    mot.y += (mot.ty-mot.y)*speed*16;
+    const x=mot.x*w,y=mot.y*h;
+    ctx.save();
+    ctx.shadowBlur=SANCTUARY_SIM.perf==="full"?14:0;
+    ctx.shadowColor="rgba(100,220,255,.35)";
+    ctx.fillStyle="#102b3d";
+    ctx.beginPath();ctx.arc(x,y,22,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.font="24px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
+    ctx.fillText(petWorldIcon(p),x,y-2);
+    ctx.fillStyle="#e9f8ff";ctx.font="bold 12px system-ui";ctx.fillText(p.name,x,y+33);
+    ctx.fillStyle="rgba(220,245,255,.72)";ctx.font="10px system-ui";ctx.fillText(s.activity||"Resting",x,y+46);
+    ctx.restore();
+  });
+}
+function sanctuaryLoop(ts){
+  if(!SANCTUARY_SIM.running)return;
+  if(SANCTUARY_SIM.lastFrame){
+    const dt=ts-SANCTUARY_SIM.lastFrame;
+    SANCTUARY_SIM.fps=SANCTUARY_SIM.fps*.88+(1000/Math.max(1,dt))*.12;
+  }
+  SANCTUARY_SIM.lastFrame=ts;
+  sanctuaryDraw();
+  const f=document.getElementById("sanctuaryFPS");
+  if(f)f.textContent=`FPS ${Math.round(SANCTUARY_SIM.fps)}`;
+  SANCTUARY_SIM.raf=requestAnimationFrame(sanctuaryLoop);
+}
+function sanctuaryStart(){
+  if(SANCTUARY_SIM.raf)cancelAnimationFrame(SANCTUARY_SIM.raf);
+  SANCTUARY_SIM.running=true;SANCTUARY_SIM.lastFrame=0;
+  SANCTUARY_SIM.raf=requestAnimationFrame(sanctuaryLoop);
+}
+function sanctuaryStop(){
+  SANCTUARY_SIM.running=false;
+  if(SANCTUARY_SIM.raf)cancelAnimationFrame(SANCTUARY_SIM.raf);
+  SANCTUARY_SIM.raf=0;
+}
+function sanctuaryToggleRun(){
+  if(SANCTUARY_SIM.running)sanctuaryStop();else sanctuaryStart();
+  render();
+  setTimeout(()=>{sanctuaryDraw();if(SANCTUARY_SIM.running)sanctuaryStart();},0);
+}
+function sanctuaryTogglePerf(){
+  SANCTUARY_SIM.perf=SANCTUARY_SIM.perf==="full"?"battery":"full";
+  render();setTimeout(sanctuaryDraw,0);
+}
+function sanctuaryFullscreen(){
+  const el=document.getElementById("sanctuaryStage");
+  if(!el)return;
+  if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+  else if(el.requestFullscreen)el.requestFullscreen().catch(()=>{});
+}
+function sanctuaryBeginDrag(ev,id){
+  SANCTUARY_SIM.dragObject=id;
+  try{ev.currentTarget.setPointerCapture(ev.pointerId)}catch(e){}
+  ev.currentTarget.addEventListener("pointermove",sanctuaryDragMove);
+  ev.currentTarget.addEventListener("pointerup",sanctuaryEndDrag,{once:true});
+}
+function sanctuaryDragMove(ev){
+  if(!SANCTUARY_SIM.dragObject)return;
+  const svg=document.getElementById("sanctuaryObjects");
+  if(!svg)return;
+  const r=svg.getBoundingClientRect();
+  const x=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));
+  const y=Math.max(0,Math.min(1,(ev.clientY-r.top)/r.height));
+  const o=SANCTUARY_SIM.objects.find(x=>x.id===SANCTUARY_SIM.dragObject);
+  if(o){o.x=x;o.y=y;ev.currentTarget.setAttribute("transform",`translate(${x*1000} ${y*560})`);}
+}
+function sanctuaryEndDrag(ev){
+  ev.currentTarget.removeEventListener("pointermove",sanctuaryDragMove);
+  SANCTUARY_SIM.dragObject=null;
+  if(typeof saveGame==="function")try{saveGame("Sanctuary layout",true)}catch(e){}
+}
+
+function petLifeBookHTML(p){
+  const m=ensurePetMind(p),s=ensurePetSim(p);
+  const events=(p.memories||[]).slice(-8).reverse();
+  return `<details class="pet-life-book">
+    <summary>📖 Life Book · ${p.name}</summary>
+    <div class="life-tabs">
+      <div><b>Rescue</b><span>${p.backstory||p.condition||"Saved through VET GODS"}</span></div>
+      <div><b>Home</b><span>Day ${s.day} · ${PET_SIM.dayparts[s.daypartIndex]}</span></div>
+      <div><b>Personality</b><span>${m.behaviorState} · confidence ${Math.round(m.traits.confidence)}%</span></div>
+      <div><b>Favorite</b><span>${m.favoriteRoom||m.favoriteFood||m.favoriteToy||"Still discovering"}</span></div>
+      <div><b>Milestones</b><span>${m.milestones.length} recorded</span></div>
+      <div><b>Bond</b><span>You · ${Math.round(m.bondPlayer)}%</span></div>
+    </div>
+    <div class="life-timeline">${events.length?events.map((x,i)=>`<div><b>${events.length-i}</b><span>${x}</span></div>`).join(""):`<div><span>No major memories recorded yet.</span></div>`}</div>
+  </details>`;
+}
+
+
+/* =========================================================
+   VET GODS · AMAZON CARE LINKS FOR ALL SPECIES
+   Search links only; care supplies do not replace veterinary care.
+   ========================================================= */
+
+function vgAmazonUrl(q){
+  return "https://www.amazon.com/s?k="+encodeURIComponent(q);
+}
+
+function vgAmazonGo(q){
+  try{ window.location.href=vgAmazonUrl(q); }
+  catch(e){ try{ window.open(vgAmazonUrl(q),"_blank"); }catch(_){} }
+  return false;
+}
+
+function vgCareSearchSet(p){
+  const species=(p.species||"animal").trim();
+  const mode=petSpeciesMode(p);
+
+  // Baseline links every animal gets.
+  let items=[
+    {k:"Food",q:`${species} food diet supplies`},
+    {k:"Treats / Feeding",q:`${species} feeding treats supplies`},
+    {k:"Water",q:`${species} water bowl hydration supplies`},
+    {k:"Habitat / Home",q:`${species} habitat enclosure home supplies`},
+    {k:"Bedding / Substrate",q:`${species} bedding substrate supplies`},
+    {k:"Enrichment",q:`${species} enrichment toys activity supplies`},
+    {k:"Cleaning",q:`${species} habitat cleaning supplies pet safe`},
+    {k:"Carrier / Travel",q:`${species} carrier travel transport supplies`},
+    {k:"General Care",q:`${species} care supplies`}
+  ];
+
+  const add=(k,q)=>items.push({k,q});
+
+  if(mode==="active" || /Dog|Cat|Rabbit|Guinea Pig|Hamster|Chinchilla|Ferret|Rat|Mouse|Goat|Sheep|Pig|Horse/i.test(species)){
+    add("Grooming",`${species} grooming brush nail care supplies`);
+    add("Bed / Rest",`${species} bed blanket rest supplies`);
+    add("Training",`${species} training enrichment supplies`);
+    add("Leash / Harness",`${species} harness leash walking supplies`);
+    add("Vehicle / Car",`${species} car seat cover travel safety carrier`);
+    add("Bowls / Feeders",`${species} food water bowl feeder`);
+  }
+
+  if(mode==="bird"){
+    add("Perches",`${species} natural perches cage`);
+    add("Bird Food",`${species} pellets food diet`);
+    add("Foraging",`${species} foraging toys enrichment`);
+    add("Cage / Aviary",`${species} cage aviary supplies`);
+    add("Bath",`${species} bird bath misting supplies`);
+    add("Travel Carrier",`${species} bird travel carrier`);
+  }
+
+  if(mode==="reptile"){
+    add("Heat",`${species} reptile heat lamp thermostat`);
+    add("UVB / Lighting",`${species} UVB light reptile`);
+    add("Thermometer",`${species} digital reptile thermometer hygrometer`);
+    add("Hides",`${species} reptile hide cave`);
+    add("Substrate",`${species} safe reptile substrate`);
+    add("Feeding",`${species} reptile feeder feeding supplies`);
+  }
+
+  if(mode==="amphibian"){
+    add("Humidity",`${species} terrarium misting humidity`);
+    add("Vivarium",`${species} vivarium enclosure`);
+    add("Water Care",`${species} amphibian water conditioner`);
+    add("Hides / Plants",`${species} vivarium hides plants`);
+    add("Live Food",`${species} feeder insects food`);
+  }
+
+  if(mode==="arachnid"){
+    add("Terrarium",`${species} tarantula spider enclosure`);
+    add("Substrate",`${species} spider tarantula substrate`);
+    add("Hide",`${species} tarantula hide cork bark`);
+    add("Water Dish",`${species} tarantula water dish`);
+    add("Feeder Insects",`${species} feeder insects crickets roaches`);
+    add("Humidity Gauge",`${species} terrarium hygrometer`);
+    add("Transfer Cup",`${species} spider catch cup transfer container`);
+  }
+
+  if(mode==="insect"){
+    add("Insect Enclosure",`${species} insect enclosure habitat`);
+    add("Climbing",`${species} insect climbing branches mesh`);
+    add("Feeding",`${species} insect food feeder diet supplies`);
+    add("Misting",`${species} mister humidity bottle`);
+    add("Substrate",`${species} insect substrate`);
+    add("Molt Support",`${species} insect molt habitat supplies`);
+  }
+
+  if(mode==="myriapod"){
+    add("Deep Substrate",`${species} millipede centipede substrate`);
+    add("Moisture",`${species} terrarium moisture humidity supplies`);
+    add("Hide",`${species} cork bark hide`);
+    add("Food",`${species} millipede centipede food`);
+    add("Calcium / Minerals",`${species} calcium mineral source`);
+  }
+
+  if(mode==="mollusk"){
+    add("Snail Food",`${species} land snail food`);
+    add("Calcium",`${species} snail calcium cuttlebone`);
+    add("Humid Habitat",`${species} land snail terrarium`);
+    add("Substrate",`${species} land snail substrate`);
+    add("Misting",`${species} terrarium misting bottle`);
+  }
+
+  if(mode==="crustacean"){
+    add("Habitat",`${species} hermit crab habitat tank`);
+    add("Food",`${species} hermit crab food`);
+    add("Salt / Minerals",`${species} hermit crab marine salt minerals`);
+    add("Shells",`${species} hermit crab natural shells`);
+    add("Humidity / Heat",`${species} hermit crab humidity heater`);
+    add("Substrate",`${species} hermit crab substrate`);
+  }
+
+  if(mode==="colony"){
+    add("Colony Habitat",`${species} colony habitat formicarium enclosure`);
+    add("Food",`${species} colony food feeding supplies`);
+    add("Hydration",`${species} colony hydration water feeder`);
+    add("Nest Material",`${species} colony nest substrate`);
+    add("Observation",`${species} colony observation habitat`);
+    if(/Ant/i.test(species))add("Formicarium",`ant formicarium starter habitat`);
+    if(/Isopod/i.test(species))add("Leaf Litter / Calcium",`isopod leaf litter calcium substrate`);
+    if(/Roach/i.test(species))add("Roach Colony Food",`dubia roach colony food water crystals`);
+  }
+
+  // Species-specific useful extras
+  if(/Dog/i.test(species)){
+    add("Dog Food",`dog food`);
+    add("Chews",`dog chew toys`);
+    add("Crate",`dog crate kennel`);
+    add("Car Restraint",`dog car safety harness seat belt`);
+  }
+  if(/Cat/i.test(species)){
+    add("Cat Food",`cat food`);
+    add("Litter",`cat litter`);
+    add("Scratcher",`cat scratching post`);
+    add("Carrier",`cat carrier travel`);
+  }
+  if(/Rabbit/i.test(species)){
+    add("Hay",`rabbit timothy hay`);
+    add("Pellets",`rabbit pellets`);
+    add("Litter",`rabbit litter bedding`);
+    add("Chew Toys",`rabbit chew toys enrichment`);
+  }
+  if(/Guinea Pig/i.test(species)){
+    add("Hay",`guinea pig timothy hay`);
+    add("Vitamin C Food",`guinea pig vitamin c pellets`);
+    add("Hide",`guinea pig hide`);
+  }
+  if(/Hamster/i.test(species)){
+    add("Deep Bedding",`hamster deep bedding`);
+    add("Wheel",`hamster wheel`);
+    add("Sand Bath",`hamster sand bath`);
+  }
+  if(/Axolotl/i.test(species)){
+    add("Aquarium",`axolotl aquarium supplies`);
+    add("Water Test",`aquarium water test kit`);
+    add("Cooling",`aquarium cooling fan axolotl`);
+    add("Hides",`axolotl aquarium hide`);
+  }
+  if(/Frog|Newt|Salamander/i.test(species)){
+    add("Live Food",`${species} feeder insects`);
+    add("Mister",`${species} vivarium mister`);
+    add("Water Conditioner",`amphibian water conditioner`);
+  }
+  if(/Tarantula|Spider/i.test(species)){
+    add("Feeder Roaches",`feeder roaches tarantula`);
+    add("Cork Bark",`cork bark tarantula enclosure`);
+  }
+  if(/Mantis/i.test(species)){
+    add("Tall Mesh Enclosure",`praying mantis mesh enclosure`);
+    add("Feeder Flies",`feeder flies mantis`);
+  }
+  if(/Stick Insect|Leaf Insect/i.test(species)){
+    add("Tall Enclosure",`${species} tall mesh enclosure`);
+    add("Misting Bottle",`fine mist spray bottle terrarium`);
+  }
+
+  // De-dupe by key+query
+  const seen=new Set();
+  items=items.filter(x=>{
+    const key=(x.k+"|"+x.q).toLowerCase();
+    if(seen.has(key))return false;
+    seen.add(key);return true;
+  });
+
+  return items;
+}
+
+function vgAmazonCarePanelHTML(p){
+  const items=vgCareSearchSet(p);
+  return `<details class="amazon-care-panel">
+    <summary>🛒 Amazon Care & Food · ${p.species}</summary>
+    <div class="amazon-disclaimer">General food, habitat, travel and care supply searches only. For illness, injury or worsening symptoms, use appropriate veterinary/exotic-veterinary care.</div>
+    <div class="amazon-care-grid">
+      ${items.map(x=>`<button onclick="event.stopPropagation();return vgAmazonGo('${x.q.replace(/'/g,"\\'")}')"><b>${x.k}</b><span>${x.q}</span></button>`).join("")}
+    </div>
+  </details>`;
+}
+
+function vgGlobalAmazonSpeciesHTML(){
+  const species=[...new Set((typeof ANIMAL_DB!=="undefined"?ANIMAL_DB:[])
+    .map(a=>a.species).filter(Boolean))].sort();
+  if(!species.length)return "";
+  return `<details class="panel amazon-all-species">
+    <summary>🛒 All-Species Amazon Care Index · ${species.length} species</summary>
+    <div class="amazon-disclaimer">Tap a species for food, habitat, bedding/substrate, water, enrichment, transport and care searches.</div>
+    <div class="amazon-species-grid">
+      ${species.map(s=>`<button onclick="event.stopPropagation();vgAmazonSpeciesPopup('${s.replace(/'/g,"\\'")}')">${s}</button>`).join("")}
+    </div>
+  </details>`;
+}
+
+function vgAmazonSpeciesPopup(species){
+  const fake={species,trust:50,fear:20,happiness:60,memories:[],sim:{},mind:{}};
+  const items=vgCareSearchSet(fake);
+  const old=document.getElementById("amazonSpeciesModal");
+  if(old)old.remove();
+  const modal=document.createElement("div");
+  modal.id="amazonSpeciesModal";
+  modal.className="amazon-modal";
+  modal.innerHTML=`<div class="amazon-modal-card">
+    <div class="amazon-modal-head"><div><b>${species}</b><span>Food · habitat · care · travel</span></div><button onclick="document.getElementById('amazonSpeciesModal').remove()">✕</button></div>
+    <div class="amazon-care-grid">${items.map(x=>`<button onclick="return vgAmazonGo('${x.q.replace(/'/g,"\\'")}')"><b>${x.k}</b><span>${x.q}</span></button>`).join("")}</div>
+  </div>`;
+  document.body.appendChild(modal);
 }
 
 function renderPets(){
@@ -2129,6 +2969,10 @@ function renderPets(){
       </div>
 
       ${petSimRoomHTML(p)}
+      ${petDailyScheduleHTML(p)}
+      ${petMindPanelHTML(p)}
+      ${petLifeBookHTML(p)}
+      ${vgAmazonCarePanelHTML(p)}
 
       <div class="mixed-care-grid">
 
@@ -2227,11 +3071,16 @@ function renderPets(){
         </div>
       </div>
     </div>
+    ${sanctuaryCanvasHTML()}
+    ${petWorldHTML()}
     ${petHomeSimReportHTML()}
     <div class="pet-care-grid">${cards}</div>
+    ${vgGlobalAmazonSpeciesHTML()}
     ${typeof persistentSavePanel==="function"?persistentSavePanel():""}
   `;
+  setTimeout(()=>{if(typeof sanctuaryDraw==="function")sanctuaryDraw();},0);
 }
+
 function renderStatus(){
   status.innerHTML=`<div class="panel"><h2>Hospital Status</h2>
     <div class="dept-counts">
@@ -3715,7 +4564,7 @@ function openAnimalProfile(id){
   render();
 }
 function animalProfileHTML(p){
-  if(!p)return `<div class="panel"><div class="empty">Animal not found.</div></div>`;
+  if(!p)return `<div class="panel"><div class="empty">Animal not found.</div>${vgAmazonCarePanelHTML(p)}</div>`;
   const t=ensureTree(p), l=ensureLongPatient(p), f=ensureFlow(p);
   let pet=null;
   try{pet=ensurePetSim(p)}catch(e){}
