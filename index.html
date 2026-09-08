@@ -2663,6 +2663,19 @@ function sanctuaryArrived(p,i){
     wander:"Looking around"
   };
   if(labels[mot.stationType])s.activity=labels[mot.stationType];
+  if(near && (!mot.arrivedAt || Date.now()-mot.arrivedAt>1000)){
+    mot.arrivedAt=Date.now();
+    const stay={
+      bed:30000,
+      hide:24000,
+      food:18000,
+      water:15000,
+      toy:20000,
+      care:17000,
+      wander:10000
+    };
+    mot.nextDecision=Math.max(mot.nextDecision||0,Date.now()+(stay[mot.stationType]||16000));
+  }
 }
 function sanctuaryTargetFor(p,i){
   const s=ensurePetSim(p),m=ensurePetMind(p),mot=sanctuaryEnsureMotion(p,i);
@@ -2677,7 +2690,7 @@ function sanctuaryTargetFor(p,i){
       mot.stationType=bed.type;mot.stationId=bed.id;
       mot.tx=Math.max(.05,Math.min(.95,bed.x+off.x));
       mot.ty=Math.max(.08,Math.min(.92,bed.y+off.y));
-      mot.nextDecision=now+9000;
+      mot.nextDecision=now+22000;
       s.activity=Math.hypot(mot.tx-mot.x,mot.ty-mot.y)<.04?"Sleeping peacefully":"Going to the sleep station";
       s.room=bed.label||"Sleep Station";
       return;
@@ -2685,13 +2698,13 @@ function sanctuaryTargetFor(p,i){
   }
 
   // Strong physical needs override casual activities.
-  if((p.hunger||0)<28){sanctuarySetTarget(p,i,"food",6500);return;}
-  if((p.water||0)<28){sanctuarySetTarget(p,i,"water",5200);return;}
-  if((p.fear||0)>62){sanctuarySetTarget(p,i,"hide",8000);return;}
+  if((p.hunger||0)<28){sanctuarySetTarget(p,i,"food",15000);return;}
+  if((p.water||0)<28){sanctuarySetTarget(p,i,"water",12000);return;}
+  if((p.fear||0)>62){sanctuarySetTarget(p,i,"hide",18000);return;}
 
   // During the shared quiet phase, residents drift toward calm stations.
   if(phase==="quiet" && mot.stationType!=="hide" && Math.random()<.018){
-    sanctuarySetTarget(p,i,"hide",7000+Math.random()*5000);return;
+    sanctuarySetTarget(p,i,"hide",16000+Math.random()*9000);return;
   }
 
   // Keep following a station if the player drags it to a new location.
@@ -2729,8 +2742,8 @@ function sanctuaryTargetFor(p,i){
   if(m.traits && m.traits.independence>60){push("wander",2);push("hide",1);}
 
   const choice=choices[Math.floor(Math.random()*choices.length)]||"wander";
-  if(choice==="wander")sanctuarySetWander(p,i,4200+Math.random()*6500);
-  else sanctuarySetTarget(p,i,choice,5000+Math.random()*7000);
+  if(choice==="wander")sanctuarySetWander(p,i,9000+Math.random()*12000);
+  else sanctuarySetTarget(p,i,choice,13000+Math.random()*14000);
 }
 
 function sanctuaryDraw(){
