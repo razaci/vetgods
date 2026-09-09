@@ -1425,6 +1425,30 @@ button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
 .ant-events{margin-top:7px;font-size:.45rem;line-height:1.45;opacity:.76}
 #antsSimCanvas{cursor:crosshair}
 
+
+.ant-society-panel{margin-top:8px;background:rgba(9,20,16,.82);border-color:rgba(130,210,170,.25)}
+.ant-society-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:7px;font-size:.48rem}
+.ant-society-grid>div{padding:6px;border:1px solid rgba(120,200,160,.16);border-radius:7px;background:rgba(14,34,27,.48)}
+.ant-chambers{font-size:.44rem;line-height:1.4;opacity:.76;margin-top:7px}
+
+
+.ant-world-panel{margin-top:8px;background:rgba(14,16,28,.88);border-color:rgba(160,170,255,.26)}
+.ant-world-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:7px;font-size:.48rem}
+.ant-world-grid>div{padding:6px;border:1px solid rgba(160,170,255,.14);border-radius:7px;background:rgba(24,28,48,.46)}
+.ant-emergency{margin-top:8px;padding:7px;border:1px solid rgba(255,90,70,.35);border-radius:7px;background:rgba(70,15,12,.45);font-size:.49rem}
+.ant-goals{margin-top:8px;display:grid;gap:5px}
+.ant-goal{display:flex;justify-content:space-between;gap:8px;padding:5px 7px;border-radius:6px;background:rgba(36,44,70,.46);font-size:.46rem}
+.ant-standout{margin-top:8px;font-size:.44rem;line-height:1.5;opacity:.84}
+
+
+.ant-civ-panel{margin-top:8px;background:rgba(20,13,10,.92);border-color:rgba(230,185,100,.28)}
+.ant-civ-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:7px;font-size:.48rem}
+.ant-civ-grid>div{padding:6px;border:1px solid rgba(230,185,100,.14);border-radius:7px;background:rgba(50,35,20,.44)}
+.ant-queen-card{margin-top:8px;padding:7px;border-radius:7px;background:rgba(70,48,20,.5);font-size:.48rem;line-height:1.45}
+.ant-orders{display:grid;gap:5px;margin-top:8px}.ant-orders label{display:grid;grid-template-columns:70px 1fr;align-items:center;gap:8px;font-size:.45rem}.ant-orders input{width:100%}
+.ant-cam-row,.ant-sandbox-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.ant-cam-row button,.ant-sandbox-row button{font-size:.45rem;padding:6px 8px}
+.ant-detail{margin-top:8px;padding:7px;border:1px solid rgba(255,230,150,.16);border-radius:7px;font-size:.46rem;line-height:1.45}.ant-history{margin-top:8px;font-size:.44rem;line-height:1.5;opacity:.8}
+
 </style>
 </head>
 <body>
@@ -4559,22 +4583,444 @@ function antCanvasDig(ev){
   return false;
 }
 
-function antChooseTarget(i,m){
-  const a=ensureAntFarm(),adv=antEnsureAdvanced(),role=antAssignRole(m,i),now=Date.now();
-  if(role==="Water Carrier"||(a.water||0)<40)return {x:.78,y:.13,label:"collecting water",zone:"surface",duty:"water",carry:"💧"};
-  if(role==="Food Hauler"||role==="Forager"||(a.food||0)<40)return {x:.18,y:.13,label:"collecting food",zone:"surface",duty:"food",carry:"🍯"};
-  if(role==="Nurse")return {x:.20,y:.76,label:"tending brood",zone:"nursery",duty:"nursery",carry:"🥚"};
-  if(role==="Queen Attendant")return {x:.47,y:.55,label:"attending queen",zone:"queen",duty:"queen"};
-  if(role==="Digger")return adv.digTarget?{x:adv.digTarget.x,y:adv.digTarget.y,label:"digging tunnel",zone:"tunnel",duty:"dig",carry:"🪨"}:{x:.50,y:.67,label:"clearing tunnel",zone:"tunnel",duty:"dig",carry:"🪨"};
-  if(role==="Guard")return {x:.15,y:.22,label:"guarding entrance",zone:"surface",duty:"guard"};
-  const pts=m.lane==="surface"?[
-    {x:.10,y:.10,label:"patrolling edge",zone:"surface"},{x:.46,y:.12,label:"crossing outworld",zone:"surface"},{x:.78,y:.13,label:"checking water",zone:"surface"}
-  ]:[
-    {x:.34,y:.34,label:"upper tunnel",zone:"tunnel"},{x:.47,y:.55,label:"queen chamber",zone:"queen"},{x:.84,y:.76,label:"worker chamber",zone:"workers"}
-  ];
-  if(Math.random()<.18)m.lane=m.lane==="surface"?"tunnel":"surface";
-  return pts[(i+Math.floor(now/9000))%pts.length];
+
+function antEnsureSociety(){
+  const adv=antEnsureAdvanced();
+  if(!adv.society)adv.society={alarm:0,midden:8,storedFood:28,broodWarmth:72,traffic:0,nightMode:false,socialEvents:[]};
+  if(!Array.isArray(adv.society.socialEvents))adv.society.socialEvents=[];
+  return adv.society;
 }
+function antSocietyEvent(msg){
+  const s=antEnsureSociety();s.socialEvents.unshift(msg);s.socialEvents=s.socialEvents.slice(0,6);
+}
+function antUpdateIndividuals(){
+  ensureAntMotion().forEach((m,i)=>{
+    if(m.ageHours==null)m.ageHours=8+Math.floor(Math.random()*180);
+    if(m.energy==null)m.energy=55+Math.random()*40;
+    if(m.social==null)m.social=Math.random()*100;
+    if(m.lastRoleSwitch==null)m.lastRoleSwitch=Date.now();
+    m.ageHours+=.001;
+    m.energy=Math.max(0,m.energy-.0025);
+    const a=ensureAntFarm();
+    if(Date.now()-m.lastRoleSwitch>25000){
+      if((a.food||0)<38)m.role=Math.random()<.6?"Forager":"Food Hauler";
+      else if((a.water||0)<38)m.role="Water Carrier";
+      else if((a.eggs||0)+(a.larvae||0)>32&&Math.random()<.5)m.role="Nurse";
+      else if(m.energy<25)m.role="Explorer";
+      else if(Math.random()<.18)m.role=ANT_ROLES[Math.floor(Math.random()*ANT_ROLES.length)];
+      m.lastRoleSwitch=Date.now();
+    }
+  });
+}
+function antTrophallaxis(){
+  const ants=ensureAntMotion();
+  for(let i=0;i<ants.length;i++)for(let j=i+1;j<ants.length;j++){
+    const a=ants[i],b=ants[j];
+    if(Math.hypot(a.x-b.x,a.y-b.y)<.035&&Math.random()<.006){
+      const avg=(a.energy+b.energy)/2;
+      a.energy=Math.min(100,avg+2);b.energy=Math.min(100,avg+2);
+      antSocietyEvent("Two workers exchanged food and antenna signals.");
+    }
+  }
+}
+function antSocietyTick(dt){
+  const a=ensureAntFarm(),s=antEnsureSociety();
+  antUpdateIndividuals();antTrophallaxis();
+  s.alarm=Math.max(0,s.alarm-dt/12000);
+  s.broodWarmth=Math.max(0,Math.min(100,s.broodWarmth+((a.humidity||60)-60)*dt/500000));
+  s.traffic=ensureAntMotion().filter(m=>m.phase==="travel"||m.phase==="roam-travel").length;
+  s.midden=Math.min(100,s.midden+dt/120000);
+  const cleaners=ensureAntMotion().filter(m=>m.role==="Digger"||m.role==="Explorer").length;
+  s.midden=Math.max(0,s.midden-cleaners*dt/180000);
+  const haulers=ensureAntMotion().filter(m=>m.role==="Food Hauler"||m.role==="Forager").length;
+  s.storedFood=Math.max(0,Math.min(100,s.storedFood+haulers*dt/220000-dt/400000));
+  const hour=new Date().getHours();s.nightMode=(hour>=20||hour<6);
+}
+function antChamberCounts(){
+  const counts={surface:0,queen:0,nursery:0,foodvault:0,workers:0,tunnel:0};
+  ensureAntMotion().forEach(m=>{const t=m.target?.zone||m.lane||"tunnel";counts[t]=(counts[t]||0)+1;});
+  return counts;
+}
+function antSocietyPanelHTML(){
+  const s=antEnsureSociety(),c=antChamberCounts();
+  return `<div class="panel ant-society-panel">
+    <div class="terminal-kicker">COLONY SOCIETY</div>
+    <div class="ant-society-grid">
+      <div>🌙 Shift <b>${s.nightMode?"Night":"Day"}</b></div>
+      <div>🚦 Traffic <b>${s.traffic}</b></div>
+      <div>🍯 Cache <b>${Math.round(s.storedFood)}%</b></div>
+      <div>🧹 Midden <b>${Math.round(s.midden)}%</b></div>
+      <div>🔥 Brood Warmth <b>${Math.round(s.broodWarmth)}%</b></div>
+      <div>🚨 Alarm <b>${Math.round(s.alarm)}%</b></div>
+    </div>
+    <div class="ant-chambers">Surface ${c.surface||0} · Queen ${c.queen||0} · Nursery ${c.nursery||0} · Food ${c.foodvault||0} · Workers ${c.workers||0} · Tunnels ${c.tunnel||0}</div>
+    <div class="ant-events">${s.socialEvents.slice(0,3).map(e=>`<div>• ${e}</div>`).join("")}</div>
+  </div>`;
+}
+
+
+function antEnsureWorldLogic(){
+  const adv=antEnsureAdvanced();
+  if(!adv.world)adv.world={
+    memories:{
+      food:{x:.18,y:.13,confidence:.7,lastSeen:Date.now()},
+      water:{x:.78,y:.13,confidence:.7,lastSeen:Date.now()}
+    },
+    routes:[],
+    resources:[
+      {id:"foodA",type:"food",x:.18,y:.13,amount:100,quality:80},
+      {id:"waterA",type:"water",x:.78,y:.13,amount:100,quality:90}
+    ],
+    discoveries:[],
+    emergency:null,
+    emergencyUntil:0,
+    weather:"Clear",
+    temperature:74,
+    humidity:68,
+    season:"Warm Cycle",
+    colonyPersonality:"Balanced",
+    personalityScore:{explore:0,cautious:0,hoard:0,brood:0,expand:0},
+    goals:[],
+    chamberTypes:{main:"Transit",nursery:"Brood",food:"Storage",workers:"Rest"},
+    standout:[],
+    lastWeatherTick:Date.now(),
+    lastGoalTick:0,
+    lastEmergencyTick:0
+  };
+  if(!Array.isArray(adv.world.routes))adv.world.routes=[];
+  if(!Array.isArray(adv.world.resources))adv.world.resources=[];
+  if(!Array.isArray(adv.world.discoveries))adv.world.discoveries=[];
+  if(!Array.isArray(adv.world.goals))adv.world.goals=[];
+  if(!Array.isArray(adv.world.standout))adv.world.standout=[];
+  return adv.world;
+}
+
+function antRemember(type,x,y,confidence=.9){
+  const w=antEnsureWorldLogic();
+  w.memories[type]={x,y,confidence,lastSeen:Date.now()};
+}
+
+function antRouteKey(x1,y1,x2,y2){
+  return [x1.toFixed(2),y1.toFixed(2),x2.toFixed(2),y2.toFixed(2)].join(",");
+}
+function antReinforceRoute(x1,y1,x2,y2,success=1){
+  const w=antEnsureWorldLogic(),key=antRouteKey(x1,y1,x2,y2);
+  let r=w.routes.find(r=>r.key===key);
+  if(!r){r={key,x1,y1,x2,y2,strength:0,traffic:0};w.routes.push(r);}
+  r.strength=Math.max(0,Math.min(100,r.strength+success*2));
+  r.traffic=(r.traffic||0)+1;
+  if(w.routes.length>80)w.routes.sort((a,b)=>b.strength-a.strength).splice(60);
+}
+function antDecayRoutes(dt){
+  const w=antEnsureWorldLogic();
+  w.routes.forEach(r=>{r.strength=Math.max(0,r.strength-dt/120000);r.traffic=Math.max(0,(r.traffic||0)-dt/4000);});
+  w.routes=w.routes.filter(r=>r.strength>.25);
+}
+
+function antResourceAt(type){
+  const w=antEnsureWorldLogic();
+  return w.resources.filter(r=>r.type===type&&r.amount>0).sort((a,b)=>b.amount-a.amount)[0]||null;
+}
+function antConsumeResource(type,amount){
+  const r=antResourceAt(type);if(!r)return false;
+  r.amount=Math.max(0,r.amount-amount);
+  if(r.amount<=0)antSocietyEvent(`${type==="food"?"Food":"Water"} source depleted. Scouts are searching.`);
+  return true;
+}
+
+function antScoutDiscovery(m){
+  const w=antEnsureWorldLogic();
+  const roll=Math.random();
+  let d=null;
+  if(roll<.35)d={type:"food",x:.08+Math.random()*.84,y:.07+Math.random()*.13,amount:45+Math.random()*55,quality:55+Math.random()*40};
+  else if(roll<.55)d={type:"water",x:.08+Math.random()*.84,y:.07+Math.random()*.13,amount:40+Math.random()*60,quality:60+Math.random()*35};
+  else if(roll<.72)d={type:"danger",x:.10+Math.random()*.80,y:.07+Math.random()*.16,amount:1,quality:0};
+  else if(roll<.88)d={type:"debris",x:.12+Math.random()*.75,y:.28+Math.random()*.58,amount:25+Math.random()*40,quality:0};
+  else d={type:"chamber",x:.12+Math.random()*.75,y:.34+Math.random()*.52,amount:1,quality:0};
+  d.id="disc_"+Date.now()+"_"+Math.floor(Math.random()*999);
+  d.foundAt=Date.now();
+  w.discoveries.unshift(d);w.discoveries=w.discoveries.slice(0,16);
+
+  if(d.type==="food"||d.type==="water"){
+    w.resources.push({...d});
+    antRemember(d.type,d.x,d.y,1);
+    antSocietyEvent(`Scout discovered a new ${d.type} source.`);
+  }else if(d.type==="danger"){
+    antRaiseAlarm(d.x,d.y,75);
+    antSocietyEvent("Scout discovered a danger zone.");
+  }else if(d.type==="chamber"){
+    antSocietyEvent("Scout found promising soil for a future chamber.");
+  }else{
+    antSocietyEvent("Scout discovered debris that can be cleared.");
+  }
+  m.experience=(m.experience||0)+2;
+  m.discoveryCount=(m.discoveryCount||0)+1;
+}
+
+function antRaiseAlarm(x,y,amount=60){
+  const soc=antEnsureSociety(),adv=antEnsureAdvanced();
+  soc.alarm=Math.min(100,(soc.alarm||0)+amount);
+  antAddPheromone(x,y,x+.01,y+.01,"alarm",1.4);
+  const w=antEnsureWorldLogic();
+  w.emergency={type:"ALARM",x,y,message:"Threat detected near colony."};
+  w.emergencyUntil=Date.now()+16000;
+}
+
+function antMaybeEmergency(dt){
+  const w=antEnsureWorldLogic(),a=ensureAntFarm(),now=Date.now();
+  if(w.emergency && now>w.emergencyUntil){w.emergency=null;}
+  if(now-(w.lastEmergencyTick||0)<30000)return;
+  w.lastEmergencyTick=now;
+  if(Math.random()>.18)return;
+  const opts=[
+    {type:"TUNNEL COLLAPSE",message:"A tunnel section collapsed. Diggers are rerouting."},
+    {type:"DRY SPELL",message:"Humidity dropped. Water carriers are prioritizing hydration."},
+    {type:"BROOD COOLING",message:"Nursery temperature slipped. Nurses are clustering brood."},
+    {type:"BLOCKED ENTRANCE",message:"Debris partially blocked the surface entrance."},
+    {type:"QUEEN STRESS",message:"Queen activity dropped. Attendants are gathering."},
+    {type:"CONTAMINATION",message:"Waste buildup triggered a cleanup response."}
+  ];
+  const e=opts[Math.floor(Math.random()*opts.length)];
+  w.emergency=e;w.emergencyUntil=now+18000;
+  if(e.type==="DRY SPELL")a.humidity=Math.max(35,(a.humidity||60)-12);
+  if(e.type==="QUEEN STRESS")a.queenHealth=Math.max(40,(a.queenHealth||80)-8);
+  if(e.type==="CONTAMINATION")antEnsureSociety().midden=Math.min(100,antEnsureSociety().midden+18);
+  antSocietyEvent("EMERGENCY · "+e.type);
+}
+
+function antBroodSort(){
+  const a=ensureAntFarm(),soc=antEnsureSociety();
+  const nurses=ensureAntMotion().filter(m=>m.role==="Nurse").length;
+  if(nurses<=0)return;
+  if(soc.broodWarmth<55 && (a.eggs||0)+(a.larvae||0)>0){
+    soc.broodWarmth=Math.min(100,soc.broodWarmth+nurses*.04);
+  }
+  if((a.humidity||60)<55 && Math.random()<.01*nurses){
+    antSocietyEvent("Nurses moved brood deeper into the nursery.");
+  }
+}
+
+function antSupplyChainTick(dt){
+  const soc=antEnsureSociety();
+  const workers=ensureAntMotion();
+  const foragers=workers.filter(m=>m.role==="Forager").length;
+  const haulers=workers.filter(m=>m.role==="Food Hauler").length;
+  const nurses=workers.filter(m=>m.role==="Nurse").length;
+  soc.storedFood=Math.min(100,soc.storedFood+foragers*dt/300000+haulers*dt/240000);
+  soc.storedFood=Math.max(0,soc.storedFood-nurses*dt/420000-dt/600000);
+}
+
+function antWorkerCareerTick(){
+  ensureAntMotion().forEach((m,i)=>{
+    if(m.ageHours==null)m.ageHours=1;
+    if(m.experience==null)m.experience=0;
+    if(m.rank==null)m.rank="Young Worker";
+    if(m.ageHours>120)m.rank="Mature Worker";
+    if(m.ageHours>240)m.rank="Veteran Worker";
+    if(m.ageHours>360)m.rank="Elder Worker";
+
+    if(m.activityType&&m.activityType!=="roam")m.experience+=.002;
+    if(m.experience>30&&Math.random()<.002){
+      m.skillRole=m.role;
+      m.experience+=.1;
+    }
+  });
+}
+
+function antUpdatePersonality(){
+  const w=antEnsureWorldLogic(),p=w.personalityScore;
+  const ants=ensureAntMotion();
+  p.explore+=ants.filter(m=>m.role==="Explorer").length*.002;
+  p.hoard+=Math.max(0,(antEnsureSociety().storedFood||0)-60)*.0003;
+  p.brood+=ants.filter(m=>m.role==="Nurse").length*.002;
+  p.expand+=ants.filter(m=>m.role==="Digger").length*.002;
+  p.cautious+=(antEnsureSociety().alarm||0)*.0003;
+  const best=Object.entries(p).sort((a,b)=>b[1]-a[1])[0]?.[0]||"balanced";
+  w.colonyPersonality=({explore:"Exploratory",hoard:"Resource-Hoarding",brood:"Brood-Focused",expand:"Expansionist",cautious:"Cautious"})[best]||"Balanced";
+}
+
+function antSpecializeChambers(){
+  const w=antEnsureWorldLogic(),soc=antEnsureSociety(),a=ensureAntFarm();
+  w.chamberTypes.main=(soc.traffic>20)?"Highway":"Transit";
+  w.chamberTypes.nursery=((a.eggs||0)+(a.larvae||0)>30)?"Expanded Brood":"Brood";
+  w.chamberTypes.food=(soc.storedFood>70)?"Deep Storage":"Storage";
+  w.chamberTypes.workers=(ensureAntMotion().filter(m=>(m.energy||0)<30).length>8)?"Recovery":"Rest";
+}
+
+function antWeatherTick(){
+  const w=antEnsureWorldLogic(),a=ensureAntFarm(),now=Date.now();
+  if(now-(w.lastWeatherTick||0)<26000)return;
+  w.lastWeatherTick=now;
+  const options=["Clear","Warm","Humid","Dry","Light Rain"];
+  w.weather=options[Math.floor(Math.random()*options.length)];
+  if(w.weather==="Dry"){a.humidity=Math.max(40,(a.humidity||60)-4);w.temperature+=1;}
+  if(w.weather==="Humid"||w.weather==="Light Rain"){a.humidity=Math.min(90,(a.humidity||60)+4);}
+  if(w.weather==="Warm")w.temperature=Math.min(90,w.temperature+2);
+  if(w.weather==="Light Rain")antSocietyEvent("Rain reduced surface activity.");
+}
+
+function antPopulationPressure(){
+  const a=ensureAntFarm(),w=antEnsureWorldLogic();
+  const pressure=Math.max(0,(a.workers||0)-45);
+  if(pressure>0){
+    w.personalityScore.expand+=pressure*.0007;
+    if(pressure>20 && !w.goals.some(g=>g.key==="expand"))w.goals.push({key:"expand",label:"EXPAND COLONY",priority:80,progress:0});
+  }
+}
+
+function antGenerateGoals(){
+  const a=ensureAntFarm(),w=antEnsureWorldLogic(),soc=antEnsureSociety(),now=Date.now();
+  if(now-(w.lastGoalTick||0)<12000)return;
+  w.lastGoalTick=now;
+  const goals=[];
+  if((a.water||0)<55)goals.push({key:"water",label:"SECURE WATER",priority:95,progress:a.water||0});
+  if((a.food||0)<55||soc.storedFood<45)goals.push({key:"food",label:"BUILD FOOD CACHE",priority:90,progress:soc.storedFood});
+  if((a.eggs||0)+(a.larvae||0)>25)goals.push({key:"brood",label:"EXPAND NURSERY",priority:82,progress:Math.min(100,soc.broodWarmth)});
+  if(soc.midden>35)goals.push({key:"clean",label:"REDUCE WASTE",priority:78,progress:100-soc.midden});
+  if((a.queenHealth||0)<80)goals.push({key:"queen",label:"PROTECT QUEEN",priority:92,progress:a.queenHealth||0});
+  if((a.workers||0)>55)goals.push({key:"expand",label:"EXPAND COLONY",priority:75,progress:antEnsureAdvanced().digTarget?antEnsureAdvanced().digTarget.progress:0});
+  if(!goals.length)goals.push({key:"explore",label:"SCOUT TERRITORY",priority:50,progress:w.discoveries.length*5});
+  w.goals=goals.sort((a,b)=>b.priority-a.priority).slice(0,4);
+}
+
+function antGoalInfluence(m){
+  const w=antEnsureWorldLogic(),g=w.goals[0];
+  if(!g)return null;
+  if(g.key==="water" && (m.role==="Water Carrier"||m.role==="Explorer"))return "water";
+  if(g.key==="food" && (m.role==="Forager"||m.role==="Food Hauler"||m.role==="Explorer"))return "food";
+  if(g.key==="brood" && m.role==="Nurse")return "nursery";
+  if(g.key==="clean" && (m.role==="Digger"||m.role==="Explorer"))return "clean";
+  if(g.key==="queen" && m.role==="Queen Attendant")return "queen";
+  if(g.key==="expand" && m.role==="Digger")return "dig";
+  return null;
+}
+
+function antStandoutTick(){
+  const w=antEnsureWorldLogic();
+  ensureAntMotion().forEach((m,i)=>{
+    const score=(m.experience||0)+(m.discoveryCount||0)*5+(m.ageHours||0)/120;
+    if(score>10){
+      const id=m.simId||(m.simId="Worker "+(i+1));
+      let s=w.standout.find(x=>x.id===id);
+      if(!s){s={id,role:m.role,score,story:"Emerging colony specialist."};w.standout.push(s);}
+      s.role=m.role;s.score=score;
+      if((m.discoveryCount||0)>=2)s.story=`Discovered ${m.discoveryCount} resources or hazards.`;
+      else if(m.skillRole)s.story=`Veteran specialist in ${m.skillRole.toLowerCase()} work.`;
+    }
+  });
+  w.standout.sort((a,b)=>b.score-a.score);w.standout=w.standout.slice(0,5);
+}
+
+function antWorldLogicTick(dt){
+  antDecayRoutes(dt);
+  antMaybeEmergency(dt);
+  antBroodSort();
+  antSupplyChainTick(dt);
+  antWorkerCareerTick();
+  antUpdatePersonality();
+  antSpecializeChambers();
+  antWeatherTick();
+  antPopulationPressure();
+  antGenerateGoals();
+  antStandoutTick();
+
+  const w=antEnsureWorldLogic();
+  // Memory fades slowly.
+  Object.values(w.memories).forEach(mem=>{
+    mem.confidence=Math.max(.15,(mem.confidence||.5)-dt/600000);
+  });
+}
+
+function antWorldPanelHTML(){
+  const w=antEnsureWorldLogic(),soc=antEnsureSociety();
+  const goals=w.goals.map(g=>`<div class="ant-goal"><b>${g.label}</b><span>${Math.round(g.progress||0)}%</span></div>`).join("");
+  const stars=w.standout.slice(0,3).map(s=>`<div>⭐ <b>${s.id}</b> · ${s.role} · ${s.story}</div>`).join("");
+  return `<div class="panel ant-world-panel">
+    <div class="terminal-kicker">COLONY WORLD LOGIC</div>
+    <div class="ant-world-grid">
+      <div>🧠 Personality <b>${w.colonyPersonality}</b></div>
+      <div>🌦 Weather <b>${w.weather}</b></div>
+      <div>🌡 Temp <b>${Math.round(w.temperature)}°</b></div>
+      <div>💧 Humidity <b>${Math.round(ensureAntFarm().humidity||0)}%</b></div>
+      <div>🛣 Routes <b>${w.routes.length}</b></div>
+      <div>🔎 Discoveries <b>${w.discoveries.length}</b></div>
+    </div>
+    ${w.emergency?`<div class="ant-emergency">🚨 ${w.emergency.type} · ${w.emergency.message}</div>`:""}
+    <div class="ant-goals">${goals}</div>
+    <div class="ant-chambers">Main: ${w.chamberTypes.main} · Nursery: ${w.chamberTypes.nursery} · Food: ${w.chamberTypes.food} · Workers: ${w.chamberTypes.workers}</div>
+    <div class="ant-standout">${stars}</div>
+  </div>`;
+}
+
+
+function antEnsureCivilization(){
+  const adv=antEnsureAdvanced();
+  if(!adv.civ)adv.civ={day:1,startedAt:Date.now(),mode:"Sandbox",cameraMode:"Colony",cameraAntId:null,
+    orders:{forage:60,dig:45,brood:70,defend:45,explore:55},
+    queen:{ageDays:140,health:94,stress:12,fertility:88,hunger:18,rest:72,relocating:false},
+    chambers:[
+      {id:"queen",type:"Queen Chamber",x:.47,y:.55},{id:"nursery",type:"Nursery",x:.20,y:.76},
+      {id:"granary",type:"Food Store",x:.60,y:.79},{id:"refuse",type:"Refuse Dump",x:.80,y:.88},
+      {id:"barracks",type:"Soldier Barracks",x:.84,y:.76},{id:"water",type:"Water Chamber",x:.33,y:.86},
+      {id:"bunker",type:"Emergency Bunker",x:.12,y:.88},{id:"hibernation",type:"Hibernation Room",x:.70,y:.90},
+      {id:"fungus",type:"Fungus Garden",x:.48,y:.88}],
+    brood:[],predators:[],
+    rivals:[{id:"r1",name:"Red Ridge Colony",x:.92,y:.18,strength:55,food:60,aggression:52,discovered:false},{id:"r2",name:"Creekside Colony",x:.08,y:.18,strength:45,food:70,aggression:35,discovered:false}],
+    territory:[{name:"Grass",x:.12,y:.12},{name:"Sidewalk",x:.30,y:.10},{name:"Garden",x:.48,y:.11},{name:"Forest",x:.65,y:.10},{name:"Picnic",x:.80,y:.10},{name:"Creek",x:.91,y:.10}],
+    weather:{type:"Clear",rain:0,heat:0,storm:0},floodLevel:0,surfaceMound:0,
+    history:["Day 1 — Colony founded."],evolution:{generation:1,traits:{forage:1,dig:1,brood:1,defend:1,explore:1}},species:"Harvester Ant",foodTypes:[],disaster:null,lastBroodSpawn:0,lastPredatorSpawn:0,lastHistoryDay:1};
+  return adv.civ;
+}
+function antInitIndividual(m,i){
+  antAssignRole(m,i); if(!m.simId)m.simId="Worker "+(i+1); if(m.health==null)m.health=85+Math.random()*15;
+  if(m.energy==null)m.energy=60+Math.random()*35; if(m.ageHours==null)m.ageHours=10+Math.random()*260;
+  if(m.memory==null)m.memory={food:null,home:{x:.15,y:.22},danger:null,recruit:null}; if(m.taskChain==null)m.taskChain=[];
+  if(m.taskStep==null)m.taskStep=0; if(m.pheromoneAwareness==null)m.pheromoneAwareness=.4+Math.random()*.6;
+  if(m.currentTask==null)m.currentTask="Wandering"; if(m.experience==null)m.experience=0; if(m.injured==null)m.injured=false;
+  if(m.alive==null)m.alive=true; if(m.caste==null)m.caste=Math.random()<.08?"Soldier":"Worker"; return m;
+}
+function antContinuousWanderTarget(m){
+  if(m.y>.22||m.lane==="tunnel"){const a=Math.random()*Math.PI*2,r=.08+Math.random()*.20;return {x:Math.max(.10,Math.min(.90,.48+Math.cos(a)*r)),y:Math.max(.28,Math.min(.90,.62+Math.sin(a)*r)),label:"wandering tunnels",zone:"tunnel"};}
+  return {x:.05+Math.random()*.90,y:.05+Math.random()*.15,label:"exploring surface",zone:"surface"};
+}
+function antNearestPheromone(m,type){const adv=antEnsureAdvanced();let best=null,bd=999;for(const p of adv.pheromones){if(p.type!==type||p.strength<.15)continue;const d=Math.hypot(m.x-p.x2,m.y-p.y2);if(d<bd){bd=d;best=p;}}return best;}
+function antSenseAndDecide(m,i){
+  const c=antEnsureCivilization(),a=ensureAntFarm(),soc=antEnsureSociety();antInitIndividual(m,i);
+  if(m.health<30)return {x:.12,y:.88,label:"seeking bunker",zone:"bunker",duty:"rest"};
+  if(c.disaster?.type==="FLOOD"&&m.y>.70)return {x:.30,y:.35,label:"evacuating flood",zone:"tunnel",duty:"evacuate"};
+  if((soc.alarm||0)>35&&(m.caste==="Soldier"||m.role==="Guard")){const d=antNearestPheromone(m,"alarm");if(d)return {x:d.x2,y:d.y2,label:"following danger pheromone",zone:"surface",duty:"defend"};}
+  if((a.food||0)<55||c.orders.forage>70){const d=antNearestPheromone(m,"food");if(d&&Math.random()<m.pheromoneAwareness)return {x:d.x2,y:d.y2,label:"following food trail",zone:"surface",duty:"food"};}
+  if((a.water||0)<50){const d=antNearestPheromone(m,"water");if(d&&Math.random()<m.pheromoneAwareness)return {x:d.x2,y:d.y2,label:"following water trail",zone:"surface",duty:"water"};}
+  if((a.eggs||0)+(a.larvae||0)>25&&c.orders.brood>60&&m.role==="Nurse")return {x:.20,y:.76,label:"checking brood",zone:"nursery",duty:"nursery"};
+  if(c.orders.dig>70&&m.role==="Digger"&&antEnsureAdvanced().digTarget)return {x:antEnsureAdvanced().digTarget.x,y:antEnsureAdvanced().digTarget.y,label:"excavating",zone:"tunnel",duty:"dig"};
+  return antContinuousWanderTarget(m);
+}
+function antBuildFoodTaskChain(m,r){m.taskChain=[{type:"goto",x:r.x,y:r.y,label:"traveling to food"},{type:"pickup",label:"picking up food"},{type:"goto",x:.15,y:.22,label:"returning to entrance"},{type:"goto",x:.60,y:.79,label:"carrying food to granary"},{type:"deposit",label:"depositing food"},{type:"goto",x:.15,y:.22,label:"returning outside"}];m.taskStep=0;m.currentTask=m.taskChain[0].label;}
+function antAdvanceTaskChain(m){
+  if(!m.taskChain?.length)return false; const s=m.taskChain[m.taskStep]; if(!s){m.taskChain=[];m.taskStep=0;return false;} m.currentTask=s.label||s.type;
+  if(s.type==="goto"){m.tx=s.x;m.ty=s.y;m.phase="chain-travel";return true;}
+  if(s.type==="pickup"){m.carry="🍯";m.carryType="food";antAddPheromone(m.x,m.y,.15,.22,"food",1.1);m.taskStep++;return antAdvanceTaskChain(m);}
+  if(s.type==="deposit"){antEnsureSociety().storedFood=Math.min(100,(antEnsureSociety().storedFood||0)+3);m.carry=null;m.carryType=null;m.experience+=1;m.taskStep++;return antAdvanceTaskChain(m);} return false;
+}
+function antExcavateAt(m,dt){const adv=antEnsureAdvanced(),c=antEnsureCivilization();if(!adv.digTarget)return;if(Math.hypot(m.x-adv.digTarget.x,m.y-adv.digTarget.y)<.03){adv.digTarget.progress=Math.min(100,(adv.digTarget.progress||0)+dt/650);m.carry="🪨";m.carryType="dirt";c.surfaceMound=Math.min(100,c.surfaceMound+dt/90000);}}
+function antQueenTick(dt){const c=antEnsureCivilization(),q=c.queen,a=ensureAntFarm();q.ageDays+=dt/86400000;q.hunger=Math.min(100,q.hunger+dt/180000);q.rest=Math.max(0,q.rest-dt/260000);q.stress=Math.max(0,q.stress-dt/180000);q.fertility=Math.max(0,Math.min(100,90-q.stress*.5-q.ageDays/20));if(Math.random()<dt/5000*(q.fertility/100))a.eggs=(a.eggs||0)+1;if(c.floodLevel>60&&!q.relocating){q.relocating=true;antSocietyEvent("Queen relocation ordered due to flood.");}if(q.relocating&&c.floodLevel<30)q.relocating=false;}
+function antSpawnBroodVisual(){const c=antEnsureCivilization(),a=ensureAntFarm(),now=Date.now();if(now-c.lastBroodSpawn<5000)return;c.lastBroodSpawn=now;const target=Math.min(60,(a.eggs||0)+(a.larvae||0)+(a.pupae||0));while(c.brood.length<target){const n=c.brood.length,stage=n<(a.eggs||0)?"egg":n<(a.eggs||0)+(a.larvae||0)?"larva":"pupa";c.brood.push({stage,x:.17+Math.random()*.06,y:.73+Math.random()*.06});}if(c.brood.length>target)c.brood.length=target;}
+function antPredatorTick(dt){const c=antEnsureCivilization(),now=Date.now();if(now-c.lastPredatorSpawn>26000&&Math.random()<.35){c.lastPredatorSpawn=now;const kinds=["Spider","Beetle","Centipede","Bird"],kind=kinds[Math.floor(Math.random()*kinds.length)];c.predators.push({id:"pred_"+Date.now(),kind,x:.05+Math.random()*.90,y:kind==="Centipede"?.55:.06+Math.random()*.12,health:70,active:true});antSocietyEvent(kind+" entered colony territory.");}c.predators.forEach(p=>{if(!p.active)return;const ants=ensureAntMotion().filter(m=>m.alive);let v=null,bd=999;ants.forEach(a=>{const d=Math.hypot(a.x-p.x,a.y-p.y);if(d<bd){bd=d;v=a;}});if(v&&bd<.035){const soldiers=ants.filter(a=>a.caste==="Soldier"&&Math.hypot(a.x-p.x,a.y-p.y)<.10);if(soldiers.length>=2)p.health-=soldiers.length*dt/1200;else{v.health=Math.max(0,v.health-dt/2200);v.injured=true;}antRaiseAlarm(p.x,p.y,18);}if(p.health<=0){p.active=false;antSocietyEvent(p.kind+" defeated.");}});c.predators=c.predators.filter(p=>p.active);}
+function antWeatherPhysicsTick(dt){const c=antEnsureCivilization(),w=antEnsureWorldLogic();c.weather.type=w.weather;c.weather.rain=w.weather==="Light Rain"?65:Math.max(0,c.weather.rain-dt/2000);if(c.weather.rain>40)c.floodLevel=Math.min(100,c.floodLevel+dt/15000);else c.floodLevel=Math.max(0,c.floodLevel-dt/22000);if(w.weather==="Storm")antEnsureAdvanced().pheromones.forEach(p=>p.strength*=.96);}
+function antDisasterTick(dt){const c=antEnsureCivilization(),now=Date.now();if(c.disaster&&now>(c.disaster.until||0))c.disaster=null;if(c.disaster)return;if(Math.random()<dt/160000){const types=["TUNNEL COLLAPSE","MOLD","MITES","POISONED FOOD","QUEEN INJURY","FLOOD","RIVAL INVASION","FOOD SHORTAGE"],type=types[Math.floor(Math.random()*types.length)];c.disaster={type,until:now+20000};antSocietyEvent("DISASTER · "+type);if(type==="FLOOD")c.floodLevel=75;if(type==="QUEEN INJURY")c.queen.health=Math.max(20,c.queen.health-18);}}
+function antRivalTick(dt){const c=antEnsureCivilization(),ants=ensureAntMotion();c.rivals.forEach(r=>{if(!r.discovered&&ants.some(a=>Math.hypot(a.x-r.x,a.y-r.y)<.12)){r.discovered=true;antSocietyEvent("Rival discovered: "+r.name);}if(r.discovered&&Math.random()<dt/240000*r.aggression/50){antSocietyEvent(r.name+" raided the colony.");antEnsureSociety().storedFood=Math.max(0,antEnsureSociety().storedFood-5);}});}
+function antFoodEcosystemTick(dt){const c=antEnsureCivilization();if(c.foodTypes.length<8&&Math.random()<dt/24000){const types=["Seed","Fruit","Crumb","Nectar","Dead Bug","Fungus","Honeydew","Leaf"],t=types[Math.floor(Math.random()*types.length)];c.foodTypes.push({type:t,x:.05+Math.random()*.90,y:.05+Math.random()*.14,spoilage:0});}c.foodTypes.forEach(f=>f.spoilage+=dt/240000);c.foodTypes=c.foodTypes.filter(f=>f.spoilage<100);}
+function antHistoryTick(){const c=antEnsureCivilization(),day=Math.max(1,Math.floor((Date.now()-c.startedAt)/60000)+1);c.day=day;if(day!==c.lastHistoryDay){c.lastHistoryDay=day;c.history.unshift(`Day ${day} — Colony survived another cycle.`);c.history=c.history.slice(0,30);}}
+function antEvolutionTick(){const c=antEnsureCivilization();if(c.day>0&&c.day%25===0&&c.evolution.lastDay!==c.day){c.evolution.lastDay=c.day;c.evolution.generation++;Object.keys(c.evolution.traits).forEach(k=>c.evolution.traits[k]=Math.max(.75,Math.min(1.5,c.evolution.traits[k]+(-.04+Math.random()*.08))));antSocietyEvent("New generation inherited altered traits.");}}
+function antCivilizationTick(dt){antSpawnBroodVisual();antQueenTick(dt);antPredatorTick(dt);antWeatherPhysicsTick(dt);antDisasterTick(dt);antRivalTick(dt);antFoodEcosystemTick(dt);antHistoryTick();antEvolutionTick();}
+function antSetOrder(k,v){antEnsureCivilization().orders[k]=Math.max(0,Math.min(100,Number(v)||0));}
+function antSpawnThing(type){const c=antEnsureCivilization();if(type==="food")c.foodTypes.push({type:"Crumb",x:.1+Math.random()*.8,y:.08,spoilage:0});if(type==="predator")c.predators.push({kind:"Spider",x:.5,y:.08,health:85,active:true});if(type==="worker")ensureAntFarm().workers=(ensureAntFarm().workers||0)+10;if(type==="rain")antEnsureWorldLogic().weather="Light Rain";}
+function antCamFollow(id){const c=antEnsureCivilization();c.cameraMode="Ant";c.cameraAntId=id;}
+function antQueenCam(){const c=antEnsureCivilization();c.cameraMode="Queen";c.cameraAntId=null;}
+function antColonyCam(){const c=antEnsureCivilization();c.cameraMode="Colony";c.cameraAntId=null;}
+function antCivilizationPanelHTML(){const c=antEnsureCivilization(),q=c.queen,sel=ensureAntMotion().find(a=>a.simId===c.cameraAntId);return `<div class="panel ant-civ-panel"><div class="terminal-kicker">ANT CIVILIZATION</div><div class="ant-civ-grid"><div>Mode <b>${c.mode}</b></div><div>Species <b>${c.species}</b></div><div>Day <b>${c.day}</b></div><div>Flood <b>${Math.round(c.floodLevel)}%</b></div><div>Mound <b>${Math.round(c.surfaceMound)}%</b></div><div>Predators <b>${c.predators.length}</b></div></div><div class="ant-queen-card">👑 Queen · Health ${Math.round(q.health)} · Fertility ${Math.round(q.fertility)} · Stress ${Math.round(q.stress)} · Hunger ${Math.round(q.hunger)} · Rest ${Math.round(q.rest)}</div><div class="ant-orders">${["forage","dig","brood","defend","explore"].map(k=>`<label>${k.toUpperCase()} <input type="range" min="0" max="100" value="${c.orders[k]}" oninput="antSetOrder('${k}',this.value)"></label>`).join("")}</div><div class="ant-cam-row"><button onclick="antColonyCam()">COLONY CAM</button><button onclick="antQueenCam()">QUEEN CAM</button><button onclick="antCamFollow((ensureAntMotion()[0]||{}).simId)">ANT CAM</button></div>${sel?`<div class="ant-detail"><b>${sel.simId}</b> · ${sel.caste} · ${sel.role}<br>Energy ${Math.round(sel.energy||0)} · Health ${Math.round(sel.health||0)} · Age ${Math.round(sel.ageHours||0)}h<br>Task ${sel.currentTask||"Wandering"} · Carrying ${sel.carryType||"nothing"}<br>Pheromone awareness ${Math.round((sel.pheromoneAwareness||0)*100)}%</div>`:""}<div class="ant-sandbox-row"><button onclick="antSpawnThing('food')">+ FOOD</button><button onclick="antSpawnThing('worker')">+ 10 ANTS</button><button onclick="antSpawnThing('predator')">+ PREDATOR</button><button onclick="antSpawnThing('rain')">RAIN</button></div><div class="ant-history">${c.history.slice(0,5).map(x=>`<div>• ${x}</div>`).join("")}</div></div>`;}
+
+function antChooseTarget(i,m){antInitIndividual(m,i);return antSenseAndDecide(m,i);}
 
 function antPickRoamPoint(m){
   const surfaceRoam=[
@@ -4605,52 +5051,35 @@ function antPickRoamPoint(m){
 
 
 function antSimStep(dt){
-  const ants=ensureAntMotion(),now=Date.now();
-  antBroodTick();antDecayPheromones(dt);antAdvanceDig(dt);antMaybeEvent(dt);
-  ants.forEach((m,i)=>{
-    if(!m.target||!m.phase){
-      m.target=antChooseTarget(i,m);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";m.activity=m.target.label;m.activityType=m.target.duty||"task";m.carry=m.target.carry||null;
-    }else if(m.phase==="doing"&&now>(m.linger||0)){
-      if(Math.random()<.70){m.target=antPickRoamPoint(m);m.tx=m.target.x;m.ty=m.target.y;m.phase="roam-travel";m.activity=m.target.label;m.activityType="roam";m.carry=null;}
-      else{m.target=antChooseTarget(i,m);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";m.activity=m.target.label;m.activityType=m.target.duty||"task";m.carry=m.target.carry||null;}
-    }else if(m.phase==="roam-doing"&&now>(m.linger||0)){
-      if(Math.random()<.38){m.target=antPickRoamPoint(m);m.tx=m.target.x;m.ty=m.target.y;m.phase="roam-travel";m.activity=m.target.label;}
-      else{m.target=antChooseTarget(i,m);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";m.activity=m.target.label;m.activityType=m.target.duty||"task";m.carry=m.target.carry||null;}
-    }
-    const dx=m.tx-m.x,dy=m.ty-m.y,dist=Math.hypot(dx,dy);
-    if(m.phase==="travel"||m.phase==="roam-travel"){
-      const ox=m.x,oy=m.y,step=Math.min(dist,.000075*dt);
-      if(dist>.002){m.x+=dx/dist*step;m.y+=dy/dist*step;}
-      if(m.phase==="travel"&&Math.random()<.035)antAddPheromone(ox,oy,m.x,m.y,m.activityType);
-      if(dist<.014){
-        m.x=m.tx;m.y=m.ty;
-        if(m.phase==="roam-travel"){m.phase="roam-doing";m.activity="exploring";m.linger=now+4500+Math.random()*7500;}
-        else{m.phase="doing";m.linger=now+8500+Math.random()*12000;
-          const a=ensureAntFarm();
-          if(m.target?.duty==="water")a.water=antClamp((a.water||0)+1);
-          if(m.target?.duty==="food")a.food=antClamp((a.food||0)+1);
-          if(m.target?.duty==="queen")a.queenHealth=antClamp((a.queenHealth||0)+.5);
-        }
-      }
-    }
+  const ants=ensureAntMotion(),now=Date.now(); antBroodTick();antDecayPheromones(dt);antAdvanceDig(dt);antMaybeEvent(dt);antSocietyTick(dt);antWorldLogicTick(dt);antCivilizationTick(dt);
+  ants.forEach((m,i)=>{antInitIndividual(m,i);if(!m.alive)return;if(m.health<=0){m.alive=false;m.currentTask="Dead";return;}
+    if((!m.taskChain||!m.taskChain.length)&&(m.role==="Forager"||m.role==="Food Hauler")&&Math.random()<.0035*dt){const r=antResourceAt("food");if(r)antBuildFoodTaskChain(m,r);}
+    if(m.taskChain?.length){const s=m.taskChain[m.taskStep];if(s?.type==="goto"&&m.phase!=="chain-travel")antAdvanceTaskChain(m);}else if(!m.target||!m.phase||(m.phase==="roam-doing"&&now>(m.linger||0))){m.target=antChooseTarget(i,m);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";m.currentTask=m.target.label;m.activityType=m.target.duty||"wander";}
+    const dx=(m.tx??m.x)-m.x,dy=(m.ty??m.y)-m.y,dist=Math.hypot(dx,dy);
+    if(["travel","roam-travel","chain-travel"].includes(m.phase)){const ox=m.x,oy=m.y,fatigue=Math.max(.35,Math.min(1,(m.energy||50)/45)),step=Math.min(dist,.000075*dt*fatigue);if(dist>.001){m.x+=dx/dist*step;m.y+=dy/dist*step;}m.energy=Math.max(0,(m.energy||50)-dt/120000);if(Math.random()<.025)antAddPheromone(ox,oy,m.x,m.y,m.activityType==="food"?"food":"home",m.activityType==="food"?1:.45);antReinforceRoute(ox,oy,m.x,m.y,.2);
+      if(dist<.012){m.x=m.tx;m.y=m.ty;if(m.phase==="chain-travel"){m.taskStep++;const nxt=m.taskChain[m.taskStep];if(nxt)antAdvanceTaskChain(m);else{m.taskChain=[];m.taskStep=0;m.phase=null;}}else{if(m.activityType==="dig")antExcavateAt(m,dt);if(m.activityType==="food"){const r=antResourceAt("food");if(r&&Math.random()<.7)antBuildFoodTaskChain(m,r);}if(m.activityType==="water"){antConsumeResource("water",.5);ensureAntFarm().water=antClamp((ensureAntFarm().water||0)+1);}m.phase="roam-doing";m.linger=now+2500+Math.random()*6000;}}}
+    if(m.phase==="roam-doing"&&now>(m.linger||0)&&(!m.taskChain||!m.taskChain.length)){const t=antContinuousWanderTarget(m);m.target=t;m.tx=t.x;m.ty=t.y;m.phase="roam-travel";m.currentTask=t.label;}
   });
 }
 
 
 function drawAntSim(){
-  const c=document.getElementById("antsSimCanvas");if(!c)return;
-  const ctx=c.getContext("2d"),w=c.width,h=c.height,a=ensureAntFarm(),adv=antEnsureAdvanced();
-  ctx.clearRect(0,0,w,h);ctx.fillStyle="#0f1b16";ctx.fillRect(0,0,w,h*.21);ctx.fillStyle="#2b1d12";ctx.fillRect(0,h*.21,w,h*.79);
-  adv.pheromones.forEach(p=>{ctx.strokeStyle=`rgba(140,255,170,${Math.min(.35,p.strength*.28)})`;ctx.lineWidth=1+2*p.strength;ctx.beginPath();ctx.moveTo(p.x1*w,p.y1*h);ctx.lineTo(p.x2*w,p.y2*h);ctx.stroke();});
-  ctx.strokeStyle="#8a6a48";ctx.lineWidth=28;ctx.lineCap="round";
-  adv.tunnelBranches.forEach(b=>{ctx.beginPath();ctx.moveTo(b.x1*w,b.y1*h);ctx.lineTo(b.x2*w,b.y2*h);ctx.stroke();});
-  if(adv.digTarget){const s=adv.tunnelBranches[adv.tunnelBranches.length-1]||{x2:.47,y2:.55};ctx.save();ctx.setLineDash([10,8]);ctx.strokeStyle="rgba(255,210,120,.75)";ctx.lineWidth=8;ctx.beginPath();ctx.moveTo((s.x2??.47)*w,(s.y2??.55)*h);ctx.lineTo(adv.digTarget.x*w,adv.digTarget.y*h);ctx.stroke();ctx.restore();}
-  function ch(x,y,rx,ry,l,ic){ctx.fillStyle="#3a281b";ctx.strokeStyle="#b08b5d";ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x*w,y*h,rx*w,ry*h,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#f0ddbd";ctx.textAlign="center";ctx.font="bold 12px system-ui";ctx.fillText(l,x*w,y*h-8);ctx.font="24px system-ui";ctx.fillText(ic,x*w,y*h+20);}
-  ch(.47,.55,.105,.075,"QUEEN CHAMBER","👑");ch(.20,.76,.11,.07,"BROOD NURSERY","🥚");ch(.60,.79,.105,.065,"FOOD VAULT","🥣");ch(.84,.76,.10,.065,"WORKER CHAMBER","🐜");
-  ctx.textAlign="center";ctx.font="24px system-ui";ctx.fillText("🍯",.18*w,.13*h);ctx.fillText("💧",.79*w,.13*h);
-  ensureAntMotion().forEach(m=>{const x=m.x*w,y=m.y*h;ctx.font="18px system-ui";ctx.fillText("🐜",x,y);if(m.carry){ctx.font="10px system-ui";ctx.fillText(m.carry,x+9,y-10);}});
-  const ants=ensureAntMotion(),surface=ants.filter(x=>x.lane==="surface").length;
-  ctx.textAlign="left";ctx.fillStyle="rgba(232,245,232,.84)";ctx.font="bold 12px system-ui";ctx.fillText(`SURFACE ${surface} · UNDERGROUND ${ants.length-surface} · WORKERS ${a.workers||0}`,16,h-34);ctx.fillText(`EGGS ${a.eggs||0} · LARVAE ${a.larvae||0} · PUPAE ${a.pupae||0}`,16,h-16);
+  const c=document.getElementById("antsSimCanvas");if(!c)return;const ctx=c.getContext("2d"),w=c.width,h=c.height,a=ensureAntFarm(),adv=antEnsureAdvanced(),soc=antEnsureSociety(),world=antEnsureWorldLogic(),civ=antEnsureCivilization();ctx.clearRect(0,0,w,h);ctx.save();
+  if(civ.cameraMode==="Ant"&&civ.cameraAntId){const ant=ensureAntMotion().find(x=>x.simId===civ.cameraAntId);if(ant){ctx.translate(w/2-ant.x*w,h/2-ant.y*h);ctx.scale(1.35,1.35);}}else if(civ.cameraMode==="Queen"){ctx.translate(w/2-.47*w,h/2-.55*h);ctx.scale(1.45,1.45);}
+  ctx.fillStyle=soc.nightMode?"#07100c":"#102018";ctx.fillRect(-w,-h,w*3,h*.21);ctx.fillStyle="#2b1d12";ctx.fillRect(-w,h*.21,w*3,h*.79);
+  civ.territory.forEach(t=>{ctx.fillStyle="rgba(90,150,80,.12)";ctx.beginPath();ctx.arc(t.x*w,t.y*h,26,0,Math.PI*2);ctx.fill();ctx.fillStyle="rgba(220,240,210,.7)";ctx.font="9px system-ui";ctx.textAlign="center";ctx.fillText(t.name,t.x*w,t.y*h-18);});
+  world.routes.filter(r=>r.strength>10).forEach(r=>{ctx.strokeStyle=`rgba(120,190,120,${Math.min(.25,r.strength/260)})`;ctx.lineWidth=1+Math.min(5,r.strength/20);ctx.beginPath();ctx.moveTo(r.x1*w,r.y1*h);ctx.lineTo(r.x2*w,r.y2*h);ctx.stroke();});
+  adv.pheromones.forEach(p=>{const col=p.type==="alarm"?"255,70,60":p.type==="food"?"100,255,130":p.type==="home"?"100,170,255":"230,210,120";ctx.strokeStyle=`rgba(${col},${Math.min(.5,p.strength*.32)})`;ctx.lineWidth=1+2*p.strength;ctx.beginPath();ctx.moveTo(p.x1*w,p.y1*h);ctx.lineTo(p.x2*w,p.y2*h);ctx.stroke();});
+  ctx.strokeStyle="#8a6a48";ctx.lineWidth=28;ctx.lineCap="round";adv.tunnelBranches.forEach(b=>{ctx.beginPath();ctx.moveTo(b.x1*w,b.y1*h);ctx.lineTo(b.x2*w,b.y2*h);ctx.stroke();});
+  if(civ.surfaceMound>0){ctx.fillStyle="#5b3b22";ctx.beginPath();ctx.ellipse(.15*w,.22*h,.06*w,(.018+.00035*civ.surfaceMound)*h,0,0,Math.PI*2);ctx.fill();}
+  function ch(x,y,rx,ry,l,ic){ctx.fillStyle="#3a281b";ctx.strokeStyle="#b08b5d";ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x*w,y*h,rx*w,ry*h,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#f0ddbd";ctx.textAlign="center";ctx.font="bold 10px system-ui";ctx.fillText(l,x*w,y*h-7);ctx.font="20px system-ui";ctx.fillText(ic,x*w,y*h+16);}
+  ch(.47,.55,.105,.075,"QUEEN","👑");ch(.20,.76,.11,.07,"NURSERY","🥚");ch(.60,.79,.105,.065,"GRANARY","🥣");ch(.80,.88,.09,.05,"REFUSE","🗑️");ch(.84,.76,.10,.065,"BARRACKS","🛡️");ch(.33,.86,.08,.05,"WATER","💧");ch(.12,.88,.08,.05,"BUNKER","⬆️");ch(.48,.88,.08,.05,"FUNGUS","🍄");ch(.70,.90,.08,.05,"HIBERNATION","❄️");
+  civ.brood.slice(0,60).forEach(b=>{ctx.font=b.stage==="egg"?"8px system-ui":b.stage==="larva"?"10px system-ui":"11px system-ui";ctx.fillText(b.stage==="egg"?"•":b.stage==="larva"?"◦":"◉",b.x*w,b.y*h);});
+  civ.foodTypes.forEach(f=>{ctx.font="14px system-ui";ctx.fillText(f.type==="Leaf"?"🍃":f.type==="Nectar"?"🌼":"🍞",f.x*w,f.y*h);});
+  world.resources.forEach(r=>{if(r.amount>0){ctx.font="18px system-ui";ctx.fillText(r.type==="food"?"🍯":"💧",r.x*w,r.y*h);}});
+  civ.predators.forEach(p=>{const icon={Spider:"🕷️",Beetle:"🪲",Centipede:"🪱",Bird:"🐦"}[p.kind]||"⚠️";ctx.font="18px system-ui";ctx.fillText(icon,p.x*w,p.y*h);});
+  ensureAntMotion().forEach(m=>{if(!m.alive)return;const x=m.x*w,y=m.y*h;ctx.font=(m.caste==="Soldier"?"19px":"16px")+" system-ui";ctx.fillText("🐜",x,y);if(m.carry){ctx.font="9px system-ui";ctx.fillText(m.carry,x+8,y-9);}if(civ.cameraMode==="Ant"&&m.simId===civ.cameraAntId){ctx.strokeStyle="rgba(255,230,120,.9)";ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,13,0,Math.PI*2);ctx.stroke();}});
+  if(civ.floodLevel>0){ctx.fillStyle=`rgba(60,120,180,${Math.min(.35,civ.floodLevel/260)})`;ctx.fillRect(0,h*(.96-.004*civ.floodLevel),w,h);}ctx.restore();ctx.textAlign="left";ctx.fillStyle="rgba(235,245,235,.9)";ctx.font="bold 12px system-ui";ctx.fillText(`ANTS ${ensureAntMotion().filter(x=>x.alive).length} · BROOD ${civ.brood.length} · PREDATORS ${civ.predators.length} · DAY ${civ.day}`,14,h-18);
 }
 
 
@@ -4793,7 +5222,7 @@ function antSimCanvasHTML(){
   return `<div class="panel wing-sim-panel"><div class="terminal-kicker">LIVE COLONY SIM</div>
   <div class="wing-sim-toolbar"><span>${wingNowDaypart()} · REAL TIME</span><button onclick="antToggleSim()">${WING_SIM.running.ants?"⏸ PAUSE SIM":"▶ RUN SIM"}</button></div>
   <canvas id="antsSimCanvas" width="1000" height="500" onclick="return antCanvasDig(event)"></canvas>
-  ${antAdvancedPanelHTML()}<div class="wing-sim-help">Cutaway colony sim: workers complete duties, freely wander across the surface or through tunnels, pause to explore, then choose another chamber or resource. Colony needs can interrupt roaming.</div></div>`;
+  ${antAdvancedPanelHTML()}${antSocietyPanelHTML()}${antWorldPanelHTML()}${antCivilizationPanelHTML()}<div class="wing-sim-help">Cutaway colony sim: workers complete duties, freely wander across the surface or through tunnels, pause to explore, then choose another chamber or resource. Colony needs can interrupt roaming.</div></div>`;
 }
 
 function antFarmSvg(a){
