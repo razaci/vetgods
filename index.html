@@ -1411,6 +1411,12 @@ button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
 .wing-sim-panel canvas{display:block;width:100%;height:auto;border:1px solid #445247;border-radius:9px;background:#0a1110;touch-action:manipulation}
 .wing-sim-help{font-size:.48rem;opacity:.6;margin-top:7px;line-height:1.45}
 
+
+/* ANT CUTAWAY ENHANCEMENT */
+#antsSimCanvas{
+  box-shadow:inset 0 0 0 1px rgba(176,139,93,.22);
+}
+
 </style>
 </head>
 <body>
@@ -4339,15 +4345,71 @@ function antMetric(label,val,suffix=""){
   return `<div class="ant-metric"><span>${label}</span><b>${Math.round(val)}${suffix}</b><i><u style="width:${antClamp(val)}%"></u></i></div>`;
 }
 
+
 function ensureAntMotion(){
   const a=ensureAntFarm();
-  if(!Array.isArray(a.movingAnts))a.movingAnts=Array.from({length:22},(_,i)=>({x:.12+(i*.071)%0.76,y:.22+(i*.113)%0.64,tx:.5,ty:.5,phase:"travel",linger:0}));
+  const count=Math.max(28,Math.min(60,Number(a.workers||28)));
+  if(!Array.isArray(a.movingAnts))a.movingAnts=[];
+  while(a.movingAnts.length<count){
+    const i=a.movingAnts.length;
+    const surface=i<Math.ceil(count*.62);
+    a.movingAnts.push({
+      x:surface ? .08+Math.random()*.84 : .16+Math.random()*.68,
+      y:surface ? .07+Math.random()*.14 : .24+Math.random()*.60,
+      tx:.5,ty:.5,phase:"travel",linger:0,target:null,
+      lane:surface?"surface":"tunnel",
+      surfaceUntil:Date.now()+18000+Math.random()*35000
+    });
+  }
+  if(a.movingAnts.length>count)a.movingAnts.length=count;
   return a.movingAnts;
 }
-function antChooseTarget(i){
-  const pts=[{x:.16,y:.14},{x:.47,y:.55},{x:.20,y:.73},{x:.59,y:.80},{x:.84,y:.76}];
-  return pts[(i+Math.floor(Date.now()/18000))%pts.length];
+
+
+function antChooseTarget(i,m){
+  const now=Date.now();
+  const surfacePts=[
+    {x:.10,y:.10,label:"patrolling edge",zone:"surface"},
+    {x:.18,y:.13,label:"feeding",zone:"surface"},
+    {x:.30,y:.09,label:"foraging",zone:"surface"},
+    {x:.46,y:.12,label:"crossing outworld",zone:"surface"},
+    {x:.62,y:.09,label:"foraging",zone:"surface"},
+    {x:.78,y:.13,label:"drinking",zone:"surface"},
+    {x:.90,y:.10,label:"patrolling edge",zone:"surface"},
+    {x:.55,y:.16,label:"carrying food",zone:"surface"}
+  ];
+  const tunnelPts=[
+    {x:.34,y:.34,label:"upper tunnel",zone:"tunnel"},
+    {x:.47,y:.55,label:"queen chamber",zone:"queen"},
+    {x:.20,y:.76,label:"nursery",zone:"nursery"},
+    {x:.60,y:.79,label:"food vault",zone:"foodvault"},
+    {x:.84,y:.76,label:"worker chamber",zone:"workers"},
+    {x:.50,y:.67,label:"lower tunnel",zone:"tunnel"}
+  ];
+
+  if(m.lane==="surface"){
+    if(now>(m.surfaceUntil||0) && Math.random()<.18){
+      m.lane="tunnel";
+      m.surfaceUntil=now+14000+Math.random()*20000;
+      return tunnelPts[(i+Math.floor(now/11000))%tunnelPts.length];
+    }
+    return surfacePts[(i+Math.floor(now/7000))%surfacePts.length];
+  }
+
+  if(now>(m.surfaceUntil||0) || Math.random()<.08){
+    m.lane="surface";
+    m.surfaceUntil=now+26000+Math.random()*42000;
+    return surfacePts[(i*3+Math.floor(now/9000))%surfacePts.length];
+  }
+  return tunnelPts[(i+Math.floor(now/12000))%tunnelPts.length];
 }
+
+
+
+
+
+
+
 function antSimStep(dt){
   const ants=ensureAntMotion(),now=Date.now();
   ants.forEach((m,i)=>{
@@ -4362,17 +4424,249 @@ function antSimStep(dt){
     }
   });
 }
+
 function drawAntSim(){
   const c=document.getElementById("antsSimCanvas");if(!c)return;
-  const ctx=c.getContext("2d"),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
-  ctx.fillStyle="#111510";ctx.fillRect(0,0,w,h);
-  ctx.fillStyle="#2a1e13";ctx.fillRect(0,h*.18,w,h*.82);
-  ctx.strokeStyle="#80684c";ctx.lineWidth=24;ctx.lineCap="round";
-  [[.14,.18,.48,.52],[.48,.52,.22,.76],[.48,.52,.60,.78],[.48,.52,.84,.74]].forEach(p=>{ctx.beginPath();ctx.moveTo(p[0]*w,p[1]*h);ctx.lineTo(p[2]*w,p[3]*h);ctx.stroke();});
-  ctx.font="20px system-ui";ctx.textAlign="center";
-  [["🍯",.16,.13],["👑",.48,.52],["🥚",.22,.77],["🥣",.60,.79],["🐜",.84,.75]].forEach(x=>ctx.fillText(x[0],x[1]*w,x[2]*h));
-  ensureAntMotion().forEach(m=>ctx.fillText("🐜",m.x*w,m.y*h));
+  const ctx=c.getContext("2d"),w=c.width,h=c.height;
+  ctx.clearRect(0,0,w,h);
+
+  // SKY / OUTWORLD
+  ctx.fillStyle="#0f1b16";
+  ctx.fillRect(0,0,w,h*.21);
+
+  // soil cutaway
+  ctx.fillStyle="#2b1d12";
+  ctx.fillRect(0,h*.21,w,h*.79);
+
+  // soil strata
+  ctx.fillStyle="rgba(123,83,46,.18)";
+  ctx.fillRect(0,h*.34,w,h*.12);
+  ctx.fillStyle="rgba(70,48,29,.24)";
+  ctx.fillRect(0,h*.62,w,h*.18);
+
+  // surface lip
+  ctx.strokeStyle="#66735d";
+  ctx.lineWidth=3;
+  ctx.strokeRect(8,8,w-16,h*.20-10);
+
+  // underground tunnel network
+  ctx.strokeStyle="#8a6a48";
+  ctx.lineWidth=28;
+  ctx.lineCap="round";
+  const tunnels=[
+    [.15,.22,.34,.34],
+    [.34,.34,.47,.55],
+    [.47,.55,.20,.76],
+    [.47,.55,.60,.79],
+    [.47,.55,.84,.76],
+    [.47,.55,.50,.67]
+  ];
+  tunnels.forEach(p=>{
+    ctx.beginPath();
+    ctx.moveTo(p[0]*w,p[1]*h);
+    ctx.lineTo(p[2]*w,p[3]*h);
+    ctx.stroke();
+  });
+
+  // visible chambers
+  function chamber(x,y,rx,ry,label,icon){
+    ctx.fillStyle="#3a281b";
+    ctx.strokeStyle="#b08b5d";
+    ctx.lineWidth=2;
+    ctx.beginPath();
+    ctx.ellipse(x*w,y*h,rx*w,ry*h,0,0,Math.PI*2);
+    ctx.fill();ctx.stroke();
+
+    ctx.fillStyle="#f0ddbd";
+    ctx.textAlign="center";
+    ctx.font="bold 12px system-ui";
+    ctx.fillText(label,x*w,y*h-8);
+    ctx.font="24px system-ui";
+    ctx.fillText(icon,x*w,y*h+20);
+  }
+  chamber(.47,.55,.105,.075,"QUEEN CHAMBER","👑");
+  chamber(.20,.76,.11,.07,"BROOD NURSERY","🥚");
+  chamber(.60,.79,.105,.065,"FOOD VAULT","🥣");
+  chamber(.84,.76,.10,.065,"WORKER CHAMBER","🐜");
+
+  // surface resources
+  ctx.textAlign="center";
+  ctx.font="24px system-ui";
+  ctx.fillText("🍯",.18*w,.13*h);
+  ctx.fillText("💧",.79*w,.13*h);
+
+  ctx.fillStyle="rgba(230,245,234,.72)";
+  ctx.font="10px system-ui";
+  ctx.fillText("FOOD",.18*w,.18*h);
+  ctx.fillText("WATER",.79*w,.18*h);
+
+  // moving ants
+  ensureAntMotion().forEach((m,i)=>{
+    const x=m.x*w,y=m.y*h;
+    ctx.save();
+    ctx.translate(x,y);
+
+    const underground=m.lane==="tunnel";
+    const s=underground?0.86:1.12;
+    ctx.scale(s,s);
+
+    // glow/halo underground so they do not disappear in brown soil
+    if(underground){
+      ctx.fillStyle="rgba(255,216,143,.15)";
+      ctx.beginPath();
+      ctx.arc(0,-3,14,0,Math.PI*2);
+      ctx.fill();
+    }
+
+    ctx.font="18px system-ui";
+    ctx.textAlign="center";
+    ctx.fillText("🐜",0,0);
+    ctx.restore();
+  });
+
+  // labels
+  const ants=ensureAntMotion();
+  const surface=ants.filter(a=>a.lane==="surface").length;
+  const underground=ants.length-surface;
+
+  ctx.textAlign="left";
+  ctx.fillStyle="rgba(232,245,232,.84)";
+  ctx.font="bold 12px system-ui";
+  ctx.fillText(`SURFACE WORKERS: ${surface}`,16,h-34);
+  ctx.fillText(`UNDERGROUND WORKERS: ${underground}`,16,h-16);
+
+  ctx.textAlign="right";
+  ctx.fillStyle="rgba(240,221,189,.74)";
+  ctx.font="11px system-ui";
+  ctx.fillText("CUTAWAY VIEW · TUNNELS VISIBLE",w-16,h-16);
 }
+
+
+function ensureAntMotion(){
+  const a=ensureAntFarm();
+  const count=Math.max(28,Math.min(60,Number(a.workers||28)));
+  if(!Array.isArray(a.movingAnts))a.movingAnts=[];
+  while(a.movingAnts.length<count){
+    const i=a.movingAnts.length;
+    const surface=i<Math.ceil(count*.62);
+    a.movingAnts.push({
+      x:surface ? .08+Math.random()*.84 : .16+Math.random()*.68,
+      y:surface ? .07+Math.random()*.14 : .24+Math.random()*.60,
+      tx:.5,ty:.5,phase:"travel",linger:0,target:null,
+      lane:surface?"surface":"tunnel",
+      surfaceUntil:Date.now()+18000+Math.random()*35000
+    });
+  }
+  if(a.movingAnts.length>count)a.movingAnts.length=count;
+  return a.movingAnts;
+}
+
+function antChooseTarget(i,m){
+  const now=Date.now();
+
+  // Surface workers are deliberately kept visible in the outworld.
+  const surfacePts=[
+    {x:.10,y:.10,label:"patrolling edge"},
+    {x:.18,y:.13,label:"feeding"},
+    {x:.30,y:.09,label:"foraging"},
+    {x:.46,y:.12,label:"crossing outworld"},
+    {x:.62,y:.09,label:"foraging"},
+    {x:.78,y:.13,label:"drinking"},
+    {x:.90,y:.10,label:"patrolling edge"},
+    {x:.55,y:.16,label:"carrying food"}
+  ];
+  const tunnelPts=[
+    {x:.20,y:.73,label:"nursery"},
+    {x:.47,y:.55,label:"queen chamber"},
+    {x:.60,y:.80,label:"food vault"},
+    {x:.84,y:.76,label:"worker chamber"},
+    {x:.33,y:.40,label:"main tunnel"}
+  ];
+
+  // At least ~60% stay on the surface at any moment.
+  if(m.lane==="surface"){
+    if(now>(m.surfaceUntil||0) && Math.random()<.18){
+      m.lane="tunnel";
+      m.surfaceUntil=now+12000+Math.random()*16000;
+      return tunnelPts[(i+Math.floor(now/11000))%tunnelPts.length];
+    }
+    return surfacePts[(i+Math.floor(now/7000))%surfacePts.length];
+  }
+
+  // Tunnel workers regularly come back out instead of disappearing forever.
+  if(now>(m.surfaceUntil||0) || Math.random()<.10){
+    m.lane="surface";
+    m.surfaceUntil=now+24000+Math.random()*42000;
+    return surfacePts[(i*3+Math.floor(now/9000))%surfacePts.length];
+  }
+  return tunnelPts[(i+Math.floor(now/12000))%tunnelPts.length];
+}
+
+function antSimStep(dt){
+  const ants=ensureAntMotion(),now=Date.now();
+  ants.forEach((m,i)=>{
+    if(!m.target || (m.phase==="doing"&&now>m.linger)){
+      m.target=antChooseTarget(i,m);
+      m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";
+    }
+    const dx=m.tx-m.x,dy=m.ty-m.y,dist=Math.hypot(dx,dy);
+    if(m.phase==="travel"){
+      // slow, visible crawling
+      const step=Math.min(dist,.000075*dt);
+      if(dist>.002){m.x+=dx/dist*step;m.y+=dy/dist*step;}
+      if(dist<.014){
+        m.x=m.tx;m.y=m.ty;m.phase="doing";
+        m.linger=now+(m.lane==="surface"?9000:7000)+Math.random()*11000;
+      }
+    }
+  });
+}
+
+function drawAntSim(){
+  const c=document.getElementById("antsSimCanvas");if(!c)return;
+  const ctx=c.getContext("2d"),w=c.width,h=c.height;
+  ctx.clearRect(0,0,w,h);
+
+  // Outworld + soil
+  ctx.fillStyle="#111a13";ctx.fillRect(0,0,w,h*.21);
+  ctx.fillStyle="#2a1e13";ctx.fillRect(0,h*.21,w,h*.79);
+
+  // Surface tray rim
+  ctx.strokeStyle="#52644b";ctx.lineWidth=3;
+  ctx.strokeRect(8,8,w-16,h*.20-10);
+
+  // Tunnel network
+  ctx.strokeStyle="#80684c";ctx.lineWidth=24;ctx.lineCap="round";
+  [[.15,.22,.47,.55],[.47,.55,.20,.76],[.47,.55,.60,.79],[.47,.55,.84,.76],[.47,.55,.33,.40]].forEach(p=>{
+    ctx.beginPath();ctx.moveTo(p[0]*w,p[1]*h);ctx.lineTo(p[2]*w,p[3]*h);ctx.stroke();
+  });
+
+  // Stations
+  ctx.textAlign="center";
+  ctx.font="23px system-ui";
+  [["🍯",.18,.13],["💧",.79,.13],["👑",.47,.55],["🥚",.20,.76],["🥣",.60,.79],["🐜",.84,.76]].forEach(x=>ctx.fillText(x[0],x[1]*w,x[2]*h));
+
+  // Draw every ant, with surface ants slightly larger so the colony looks alive.
+  ensureAntMotion().forEach((m,i)=>{
+    const x=m.x*w,y=m.y*h;
+    ctx.save();
+    ctx.translate(x,y);
+    const s=m.lane==="surface"?1.12:.92;
+    ctx.scale(s,s);
+    ctx.font="18px system-ui";
+    ctx.fillText("🐜",0,0);
+    ctx.restore();
+  });
+
+  // visible colony counter
+  const ants=ensureAntMotion();
+  const surface=ants.filter(a=>a.lane==="surface").length;
+  ctx.textAlign="left";
+  ctx.fillStyle="rgba(232,245,232,.78)";
+  ctx.font="bold 12px system-ui";
+  ctx.fillText(`VISIBLE WORKERS: ${surface}  ·  TUNNEL WORKERS: ${ants.length-surface}`,16,h-16);
+}
+
 function antLoop(ts){
   if(!WING_SIM.running.ants)return;
   const prev=WING_SIM.last.ants||ts,dt=Math.min(50,ts-prev);WING_SIM.last.ants=ts;
@@ -4387,7 +4681,7 @@ function antSimCanvasHTML(){
   return `<div class="panel wing-sim-panel"><div class="terminal-kicker">LIVE COLONY SIM</div>
   <div class="wing-sim-toolbar"><span>${wingNowDaypart()} · REAL TIME</span><button onclick="antToggleSim()">${WING_SIM.running.ants?"⏸ PAUSE SIM":"▶ RUN SIM"}</button></div>
   <canvas id="antsSimCanvas" width="1000" height="500"></canvas>
-  <div class="wing-sim-help">Workers slowly move between food, queen, nursery and colony chambers, pausing at each destination before choosing another route.</div></div>`;
+  <div class="wing-sim-help">Cutaway view: surface workers remain above ground while tunnel workers stay visible underground inside the tunnels, queen chamber, brood nursery, food vault and worker chamber.</div></div>`;
 }
 
 function antFarmSvg(a){
