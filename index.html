@@ -1417,6 +1417,14 @@ button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
   box-shadow:inset 0 0 0 1px rgba(176,139,93,.22);
 }
 
+
+.ant-advanced-panel{margin-top:8px;background:rgba(22,15,9,.82);border-color:#705941}
+.ant-role-wrap{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.ant-role-pill{font-size:.44rem;padding:4px 6px;border:1px solid rgba(210,178,125,.28);border-radius:999px;background:rgba(79,55,31,.45)}
+.ant-queen-line,.ant-dig-status{font-size:.49rem;line-height:1.45;margin-top:5px}
+.ant-events{margin-top:7px;font-size:.45rem;line-height:1.45;opacity:.76}
+#antsSimCanvas{cursor:crosshair}
+
 </style>
 </head>
 <body>
@@ -2915,6 +2923,52 @@ function sanctuaryActivityLabelFor(p,m){
 }
 
 
+
+function sanctuaryPickRoamPoint(p,i){
+  const s=ensurePetSim(p);
+  const mot=sanctuaryEnsureMotion(p,i);
+
+  // Keep roaming in the open central habitat, away from the very edges.
+  // Bias away from fixed stations so free-roam looks visibly different.
+  const points=[
+    {x:.36,y:.48},{x:.48,y:.62},{x:.62,y:.48},{x:.42,y:.36},
+    {x:.58,y:.66},{x:.68,y:.40},{x:.32,y:.62},{x:.54,y:.40},
+    {x:.44,y:.70},{x:.66,y:.58}
+  ];
+
+  let pick=points[Math.floor(Math.random()*points.length)];
+  // Avoid picking a point too close to current position.
+  for(let n=0;n<6;n++){
+    const p2=points[Math.floor(Math.random()*points.length)];
+    if(Math.hypot(p2.x-mot.x,p2.y-mot.y)>.12){pick=p2;break;}
+  }
+
+  mot.targetObjectId=null;
+  mot.tx=pick.x;
+  mot.ty=pick.y;
+  mot.activityType="roam";
+  mot.activityTravel="Wandering freely";
+  mot.activityDoing=Math.random()<.34 ? "Sniffing around" :
+                    Math.random()<.5 ? "Looking around" : "Exploring the habitat";
+  mot.phase="roam-travel";
+  mot.lingerUntil=0;
+  mot.lastRetargetAt=Date.now();
+  s.activity=mot.activityTravel;
+}
+
+function sanctuaryShouldRoam(p,s,mot){
+  // Needs override wandering.
+  if((p.water??100)<52)return false;
+  if((p.hunger??100)<52)return false;
+  if((p.fear??0)>68)return false;
+  if((p.pain??0)>55)return false;
+  if((p.cleanliness??100)<42)return false;
+
+  // After completing a station activity, roam most of the time before next station.
+  return Math.random()<0.72;
+}
+
+
 function sanctuaryDraw(){
   const c=document.getElementById("sanctuaryCanvas");
   if(!c)return;
@@ -2937,17 +2991,14 @@ function sanctuaryDraw(){
     const s=ensurePetSim(p);
     const mot=sanctuaryEnsureMotion(p,i);
 
-    // Choose a new destination only when there is no target yet,
-    // or after the pet has finished lingering at its current station.
-    const needsTarget =
-      !mot.targetObjectId ||
-      !mot.phase ||
-      (mot.phase==="doing" && now >= (mot.lingerUntil||0));
+    // New pet or exhausted prior target: choose either free roam or a real station.
+    const noTarget = !mot.phase || (!mot.targetObjectId && !String(mot.phase).startsWith("roam"));
+    const finishedStation = mot.phase==="doing" && now >= (mot.lingerUntil||0);
+    const finishedRoam = mot.phase==="roam-doing" && now >= (mot.lingerUntil||0);
 
-    if(needsTarget){
+    if(noTarget){
+      // Start with a real task so pets don't spawn frozen.
       const target=sanctuaryTargetFor(p,i);
-
-      // Convert the returned activity type into the actual habitat object.
       const targetObj=(SANCTUARY_SIM.objects||[]).find(o=>o.type===target.type)
         || (SANCTUARY_SIM.objects||[])[0];
 
@@ -2955,52 +3006,94 @@ function sanctuaryDraw(){
         mot.targetObjectId=targetObj.id;
         mot.tx=targetObj.x;
         mot.ty=targetObj.y;
-      }else{
-        mot.tx=target.x??mot.x;
-        mot.ty=target.y??mot.y;
       }
-
       mot.activityType=target.type||null;
       mot.activityTravel=target.label||"Exploring";
       mot.activityDoing=target.doing||"Exploring";
       mot.phase="travel";
       mot.lastRetargetAt=now;
       s.activity=mot.activityTravel;
+    }else if(finishedStation){
+      if(sanctuaryShouldRoam(p,s,mot)){
+        sanctuaryPickRoamPoint(p,i);
+      }else{
+        const target=sanctuaryTargetFor(p,i);
+        const targetObj=(SANCTUARY_SIM.objects||[]).find(o=>o.type===target.type)
+          || (SANCTUARY_SIM.objects||[])[0];
+
+        if(targetObj){
+          mot.targetObjectId=targetObj.id;
+          mot.tx=targetObj.x;
+          mot.ty=targetObj.y;
+        }
+        mot.activityType=target.type||null;
+        mot.activityTravel=target.label||"Exploring";
+        mot.activityDoing=target.doing||"Exploring";
+        mot.phase="travel";
+        mot.lingerUntil=0;
+        mot.lastRetargetAt=now;
+        s.activity=mot.activityTravel;
+      }
+    }else if(finishedRoam){
+      // Sometimes continue wandering to another open spot before selecting a station.
+      if(Math.random()<0.38){
+        sanctuaryPickRoamPoint(p,i);
+      }else{
+        const target=sanctuaryTargetFor(p,i);
+        const targetObj=(SANCTUARY_SIM.objects||[]).find(o=>o.type===target.type)
+          || (SANCTUARY_SIM.objects||[])[0];
+
+        if(targetObj){
+          mot.targetObjectId=targetObj.id;
+          mot.tx=targetObj.x;
+          mot.ty=targetObj.y;
+        }
+        mot.activityType=target.type||null;
+        mot.activityTravel=target.label||"Exploring";
+        mot.activityDoing=target.doing||"Exploring";
+        mot.phase="travel";
+        mot.lingerUntil=0;
+        mot.lastRetargetAt=now;
+        s.activity=mot.activityTravel;
+      }
     }
 
     const dx=mot.tx-mot.x;
     const dy=mot.ty-mot.y;
     const dist=Math.hypot(dx,dy);
 
-    if(mot.phase==="travel"){
+    if(mot.phase==="travel" || mot.phase==="roam-travel"){
       if(dist>.012){
-        // Slow, steady travel.
-        const maxStep=SANCTUARY_SIM.perf==="full" ? 0.00042 : 0.00030;
+        const maxStep=SANCTUARY_SIM.perf==="full" ? 0.00036 : 0.00027;
         const step=Math.min(maxStep,dist);
         mot.x += dx/dist*step;
         mot.y += dy/dist*step;
         s.activity=mot.activityTravel;
       }else{
-        // Arrived at station.
         mot.x=mot.tx;
         mot.y=mot.ty;
-        mot.phase="doing";
-        mot.lingerUntil=now+18000+Math.random()*22000;
-        s.activity=mot.activityDoing;
 
-        // Small stat effects happen only at the correct station.
-        if(mot.activityType==="food") p.hunger=Math.min(100,(p.hunger??70)+2);
-        if(mot.activityType==="water") p.water=Math.min(100,(p.water??70)+2);
-        if(mot.activityType==="toy"){
-          p.happiness=Math.min(100,(p.happiness??70)+1);
-          if(s.enrichment!=null)s.enrichment=Math.min(100,s.enrichment+1);
+        if(mot.phase==="roam-travel"){
+          mot.phase="roam-doing";
+          mot.lingerUntil=now+5000+Math.random()*9000;
+          s.activity=mot.activityDoing;
+        }else{
+          mot.phase="doing";
+          mot.lingerUntil=now+18000+Math.random()*22000;
+          s.activity=mot.activityDoing;
+
+          if(mot.activityType==="food") p.hunger=Math.min(100,(p.hunger??70)+2);
+          if(mot.activityType==="water") p.water=Math.min(100,(p.water??70)+2);
+          if(mot.activityType==="toy"){
+            p.happiness=Math.min(100,(p.happiness??70)+1);
+            if(s.enrichment!=null)s.enrichment=Math.min(100,s.enrichment+1);
+          }
+          if(mot.activityType==="bed") p.energy=Math.min(100,(p.energy??70)+1);
+          if(mot.activityType==="hide") p.comfort=Math.min(100,(p.comfort??70)+1);
+          if(mot.activityType==="care") p.cleanliness=Math.min(100,(p.cleanliness??70)+1);
         }
-        if(mot.activityType==="bed") p.energy=Math.min(100,(p.energy??70)+1);
-        if(mot.activityType==="hide") p.comfort=Math.min(100,(p.comfort??70)+1);
-        if(mot.activityType==="care") p.cleanliness=Math.min(100,(p.cleanliness??70)+1);
       }
-    }else if(mot.phase==="doing"){
-      // Stay planted at the correct station while the activity is happening.
+    }else if(mot.phase==="doing" || mot.phase==="roam-doing"){
       mot.x=mot.tx;
       mot.y=mot.ty;
       s.activity=mot.activityDoing;
@@ -3029,12 +3122,13 @@ function sanctuaryDraw(){
     ctx.fillStyle="rgba(220,245,255,.72)";
     ctx.font="10px system-ui";
     ctx.fillText(
-      mot.phase==="travel" ? mot.activityTravel : mot.activityDoing,
+      (mot.phase==="travel"||mot.phase==="roam-travel") ? mot.activityTravel : mot.activityDoing,
       x,y+46
     );
     ctx.restore();
   });
 }
+
 
 function sanctuaryLoop(ts){
   if(!SANCTUARY_SIM.running)return;
@@ -4382,58 +4476,127 @@ function ensureAntMotion(){
   const count=Math.max(28,Math.min(60,Number(a.workers||28)));
   if(!Array.isArray(a.movingAnts))a.movingAnts=[];
   while(a.movingAnts.length<count){
-    const i=a.movingAnts.length;
-    const surface=i<Math.ceil(count*.62);
-    a.movingAnts.push({
-      x:surface ? .08+Math.random()*.84 : .16+Math.random()*.68,
-      y:surface ? .07+Math.random()*.14 : .24+Math.random()*.60,
-      tx:.5,ty:.5,phase:"travel",linger:0,target:null,
-      lane:surface?"surface":"tunnel",
-      surfaceUntil:Date.now()+18000+Math.random()*35000
-    });
+    const i=a.movingAnts.length,surface=i<Math.ceil(count*.62);
+    a.movingAnts.push({x:surface?.08+Math.random()*.84:.16+Math.random()*.68,y:surface?.07+Math.random()*.14:.24+Math.random()*.60,tx:.5,ty:.5,phase:null,linger:0,target:null,lane:surface?"surface":"tunnel",surfaceUntil:Date.now()+18000+Math.random()*35000,role:null,carry:null,activityType:null});
   }
   if(a.movingAnts.length>count)a.movingAnts.length=count;
+  a.movingAnts.forEach((m,i)=>antAssignRole(m,i));
   return a.movingAnts;
 }
 
 
-function antChooseTarget(i,m){
-  const now=Date.now();
-  const surfacePts=[
-    {x:.10,y:.10,label:"patrolling edge",zone:"surface"},
-    {x:.18,y:.13,label:"feeding",zone:"surface"},
-    {x:.30,y:.09,label:"foraging",zone:"surface"},
-    {x:.46,y:.12,label:"crossing outworld",zone:"surface"},
-    {x:.62,y:.09,label:"foraging",zone:"surface"},
-    {x:.78,y:.13,label:"drinking",zone:"surface"},
-    {x:.90,y:.10,label:"patrolling edge",zone:"surface"},
-    {x:.55,y:.16,label:"carrying food",zone:"surface"}
-  ];
-  const tunnelPts=[
-    {x:.34,y:.34,label:"upper tunnel",zone:"tunnel"},
-    {x:.47,y:.55,label:"queen chamber",zone:"queen"},
-    {x:.20,y:.76,label:"nursery",zone:"nursery"},
-    {x:.60,y:.79,label:"food vault",zone:"foodvault"},
-    {x:.84,y:.76,label:"worker chamber",zone:"workers"},
-    {x:.50,y:.67,label:"lower tunnel",zone:"tunnel"}
-  ];
 
-  if(m.lane==="surface"){
-    if(now>(m.surfaceUntil||0) && Math.random()<.18){
-      m.lane="tunnel";
-      m.surfaceUntil=now+14000+Math.random()*20000;
-      return tunnelPts[(i+Math.floor(now/11000))%tunnelPts.length];
-    }
-    return surfacePts[(i+Math.floor(now/7000))%surfacePts.length];
-  }
 
-  if(now>(m.surfaceUntil||0) || Math.random()<.08){
-    m.lane="surface";
-    m.surfaceUntil=now+26000+Math.random()*42000;
-    return surfacePts[(i*3+Math.floor(now/9000))%surfacePts.length];
-  }
-  return tunnelPts[(i+Math.floor(now/12000))%tunnelPts.length];
+const ANT_ROLES=["Forager","Nurse","Digger","Guard","Queen Attendant","Food Hauler","Water Carrier","Explorer"];
+function antEnsureAdvanced(){
+  const a=ensureAntFarm();
+  if(!a.advanced)a.advanced={pheromones:[],tunnelBranches:[
+    {x1:.15,y1:.22,x2:.47,y2:.55},{x1:.47,y1:.55,x2:.20,y2:.76},
+    {x1:.47,y1:.55,x2:.60,y2:.79},{x1:.47,y1:.55,x2:.84,y2:.76}
+  ],digTarget:null,queenMood:"Calm",layingRate:1,events:["Colony routine established."],eventClock:0,lastBroodTick:Date.now()};
+  if(!Array.isArray(a.advanced.pheromones))a.advanced.pheromones=[];
+  if(!Array.isArray(a.advanced.tunnelBranches))a.advanced.tunnelBranches=[];
+  if(!Array.isArray(a.advanced.events))a.advanced.events=[];
+  return a.advanced;
 }
+function antAssignRole(m,i){ if(!m.role)m.role=ANT_ROLES[i%ANT_ROLES.length]; return m.role; }
+function antEvent(msg){
+  const adv=antEnsureAdvanced();adv.events.unshift(msg);adv.events=adv.events.slice(0,6);
+}
+function antAddPheromone(x1,y1,x2,y2,type){
+  const adv=antEnsureAdvanced();adv.pheromones.push({x1,y1,x2,y2,type,strength:1});
+  if(adv.pheromones.length>90)adv.pheromones.shift();
+}
+function antDecayPheromones(dt){
+  const adv=antEnsureAdvanced();
+  adv.pheromones.forEach(p=>p.strength-=dt/85000);
+  adv.pheromones=adv.pheromones.filter(p=>p.strength>.05);
+}
+function antBroodTick(){
+  const a=ensureAntFarm(),adv=antEnsureAdvanced(),now=Date.now();
+  if(now-(adv.lastBroodTick||now)<12000)return;
+  adv.lastBroodTick=now;
+  const cond=(a.queenHealth||0)+(a.food||0)+(a.water||0)+(a.humidity||0);
+  adv.queenMood=cond>280?"Laying strongly":cond>220?"Calm":"Stressed";
+  adv.layingRate=cond>280?2:cond>220?1:.4;
+  if(Math.random()<.55*adv.layingRate)a.eggs=(a.eggs||0)+1;
+  if((a.eggs||0)>0&&Math.random()<.30){a.eggs--;a.larvae=(a.larvae||0)+1;}
+  if((a.larvae||0)>0&&Math.random()<.20){a.larvae--;a.pupae=(a.pupae||0)+1;}
+  if((a.pupae||0)>0&&Math.random()<.14){a.pupae--;a.workers=(a.workers||0)+1;antEvent("A new worker emerged.");}
+}
+function antRequestDig(x,y){
+  antEnsureAdvanced().digTarget={x:Math.max(.08,Math.min(.92,x)),y:Math.max(.28,Math.min(.9,y)),progress:0};
+  antEvent("Diggers assigned to a new tunnel.");
+}
+function antAdvanceDig(dt){
+  const adv=antEnsureAdvanced();if(!adv.digTarget)return;
+  const n=ensureAntMotion().filter(m=>m.role==="Digger").length||1;
+  adv.digTarget.progress=Math.min(100,adv.digTarget.progress+n*dt/1800);
+  if(adv.digTarget.progress>=100){
+    const last=adv.tunnelBranches[adv.tunnelBranches.length-1]||{x2:.47,y2:.55};
+    adv.tunnelBranches.push({x1:last.x2??.47,y1:last.y2??.55,x2:adv.digTarget.x,y2:adv.digTarget.y});
+    adv.digTarget=null;antEvent("A new tunnel branch was completed.");
+  }
+}
+function antMaybeEvent(dt){
+  const adv=antEnsureAdvanced();adv.eventClock+=dt;if(adv.eventClock<22000)return;adv.eventClock=0;
+  const e=["Foragers discovered a scent trail.","Nurses moved brood.","Guards clustered at the entrance.","Workers cleared debris.","A surface foraging rush began.","Queen attendants gathered around the queen."];
+  antEvent(e[Math.floor(Math.random()*e.length)]);
+}
+function antAdvancedPanelHTML(){
+  const a=ensureAntFarm(),adv=antEnsureAdvanced(),counts={};
+  ensureAntMotion().forEach((m,i)=>{const r=antAssignRole(m,i);counts[r]=(counts[r]||0)+1;});
+  return `<div class="panel ant-advanced-panel"><div class="terminal-kicker">COLONY INTELLIGENCE</div>
+  <div class="ant-role-wrap">${Object.entries(counts).map(([r,n])=>`<span class="ant-role-pill">${r} ${n}</span>`).join("")}</div>
+  <div class="ant-queen-line">👑 Queen: <b>${adv.queenMood}</b> · laying ${adv.layingRate}×</div>
+  <div class="ant-dig-status">${adv.digTarget?`New tunnel ${Math.round(adv.digTarget.progress)}%`:"Tap underground soil to assign a dig target."}</div>
+  <div class="ant-events">${adv.events.slice(0,4).map(e=>`<div>• ${e}</div>`).join("")}</div></div>`;
+}
+function antCanvasDig(ev){
+  const c=document.getElementById("antsSimCanvas");if(!c)return false;
+  const r=c.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width,y=(ev.clientY-r.top)/r.height;
+  if(y>.24)antRequestDig(x,y);
+  return false;
+}
+
+function antChooseTarget(i,m){
+  const a=ensureAntFarm(),adv=antEnsureAdvanced(),role=antAssignRole(m,i),now=Date.now();
+  if(role==="Water Carrier"||(a.water||0)<40)return {x:.78,y:.13,label:"collecting water",zone:"surface",duty:"water",carry:"💧"};
+  if(role==="Food Hauler"||role==="Forager"||(a.food||0)<40)return {x:.18,y:.13,label:"collecting food",zone:"surface",duty:"food",carry:"🍯"};
+  if(role==="Nurse")return {x:.20,y:.76,label:"tending brood",zone:"nursery",duty:"nursery",carry:"🥚"};
+  if(role==="Queen Attendant")return {x:.47,y:.55,label:"attending queen",zone:"queen",duty:"queen"};
+  if(role==="Digger")return adv.digTarget?{x:adv.digTarget.x,y:adv.digTarget.y,label:"digging tunnel",zone:"tunnel",duty:"dig",carry:"🪨"}:{x:.50,y:.67,label:"clearing tunnel",zone:"tunnel",duty:"dig",carry:"🪨"};
+  if(role==="Guard")return {x:.15,y:.22,label:"guarding entrance",zone:"surface",duty:"guard"};
+  const pts=m.lane==="surface"?[
+    {x:.10,y:.10,label:"patrolling edge",zone:"surface"},{x:.46,y:.12,label:"crossing outworld",zone:"surface"},{x:.78,y:.13,label:"checking water",zone:"surface"}
+  ]:[
+    {x:.34,y:.34,label:"upper tunnel",zone:"tunnel"},{x:.47,y:.55,label:"queen chamber",zone:"queen"},{x:.84,y:.76,label:"worker chamber",zone:"workers"}
+  ];
+  if(Math.random()<.18)m.lane=m.lane==="surface"?"tunnel":"surface";
+  return pts[(i+Math.floor(now/9000))%pts.length];
+}
+
+function antPickRoamPoint(m){
+  const surfaceRoam=[
+    {x:.14,y:.08,label:"wandering surface",zone:"surface"},
+    {x:.26,y:.16,label:"exploring surface",zone:"surface"},
+    {x:.40,y:.08,label:"wandering surface",zone:"surface"},
+    {x:.58,y:.15,label:"exploring surface",zone:"surface"},
+    {x:.72,y:.08,label:"wandering surface",zone:"surface"},
+    {x:.86,y:.16,label:"exploring surface",zone:"surface"}
+  ];
+  const tunnelRoam=[
+    {x:.30,y:.32,label:"wandering tunnel",zone:"tunnel"},
+    {x:.41,y:.45,label:"exploring tunnel",zone:"tunnel"},
+    {x:.52,y:.62,label:"wandering tunnel",zone:"tunnel"},
+    {x:.67,y:.68,label:"exploring tunnel",zone:"tunnel"},
+    {x:.76,y:.72,label:"wandering chamber edge",zone:"tunnel"}
+  ];
+  const pool=m.lane==="surface"?surfaceRoam:tunnelRoam;
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+
+
 
 
 
@@ -4443,133 +4606,51 @@ function antChooseTarget(i,m){
 
 function antSimStep(dt){
   const ants=ensureAntMotion(),now=Date.now();
+  antBroodTick();antDecayPheromones(dt);antAdvanceDig(dt);antMaybeEvent(dt);
   ants.forEach((m,i)=>{
-    if(!m.target || (m.phase==="doing"&&now>m.linger)){
-      m.target=antChooseTarget(i);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";
+    if(!m.target||!m.phase){
+      m.target=antChooseTarget(i,m);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";m.activity=m.target.label;m.activityType=m.target.duty||"task";m.carry=m.target.carry||null;
+    }else if(m.phase==="doing"&&now>(m.linger||0)){
+      if(Math.random()<.70){m.target=antPickRoamPoint(m);m.tx=m.target.x;m.ty=m.target.y;m.phase="roam-travel";m.activity=m.target.label;m.activityType="roam";m.carry=null;}
+      else{m.target=antChooseTarget(i,m);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";m.activity=m.target.label;m.activityType=m.target.duty||"task";m.carry=m.target.carry||null;}
+    }else if(m.phase==="roam-doing"&&now>(m.linger||0)){
+      if(Math.random()<.38){m.target=antPickRoamPoint(m);m.tx=m.target.x;m.ty=m.target.y;m.phase="roam-travel";m.activity=m.target.label;}
+      else{m.target=antChooseTarget(i,m);m.tx=m.target.x;m.ty=m.target.y;m.phase="travel";m.activity=m.target.label;m.activityType=m.target.duty||"task";m.carry=m.target.carry||null;}
     }
     const dx=m.tx-m.x,dy=m.ty-m.y,dist=Math.hypot(dx,dy);
-    if(m.phase==="travel"){
-      const step=Math.min(dist,.00016*dt);
+    if(m.phase==="travel"||m.phase==="roam-travel"){
+      const ox=m.x,oy=m.y,step=Math.min(dist,.000075*dt);
       if(dist>.002){m.x+=dx/dist*step;m.y+=dy/dist*step;}
-      if(dist<.018){m.x=m.tx;m.y=m.ty;m.phase="doing";m.linger=now+12000+Math.random()*16000;}
+      if(m.phase==="travel"&&Math.random()<.035)antAddPheromone(ox,oy,m.x,m.y,m.activityType);
+      if(dist<.014){
+        m.x=m.tx;m.y=m.ty;
+        if(m.phase==="roam-travel"){m.phase="roam-doing";m.activity="exploring";m.linger=now+4500+Math.random()*7500;}
+        else{m.phase="doing";m.linger=now+8500+Math.random()*12000;
+          const a=ensureAntFarm();
+          if(m.target?.duty==="water")a.water=antClamp((a.water||0)+1);
+          if(m.target?.duty==="food")a.food=antClamp((a.food||0)+1);
+          if(m.target?.duty==="queen")a.queenHealth=antClamp((a.queenHealth||0)+.5);
+        }
+      }
     }
   });
 }
 
+
 function drawAntSim(){
   const c=document.getElementById("antsSimCanvas");if(!c)return;
-  const ctx=c.getContext("2d"),w=c.width,h=c.height;
-  ctx.clearRect(0,0,w,h);
-
-  // SKY / OUTWORLD
-  ctx.fillStyle="#0f1b16";
-  ctx.fillRect(0,0,w,h*.21);
-
-  // soil cutaway
-  ctx.fillStyle="#2b1d12";
-  ctx.fillRect(0,h*.21,w,h*.79);
-
-  // soil strata
-  ctx.fillStyle="rgba(123,83,46,.18)";
-  ctx.fillRect(0,h*.34,w,h*.12);
-  ctx.fillStyle="rgba(70,48,29,.24)";
-  ctx.fillRect(0,h*.62,w,h*.18);
-
-  // surface lip
-  ctx.strokeStyle="#66735d";
-  ctx.lineWidth=3;
-  ctx.strokeRect(8,8,w-16,h*.20-10);
-
-  // underground tunnel network
-  ctx.strokeStyle="#8a6a48";
-  ctx.lineWidth=28;
-  ctx.lineCap="round";
-  const tunnels=[
-    [.15,.22,.34,.34],
-    [.34,.34,.47,.55],
-    [.47,.55,.20,.76],
-    [.47,.55,.60,.79],
-    [.47,.55,.84,.76],
-    [.47,.55,.50,.67]
-  ];
-  tunnels.forEach(p=>{
-    ctx.beginPath();
-    ctx.moveTo(p[0]*w,p[1]*h);
-    ctx.lineTo(p[2]*w,p[3]*h);
-    ctx.stroke();
-  });
-
-  // visible chambers
-  function chamber(x,y,rx,ry,label,icon){
-    ctx.fillStyle="#3a281b";
-    ctx.strokeStyle="#b08b5d";
-    ctx.lineWidth=2;
-    ctx.beginPath();
-    ctx.ellipse(x*w,y*h,rx*w,ry*h,0,0,Math.PI*2);
-    ctx.fill();ctx.stroke();
-
-    ctx.fillStyle="#f0ddbd";
-    ctx.textAlign="center";
-    ctx.font="bold 12px system-ui";
-    ctx.fillText(label,x*w,y*h-8);
-    ctx.font="24px system-ui";
-    ctx.fillText(icon,x*w,y*h+20);
-  }
-  chamber(.47,.55,.105,.075,"QUEEN CHAMBER","👑");
-  chamber(.20,.76,.11,.07,"BROOD NURSERY","🥚");
-  chamber(.60,.79,.105,.065,"FOOD VAULT","🥣");
-  chamber(.84,.76,.10,.065,"WORKER CHAMBER","🐜");
-
-  // surface resources
-  ctx.textAlign="center";
-  ctx.font="24px system-ui";
-  ctx.fillText("🍯",.18*w,.13*h);
-  ctx.fillText("💧",.79*w,.13*h);
-
-  ctx.fillStyle="rgba(230,245,234,.72)";
-  ctx.font="10px system-ui";
-  ctx.fillText("FOOD",.18*w,.18*h);
-  ctx.fillText("WATER",.79*w,.18*h);
-
-  // moving ants
-  ensureAntMotion().forEach((m,i)=>{
-    const x=m.x*w,y=m.y*h;
-    ctx.save();
-    ctx.translate(x,y);
-
-    const underground=m.lane==="tunnel";
-    const s=underground?0.86:1.12;
-    ctx.scale(s,s);
-
-    // glow/halo underground so they do not disappear in brown soil
-    if(underground){
-      ctx.fillStyle="rgba(255,216,143,.15)";
-      ctx.beginPath();
-      ctx.arc(0,-3,14,0,Math.PI*2);
-      ctx.fill();
-    }
-
-    ctx.font="18px system-ui";
-    ctx.textAlign="center";
-    ctx.fillText("🐜",0,0);
-    ctx.restore();
-  });
-
-  // labels
-  const ants=ensureAntMotion();
-  const surface=ants.filter(a=>a.lane==="surface").length;
-  const underground=ants.length-surface;
-
-  ctx.textAlign="left";
-  ctx.fillStyle="rgba(232,245,232,.84)";
-  ctx.font="bold 12px system-ui";
-  ctx.fillText(`SURFACE WORKERS: ${surface}`,16,h-34);
-  ctx.fillText(`UNDERGROUND WORKERS: ${underground}`,16,h-16);
-
-  ctx.textAlign="right";
-  ctx.fillStyle="rgba(240,221,189,.74)";
-  ctx.font="11px system-ui";
-  ctx.fillText("CUTAWAY VIEW · TUNNELS VISIBLE",w-16,h-16);
+  const ctx=c.getContext("2d"),w=c.width,h=c.height,a=ensureAntFarm(),adv=antEnsureAdvanced();
+  ctx.clearRect(0,0,w,h);ctx.fillStyle="#0f1b16";ctx.fillRect(0,0,w,h*.21);ctx.fillStyle="#2b1d12";ctx.fillRect(0,h*.21,w,h*.79);
+  adv.pheromones.forEach(p=>{ctx.strokeStyle=`rgba(140,255,170,${Math.min(.35,p.strength*.28)})`;ctx.lineWidth=1+2*p.strength;ctx.beginPath();ctx.moveTo(p.x1*w,p.y1*h);ctx.lineTo(p.x2*w,p.y2*h);ctx.stroke();});
+  ctx.strokeStyle="#8a6a48";ctx.lineWidth=28;ctx.lineCap="round";
+  adv.tunnelBranches.forEach(b=>{ctx.beginPath();ctx.moveTo(b.x1*w,b.y1*h);ctx.lineTo(b.x2*w,b.y2*h);ctx.stroke();});
+  if(adv.digTarget){const s=adv.tunnelBranches[adv.tunnelBranches.length-1]||{x2:.47,y2:.55};ctx.save();ctx.setLineDash([10,8]);ctx.strokeStyle="rgba(255,210,120,.75)";ctx.lineWidth=8;ctx.beginPath();ctx.moveTo((s.x2??.47)*w,(s.y2??.55)*h);ctx.lineTo(adv.digTarget.x*w,adv.digTarget.y*h);ctx.stroke();ctx.restore();}
+  function ch(x,y,rx,ry,l,ic){ctx.fillStyle="#3a281b";ctx.strokeStyle="#b08b5d";ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(x*w,y*h,rx*w,ry*h,0,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle="#f0ddbd";ctx.textAlign="center";ctx.font="bold 12px system-ui";ctx.fillText(l,x*w,y*h-8);ctx.font="24px system-ui";ctx.fillText(ic,x*w,y*h+20);}
+  ch(.47,.55,.105,.075,"QUEEN CHAMBER","👑");ch(.20,.76,.11,.07,"BROOD NURSERY","🥚");ch(.60,.79,.105,.065,"FOOD VAULT","🥣");ch(.84,.76,.10,.065,"WORKER CHAMBER","🐜");
+  ctx.textAlign="center";ctx.font="24px system-ui";ctx.fillText("🍯",.18*w,.13*h);ctx.fillText("💧",.79*w,.13*h);
+  ensureAntMotion().forEach(m=>{const x=m.x*w,y=m.y*h;ctx.font="18px system-ui";ctx.fillText("🐜",x,y);if(m.carry){ctx.font="10px system-ui";ctx.fillText(m.carry,x+9,y-10);}});
+  const ants=ensureAntMotion(),surface=ants.filter(x=>x.lane==="surface").length;
+  ctx.textAlign="left";ctx.fillStyle="rgba(232,245,232,.84)";ctx.font="bold 12px system-ui";ctx.fillText(`SURFACE ${surface} · UNDERGROUND ${ants.length-surface} · WORKERS ${a.workers||0}`,16,h-34);ctx.fillText(`EGGS ${a.eggs||0} · LARVAE ${a.larvae||0} · PUPAE ${a.pupae||0}`,16,h-16);
 }
 
 
@@ -4711,8 +4792,8 @@ function antToggleSim(){
 function antSimCanvasHTML(){
   return `<div class="panel wing-sim-panel"><div class="terminal-kicker">LIVE COLONY SIM</div>
   <div class="wing-sim-toolbar"><span>${wingNowDaypart()} · REAL TIME</span><button onclick="antToggleSim()">${WING_SIM.running.ants?"⏸ PAUSE SIM":"▶ RUN SIM"}</button></div>
-  <canvas id="antsSimCanvas" width="1000" height="500"></canvas>
-  <div class="wing-sim-help">Cutaway view: surface workers remain above ground while tunnel workers stay visible underground inside the tunnels, queen chamber, brood nursery, food vault and worker chamber.</div></div>`;
+  <canvas id="antsSimCanvas" width="1000" height="500" onclick="return antCanvasDig(event)"></canvas>
+  ${antAdvancedPanelHTML()}<div class="wing-sim-help">Cutaway colony sim: workers complete duties, freely wander across the surface or through tunnels, pause to explore, then choose another chamber or resource. Colony needs can interrupt roaming.</div></div>`;
 }
 
 function antFarmSvg(a){
