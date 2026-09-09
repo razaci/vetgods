@@ -2914,57 +2914,128 @@ function sanctuaryActivityLabelFor(p,m){
   return m?.activityDoing||m?.activityTravel||m?.activity||"Exploring";
 }
 
+
 function sanctuaryDraw(){
   const c=document.getElementById("sanctuaryCanvas");
   if(!c)return;
   const ctx=c.getContext("2d"),w=c.width,h=c.height;
   ctx.clearRect(0,0,w,h);
+
   const g=ctx.createLinearGradient(0,0,0,h);
   g.addColorStop(0,"#0c1c2b"); g.addColorStop(1,"#071018");
   ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
   ctx.fillStyle=sanctuaryLight(); ctx.fillRect(0,0,w,h);
 
-  ctx.strokeStyle="rgba(130,210,255,.08)"; ctx.lineWidth=1;
+  ctx.strokeStyle="rgba(130,210,255,.08)";
+  ctx.lineWidth=1;
   for(let x=0;x<w;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke();}
   for(let y=0;y<h;y+=70){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
 
-  const now=performance.now();
-  state.pets.slice(0,24).forEach((p,i)=>{
-    const s=ensurePetSim(p),mot=sanctuaryEnsureMotion(p,i);
-    sanctuaryTargetFor(p,i);
+  const now=Date.now();
 
-    // HARD-CAPPED movement: distance moved per frame is fixed and tiny.
-    // This prevents "speed demon" behavior even if render/update cadence changes.
-    const dx=mot.tx-mot.x, dy=mot.ty-mot.y;
+  state.pets.slice(0,24).forEach((p,i)=>{
+    const s=ensurePetSim(p);
+    const mot=sanctuaryEnsureMotion(p,i);
+
+    // Choose a new destination only when there is no target yet,
+    // or after the pet has finished lingering at its current station.
+    const needsTarget =
+      !mot.targetObjectId ||
+      !mot.phase ||
+      (mot.phase==="doing" && now >= (mot.lingerUntil||0));
+
+    if(needsTarget){
+      const target=sanctuaryTargetFor(p,i);
+
+      // Convert the returned activity type into the actual habitat object.
+      const targetObj=(SANCTUARY_SIM.objects||[]).find(o=>o.type===target.type)
+        || (SANCTUARY_SIM.objects||[])[0];
+
+      if(targetObj){
+        mot.targetObjectId=targetObj.id;
+        mot.tx=targetObj.x;
+        mot.ty=targetObj.y;
+      }else{
+        mot.tx=target.x??mot.x;
+        mot.ty=target.y??mot.y;
+      }
+
+      mot.activityType=target.type||null;
+      mot.activityTravel=target.label||"Exploring";
+      mot.activityDoing=target.doing||"Exploring";
+      mot.phase="travel";
+      mot.lastRetargetAt=now;
+      s.activity=mot.activityTravel;
+    }
+
+    const dx=mot.tx-mot.x;
+    const dy=mot.ty-mot.y;
     const dist=Math.hypot(dx,dy);
 
-    // In doing/linger mode, pet is effectively anchored at the station.
-    const anchored=(mot.phase==="doing" && Date.now()<(mot.lingerUntil||0));
+    if(mot.phase==="travel"){
+      if(dist>.012){
+        // Slow, steady travel.
+        const maxStep=SANCTUARY_SIM.perf==="full" ? 0.00042 : 0.00030;
+        const step=Math.min(maxStep,dist);
+        mot.x += dx/dist*step;
+        mot.y += dy/dist*step;
+        s.activity=mot.activityTravel;
+      }else{
+        // Arrived at station.
+        mot.x=mot.tx;
+        mot.y=mot.ty;
+        mot.phase="doing";
+        mot.lingerUntil=now+18000+Math.random()*22000;
+        s.activity=mot.activityDoing;
 
-    if(!anchored && dist>.003){
-      const maxStep=SANCTUARY_SIM.perf==="full" ? 0.00042 : 0.00030;
-      const step=Math.min(maxStep,dist);
-      mot.x += dx/dist*step;
-      mot.y += dy/dist*step;
-    }else if(dist<=.003){
-      // Snap only when already extremely close.
-      mot.x=mot.tx; mot.y=mot.ty;
+        // Small stat effects happen only at the correct station.
+        if(mot.activityType==="food") p.hunger=Math.min(100,(p.hunger??70)+2);
+        if(mot.activityType==="water") p.water=Math.min(100,(p.water??70)+2);
+        if(mot.activityType==="toy"){
+          p.happiness=Math.min(100,(p.happiness??70)+1);
+          if(s.enrichment!=null)s.enrichment=Math.min(100,s.enrichment+1);
+        }
+        if(mot.activityType==="bed") p.energy=Math.min(100,(p.energy??70)+1);
+        if(mot.activityType==="hide") p.comfort=Math.min(100,(p.comfort??70)+1);
+        if(mot.activityType==="care") p.cleanliness=Math.min(100,(p.cleanliness??70)+1);
+      }
+    }else if(mot.phase==="doing"){
+      // Stay planted at the correct station while the activity is happening.
+      mot.x=mot.tx;
+      mot.y=mot.ty;
+      s.activity=mot.activityDoing;
     }
 
     const x=mot.x*w,y=mot.y*h;
+
     ctx.save();
     ctx.shadowBlur=SANCTUARY_SIM.perf==="full"?10:0;
     ctx.shadowColor="rgba(100,220,255,.3)";
     ctx.fillStyle=(SANCTUARY_SIM.selectedPetId===p.id)?"#1b5367":"#102b3d";
-    ctx.beginPath();ctx.arc(x,y,(SANCTUARY_SIM.selectedPetId===p.id)?27:22,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x,y,(SANCTUARY_SIM.selectedPetId===p.id)?27:22,0,Math.PI*2);
+    ctx.fill();
     ctx.shadowBlur=0;
-    ctx.font="24px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
+
+    ctx.font="24px system-ui";
+    ctx.textAlign="center";
+    ctx.textBaseline="middle";
     ctx.fillText(petWorldIcon(p),x,y-2);
-    ctx.fillStyle="#e9f8ff";ctx.font="bold 12px system-ui";ctx.fillText(p.name,x,y+33);
-    ctx.fillStyle="rgba(220,245,255,.72)";ctx.font="10px system-ui";ctx.fillText(sanctuaryActivityLabelFor(p,m),x,y+46);
+
+    ctx.fillStyle="#e9f8ff";
+    ctx.font="bold 12px system-ui";
+    ctx.fillText(p.name,x,y+33);
+
+    ctx.fillStyle="rgba(220,245,255,.72)";
+    ctx.font="10px system-ui";
+    ctx.fillText(
+      mot.phase==="travel" ? mot.activityTravel : mot.activityDoing,
+      x,y+46
+    );
     ctx.restore();
   });
 }
+
 function sanctuaryLoop(ts){
   if(!SANCTUARY_SIM.running)return;
   if(SANCTUARY_SIM.lastFrame){
