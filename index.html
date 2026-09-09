@@ -2812,6 +2812,7 @@ function sanctuaryEnsureMotion(p,i){
   return mot;
 }
 
+
 function sanctuaryTargetFor(p,i){
   const s=ensurePetSim(p);
   const daypart=sanctuaryDaypart();
@@ -2829,11 +2830,12 @@ function sanctuaryTargetFor(p,i){
     return {x:o?.x??.5,y:o?.y??.5,type,label:travel,doing};
   }
 
-  if((p.water??100)<52) return ret("water","Heading for fresh water","Drinking fresh water");
+  // Hard needs: activity and destination are locked together.
+  if((p.water??100)<52) return ret("water","Heading to the water station","Drinking at the water station");
   if((p.hunger??100)<52) return ret("food","Heading to the food station","Eating at the food station");
-  if((p.fear??0)>68) return ret("hide","Looking for a quiet place","Settling in the quiet hide");
-  if((p.pain??0)>55) return ret("care","Heading to the care station","Receiving gentle care");
-  if((p.cleanliness??100)<42) return ret("care","Going for grooming","Getting brushed and cleaned");
+  if((p.fear??0)>68) return ret("hide","Heading to the quiet hide","Resting in the quiet hide");
+  if((p.pain??0)>55) return ret("care","Heading to the care station","Receiving care at the care station");
+  if((p.cleanliness??100)<42) return ret("care","Heading to the care station","Getting groomed at the care station");
 
   const energy=p.energy??70;
   const sleep=s.sleep??70;
@@ -2845,47 +2847,46 @@ function sanctuaryTargetFor(p,i){
 
   if(daypart==="Morning"){
     pool=[
-      {type:"food",travel:"Going for breakfast",doing:"Eating breakfast",w:3},
-      {type:"water",travel:"Heading for water",doing:"Drinking",w:2},
-      {type:"care",travel:"Heading to morning care",doing:"Getting groomed",w:2},
-      {type:"toy",travel:"Going to explore",doing:"Exploring the play area",w:2},
-      {type:"hide",travel:"Checking the quiet area",doing:"Watching from the quiet hide",w:1},
-      {type:"bed",travel:"Heading to bed",doing:"Taking a short morning rest",w:(energy<35||sleep<35)?3:.35}
+      {type:"food",travel:"Going to the food station",doing:"Eating at the food station",w:3},
+      {type:"water",travel:"Going to the water station",doing:"Drinking at the water station",w:2},
+      {type:"care",travel:"Going to the care station",doing:"Getting groomed at the care station",w:2},
+      {type:"toy",travel:"Going to the play toy",doing:"Playing at the toy",w:2},
+      {type:"hide",travel:"Going to the quiet hide",doing:"Watching from the quiet hide",w:1},
+      {type:"bed",travel:"Going to bed",doing:"Resting on the bed",w:(energy<35||sleep<35)?3:.35}
     ];
   }else if(daypart==="Afternoon"){
     pool=[
-      {type:"toy",travel:"Heading to enrichment",doing:"Playing with enrichment",w:2},
-      {type:"care",travel:"Going to the care station",doing:"Getting brushed and checked",w:2},
-      {type:"food",travel:"Going for an afternoon snack",doing:"Eating a snack",w:1.6},
-      {type:"water",travel:"Heading for water",doing:"Drinking fresh water",w:1.8},
-      {type:"hide",travel:"Going to the quiet corner",doing:"Watching the room quietly",w:1.2},
-      {type:"toy",travel:"Going exploring",doing:"Exploring around the habitat",w:2.4},
-      {type:"bed",travel:"Heading to bed",doing:"Taking a short recovery nap",w:(energy<22||sleep<22)?3:.15}
+      {type:"toy",travel:"Going to the play toy",doing:"Playing at the toy",w:2.3},
+      {type:"care",travel:"Going to the care station",doing:"Getting groomed at the care station",w:1.8},
+      {type:"food",travel:"Going to the food station",doing:"Eating at the food station",w:1.8},
+      {type:"water",travel:"Going to the water station",doing:"Drinking at the water station",w:1.8},
+      {type:"hide",travel:"Going to the quiet hide",doing:"Watching from the quiet hide",w:1.2},
+      {type:"bed",travel:"Going to bed",doing:"Taking a short nap on the bed",w:(energy<22||sleep<22)?3:.15}
     ];
   }else if(daypart==="Evening"){
     pool=[
-      {type:"food",travel:"Heading for evening food",doing:"Eating evening food",w:2},
-      {type:"water",travel:"Going for water",doing:"Drinking",w:2},
-      {type:"toy",travel:"Going for evening play",doing:"Playing gently",w:1.5},
-      {type:"care",travel:"Going for evening care",doing:"Getting groomed",w:1.4},
-      {type:"hide",travel:"Heading to the quiet hide",doing:"Settling down quietly",w:1.8},
-      {type:"bed",travel:"Heading toward bed",doing:"Resting on the bed",w:(energy<45||sleep<45)?2.2:.8}
+      {type:"food",travel:"Going to the food station",doing:"Eating at the food station",w:2},
+      {type:"water",travel:"Going to the water station",doing:"Drinking at the water station",w:2},
+      {type:"toy",travel:"Going to the play toy",doing:"Playing gently at the toy",w:1.5},
+      {type:"care",travel:"Going to the care station",doing:"Getting evening care",w:1.4},
+      {type:"hide",travel:"Going to the quiet hide",doing:"Settling in the quiet hide",w:1.8},
+      {type:"bed",travel:"Going to bed",doing:"Resting on the bed",w:(energy<45||sleep<45)?2.2:.8}
     ];
   }else{
     pool=[
-      {type:"bed",travel:"Heading to bed",doing:"Sleeping",w:4},
-      {type:"hide",travel:"Going to the quiet hide",doing:"Resting quietly",w:2},
-      {type:"water",travel:"Getting a drink",doing:"Drinking",w:(p.water??100)<65?2:.5},
-      {type:"food",travel:"Getting a late snack",doing:"Eating",w:(p.hunger??100)<65?1.5:.3},
-      {type:"care",travel:"Checking the care station",doing:"Settling after care",w:.4}
+      {type:"bed",travel:"Going to bed",doing:"Sleeping on the bed",w:4},
+      {type:"hide",travel:"Going to the quiet hide",doing:"Resting in the quiet hide",w:2},
+      {type:"water",travel:"Going to the water station",doing:"Drinking at the water station",w:(p.water??100)<65?2:.5},
+      {type:"food",travel:"Going to the food station",doing:"Eating at the food station",w:(p.hunger??100)<65?1.5:.3},
+      {type:"care",travel:"Going to the care station",doing:"Settling at the care station",w:.4}
     ];
   }
 
   if(lonely>55 || trust<40){
-    pool.push({type:"care",travel:"Going to find company",doing:"Spending calm time nearby",w:3});
+    pool.push({type:"care",travel:"Going to the care station",doing:"Spending calm time at the care station",w:3});
   }
   if(happy<45){
-    pool.push({type:"toy",travel:"Looking for something fun",doing:"Playing with enrichment",w:2.5});
+    pool.push({type:"toy",travel:"Going to the play toy",doing:"Playing at the toy",w:2.5});
   }
 
   const lastType=s.lastSanctuaryTargetType;
@@ -2898,6 +2899,19 @@ function sanctuaryTargetFor(p,i){
   const chosen=pickWeighted(filtered);
   s.lastSanctuaryTargetType=chosen.type;
   return ret(chosen.type,chosen.travel,chosen.doing);
+}
+
+
+
+function sanctuaryActivityLabelFor(p,m){
+  const type=m?.targetObjectId ? (SANCTUARY_SIM.objects||[]).find(o=>o.id===m.targetObjectId)?.type : (m?.target||m?.activityType||null);
+  if(type==="food") return m?.phase==="travel" ? "Going to food" : "Eating at food station";
+  if(type==="water") return m?.phase==="travel" ? "Going to water" : "Drinking at water station";
+  if(type==="care") return m?.phase==="travel" ? "Going to care" : "At care station";
+  if(type==="bed") return m?.phase==="travel" ? "Going to bed" : "Resting on bed";
+  if(type==="hide") return m?.phase==="travel" ? "Going to quiet hide" : "Resting in quiet hide";
+  if(type==="toy") return m?.phase==="travel" ? "Going to play" : "Playing at toy";
+  return m?.activityDoing||m?.activityTravel||m?.activity||"Exploring";
 }
 
 function sanctuaryDraw(){
@@ -2947,7 +2961,7 @@ function sanctuaryDraw(){
     ctx.font="24px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";
     ctx.fillText(petWorldIcon(p),x,y-2);
     ctx.fillStyle="#e9f8ff";ctx.font="bold 12px system-ui";ctx.fillText(p.name,x,y+33);
-    ctx.fillStyle="rgba(220,245,255,.72)";ctx.font="10px system-ui";ctx.fillText(s.activity||"Resting",x,y+46);
+    ctx.fillStyle="rgba(220,245,255,.72)";ctx.font="10px system-ui";ctx.fillText(sanctuaryActivityLabelFor(p,m),x,y+46);
     ctx.restore();
   });
 }
