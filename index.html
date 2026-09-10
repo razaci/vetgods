@@ -1454,6 +1454,32 @@ button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
 #antGodsLivingColonyFrame{min-height:980px}
 @media(max-width:700px){#antGodsLivingColonyFrame{height:1040px!important;min-height:1040px}}
 
+
+/* Nursery full-screen layout fix */
+#nursery.screen{
+  min-height:100vh !important;
+  height:auto !important;
+  overflow:visible !important;
+  background:linear-gradient(180deg,#08131d 0%,#0d1d29 35%,#101820 100%) !important;
+  padding-bottom:120px !important;
+}
+#nursery.active{
+  display:block !important;
+  min-height:100vh !important;
+}
+#nursery .hero,
+#nursery .card,
+#nursery .statgrid{
+  position:relative !important;
+  z-index:1 !important;
+}
+html,body{
+  min-height:100% !important;
+}
+body{
+  background:#081018 !important;
+}
+
 </style>
 </head>
 <body>
@@ -1497,7 +1523,8 @@ button.world-zone:active{border-color:#8fe8ff;background:rgba(40,95,118,.55)}
   </div>
   <div class="nav game-menu-nav">
     <button data-screen="clinic">Clinic</button><button data-screen="surgery">Surgery</button><button data-screen="recovery">Recovery</button><button data-screen="animalprofile">Animal Profile</button>
-<button data-screen="habitats">Habitats</button><button data-screen="carelab">Care Lab</button><button data-screen="pets">My Pets</button><button data-screen="status">Status</button><button data-screen="admit">Admit Patient</button><button data-screen="hospital">Hospital+</button><button data-screen="sanctuary">Sanctuary</button><button data-screen="world">World</button><button data-screen="lifebook">Life Book</button><button data-screen="reception">Reception</button><button data-screen="ambulance">Ambulance</button><button data-screen="research">Research</button>
+<button data-screen="habitats">Habitats</button>
+<button data-screen="nursery" onclick="vgOpenScreen('nursery')">🐣 Nursery</button><button data-screen="carelab">Care Lab</button><button data-screen="pets">My Pets</button><button data-screen="status">Status</button><button data-screen="admit">Admit Patient</button><button data-screen="hospital">Hospital+</button><button data-screen="sanctuary">Sanctuary</button><button data-screen="world">World</button><button data-screen="lifebook">Life Book</button><button data-screen="reception">Reception</button><button data-screen="ambulance">Ambulance</button><button data-screen="research">Research</button>
   </div>
 </div>
 
@@ -1733,6 +1760,7 @@ function addLog(msg){
 }
 
 function vgHydrationAction(p,mode){
+  vgEnsureOralHydrationState(p);
   if(!p)return false;
   p.hydration=Math.max(0,Math.min(100,Number(p.hydration??50)));
   p.water=Math.max(0,Math.min(100,Number(p.water??p.hydration)));
@@ -1748,6 +1776,7 @@ function vgHydrationAction(p,mode){
     const alertEnough=(Number(p.oxygen??95)>=88)&&(Number(p.shock??0)<55);
     const willing=alertEnough&&(Number(p.nausea??0)<70)&&(Number(p.stress??0)<85);
     p.lastWaterOffer=willing?"drank":"declined";
+    vgRecordWaterOffer(p,willing);
     if(willing){
       p.water=Math.min(100,p.water+16);
       p.hydration=Math.min(100,p.hydration+8);
@@ -5651,7 +5680,7 @@ function wingSimCanvas(kind){
 function renderSnakeTanks(){
   const el=document.getElementById("snaketanks");if(!el)return;
   const w=ensureHabitatWings().snakes;
-  el.innerHTML=`${wingSimCanvas("snakes")}<div class="panel wing-head"><div><span class="terminal-kicker">HABITAT WING</span><h1>🐍 SNAKE TANKS</h1><p>Three controlled reptile enclosures with temperature, humidity, hydration, hides, feeding and enrichment.</p></div><button class="action" onclick="return vgOpenScreen('pets')">← MY PETS</button><button onclick="vgOpenScreen('nursery')">🐣 Nursery</button></div>
+  el.innerHTML=`${wingSimCanvas("snakes")}<div class="panel wing-head"><div><span class="terminal-kicker">HABITAT WING</span><h1>🐍 SNAKE TANKS</h1><p>Three controlled reptile enclosures with temperature, humidity, hydration, hides, feeding and enrichment.</p></div><button class="action" onclick="return vgOpenScreen('pets')">← MY PETS</button></div>
   <div class="habitat-unit-grid">${w.tanks.map(snakeTankCard).join("")}</div>
   <div class="panel"><h3>SNAKE WING LOG</h3><div class="ant-log">${w.log.map(x=>`<div>• ${vgEscape(x)}</div>`).join("")}</div></div>`;
 
@@ -5702,6 +5731,7 @@ function renderAntFarm(){
 
 
 function vgOpenScreen(name){
+
   const valid=["clinic","surgery","recovery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile","habitats","antfarm","snaketanks","hamstercages","micecages","nursery"];
   if(!valid.includes(name))return false;
   state.screen=name;
@@ -5956,6 +5986,14 @@ function surgerySupplyAction(id,action){
  if(p.surgeryStep>=7)route(p,"Recovery");else render();
 }
 function recoveryCare(id,action){
+  if(action==="recheck"){
+    const p=state.patients.find(x=>x.id===id); if(!p)return;
+    const ok=vgHydrationRecheck(p);
+    if(typeof addLog==="function") addLog(p.name+(ok?" maintained hydration without fluids.":" is not yet maintaining independent hydration."));
+    if(typeof render==="function")render();
+    return;
+  }
+
  const p=state.patients.find(x=>x.id===id);
   if(action==="water"){
     const drank=vgHydrationAction(p,"offer");
@@ -7283,6 +7321,14 @@ function recoveryCare(id,action){
  render();
 }
 function dischargeRecoveredPet(id){
+  const hydPatient=state.patients.find(x=>x.id===id);
+  if(hydPatient && !vgIndependentHydrationReady(hydPatient)){
+    if(typeof addLog==="function") addLog(hydPatient.name+" stays in treatment: independent hydration is not yet confirmed.");
+    if(typeof showToast==="function") showToast("Needs voluntary water + hydration recheck before discharge.");
+    if(typeof render==="function") render();
+    return false;
+  }
+
  const p=state.patients.find(x=>x.id===id); if(!p)return;
  const f=ensureFlow(p);
  if(!f.dischargeReady){render();return}
@@ -7616,7 +7662,8 @@ function render(){
       antfarm:typeof renderAntFarm==="function"?renderAntFarm:null,
       snaketanks:typeof renderSnakeTanks==="function"?renderSnakeTanks:null,
       hamstercages:typeof renderHamsterCages==="function"?renderHamsterCages:null,
-      micecages:typeof renderMiceCages==="function"?renderMiceCages:null
+      micecages:typeof renderMiceCages==="function"?renderMiceCages:null,
+      nursery:typeof renderNursery==="function"?renderNursery:null
 
     };
 
@@ -8583,6 +8630,14 @@ function vgDynamicCareAction(id,choiceIndex){
 }
 
 function vgFinishDynamicCase(id){
+  const hydPatient=state.patients.find(x=>x.id===id);
+  if(hydPatient && !vgIndependentHydrationReady(hydPatient)){
+    if(hydPatient.dynamicCare) hydPatient.dynamicCare.stage="recover";
+    if(typeof addLog==="function") addLog(hydPatient.name+" remains in recovery until independent hydration is confirmed.");
+    if(typeof render==="function") render();
+    return false;
+  }
+
   const p=state.patients.find(x=>x.id===id);
   if(!p)return;
   const d=vgEnsureDynamicCare(p);
@@ -8744,173 +8799,164 @@ renderClinic=function(){
 };
 
 
-/* ================= VET GODS · LIVING NURSERY WING ================= */
+/* ================= VET GODS · NURSERY WING ================= */
 const NURSERY={
-  running:true,lastTick:Date.now(),selected:"nur-1",roundIndex:0,night:false,
+  selected:"nur-1",running:true,lastTick:Date.now(),roundIndex:0,
   babies:[
-    {id:"nur-1",name:"Pipkin",species:"Rabbit Kit",group:"small",ageDays:9,stage:"Critical Newborn",weight:142,warmth:68,feeding:45,hydration:67,sleep:72,clean:71,comfort:54,development:12,bond:22,stress:30,oxygen:98,shock:4,nausea:0,awake:true,x:.28,y:.63,target:"warm",feeds:0,lastFed:Date.now()-7200000,milestones:[],siblings:["nur-4"],story:"Found cold after a nest was disturbed. Tiny, alert, and stubbornly determined."},
-    {id:"nur-2",name:"Mira",species:"Kitten",group:"mammal",ageDays:21,stage:"Stable Newborn",weight:338,warmth:77,feeding:39,hydration:63,sleep:58,clean:59,comfort:51,development:29,bond:34,stress:34,oxygen:97,shock:5,nausea:0,awake:true,x:.43,y:.70,target:"feed",feeds:0,lastFed:Date.now()-10800000,milestones:["Eyes opened"],siblings:["nur-5"],story:"Arrived with a littermate after their mother disappeared. She calls whenever the room gets too quiet."},
-    {id:"nur-3",name:"Comet",species:"Duckling",group:"bird",ageDays:5,stage:"Hatchling",weight:91,warmth:64,feeding:54,hydration:59,sleep:69,clean:63,comfort:61,development:24,bond:18,stress:21,oxygen:99,shock:2,nausea:0,awake:true,x:.60,y:.66,target:"brooder",feeds:0,lastFed:Date.now()-5400000,milestones:["Hatched"],siblings:[],story:"A late hatch from a rescue clutch. Comet follows movement and peeps at every new sound."},
-    {id:"nur-4",name:"Thimble",species:"Rabbit Kit",group:"small",ageDays:11,stage:"Stable Newborn",weight:156,warmth:74,feeding:57,hydration:70,sleep:76,clean:66,comfort:63,development:18,bond:26,stress:20,oxygen:98,shock:3,nausea:0,awake:false,x:.24,y:.65,target:"bed",feeds:1,lastFed:Date.now()-3600000,milestones:[],siblings:["nur-1"],story:"Pipkin's littermate, quieter and happiest pressed against something warm."},
-    {id:"nur-5",name:"Orbit",species:"Kitten",group:"mammal",ageDays:24,stage:"Growing",weight:391,warmth:80,feeding:61,hydration:72,sleep:66,clean:75,comfort:70,development:38,bond:41,stress:17,oxygen:98,shock:2,nausea:0,awake:true,x:.49,y:.71,target:"play",feeds:2,lastFed:Date.now()-3000000,milestones:["Eyes opened","First steps"],siblings:["nur-2"],story:"A curious littermate who has started wobbling toward toys before meals."}
+    {id:"nur-1",name:"Pipkin",species:"Rabbit Kit",ageDays:9,stage:"Critical Newborn",weight:142,warmth:68,feeding:45,hydration:67,sleep:72,clean:71,comfort:54,development:12,bond:22,stress:30,oxygen:98,shock:4,nausea:0,awake:true,target:"warm",milestones:[],story:"Found cold after a nest was disturbed. Tiny, alert, and stubbornly determined."},
+    {id:"nur-2",name:"Mira",species:"Kitten",ageDays:21,stage:"Stable Newborn",weight:338,warmth:77,feeding:39,hydration:63,sleep:58,clean:59,comfort:51,development:29,bond:34,stress:34,oxygen:97,shock:5,nausea:0,awake:true,target:"feed",milestones:["Eyes opened"],story:"Arrived after her mother disappeared. She calls whenever the room gets too quiet."},
+    {id:"nur-3",name:"Comet",species:"Duckling",ageDays:5,stage:"Hatchling",weight:91,warmth:64,feeding:54,hydration:59,sleep:69,clean:63,comfort:61,development:24,bond:18,stress:21,oxygen:99,shock:2,nausea:0,awake:true,target:"brooder",milestones:["Hatched"],story:"A late hatch from a rescue clutch. Comet follows movement and peeps at every new sound."}
   ],
-  eggs:[
-    {id:"egg-1",species:"Quail",progress:78,temp:99,humidity:56,cracks:0},
-    {id:"egg-2",species:"Gecko",progress:63,temp:82,humidity:72,cracks:0}
-  ],
-  foster:{name:"Solenne",species:"Gentle Foster Cat",available:true,comfort:92},
-  log:["Nursery Wing opened. Warm beds, brooders and feeding stations are online."]
-};
-const NURSERY_SPOTS={
-  warm:{x:.18,y:.28,label:"Warm Bed"},incubator:{x:.34,y:.28,label:"Incubator"},
-  feed:{x:.55,y:.28,label:"Feeding"},water:{x:.72,y:.28,label:"Water"},
-  bed:{x:.20,y:.72,label:"Sleep Nest"},play:{x:.48,y:.72,label:"Play"},
-  quiet:{x:.72,y:.72,label:"Quiet"},brooder:{x:.86,y:.48,label:"Brooder"}
+  eggs:[{species:"Quail",progress:78},{species:"Gecko",progress:63}],
+  log:["Nursery Wing opened."]
 };
 function nClamp(v){return Math.max(0,Math.min(100,Number(v)||0))}
 function nBaby(id){return NURSERY.babies.find(b=>b.id===id)}
-function nLog(t){NURSERY.log.unshift(t);NURSERY.log=NURSERY.log.slice(0,16)}
-function nNeed(b){let a=[];if(b.warmth<55)a.push("warmth");if(b.feeding<45)a.push("feeding");if(b.hydration<50)a.push("hydration");if(b.clean<45)a.push("cleaning");if(b.comfort<45)a.push("comfort");return a}
+function nLog(t){NURSERY.log.unshift(t);NURSERY.log=NURSERY.log.slice(0,12)}
+function nStage(b){if(b.development>=90)return"Nursery Graduate";if(b.development>=72)return"Juvenile";if(b.development>=52)return"Weaning";if(b.development>=32)return"Growing";if(b.development>=18)return"Stable Newborn";return"Critical Newborn"}
 function nCanWater(b){return b.development>=35||b.stage==="Weaning"||b.stage==="Juvenile"}
-function nStage(b){
-  if(b.development>=90)return"Nursery Graduate";
-  if(b.development>=72)return"Juvenile";
-  if(b.development>=52)return"Weaning";
-  if(b.development>=32)return"Growing";
-  if(b.development>=18)return"Stable Newborn";
-  return"Critical Newborn"
-}
-function nMilestone(b,key,label){
-  if(!b.milestones.includes(key)){b.milestones.push(key);nLog("🎉 "+b.name+" — "+label)}
-}
-function nDevelop(b,amt){
-  b.development=nClamp(b.development+amt);b.stage=nStage(b);
-  if(b.development>=20)nMilestone(b,"eyes","Eyes opened");
-  if(b.development>=34)nMilestone(b,"steps","First independent steps");
-  if(b.development>=50)nMilestone(b,"water","Ready for independent water");
-  if(b.development>=60)nMilestone(b,"solid","First solid-food stage");
-  if(b.development>=75)nMilestone(b,"play","Confident independent play");
-  if(b.development>=90)nMilestone(b,"graduate","Ready to graduate from Nursery");
-}
+function nMilestone(b,k,label){if(!b.milestones.includes(k)){b.milestones.push(k);nLog("🎉 "+b.name+" — "+label)}}
+function nDevelop(b,a){b.development=nClamp(b.development+a);b.stage=nStage(b);if(b.development>=20)nMilestone(b,"eyes","Eyes opened");if(b.development>=34)nMilestone(b,"steps","First steps");if(b.development>=50)nMilestone(b,"water","Independent water unlocked");if(b.development>=60)nMilestone(b,"solid","First solid-food stage");if(b.development>=90)nMilestone(b,"graduate","Ready to graduate")}
 function nAction(id,action){
   let b=nBaby(id);if(!b)return;
-  if(action==="warm"){b.warmth=nClamp(b.warmth+18);b.comfort=nClamp(b.comfort+5);b.target="warm";nLog(b.name+" settled into a warm bed.")}
-  if(action==="incubator"){b.warmth=nClamp(b.warmth+24);b.oxygen=nClamp(b.oxygen+2);b.target="incubator";nLog(b.name+" moved into the incubator.")}
-  if(action==="feed"){b.feeding=nClamp(b.feeding+28);b.weight+=Math.max(1,Math.round(b.weight*.008));b.feeds++;b.lastFed=Date.now();b.target="feed";nDevelop(b,2.2);nLog(b.name+" completed a nursery feeding.")}
-  if(action==="water"){
-    if(!nCanWater(b)){nLog(b.name+" is not developmentally ready for independent water yet.");}
-    else{b.hydration=nClamp(b.hydration+18);b.target="water";nDevelop(b,.5);nLog(b.name+" drank fresh water independently.")}
-  }
+  if(action==="warm"){b.warmth=nClamp(b.warmth+18);b.comfort=nClamp(b.comfort+5);nLog(b.name+" settled into a warm bed.")}
+  if(action==="incubator"){b.warmth=nClamp(b.warmth+24);b.oxygen=nClamp(b.oxygen+2);nLog(b.name+" moved into the incubator.")}
+  if(action==="feed"){b.feeding=nClamp(b.feeding+28);b.weight+=Math.max(1,Math.round(b.weight*.008));nDevelop(b,2.2);nLog(b.name+" completed a nursery feeding.")}
+  if(action==="water"){if(!nCanWater(b))nLog(b.name+" is not ready for independent water yet.");else{b.hydration=nClamp(b.hydration+18);if(typeof vgRecordWaterOffer==="function")vgRecordWaterOffer(b,true);nDevelop(b,.5);nLog(b.name+" drank fresh water.")}}
   if(action==="fluids"){b.hydration=nClamp(b.hydration+22);b.comfort=nClamp(b.comfort+2);nLog(b.name+" received clinical fluid support.")}
-  if(action==="clean"){b.clean=nClamp(b.clean+30);b.comfort=nClamp(b.comfort+5);nLog(b.name+"'s bedding was changed and cleaned.")}
-  if(action==="comfort"){b.comfort=nClamp(b.comfort+18);b.bond=nClamp(b.bond+7);b.stress=nClamp(b.stress-10);b.target="quiet";nDevelop(b,.6);nLog(b.name+" relaxed during gentle handling.")}
-  if(action==="sleep"){b.sleep=nClamp(b.sleep+24);b.awake=false;b.target="bed";nLog(b.name+" curled up for a nursery nap.")}
-  if(action==="play"){if(b.development<28)nLog(b.name+" is still too young for active play.");else{b.comfort=nClamp(b.comfort+7);b.bond=nClamp(b.bond+3);b.target="play";nDevelop(b,1.3);nLog(b.name+" practiced movement with enrichment.")}}
-  if(action==="foster"){b.comfort=nClamp(b.comfort+20);b.warmth=nClamp(b.warmth+8);b.bond=nClamp(b.bond+4);b.target="warm";nLog(NURSERY.foster.name+" stayed beside "+b.name+".")}
-  b.care++;NURSERY.selected=b.id;renderNursery()
-}
-function nGraduate(id,path){
-  let b=nBaby(id);if(!b||b.development<90)return;
-  NURSERY.babies=NURSERY.babies.filter(x=>x.id!==id);
-  nLog("🌟 "+b.name+" graduated Nursery → "+path+".");
-  if(path==="My Pets" && typeof state!=="undefined" && Array.isArray(state.pets)){
-    let p={id:"nurpet-"+Date.now(),name:b.name,species:b.species,condition:"Nursery graduate",department:"Home",location:"Home",admitted:false,hunger:90,water:90,comfort:90,happiness:85,cleanliness:90,energy:85,trust:b.bond,backstory:b.story+" Nursery milestones: "+b.milestones.join(", ")+".",image:(typeof THUMBS!=="undefined"?THUMBS[Math.floor(Math.random()*THUMBS.length)]:"")};
-    state.pets.push(p);
-  }
-  renderNursery()
-}
-function nRound(){
-  let needy=NURSERY.babies.filter(b=>nNeed(b).length);
-  if(!needy.length){nLog("✅ Nursery rounds complete — every baby is stable.");renderNursery();return}
-  let b=needy[NURSERY.roundIndex%needy.length];NURSERY.roundIndex++;NURSERY.selected=b.id;
-  let need=nNeed(b)[0];
-  nLog("Rounds: "+b.name+" needs "+need+".");renderNursery()
+  if(action==="clean"){b.clean=nClamp(b.clean+30);b.comfort=nClamp(b.comfort+5);nLog(b.name+"'s bedding was changed.")}
+  if(action==="comfort"){b.comfort=nClamp(b.comfort+18);b.bond=nClamp(b.bond+7);b.stress=nClamp(b.stress-10);nDevelop(b,.6);nLog(b.name+" relaxed with gentle handling.")}
+  if(action==="sleep"){b.sleep=nClamp(b.sleep+24);b.awake=false;nLog(b.name+" settled to sleep.")}
+  if(action==="play"){if(b.development<28)nLog(b.name+" is still too young for active play.");else{b.comfort=nClamp(b.comfort+7);nDevelop(b,1.3);nLog(b.name+" practiced movement with enrichment.")}}
+  NURSERY.selected=id;renderNursery()
 }
 function nTick(){
   let now=Date.now(),hours=Math.min(6,(now-NURSERY.lastTick)/3600000);NURSERY.lastTick=now;
   if(hours<=0)return;
-  NURSERY.babies.forEach(b=>{
-    b.feeding=nClamp(b.feeding-hours*3.2);b.hydration=nClamp(b.hydration-hours*2.4);b.clean=nClamp(b.clean-hours*1.1);
-    b.sleep=nClamp(b.sleep-hours*(b.awake?2.2:-1.8));b.warmth=nClamp(b.warmth-hours*.8);
-    if(b.feeding<35||b.warmth<45)b.stress=nClamp(b.stress+hours*2);
-    if(b.sleep<25){b.awake=false;b.target="bed"}else if(Math.random()<.15*hours){b.awake=!b.awake}
-  });
-}
-function nAutoBehavior(){
-  if(!NURSERY.running)return;
-  NURSERY.babies.forEach(b=>{
-    if(!b.awake){b.target="bed";return}
-    if(b.warmth<48)b.target="warm";
-    else if(b.feeding<42)b.target="feed";
-    else if(nCanWater(b)&&b.hydration<48)b.target="water";
-    else if(b.development>28&&Math.random()<.28)b.target="play";
-    else if(Math.random()<.25)b.target="quiet";
-  })
-}
-function nEggTick(){
-  NURSERY.eggs.forEach(e=>{
-    e.progress=Math.min(100,e.progress+.12);
-    e.cracks=e.progress>88?Math.floor((e.progress-88)/4):0;
-    if(e.progress>=100){nLog("🥚 "+e.species+" egg hatched! A hatchling entered the brooder.");e.progress=20;e.cracks=0}
-  })
-}
-function nMoveBabies(){
-  NURSERY.babies.forEach(b=>{
-    let t=NURSERY_SPOTS[b.target]||NURSERY_SPOTS.quiet;
-    b.x+=(t.x-b.x)*.10;b.y+=(t.y-b.y)*.10;
-  })
-}
-function nCanvas(){
-  let babies=NURSERY.babies.map(b=>`<div onclick="NURSERY.selected='${b.id}';renderNursery()" title="${b.name}" style="position:absolute;left:${b.x*100}%;top:${b.y*100}%;transform:translate(-50%,-50%);font-size:${b.group==="bird"?"20":"23"}px;cursor:pointer;z-index:5">${b.group==="bird"?"🐥":b.species.includes("Rabbit")?"🐇":"🐱"}<small style="display:block;font-size:8px;color:#fff;text-shadow:0 1px 2px #000">${b.name}</small></div>`).join("");
-  let spots=Object.entries(NURSERY_SPOTS).map(([k,o])=>`<div style="position:absolute;left:${o.x*100}%;top:${o.y*100}%;transform:translate(-50%,-50%);padding:5px;border-radius:9px;background:#071522cc;border:1px solid #507d9a;font-size:9px">${k==="warm"?"🔥":k==="incubator"?"🫧":k==="feed"?"🍼":k==="water"?"💧":k==="bed"?"🛏️":k==="play"?"🧸":k==="brooder"?"🥚":"🌙"} ${o.label}</div>`).join("");
-  return `<div style="position:relative;height:330px;border-radius:16px;overflow:hidden;border:1px solid #456f8c;background:radial-gradient(circle at 50% 20%,#28485b,#0b1825 50%,#050b12);margin:10px 0">${spots}${babies}<div style="position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(#493c2b55,#241b15aa)"></div></div>`
+  NURSERY.babies.forEach(b=>{b.feeding=nClamp(b.feeding-hours*3.2);b.hydration=nClamp(b.hydration-hours*2.4);b.clean=nClamp(b.clean-hours*1.1);b.warmth=nClamp(b.warmth-hours*.8);if(b.feeding<35||b.warmth<45)b.stress=nClamp(b.stress+hours*2)});
 }
 function nBar(label,v){return `<div style="margin:5px 0"><small>${label} ${Math.round(v)}%</small><div style="height:7px;background:#111;border-radius:8px;overflow:hidden"><i style="display:block;width:${nClamp(v)}%;height:100%;background:linear-gradient(90deg,#4fa6ca,#b9e9ff)"></i></div></div>`}
-function nBabyPanel(b){
-  if(!b)return "";
-  let water=nCanWater(b)?`<button onclick="nAction('${b.id}','water')">💧 Offer Water</button>`:`<button disabled title="Unlocks during weaning">💧 Water · Not Ready</button>`;
-  return `<div class="card"><h3>${b.name} · ${b.species}</h3><div class="muted">${b.ageDays} days · ${b.stage} · ${b.weight} g</div><p>${b.story}</p>
-  ${nBar("Warmth",b.warmth)}${nBar("Feeding",b.feeding)}${nBar("Hydration",b.hydration)}${nBar("Sleep",b.sleep)}${nBar("Cleanliness",b.clean)}${nBar("Comfort",b.comfort)}${nBar("Development",b.development)}${nBar("Bond",b.bond)}
-  <div class="actions"><button onclick="nAction('${b.id}','warm')">🔥 Warm Bed</button><button onclick="nAction('${b.id}','incubator')">🫧 Incubator</button><button onclick="nAction('${b.id}','feed')">🍼 Feed</button>${water}<button onclick="nAction('${b.id}','fluids')">💉 Clinical Fluids</button><button onclick="nAction('${b.id}','clean')">🧺 Change Bedding</button><button onclick="nAction('${b.id}','comfort')">🤲 Comfort</button><button onclick="nAction('${b.id}','sleep')">🌙 Settle to Sleep</button><button onclick="nAction('${b.id}','play')">🧸 Enrichment</button><button onclick="nAction('${b.id}','foster')">🐾 Foster Comfort</button></div>
-  <div class="notice"><b>Milestones:</b> ${b.milestones.length?b.milestones.join(" · "):"Still beginning the journey."}</div>
-  ${b.development>=90?`<div class="actions"><button onclick="nGraduate('${b.id}','Home')">🏠 Return Home</button><button onclick="nGraduate('${b.id}','My Pets')">❤️ Adopt to My Pets</button><button onclick="nGraduate('${b.id}','Sanctuary')">🌿 Sanctuary</button></div>`:""}
-  </div>`
-}
-function nEggPanel(){
-  return `<div class="card"><h3>🥚 Brooder & Hatchery</h3>${NURSERY.eggs.map(e=>`<div style="margin:8px 0"><b>${e.species} Egg</b> · ${Math.round(e.progress)}% ${e.cracks?"· "+" cracks ".repeat(e.cracks):""}${nBar("Incubation",e.progress)}<small>${e.temp}° simulated chamber · humidity ${e.humidity}%</small></div>`).join("")}</div>`
-}
-function nCensus(){
-  let asleep=NURSERY.babies.filter(b=>!b.awake).length,feed=NURSERY.babies.filter(b=>b.feeding<45).length,need=NURSERY.babies.filter(b=>nNeed(b).length).length,grad=NURSERY.babies.filter(b=>b.development>=90).length;
-  return `<div class="statgrid"><div class="stat"><b>${NURSERY.babies.length}</b><span>Babies</span></div><div class="stat"><b>${asleep}</b><span>Sleeping</span></div><div class="stat"><b>${feed}</b><span>Need Feeding</span></div><div class="stat"><b>${need}</b><span>Need Attention</span></div><div class="stat"><b>${grad}</b><span>Ready to Graduate</span></div></div>`
-}
+function nRound(){let needy=NURSERY.babies.filter(b=>b.feeding<45||b.hydration<50||b.warmth<55||b.clean<45||b.comfort<45);if(!needy.length){nLog("✅ Nursery rounds complete.");renderNursery();return}let b=needy[NURSERY.roundIndex++%needy.length];NURSERY.selected=b.id;nLog("Rounds: "+b.name+" needs attention.");renderNursery()}
+function nGraduate(id,path){let b=nBaby(id);if(!b||b.development<90)return;NURSERY.babies=NURSERY.babies.filter(x=>x.id!==id);nLog("🌟 "+b.name+" graduated Nursery → "+path+".");renderNursery()}
 function renderNursery(){
-  nTick();nAutoBehavior();nMoveBabies();
+  const nurseryScreen=document.getElementById("nursery");
+  if(nurseryScreen){
+    nurseryScreen.style.display="block";
+    nurseryScreen.style.minHeight="100vh";
+    nurseryScreen.style.height="auto";
+    nurseryScreen.style.overflow="visible";
+  }
+
+  nTick();
   let el=document.getElementById("nursery");if(!el)return;
   let b=nBaby(NURSERY.selected)||NURSERY.babies[0];
-  el.innerHTML=`<div class="hero"><h2>🐣 NURSERY WING · LIVING DEVELOPMENT DECK</h2><p>Newborns, orphans, hatchlings and growing rescues develop here over time. Oral water and clinical fluids are separate systems.</p></div>
-  ${nCensus()}
-  <div class="actions"><button onclick="nRound()">🩺 START NURSERY ROUNDS</button><button onclick="NURSERY.running=!NURSERY.running;renderNursery()">${NURSERY.running?"⏸ Pause Nursery":"▶ Run Nursery"}</button><button onclick="vgOpenScreen('clinic')">🏥 Clinic</button><button onclick="vgOpenScreen('pets')">❤️ My Pets</button></div>
-  ${nCanvas()}
-  <div class="card"><h3>Choose a Nursery Patient</h3><div class="actions">${NURSERY.babies.map(x=>`<button onclick="NURSERY.selected='${x.id}';renderNursery()">${x.awake?"👀":"💤"} ${x.name}</button>`).join("")}</div></div>
-  ${nBabyPanel(b)}
-  ${nEggPanel()}
-  <div class="card"><h3>🐾 Litter & Foster Room</h3><p>${NURSERY.foster.name}, ${NURSERY.foster.species}, is available for appropriate warmth and social comfort. Siblings recognize one another and tend to settle near familiar littermates.</p></div>
-  <div class="card"><h3>📖 Nursery Life Book</h3>${NURSERY.babies.map(x=>`<p><b>${x.name}</b> · ${x.stage} · ${x.weight} g<br><small>${x.milestones.join(" → ")||"No milestones yet"}</small></p>`).join("")}</div>
-  <div class="card"><h3>🌙 Nursery Log</h3>${NURSERY.log.slice(0,10).map(x=>`<div class="logline">${x}</div>`).join("")}</div>`;
+  let babies=NURSERY.babies.length, sleeping=NURSERY.babies.filter(x=>!x.awake).length, need=NURSERY.babies.filter(x=>x.feeding<45||x.hydration<50||x.warmth<55||x.clean<45||x.comfort<45).length;
+  el.innerHTML=`<div class="hero"><h2>🐣 NURSERY WING</h2><p>Newborns, orphans and hatchlings grow here. Offer Water and Clinical Fluids are separate systems.</p></div>
+  <div class="statgrid"><div class="stat"><b>${babies}</b><span>Babies</span></div><div class="stat"><b>${sleeping}</b><span>Sleeping</span></div><div class="stat"><b>${need}</b><span>Need Attention</span></div></div>
+  <div class="actions"><button onclick="nRound()">🩺 Nursery Rounds</button><button onclick="vgOpenScreen('clinic')">🏥 Clinic</button><button onclick="vgOpenScreen('pets')">❤️ My Pets</button></div>
+  <div class="card"><h3>Nursery Patients</h3><div class="actions">${NURSERY.babies.map(x=>`<button onclick="NURSERY.selected='${x.id}';renderNursery()">${x.awake?"👀":"💤"} ${x.name}</button>`).join("")}</div></div>
+  ${b?`<div class="card"><h3>${b.name} · ${b.species}</h3><p>${b.story}</p><div class="muted">${b.ageDays} days · ${b.stage} · ${b.weight} g</div>
+  ${nBar("Warmth",b.warmth)}${nBar("Feeding",b.feeding)}${nBar("Hydration",b.hydration)}${nBar("Sleep",b.sleep)}${nBar("Cleanliness",b.clean)}${nBar("Comfort",b.comfort)}${nBar("Development",b.development)}${nBar("Bond",b.bond)}
+  <div class="actions"><button onclick="nAction('${b.id}','warm')">🔥 Warm Bed</button><button onclick="nAction('${b.id}','incubator')">🫧 Incubator</button><button onclick="nAction('${b.id}','feed')">🍼 Feed</button>${nCanWater(b)?`<button onclick="nAction('${b.id}','water')">💧 Offer Water</button>`:`<button disabled>💧 Water Locked</button>`}<button onclick="nAction('${b.id}','fluids')">💉 Clinical Fluids</button><button onclick="nAction('${b.id}','clean')">🧺 Change Bedding</button><button onclick="nAction('${b.id}','comfort')">🤲 Comfort</button><button onclick="nAction('${b.id}','sleep')">🌙 Sleep</button><button onclick="nAction('${b.id}','play')">🧸 Enrichment</button></div>
+  <div class="notice"><b>Milestones:</b> ${b.milestones.join(" · ")||"None yet"}</div>
+  ${b.development>=90?`<div class="actions"><button onclick="nGraduate('${b.id}','Home')">🏠 Home</button><button onclick="nGraduate('${b.id}','My Pets')">❤️ My Pets</button><button onclick="nGraduate('${b.id}','Sanctuary')">🌿 Sanctuary</button></div>`:""}</div>`:""}
+  <div class="card"><h3>🥚 Hatchery</h3>${NURSERY.eggs.map(e=>`<p><b>${e.species}</b> · ${Math.round(e.progress)}% incubation</p>`).join("")}</div>
+  <div class="card"><h3>🌙 Nursery Log</h3>${NURSERY.log.map(x=>`<div class="logline">${x}</div>`).join("")}</div>`;
 }
-setInterval(()=>{if(typeof state!=="undefined"&&state.screen==="nursery"){nTick();nAutoBehavior();nMoveBabies();nEggTick();renderNursery()}},5000);
-
-
 function sendToNursery(id){
-  if(typeof state==="undefined")return false;
   let p=state.patients.find(x=>x.id===id);if(!p)return false;
   p.department="Nursery";p.location="Nursery";state.screen="nursery";
-  if(typeof addLog==="function")addLog(p.name+" transferred to the Nursery Wing.");
   if(!NURSERY.babies.some(b=>b.sourcePatientId===p.id)){
-    NURSERY.babies.push({id:"nur-"+Date.now(),sourcePatientId:p.id,name:p.name,species:p.species||"Rescue Baby",group:/bird|duck|chick/i.test(p.species||"")?"bird":"mammal",ageDays:14,stage:"Stable Newborn",weight:250,warmth:70,feeding:55,hydration:65,sleep:70,clean:70,comfort:55,development:22,bond:Number(p.trust||25),stress:Number(p.stress||25),oxygen:Number(p.oxygen||97),shock:Number(p.shock||5),nausea:0,awake:true,x:.42,y:.62,target:"warm",feeds:0,lastFed:Date.now(),milestones:[],siblings:[],story:p.backstory||"Transferred from the hospital for developmental care."});
+    NURSERY.babies.push({id:"nur-"+Date.now(),sourcePatientId:p.id,name:p.name,species:p.species||"Rescue Baby",ageDays:14,stage:"Stable Newborn",weight:250,warmth:70,feeding:55,hydration:65,sleep:70,clean:70,comfort:55,development:22,bond:Number(p.trust||25),stress:Number(p.stress||25),oxygen:Number(p.oxygen||97),shock:Number(p.shock||5),nausea:0,awake:true,target:"warm",milestones:[],story:p.backstory||"Transferred from the hospital for developmental care."});
   }
-  NURSERY.selected=NURSERY.babies.find(b=>b.sourcePatientId===p.id).id;
-  render();return false;
+  NURSERY.selected=NURSERY.babies.find(b=>b.sourcePatientId===p.id).id;render();return false;
+}
+
+
+function vgInstallNurseryNav(){
+  if(document.getElementById("vgNurseryNavButton"))return;
+  const candidates=[...document.querySelectorAll("button")];
+  const anchor=candidates.find(b=>/My Pets/i.test(b.textContent||""))||candidates.find(b=>/Clinic/i.test(b.textContent||""));
+  if(!anchor)return;
+  const btn=document.createElement("button");
+  btn.id="vgNurseryNavButton";
+  btn.textContent="🐣 Nursery";
+  btn.onclick=()=>vgOpenScreen("nursery");
+  anchor.parentNode.insertBefore(btn,anchor.nextSibling);
+}
+setTimeout(vgInstallNurseryNav,250);
+
+
+/* ===== Independent Oral Hydration Gate ===== */
+function vgEnsureOralHydrationState(p){
+  if(!p) return;
+  if(!p.oralHydration || typeof p.oralHydration!=="object"){
+    p.oralHydration={
+      accepted:false,
+      maintained:false,
+      lastAcceptedAt:0,
+      rechecks:0,
+      declines:0
+    };
+  }
+}
+function vgRequiresIndependentWater(p){
+  if(!p) return true;
+  const isNursery = (p.department==="Nursery" || p.location==="Nursery");
+  const dev = Number(p.development ?? (p.dynamicCare&&p.dynamicCare.development) ?? 100);
+  const ageDays = Number(p.ageDays ?? 999);
+  // Very young nursery animals can graduate by feeding/weaning milestones instead of bowl drinking.
+  if(isNursery && (dev < 35 || ageDays < 21)) return false;
+  return true;
+}
+function vgIndependentHydrationReady(p){
+  if(!p) return false;
+  vgEnsureOralHydrationState(p);
+  if(!vgRequiresIndependentWater(p)){
+    // For neonates: require feeding/hydration stability instead.
+    const feeding = Number(p.feeding ?? 70);
+    const hyd = Number(p.hydration ?? 0);
+    return feeding >= 55 && hyd >= 60;
+  }
+  return !!(p.oralHydration.accepted && p.oralHydration.maintained && Number(p.hydration??0) >= 60);
+}
+function vgRecordWaterOffer(p,accepted){
+  if(!p) return;
+  vgEnsureOralHydrationState(p);
+  if(accepted){
+    p.oralHydration.accepted=true;
+    p.oralHydration.maintained=false;
+    p.oralHydration.lastAcceptedAt=Date.now();
+    p.oralHydration.rechecks=0;
+  }else{
+    p.oralHydration.declines++;
+  }
+}
+function vgHydrationRecheck(p){
+  if(!p) return false;
+  vgEnsureOralHydrationState(p);
+  if(!vgRequiresIndependentWater(p)) return vgIndependentHydrationReady(p);
+  if(!p.oralHydration.accepted) return false;
+  p.oralHydration.rechecks++;
+  // One successful later recheck with adequate hydration is enough for the game gate.
+  if(Number(p.hydration??0) >= 60 && p.oralHydration.rechecks >= 1){
+    p.oralHydration.maintained=true;
+  }
+  return p.oralHydration.maintained;
+}
+
+
+function vgOralHydrationStatusHTML(p){
+  if(!p)return "";
+  vgEnsureOralHydrationState(p);
+  if(!vgRequiresIndependentWater(p)){
+    return `<div class="notice"><b>Hydration gate:</b> Nursery feeding/weaning stability applies. IV fluids support stabilization but do not replace developmental feeding readiness.</div>`;
+  }
+  const s=p.oralHydration;
+  const txt=s.maintained?"✅ Drinking independently and maintaining hydration":
+            s.accepted?"🟡 Drank voluntarily — needs hydration recheck before progression":
+            "🔒 Must voluntarily drink water before leaving treatment";
+  return `<div class="notice"><b>Independent hydration:</b> ${txt}. Clinical IV fluids do not satisfy this requirement.</div>`;
 }
 </script>
 </body>
