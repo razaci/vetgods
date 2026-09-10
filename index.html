@@ -1480,6 +1480,16 @@ body{
   background:#081018 !important;
 }
 
+
+/* Living Recovery Ward */
+.recovery-sim{margin:10px 0;padding:10px;border:1px solid #4d7188;border-radius:16px;background:#0c1a24}
+.recovery-room{position:relative;height:350px;border-radius:16px;overflow:hidden;border:1px solid #577f98;background:linear-gradient(#173247 0 58%,#241d18 59% 100%)}
+.recovery-room canvas{width:100%;height:100%;display:block}
+.recovery-station{position:absolute;transform:translate(-50%,-50%);padding:5px 7px;border-radius:10px;background:#07131ddd;border:1px solid #638ca3;font-size:9px;text-align:center;min-width:66px}
+.recovery-strip{display:flex;gap:7px;overflow:auto;padding:7px 0}
+.recovery-strip button{min-width:126px;text-align:left}
+.recovery-readiness{margin:8px 0;padding:8px;border-radius:10px;background:#0b1821;border:1px solid #35546a}
+
 </style>
 </head>
 <body>
@@ -1904,23 +1914,18 @@ function surgeryAction(){
   if(p.surgeryStep>=3)route(p,"Recovery");else render();
 }
 function renderRecovery(){
-  const list=dept("Recovery");
-  const p=list.find(x=>x.id===state.activeId)||list[0]||null;
-  if(p)state.activeId=p.id;
-  recovery.innerHTML=`<div class="panel">${patientHero(p)}
-    ${p?`<div class="controls" style="margin-top:12px">
-      <button class="action" onclick="recoveryAction()">Comfort + Hydrate</button>
-      <button class="action green" onclick="recoveryAction()">Feed + Monitor</button>
-      <button class="action gold" onclick="discharge(active())">Discharge Home</button>
-    </div>`:""}
-  </div><div class="panel"><h3>Recovery Patients</h3>${roster(list,"Recovery")}</div>`;
-
-if(p)recovery.innerHTML+=recoveryEconomyHTML(p);
-  const rp=state.patients.filter(x=>x.location==="Recovery");
-  if(rp.length){
-    recovery.innerHTML += rp.map(p=>recoveryFlowHTML(p)).join("");
-  }
-
+  const el=document.getElementById("recovery");if(!el)return;
+  const pts=rwPatients();
+  const p=pts.find(x=>x.id===RECOVERY_SIM.selected)||pts.find(x=>x.id===state.activeId)||pts[0]||null;
+  if(p){RECOVERY_SIM.selected=p.id;state.activeId=p.id}
+  el.innerHTML=`<div class="hero"><h2>🏥 RECOVERY · LIVING WARD</h2><p>Patients visibly rest, eat, drink, walk, seek comfort and prove they are ready for home.</p></div>
+  <div class="statgrid"><div class="stat"><b>${pts.length}</b><span>Patients</span></div><div class="stat"><b>${pts.filter(x=>rwScore(x)>=80).length}</b><span>Near Ready</span></div><div class="stat"><b>${pts.filter(x=>typeof vgIndependentHydrationReady==="function"&&vgIndependentHydrationReady(x)).length}</b><span>Water Ready</span></div></div>
+  ${pts.length?`${rwWorldHTML()}<div class="card"><h3>Recovery Patients</h3><div class="recovery-strip">${pts.map(x=>`<button onclick="RECOVERY_SIM.selected='${x.id}';state.activeId='${x.id}';renderRecovery()"><b>${rwEmoji(x)} ${x.name}</b><br><small>${rwScore(x)}% ready</small></button>`).join("")}</div></div>
+  <div class="card"><h3>${rwEmoji(p)} ${p.name}</h3><div class="recovery-readiness"><b>Recovery Readiness ${rwScore(p)}%</b><br><small>${rwMissing(p).length?"Still needs: "+rwMissing(p).join(" · "):"✅ Ready for final discharge decision"}</small></div>
+  ${typeof vgOralHydrationStatusHTML==="function"?vgOralHydrationStatusHTML(p):""}
+  <div class="actions"><button onclick="rwAction('${p.id}','rest')">🌙 Quiet Rest</button><button onclick="rwAction('${p.id}','food')">🍽 Offer Food</button><button onclick="rwAction('${p.id}','water')">💧 Offer Water</button><button onclick="rwAction('${p.id}','comfort')">🤲 Stay Nearby</button><button onclick="rwAction('${p.id}','walk')">🐾 Gentle Walk</button><button onclick="rwAction('${p.id}','recheck')">🩺 Hydration Recheck</button><button onclick="rwFinal('${p.id}')">✅ Final Check</button></div>
+  <div class="recovery-readiness"><b>Milestones</b><br><small>${rwEnsure(p,0).milestones.join(" · ")||"No milestones yet"}</small></div></div>`:`<div class="card"><h3>Recovery Ward Empty</h3><p>No patients are currently in Recovery.</p></div>`}`;
+  setTimeout(()=>{if(state.screen==="recovery")rwStart()},40);
 }
 function recoveryAction(){
   const p=active();if(!p)return;
@@ -6305,7 +6310,7 @@ function renderResearch(){
 function clinicEconomyHTML(p){
  if(!p)return "";
  return `<div class="panel"><h3>Clinical Actions</h3><div class="case-test">
- <button class="action" onclick="clinicAction('${p.id}','fluids')">IV Fluids</button>
+ <button class="action" onclick="clinicAction('${p.id}','fluids')">Offer Water</button>
  <button class="action" onclick="clinicAction('${p.id}','oxygen')">Oxygen</button>
  <button class="action" onclick="clinicAction('${p.id}','pain')">Pain Control</button>
  <button class="action" onclick="clinicAction('${p.id}','antibiotic')">Antibiotics</button>
@@ -8957,6 +8962,101 @@ function vgOralHydrationStatusHTML(p){
             s.accepted?"🟡 Drank voluntarily — needs hydration recheck before progression":
             "🔒 Must voluntarily drink water before leaving treatment";
   return `<div class="notice"><b>Independent hydration:</b> ${txt}. Clinical IV fluids do not satisfy this requirement.</div>`;
+}
+
+
+/* ===== Living Recovery Ward Engine ===== */
+const RECOVERY_SIM={
+  running:true,raf:0,last:0,selected:null,
+  stations:[
+    {id:"bed",x:.15,y:.24,label:"🛏️ Recovery Bed"},
+    {id:"food",x:.37,y:.24,label:"🍽️ Food"},
+    {id:"water",x:.59,y:.24,label:"💧 Water"},
+    {id:"comfort",x:.80,y:.24,label:"🤲 Comfort"},
+    {id:"walk",x:.24,y:.72,label:"🐾 Walk Lane"},
+    {id:"check",x:.50,y:.72,label:"🩺 Recheck"},
+    {id:"quiet",x:.76,y:.72,label:"🌙 Quiet"}
+  ]
+};
+function rwPatients(){return state.patients.filter(p=>p.admitted&&(p.department==="Recovery"||p.location==="Recovery"))}
+function rwEnsure(p,i){
+  if(!p.rw)p.rw={x:.18+(i%5)*.13,y:.55,tx:.18,ty:.55,phase:"idle",until:0,activity:"Settling into Recovery",meals:0,waters:0,walks:0,rests:0,comforts:0,rechecks:0,milestones:[]};
+  return p.rw;
+}
+function rwStation(id){return RECOVERY_SIM.stations.find(s=>s.id===id)||RECOVERY_SIM.stations[0]}
+function rwMoveTo(p,type,doing){
+  const i=Math.max(0,rwPatients().indexOf(p)),m=rwEnsure(p,i),s=rwStation(type);
+  m.tx=s.x+(Math.random()-.5)*.035;m.ty=s.y+(Math.random()-.5)*.03;m.phase="travel";m.activity="Heading to "+s.label.replace(/^[^ ]+ /,"");m.doing=doing;
+}
+function rwMilestone(p,key,label){const m=rwEnsure(p,0);if(!m.milestones.includes(key)){m.milestones.push(key);if(typeof addLog==="function")addLog(p.name+" · "+label)}}
+function rwScore(p){
+  const m=rwEnsure(p,0);let n=0;
+  if(Number(p.pain??50)<=35)n+=20;
+  if(Number(p.oxygen??95)>=92)n+=15;
+  if(m.meals>=1)n+=15;
+  if(typeof vgIndependentHydrationReady==="function"&&vgIndependentHydrationReady(p))n+=20;
+  if(m.walks>=1)n+=15;
+  if(((p.long&&p.long.recoveryDays)||0)>=1)n+=15;
+  return n;
+}
+function rwMissing(p){
+  const m=rwEnsure(p,0),a=[];
+  if(Number(p.pain??50)>35)a.push("pain control");
+  if(Number(p.oxygen??95)<92)a.push("stable oxygen");
+  if(m.meals<1)a.push("accepted food");
+  if(typeof vgIndependentHydrationReady==="function"&&!vgIndependentHydrationReady(p))a.push("independent water");
+  if(m.walks<1)a.push("gentle walk");
+  if(((p.long&&p.long.recoveryDays)||0)<1)a.push("observation time");
+  return a;
+}
+function rwAction(id,action){
+  const p=state.patients.find(x=>x.id===id);if(!p)return;const m=rwEnsure(p,0);
+  if(action==="rest"){m.rests++;p.pain=Math.max(0,Number(p.pain??30)-4);p.comfort=Math.min(100,Number(p.comfort??50)+6);rwMoveTo(p,"bed","Quiet rest");rwMilestone(p,"rest","Settled for quiet rest")}
+  if(action==="food"){m.meals++;p.hunger=Math.min(100,Number(p.hunger??50)+20);rwMoveTo(p,"food","Eating");rwMilestone(p,"food","Accepted food")}
+  if(action==="water"){const ok=typeof vgHydrationAction==="function"?vgHydrationAction(p,"offer"):true;if(ok){m.waters++;rwMoveTo(p,"water","Drinking voluntarily");rwMilestone(p,"water","Drank voluntarily")}else rwMoveTo(p,"water","Water offered but declined")}
+  if(action==="comfort"){m.comforts++;p.stress=Math.max(0,Number(p.stress??40)-10);p.trust=Math.min(100,Number(p.trust??40)+4);rwMoveTo(p,"comfort","Staying nearby");rwMilestone(p,"comfort","Relaxed with company")}
+  if(action==="walk"){if(Number(p.pain??0)>55){if(typeof addLog==="function")addLog(p.name+" is not ready to walk yet.")}else{m.walks++;rwMoveTo(p,"walk","Taking a gentle walk");rwMilestone(p,"walk","Completed a gentle walk")}}
+  if(action==="recheck"){m.rechecks++;const ok=typeof vgHydrationRecheck==="function"?vgHydrationRecheck(p):true;rwMoveTo(p,"check",ok?"Hydration recheck passed":"Hydration recheck pending");if(ok)rwMilestone(p,"hydration","Maintained hydration independently")}
+  if(typeof advanceRecoveryFromCare==="function"&&["rest","food","water","comfort","walk"].includes(action))advanceRecoveryFromCare(p,action);
+  renderRecovery();
+}
+function rwFinal(id){
+  const p=state.patients.find(x=>x.id===id);if(!p)return;
+  const miss=rwMissing(p);rwMoveTo(p,"check",miss.length?"Final check found remaining needs":"Final check passed");
+  if(miss.length){if(typeof addLog==="function")addLog(p.name+" stays in Recovery: "+miss.join(", "))}
+  else{rwMilestone(p,"final","Passed final recovery check");if(p.long)p.long.dischargeScore=100}
+  renderRecovery();
+}
+function rwStep(dt){
+  const now=Date.now();
+  rwPatients().forEach((p,i)=>{
+    const m=rwEnsure(p,i);
+    if(m.phase==="idle"){
+      const pool=["bed","comfort","quiet","walk"];
+      rwMoveTo(p,pool[Math.floor(Math.random()*pool.length)],"Resting in the ward");
+    }else if(m.phase==="travel"){
+      const dx=m.tx-m.x,dy=m.ty-m.y,d=Math.hypot(dx,dy)||1,step=Math.min(d,.00004*dt);
+      m.x+=dx/d*step;m.y+=dy/d*step;
+      if(d<.01){m.x=m.tx;m.y=m.ty;m.phase="doing";m.activity=m.doing||"Resting";m.until=now+16000+Math.random()*22000}
+    }else if(m.phase==="doing"&&now>=m.until){m.phase="idle"}
+  });
+}
+function rwEmoji(p){const s=(p.species||"").toLowerCase();if(s.includes("cat"))return"🐱";if(s.includes("rabbit"))return"🐇";if(s.includes("bird"))return"🐦";if(s.includes("reptile")||s.includes("snake"))return"🦎";return"🐶"}
+function rwDraw(){
+  const c=document.getElementById("rwCanvas");if(!c)return;
+  const r=c.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1),w=Math.max(300,Math.round(r.width*dpr)),h=Math.max(250,Math.round(r.height*dpr));
+  if(c.width!==w||c.height!==h){c.width=w;c.height=h}
+  const ctx=c.getContext("2d");ctx.clearRect(0,0,w,h);
+  rwPatients().forEach((p,i)=>{const m=rwEnsure(p,i),x=m.x*w,y=m.y*h;ctx.font=`${24*dpr}px system-ui`;ctx.textAlign="center";ctx.fillText(rwEmoji(p),x,y);ctx.font=`${8*dpr}px system-ui`;ctx.fillStyle="#fff";ctx.fillText(p.name,x,y+18*dpr)})
+}
+function rwLoop(ts){
+  if(!RECOVERY_SIM.running){RECOVERY_SIM.raf=0;return}
+  if(!RECOVERY_SIM.last)RECOVERY_SIM.last=ts;
+  const dt=Math.min(50,ts-RECOVERY_SIM.last);RECOVERY_SIM.last=ts;rwStep(dt);rwDraw();RECOVERY_SIM.raf=requestAnimationFrame(rwLoop)
+}
+function rwStart(){if(RECOVERY_SIM.raf)return;RECOVERY_SIM.running=true;RECOVERY_SIM.last=0;RECOVERY_SIM.raf=requestAnimationFrame(rwLoop)}
+function rwWorldHTML(){
+  return `<div class="recovery-sim"><h3>🏥 Living Recovery Ward</h3><div class="recovery-room"><canvas id="rwCanvas"></canvas>${RECOVERY_SIM.stations.map(s=>`<div class="recovery-station" style="left:${s.x*100}%;top:${s.y*100}%">${s.label}</div>`).join("")}</div></div>`;
 }
 </script>
 </body>
