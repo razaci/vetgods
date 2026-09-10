@@ -1711,7 +1711,7 @@ function petSimHTML(p){
       ${petNeed("Pain",s.pain,true)}
     </div>
     <div class="pet-actions">
-      <button onclick="petAction('${p.id}','feed')">Offer Food</button>
+      <button onclick="petAction('${p.id}','feed')">🍽 Offer Food</button>
       <button onclick="petAction('${p.id}','water')">Fresh Water</button>
       <button onclick="petAction('${p.id}','sit')">Sit With Them</button>
       <button onclick="petAction('${p.id}','play')">Play</button>
@@ -2584,7 +2584,7 @@ function petDailyScheduleHTML(p){
   bird:["Feed","Perch","Enrichment","Rest","Feed","Sleep"],
   arachnid:["Observe","Hide","Water","Rest","Feed","Night"],
   insect:["Humidity","Feed","Climb","Rest","Molt Check","Night"],
-  colony:["Forage","Brood","Hydrate","Dark Rest","Food","Nest"],
+  colony:["Forage","Brood","IV Fluids","Dark Rest","Food","Nest"],
   amphibian:["Water","Hide","Feed","Soak","Rest","Night"],
   reptile:["Warm","Bask","Explore","Cool Hide","Check","Rest"]
  };
@@ -6530,7 +6530,7 @@ function treeActions(p){
  }
  if(t.stage==="surgery")return [["Next Surgical Step","opstep"],["Comfort Before Step","comfort"],["Stabilize","stabilize"]];
  if(t.stage==="recover"){
-  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Hydrate","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
+  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["IV Fluids","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
   const l=ensureLongPatient(p);
   const f=ensureFlow(p);
   if(f.dischargeReady || (t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40&&l.recoveryDays>=2&&l.rechecks>=1))a.push(["Final Check · Go Home","clear"]);
@@ -8455,7 +8455,7 @@ function vgDynamicChoices(p){
 
     const phaseChoices=[
       [
-        "Quiet Rest","Offer Food","Hydrate","Stay Nearby",
+        "Quiet Rest","Offer Food","IV Fluids","Stay Nearby",
         "Warm Blanket","Pain Recheck","Dim the Lights","Fresh Bedding"
       ],
       [
