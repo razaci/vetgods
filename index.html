@@ -1907,6 +1907,76 @@ button:active,.action:active{transform:translateY(1px)}
   .vgn-room{min-height:360px!important}
 }
 
+
+/* ===== VET GODS · Healing Journey ===== */
+.vgh-wrap{margin:10px 0}
+.vgh-hero{position:relative;overflow:hidden;border-radius:20px;border:1px solid #2e7b9e;background:linear-gradient(180deg,#082034,#06111d);padding:14px}
+.vgh-title{display:flex;gap:12px;align-items:center}
+.vgh-avatar{width:74px;height:74px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:46px;background:radial-gradient(circle at 50% 35%,#1a5271,#07111d 70%);border:2px solid #64d7ff;box-shadow:0 0 22px rgba(83,211,255,.18)}
+.vgh-title h2{margin:0}
+.vgh-path{display:flex;gap:6px;overflow:auto;padding:10px 0}
+.vgh-step{flex:0 0 auto;min-width:112px;padding:8px;border:1px solid #315c72;border-radius:12px;background:#081724;font-size:10px;text-align:center}
+.vgh-step.done{border-color:#5ed5a5;background:#0d3025}
+.vgh-step.on{border-color:#ff77d8;background:#3e1537;box-shadow:0 0 16px rgba(255,119,216,.18)}
+.vgh-bars{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0}
+.vgh-bar{padding:8px;border:1px solid #264d64;border-radius:10px;background:#071725}
+.vgh-bar b{display:flex;justify-content:space-between;font-size:11px}
+.vgh-track{height:7px;margin-top:5px;border-radius:999px;background:#123044;overflow:hidden}
+.vgh-fill{height:100%;background:linear-gradient(90deg,#43d8ff,#ff79da)}
+.vgh-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.vgh-actions button{min-height:52px;text-align:left;padding:10px}
+.vgh-milestones{display:flex;gap:6px;overflow:auto;padding:8px 0}
+.vgh-mile{flex:0 0 auto;padding:7px 9px;border:1px solid #43647a;border-radius:999px;background:#0b1e2b;font-size:10px}
+.vgh-mile.done{border-color:#65d6a5;background:#0f382c}
+.vgh-note{padding:9px;border-left:3px solid #5bd9ff;background:#071620;border-radius:8px;margin:7px 0}
+.vgh-species{padding:8px;border:1px solid #594a72;border-radius:10px;background:#151126;margin:8px 0}
+@media(max-width:700px){
+  .vgh-bars{grid-template-columns:repeat(2,1fr)}
+  .vgh-actions{grid-template-columns:1fr}
+}
+
+
+/* ===== Independent Eating / Drinking Gameplay ===== */
+.vgi-sim{margin-top:10px;padding:12px;border:1px solid #2a6b8d;border-radius:16px;background:linear-gradient(180deg,#071827,#06111c)}
+.vgi-stage{position:relative;height:260px;border-radius:16px;overflow:hidden;border:1px solid #245a75;background:linear-gradient(180deg,#0b2436,#07121d)}
+.vgi-stage:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 20%,rgba(72,198,255,.14),transparent 35%)}
+.vgi-station{position:absolute;width:88px;min-height:54px;padding:6px;border:1px solid #3f83a8;border-radius:11px;background:#06131fcc;text-align:center;font-size:11px}
+.vgi-food{left:7%;bottom:18px}.vgi-water{right:7%;bottom:18px}.vgi-bed{left:50%;top:18px;transform:translateX(-50%)}
+.vgi-animal{position:absolute;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:39px;background:#0b1c2a;border:2px solid #f5fbff;box-shadow:0 6px 18px #0008;transition:left .8s linear,top .8s linear}
+.vgi-status{display:flex;gap:7px;overflow:auto;margin-top:8px}
+.vgi-chip{flex:0 0 auto;padding:7px 9px;border:1px solid #315e75;border-radius:999px;background:#081927;font-size:10px}
+
+
+/* ===== Living Healing Room Expansion ===== */
+.vglr-wrap{margin-top:10px}
+.vglr-room{position:relative;height:330px;border-radius:18px;overflow:hidden;border:1px solid #2e7396;background:linear-gradient(180deg,#0a2133,#06111c)}
+.vglr-room:before{content:"";position:absolute;inset:0;background:
+radial-gradient(circle at 50% 15%,rgba(74,209,255,.12),transparent 28%),
+linear-gradient(180deg,rgba(255,255,255,.015),rgba(0,0,0,.12))}
+.vglr-zone{position:absolute;width:86px;min-height:50px;padding:6px;border:1px solid #3b7898;border-radius:11px;background:#071724dd;text-align:center;font-size:11px}
+.vglr-animal{position:absolute;width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;background:#0b1c2a;border:2px solid #f4fbff;box-shadow:0 8px 20px #0008;transition:left .7s linear,top .7s linear}
+.vglr-animal.sleeping{filter:brightness(.72);transform:translate(-50%,-50%) scale(.96)}
+.vglr-bubble{position:absolute;left:50%;top:-30px;transform:translateX(-50%);min-width:110px;max-width:180px;padding:5px 7px;border-radius:10px;background:#07131fe8;border:1px solid #315f77;font-size:10px;text-align:center}
+.vglr-dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}
+.vglr-card{padding:8px;border:1px solid #2d5870;border-radius:11px;background:#071725}
+.vglr-card b{display:block;font-size:11px}
+.vglr-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:8px}
+.vglr-log{max-height:140px;overflow:auto;margin-top:8px;padding:8px;border-radius:10px;background:#06121c;border:1px solid #264e66}
+.vglr-log div{padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:11px}
+.vglr-ready{padding:10px;border-radius:12px;border:1px solid #4b6e55;background:#0c291f;margin-top:8px}
+.vglr-ready.yes{border-color:#62d5a7;background:#0f3a2c;box-shadow:0 0 16px rgba(98,213,167,.13)}
+.vglr-toggle{margin-top:8px}
+@media(max-width:700px){
+  .vglr-room{height:300px}
+  .vglr-dashboard{grid-template-columns:repeat(2,1fr)}
+  .vglr-actions{grid-template-columns:1fr}
+}
+
+
+body.vg-healing-observe .vgh-actions,
+body.vg-healing-observe .vglr-actions{display:none!important}
+body.vg-healing-observe .vglr-room{height:420px}
+
 </style>
 </head>
 <body>
@@ -2337,7 +2407,7 @@ function renderRecovery(){
   <div class="card"><h3>${rwEmoji(p)} ${p.name}</h3>${typeof sgRecoveryJourneyHTML==="function"?sgRecoveryJourneyHTML(p):""}<div class="recovery-readiness"><b>Recovery Readiness ${rwScore(p)}%</b><br><small>${rwMissing(p).length?"Still needs: "+rwMissing(p).join(" · "):"✅ Ready for final discharge decision"}</small></div>
   ${typeof vgOralHydrationStatusHTML==="function"?vgOralHydrationStatusHTML(p):""}
   <div class="actions"><button onclick="rwAction('${p.id}','rest')">🌙 Quiet Rest</button><button onclick="rwAction('${p.id}','food')">🍽 Offer Food</button><button onclick="rwAction('${p.id}','water')">💧 Offer Water</button><button onclick="rwAction('${p.id}','comfort')">🤲 Stay Nearby</button><button onclick="rwAction('${p.id}','walk')">🐾 Gentle Walk</button><button onclick="rwAction('${p.id}','recheck')">🩺 Hydration Recheck</button><button onclick="rwFinal('${p.id}')">✅ Final Check</button></div>
-  <div class="recovery-readiness"><b>Milestones</b><br><small>${rwEnsure(p,0).milestones.join(" · ")||"No milestones yet"}</small></div></div>`:`<div class="card"><h3>Recovery Ward Empty</h3><p>No patients are currently in Recovery.</p></div>`}`;
+  <div class="recovery-readiness"><b>Milestones</b><br><small>${rwEnsure(p,0).milestones.join(" · ")||"No milestones yet"}</small></div></div>`:`<div class="card"><h3>Integrated Aftercare Empty</h3><p>No patients are currently in Recovery.</p></div>`}`;
   setTimeout(()=>{if(state.screen==="recovery")rwStart()},40);
 }
 function recoveryAction(){
@@ -3002,7 +3072,7 @@ function petDailyScheduleHTML(p){
   bird:["Feed","Perch","Enrichment","Rest","Feed","Sleep"],
   arachnid:["Observe","Hide","Water","Rest","Feed","Night"],
   insect:["Humidity","Feed","Climb","Rest","Molt Check","Night"],
-  colony:["Forage","Brood","IV Fluids","Dark Rest","Food","Nest"],
+  colony:["Forage","Brood","Offer Water","Dark Rest","Food","Nest"],
   amphibian:["Water","Hide","Feed","Soak","Rest","Night"],
   reptile:["Warm","Bask","Explore","Cool Hide","Check","Rest"]
  };
@@ -6948,7 +7018,7 @@ function treeActions(p){
  }
  if(t.stage==="surgery")return [["Next Surgical Step","opstep"],["Comfort Before Step","comfort"],["Stabilize","stabilize"]];
  if(t.stage==="recover"){
-  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["IV Fluids","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
+  let a=[["Quiet Rest","rest"],["Offer Food","eat"],["Offer Water","hydrate"],["Gentle Walk","walk"],["Stay Nearby","bond"]];
   const l=ensureLongPatient(p);
   const f=ensureFlow(p);
   if(f.dischargeReady || (t.appetite>=65&&t.hydration>=65&&t.mobility>=60&&(p.pain||0)<40&&l.recoveryDays>=2&&l.rechecks>=1))a.push(["Final Check · Go Home","clear"]);
@@ -7622,7 +7692,7 @@ function clinicFlowHTML(p){
        <button class="action" onclick="chooseClinicTreatment('${p.id}','supportive')">Choose Supportive Care</button>
      `:""}
      ${f.readyForRecovery?`
-       <button class="action green" onclick="sendPatientToRecovery('${p.id}')">Send to Recovery</button>
+       <button class="action green" onclick="vgBeginAftercare('${p.id}',\'Treatment\')">Begin Aftercare</button>
      `:""}
    </div>
    <div class="small" style="margin-top:7px">${f.outcomeNote||(
@@ -8133,6 +8203,14 @@ try{if(typeof vgInstallCinematicBanner==="function")vgInstallCinematicBanner()}c
 try{if(typeof vgRedesignPass==="function")vgRedesignPass()}catch(e){console.error("Redesign pass failed",e)}
 
 try{if(typeof vgEnsureFooter==="function")vgEnsureFooter()}catch(e){}
+
+try{if(typeof vgNormalizeAllPatientStates==="function")vgNormalizeAllPatientStates()}catch(e){}
+
+try{if(typeof vgInstallHealingPanel==="function")vgInstallHealingPanel()}catch(e){console.error("Healing panel failed",e)}
+
+try{if(typeof vgiStart==="function")vgiStart()}catch(e){}
+
+try{if(typeof vglrStart==="function")vglrStart()}catch(e){}
 }
 
 function setGameMenu(open){
@@ -8889,7 +8967,7 @@ function vgDynamicChoices(p){
 
     const phaseChoices=[
       [
-        "Quiet Rest","Offer Food","IV Fluids","Stay Nearby",
+        "Quiet Rest","Offer Food","Offer Water","Stay Nearby",
         "Warm Blanket","Pain Recheck","Dim the Lights","Fresh Bedding"
       ],
       [
@@ -9439,7 +9517,7 @@ function vgOralHydrationStatusHTML(p){
 }
 
 
-/* ===== Living Recovery Ward Engine ===== */
+/* ===== Living Integrated Aftercare Engine ===== */
 const RECOVERY_SIM={
   running:true,raf:0,last:0,selected:null,
   stations:[
@@ -9530,7 +9608,7 @@ function rwLoop(ts){
 }
 function rwStart(){if(RECOVERY_SIM.raf)return;RECOVERY_SIM.running=true;RECOVERY_SIM.last=0;RECOVERY_SIM.raf=requestAnimationFrame(rwLoop)}
 function rwWorldHTML(){
-  return `<div class="recovery-sim"><h3>🏥 Living Recovery Ward</h3><div class="recovery-room"><canvas id="rwCanvas"></canvas>${RECOVERY_SIM.stations.map(s=>`<div class="recovery-station" style="left:${s.x*100}%;top:${s.y*100}%">${s.label}</div>`).join("")}</div></div>`;
+  return `<div class="recovery-sim"><h3>🏥 Living Integrated Aftercare</h3><div class="recovery-room"><canvas id="rwCanvas"></canvas>${RECOVERY_SIM.stations.map(s=>`<div class="recovery-station" style="left:${s.x*100}%;top:${s.y*100}%">${s.label}</div>`).join("")}</div></div>`;
 }
 
 
@@ -9602,14 +9680,16 @@ function sgAction(id,action){
   sgMaybeEvent(p);renderSurgery();
 }
 function sgTransfer(id){
-  const p=state.patients.find(x=>x.id===id);if(!p)return;const s=sgEnsure(p);
-  if(!s.completed){sgLog(p,"Complete the post-op check before transfer.");renderSurgery();return}
-  p.department="Recovery";p.location="Recovery";state.activeId=p.id;state.screen="clinic";
-  if(!p.long)p.long={recoveryDays:0,rechecks:0};
-  p.postOpHistory=(p.postOpHistory||[]).concat(s.history.slice(0,8));
-  if(typeof ensureFlow==="function"){ensureFlow(p);p.flow.recoveryProgress=Math.max(0,p.flow.recoveryProgress||0)}
-  if(typeof addLog==="function")addLog(p.name+" left Surgery and entered integrated aftercare.");
-  render();
+  const p=(state.patients||[]).find(x=>x.id===id);if(!p)return;
+  const s=typeof sgEnsure==="function"?sgEnsure(p):null;
+  if(s && !s.completed){
+    if(typeof sgLog==="function")sgLog(p,"Complete the post-op check before aftercare.");
+    if(typeof renderSurgery==="function")renderSurgery();
+    return;
+  }
+  if(s)p.postOpHistory=(p.postOpHistory||[]).concat((s.history||[]).slice(0,8));
+  if(typeof ensureFlow==="function")ensureFlow(p);
+  vgBeginAftercare(id,"Surgery");
 }
 function sgStepClass(s,i){return i<s.step?"done":i===s.step?"on":""}
 function sgSurgeryHTML(p){
@@ -9817,7 +9897,7 @@ function vgCmdNextAction(p){
   if((p.pain||0)>55)return{label:"Comfort "+p.name,care:12};
   if((p.hunger||100)<50)return{label:"Feed "+p.name,petAction:"food"};
   if((p.water||100)<50)return{label:"Give "+p.name+" Water",petAction:"water"};
-  return{label:"Continue Care for "+p.name,go:"clinic"};
+  return{label:vgCareDestinationLabel(p)+" · "+p.name,continueCare:true};
 }
 function vgCmdDoNext(){
   const p=state.patients.find(x=>x.id===state.activeId)||(state.pets||[]).find(x=>x.id===state.activeId)||vgCmdAnimals()[0];
@@ -9827,6 +9907,7 @@ function vgCmdDoNext(){
   if(n.care&&typeof treat==="function"){treat(p,n.care);return}
   if(n.petAction==="food"&&typeof petFoodChoice==="function"){petFoodChoice(p.id,22,"Food");return}
   if(n.petAction==="water"&&typeof petFillWater==="function"){petFillWater(p.id);return}
+  if(n.continueCare){vgContinueCare(p.id);return}
   if(n.go){vgCmdOpen(n.go,p&&p.id);return}
 }
 function vgCmdOpen(screen,id){
@@ -10114,6 +10195,863 @@ function vgEnsureFooter(){
     f.textContent="🐾 VET GODS · All Species · All Worlds · Always Hope";
     (document.querySelector("#app")||document.body).appendChild(f);
   }
+}
+
+
+/* ===== Recovery Routing Repair ===== */
+function vgBeginAftercare(id,source="Treatment"){
+  const p=(state.patients||[]).find(x=>x.id===id);
+  if(!p)return false;
+  if(!p.flow)p.flow={};
+  p.flow.integratedRecovery=true;
+  p.flow.integratedRecoverySource=source;
+  p.flow.recoveryProgress=Math.max(10,Number(p.flow.recoveryProgress||0));
+  p.department="Clinic";
+  p.location="Clinic";
+  state.activeId=p.id;
+  state.screen="clinic";
+  try{
+    if(typeof rwEnsure==="function")rwEnsure(p,0);
+  }catch(e){}
+  if(typeof addLog==="function")addLog(p.name+" entered integrated aftercare.");
+  try{render()}catch(e){console.error(e)}
+  return false;
+}
+function sendPatientToRecovery(id){
+  return vgBeginAftercare(id,"Treatment");
+}
+function vgSendToRecovery(id){
+  return vgBeginAftercare(id,"Treatment");
+}
+function routeToRecovery(id){
+  return vgBeginAftercare(id,"Treatment");
+}
+function recoveryCare(id,action){
+  const p=(state.patients||[]).find(x=>x.id===id);
+  if(!p)return;
+  if(!p.flow)p.flow={};
+  p.flow.integratedRecovery=true;
+  p.department="Clinic";p.location="Clinic";
+  if(typeof rwAction==="function"){
+    rwAction(id,action);
+    state.screen="clinic";
+    return;
+  }
+  // Fallback progression if legacy recovery engine is unavailable.
+  p.long=p.long||{recoveryDays:0,rechecks:0};
+  p.recoveryShiftActions=p.recoveryShiftActions||[];
+  p.recoveryShiftActions.push(action);
+  if(action==="rest")p.long.rests=(p.long.rests||0)+1;
+  if(action==="eat"||action==="food")p.long.meals=(p.long.meals||0)+1;
+  if(action==="walk")p.long.walks=(p.long.walks||0)+1;
+  if(action==="recheck")p.long.rechecks=(p.long.rechecks||0)+1;
+  if(p.recoveryShiftActions.length>=4){
+    p.long.recoveryDays=(p.long.recoveryDays||0)+1;
+    p.recoveryShiftActions=[];
+  }
+  if(typeof addLog==="function")addLog(p.name+" aftercare: "+action);
+  state.screen="clinic";render();
+}
+function dischargeRecoveredPet(id){
+  const p=(state.patients||[]).find(x=>x.id===id);
+  if(!p)return;
+  if(typeof rwMissing==="function"){
+    const miss=rwMissing(p);
+    if(miss.length){
+      if(typeof addLog==="function")addLog(p.name+" cannot leave aftercare yet: "+miss.join(", "));
+      state.screen="clinic";render();return;
+    }
+  }
+  if(typeof vgIndependentHydrationReady==="function" && !vgIndependentHydrationReady(p)){
+    if(typeof addLog==="function")addLog(p.name+" must drink independently before leaving aftercare.");
+    state.screen="clinic";render();return;
+  }
+  if(p.flow)p.flow.integratedRecovery=false;
+  if(typeof vgOfferAdoptionDecision==="function"){
+    try{
+      const r=vgOfferAdoptionDecision(p);
+      state.screen="clinic";render();
+      return r;
+    }catch(e){}
+  }
+  p.admitted=false;p.department="Home";p.location="Home";
+  if(typeof addLog==="function")addLog(p.name+" completed aftercare and went home.");
+  state.screen="clinic";render();
+}
+
+
+/* ===== Home / Aftercare State Repair + Continue Care Fix ===== */
+function vgNormalizePatientState(p){
+  if(!p)return;
+  if(!p.flow)p.flow={};
+
+  // Home always wins over stale recovery/aftercare flags.
+  if(p.location==="Home" || p.department==="Home" || p.admitted===false){
+    p.location="Home";
+    p.department="Home";
+    p.admitted=false;
+    p.flow.integratedRecovery=false;
+    return;
+  }
+
+  // Any truly active integrated-aftercare animal belongs in Clinic.
+  if(p.flow.integratedRecovery){
+    p.location="Clinic";
+    p.department="Clinic";
+    p.admitted=true;
+  }
+
+  // Legacy Recovery assignments migrate into Clinic aftercare.
+  if(p.location==="Recovery" || p.department==="Recovery"){
+    p.location="Clinic";
+    p.department="Clinic";
+    p.admitted=true;
+    p.flow.integratedRecovery=true;
+  }
+}
+function vgNormalizeAllPatientStates(){
+  (state.patients||[]).forEach(vgNormalizePatientState);
+  (state.pets||[]).forEach(p=>{
+    if(!p)return;
+    // My Pets are owned/home companions unless explicitly admitted as current hospital patients.
+    const activeHospital=(state.patients||[]).some(x=>x.id===p.id && x.admitted);
+    if(!activeHospital){
+      p.location="Home";
+      p.department="Home";
+      if(!p.flow)p.flow={};
+      p.flow.integratedRecovery=false;
+    }
+  });
+}
+function vgContinueCare(id){
+  const p=(state.patients||[]).find(x=>x.id===id)||(state.pets||[]).find(x=>x.id===id);
+  if(!p)return false;
+  if(typeof vgNormalizePatientState==="function")vgNormalizePatientState(p);
+  const owned=(state.pets||[]).some(x=>x.id===p.id);
+  if((p.location==="Home"||p.department==="Home"||p.admitted===false)&&owned){
+    if(typeof vgOpenMyPets==="function")return vgOpenMyPets();
+    state.screen="pets";render();return false;
+  }
+  if(p.location==="Surgery"||p.department==="Surgery"){
+    state.activeId=p.id;state.screen="surgery";render();return false;
+  }
+  if(p.location==="Nursery"||p.department==="Nursery"){
+    state.activeId=p.id;state.screen="nursery";render();return false;
+  }
+  return vgOpenHealing(p.id);
+}
+function vgCareDestinationLabel(p){
+  if(!p)return"Continue Care";
+  vgNormalizePatientState(p);
+  const owned=(state.pets||[]).some(x=>x.id===p.id);
+  if((p.location==="Home"||p.department==="Home"||p.admitted===false)&&owned)return"Open My Pets";
+  if(p.location==="Surgery"||p.department==="Surgery")return"Continue Surgery";
+  if(p.location==="Nursery"||p.department==="Nursery")return"Continue Nursery Care";
+  if(p.flow&&p.flow.integratedRecovery)return"Continue Aftercare";
+  return"Continue Care";
+}
+
+
+function vgDisplayLocation(p){
+  if(!p)return"Unknown";
+  vgNormalizePatientState(p);
+  if(p.location==="Home"||p.department==="Home"||p.admitted===false)return"Home";
+  if(p.flow&&p.flow.integratedRecovery)return"Aftercare · Clinic";
+  return p.location||p.department||"Clinic";
+}
+
+
+/* ===== Healing Journey Engine ===== */
+const VG_HEALING_STAGES=[
+  "Stabilize","Relieve Pain","Hydrate / Feed","Treat Problem","Rest",
+  "Rebuild Strength","Emotional Recovery","Independence Test","Final Check"
+];
+function vghEnsure(p){
+  if(!p)return null;
+  if(!p.healing||typeof p.healing!=="object"){
+    p.healing={
+      stage:0,
+      progress:0,
+      milestones:[],
+      notes:[],
+      treatmentActions:0,
+      restActions:0,
+      strengthActions:0,
+      emotionalActions:0,
+      independenceActions:0,
+      completed:false
+    };
+  }
+  return p.healing;
+}
+function vghClamp(v){return Math.max(0,Math.min(100,Number(v||0)))}
+function vghMetric(p,key,fallback=50){
+  if(p[key]!=null)return vghClamp(p[key]);
+  return fallback;
+}
+function vghSpeciesGroup(p){
+  const s=((p.species||"")+" "+(p.breed||"")).toLowerCase();
+  if(s.includes("rabbit"))return"rabbit";
+  if(s.includes("cat")||s.includes("kitten"))return"feline";
+  if(s.includes("dog")||s.includes("canine")||s.includes("puppy"))return"canine";
+  if(s.includes("snake")||s.includes("gecko")||s.includes("reptile"))return"reptile";
+  if(s.includes("bird")||s.includes("duck")||s.includes("chick"))return"bird";
+  if(s.includes("spider")||s.includes("tarantula")||s.includes("scorpion"))return"arachnid";
+  if(s.includes("ant"))return"colony";
+  if(s.includes("hamster")||s.includes("mouse"))return"small_mammal";
+  return"general";
+}
+function vghSpeciesHint(p){
+  const g=vghSpeciesGroup(p);
+  const map={
+    rabbit:"Quiet handling, warmth, appetite and gut-mobility observation matter a lot for this patient.",
+    feline:"Watch stress, appetite, hydration and willingness to move without forcing activity.",
+    canine:"Comfort, hydration, mobility and trust rebuilding can progress together.",
+    reptile:"Temperature, hydration, low-stress handling and species-appropriate activity are central.",
+    bird:"Warmth, calm observation, feeding and energy conservation are especially important.",
+    arachnid:"Minimize handling. Habitat conditions, hydration and low-stress observation matter most.",
+    colony:"Treat the colony as one living patient: food, hydration, tunnel stability and brood conditions matter.",
+    small_mammal:"Warmth, food, hydration, bedding, rest and gentle activity should progress gradually.",
+    general:"Progress care based on this animal's condition, behavior, hydration, pain and independence."
+  };
+  return map[g]||map.general;
+}
+function vghAddMilestone(p,key,label){
+  const h=vghEnsure(p);
+  if(!h.milestones.some(x=>x.key===key)){
+    h.milestones.push({key,label,at:Date.now()});
+    h.notes.unshift(label);
+    if(typeof addLog==="function")addLog(p.name+" · "+label);
+  }
+}
+function vghStageReady(p,stage){
+  const h=vghEnsure(p);
+  switch(stage){
+    case 0:return vghMetric(p,"oxygen",95)>=90 && vghMetric(p,"shock",0)<=35 && vghMetric(p,"bleeding",0)<=25;
+    case 1:return vghMetric(p,"pain",0)<=45;
+    case 2:
+      if(typeof vgRequiresIndependentWater==="function" && !vgRequiresIndependentWater(p)){
+        return vghMetric(p,"feeding",65)>=55 && vghMetric(p,"hydration",65)>=60;
+      }
+      return vghMetric(p,"hydration",65)>=60 && (typeof vgIndependentHydrationReady==="function"?vgIndependentHydrationReady(p):true);
+    case 3:return h.treatmentActions>=2;
+    case 4:return h.restActions>=2;
+    case 5:return h.strengthActions>=2;
+    case 6:return h.emotionalActions>=2 && vghMetric(p,"comfort",60)>=55;
+    case 7:{const s=typeof vgiEnsure==="function"?vgiEnsure(p):null;return h.independenceActions>=2 && !!(s&&s.firstIndependentMeal&&s.firstIndependentDrink&&s.maintainedHydration);}
+    case 8:return typeof vglrReadyToGo==="function"?vglrReadyToGo(p):true;
+    default:return false;
+  }
+}
+function vghAdvance(p){
+  const h=vghEnsure(p);
+  while(h.stage<VG_HEALING_STAGES.length-1 && vghStageReady(p,h.stage)){
+    const doneStage=VG_HEALING_STAGES[h.stage];
+    vghAddMilestone(p,"stage-"+h.stage,"Completed: "+doneStage);
+    h.stage++;
+  }
+  h.progress=Math.round((h.stage/(VG_HEALING_STAGES.length-1))*100);
+}
+function vghAction(id,action){
+  const p=(state.patients||[]).find(x=>x.id===id)||(state.pets||[]).find(x=>x.id===id);
+  if(!p)return;
+  const h=vghEnsure(p);
+  switch(action){
+    case "stabilize":
+      p.oxygen=Math.max(92,vghMetric(p,"oxygen",92));
+      p.shock=Math.max(0,vghMetric(p,"shock",25)-12);
+      p.bleeding=Math.max(0,vghMetric(p,"bleeding",15)-10);
+      vghAddMilestone(p,"stable","Vital signs stabilized");
+      break;
+    case "pain":
+      p.pain=Math.max(0,vghMetric(p,"pain",45)-12);
+      p.comfort=Math.min(100,vghMetric(p,"comfort",55)+8);
+      if(p.pain<=35)vghAddMilestone(p,"pain-controlled","Pain controlled");
+      break;
+    case "food":
+      p.hunger=Math.min(100,vghMetric(p,"hunger",55)+18);
+      p.feeding=Math.min(100,vghMetric(p,"feeding",55)+12);
+      vghAddMilestone(p,"first-meal","FIRST MEAL · appetite returning");
+      break;
+    case "water":
+      if(typeof vgHydrationAction==="function"){
+        try{vgHydrationAction(p,"water")}catch(e){p.hydration=Math.min(100,vghMetric(p,"hydration",55)+15)}
+      }else p.hydration=Math.min(100,vghMetric(p,"hydration",55)+15);
+      if(typeof vgRecordWaterOffer==="function"){
+        try{vgRecordWaterOffer(p,true)}catch(e){}
+      }
+      vghAddMilestone(p,"first-drink","DRANK ON THEIR OWN");
+      break;
+    case "treat":
+      h.treatmentActions++;
+      p.pain=Math.max(0,vghMetric(p,"pain",35)-5);
+      p.comfort=Math.min(100,vghMetric(p,"comfort",60)+5);
+      if(h.treatmentActions>=2)vghAddMilestone(p,"problem-treated","Primary problem treated");
+      break;
+    case "rest":
+      h.restActions++;
+      p.energy=Math.min(100,vghMetric(p,"energy",50)+12);
+      p.comfort=Math.min(100,vghMetric(p,"comfort",55)+6);
+      if(h.restActions>=2)vghAddMilestone(p,"rested","Rest cycle completed");
+      break;
+    case "strength":
+      h.strengthActions++;
+      p.mobility=Math.min(100,vghMetric(p,"mobility",50)+12);
+      p.energy=Math.max(20,vghMetric(p,"energy",55)-4);
+      if(h.strengthActions===1)vghAddMilestone(p,"stood","STOOD UP");
+      if(h.strengthActions>=2)vghAddMilestone(p,"first-walk","FIRST WALK · moving with confidence");
+      break;
+    case "comfort":
+      h.emotionalActions++;
+      p.comfort=Math.min(100,vghMetric(p,"comfort",50)+14);
+      p.trust=Math.min(100,vghMetric(p,"trust",40)+10);
+      p.fear=Math.max(0,vghMetric(p,"fear",45)-12);
+      if(h.emotionalActions>=2)vghAddMilestone(p,"trust","TRUST RESTORED");
+      break;
+    case "independence":
+      h.independenceActions++;
+      if(typeof vgHydrationRecheck==="function"){
+        try{vgHydrationRecheck(p)}catch(e){}
+      }
+      if(h.independenceActions>=2)vghAddMilestone(p,"independent","Independent care check passed");
+      break;
+    case "final":
+      vghAdvance(p);
+      if(h.stage<VG_HEALING_STAGES.length-1){
+        h.notes.unshift("Final Check blocked: earlier healing stages are still incomplete.");
+        break;
+      }
+      if(typeof vgIndependentHydrationReady==="function" && typeof vgRequiresIndependentWater==="function" && vgRequiresIndependentWater(p) && !vgIndependentHydrationReady(p)){
+        h.notes.unshift("Final Check blocked: patient is not yet maintaining hydration independently.");
+        break;
+      }
+      h.completed=true;h.progress=100;
+      vghAddMilestone(p,"healed","LIFE SPARK RESTORED · Healing journey complete");
+      if(p.flow)p.flow.integratedRecovery=false;
+      if(typeof dischargeRecoveredPet==="function"){
+        try{dischargeRecoveredPet(id);return}catch(e){}
+      }
+      break;
+  }
+  vghAdvance(p);
+  state.activeId=p.id;
+  state.screen="clinic";
+  render();
+}
+function vghActionsForStage(p){
+  const h=vghEnsure(p),s=h.stage;
+  if(s===0)return [["❤️ Stabilize","stabilize"]];
+  if(s===1)return [["💗 Relieve Pain","pain"],["🤲 Comfort","comfort"]];
+  if(s===2)return [["🍽 Offer Food","food"],["💧 Offer Water","water"]];
+  if(s===3)return [["🩺 Treat Problem","treat"],["🩺 Treat Again","treat"]];
+  if(s===4)return [["🌙 Quiet Rest","rest"],["🛏 Rest Again","rest"]];
+  if(s===5)return [["🐾 Supported Stand / Walk","strength"],["🐾 Mobility Recheck","strength"]];
+  if(s===6)return [["🤲 Stay Nearby","comfort"],["💞 Bond & Reassure","comfort"]];
+  if(s===7)return [["🩺 Independence Test","independence"],["🩺 Recheck Independence","independence"]];
+  return [["✅ Final Check","final"]];
+}
+function vghMetricHTML(label,val){
+  val=vghClamp(val);
+  return `<div class="vgh-bar"><b><span>${label}</span><span>${Math.round(val)}%</span></b><div class="vgh-track"><div class="vgh-fill" style="width:${val}%"></div></div></div>`;
+}
+function vgHealingJourneyHTML(p){
+  if(!p)return"";
+  const h=vghEnsure(p);
+  vghAdvance(p);
+  const acts=vghActionsForStage(p);
+  const species=vghSpeciesGroup(p);
+  return `<div class="vgh-wrap">
+    <div class="vgh-hero">
+      <div class="vgh-title">
+        <div class="vgh-avatar">${typeof vgCmdEmoji==="function"?vgCmdEmoji(p):"🐾"}</div>
+        <div><div class="vg-screen-tag">HEALING THE ANIMAL</div><h2>${p.name} · ${VG_HEALING_STAGES[h.stage]}</h2>
+        <small>${p.species||"Animal"} · ${p.condition||"Ongoing care"} · ${h.progress}% healing journey</small></div>
+      </div>
+      <div class="vgh-path">${VG_HEALING_STAGES.map((x,i)=>`<div class="vgh-step ${i<h.stage?"done":i===h.stage?"on":""}">${i<h.stage?"✓ ":""}${x}</div>`).join("")}</div>
+      <div class="vgh-species"><b>${species.replace("_"," ").toUpperCase()} CARE PATH</b><br><small>${vghSpeciesHint(p)}</small></div>
+      <div class="vgh-bars">
+        ${vghMetricHTML("Oxygen",vghMetric(p,"oxygen",95))}
+        ${vghMetricHTML("Comfort",vghMetric(p,"comfort",55))}
+        ${vghMetricHTML("Hydration",vghMetric(p,"hydration",60))}
+        ${vghMetricHTML("Energy",vghMetric(p,"energy",55))}
+        ${vghMetricHTML("Trust",vghMetric(p,"trust",45))}
+        ${vghMetricHTML("Mobility",vghMetric(p,"mobility",50))}
+      </div>
+      <div class="vgh-actions">${acts.map(a=>`<button onclick="vghAction('${p.id}','${a[1]}')">${a[0]}<br><small>Advance ${VG_HEALING_STAGES[h.stage]}</small></button>`).join("")}</div>
+      <div class="vgh-milestones">${h.milestones.map(m=>`<div class="vgh-mile done">✨ ${m.label}</div>`).join("")||"<div class='vgh-mile'>No milestones yet</div>"}</div>
+      ${h.notes.slice(0,4).map(n=>`<div class="vgh-note">${n}</div>`).join("")}${typeof vgiSceneHTML==="function"?vgiSceneHTML(p):""}${typeof vglrRoomHTML==="function"?vglrRoomHTML(p):""}
+    </div>
+  </div>`;
+}
+function vgOpenHealing(id){
+  const p=(state.patients||[]).find(x=>x.id===id)||(state.pets||[]).find(x=>x.id===id);
+  if(!p)return false;
+  state.activeId=p.id;
+  if(p.location==="Home"||p.department==="Home"||p.admitted===false){
+    if((state.pets||[]).some(x=>x.id===p.id)){
+      if(typeof vgOpenMyPets==="function")return vgOpenMyPets();
+    }
+  }
+  p.department="Clinic";p.location="Clinic";p.admitted=true;
+  if(!p.flow)p.flow={};
+  p.flow.integratedRecovery=true;
+  state.screen="clinic";
+  render();
+  return false;
+}
+
+
+function vgInstallHealingPanel(){
+  if(state.screen!=="clinic")return;
+  const el=document.getElementById("clinic");if(!el)return;
+  const old=el.querySelector("#vgHealingPanel");
+  if(old)old.remove();
+  const p=(state.patients||[]).find(x=>x.id===state.activeId);
+  if(!p||!p.admitted)return;
+  if(p.department==="Surgery"||p.department==="Nursery")return;
+  const wrap=document.createElement("div");
+  wrap.id="vgHealingPanel";
+  wrap.innerHTML=vgHealingJourneyHTML(p);
+  // Put healing immediately after any cinematic/dashboard headers.
+  const anchor=el.querySelector(".vg-dept-banner,.vg-dashboard-hero");
+  if(anchor&&anchor.nextSibling)el.insertBefore(wrap,anchor.nextSibling);
+  else el.insertBefore(wrap,el.firstChild);
+}
+
+
+/* ===== Independent Feeding / Hydration Simulation ===== */
+const VG_INDEPENDENT_SIM={timer:null,last:0};
+function vgiEnsure(p){
+  if(!p)return null;
+  if(!p.independentSim||typeof p.independentSim!=="object"){
+    p.independentSim={
+      x:50,y:52,targetX:50,targetY:52,
+      state:"resting",activity:"Resting",
+      dwellUntil:0,lastDecision:0,
+      firstIndependentDrink:false,
+      firstIndependentMeal:false,
+      maintainedHydration:false,
+      hydrationStableSince:0,
+      mealCount:0,drinkCount:0
+    };
+  }
+  return p.independentSim;
+}
+function vgiEligible(p){
+  if(!p||!p.admitted)return false;
+  if(p.department==="Surgery"||p.location==="Surgery")return false;
+  if(p.department==="Nursery"||p.location==="Nursery")return false;
+  return !!(p.flow&&p.flow.integratedRecovery) || !!p.healing;
+}
+function vgiSetTarget(p,state){
+  const s=vgiEnsure(p),now=Date.now();
+  if(state==="food"){s.targetX=12;s.targetY=72;s.activity="Walking to food";s.state="walkingFood"}
+  else if(state==="water"){s.targetX=82;s.targetY=72;s.activity="Walking to water";s.state="walkingWater"}
+  else {s.targetX=50;s.targetY=18;s.activity="Returning to rest";s.state="walkingRest"}
+  s.lastDecision=now;
+}
+function vgiNeedDecision(p){
+  const s=vgiEnsure(p),now=Date.now();
+  if(now-s.lastDecision<9000)return;
+  if(s.state.startsWith("walking")||s.state==="eating"||s.state==="drinking")return;
+  const hunger=Number(p.hunger??55), hyd=Number(p.hydration??55);
+  if(hyd<72 && Math.random()<0.70){vgiSetTarget(p,"water");return}
+  if(hunger<72 && Math.random()<0.62){vgiSetTarget(p,"food");return}
+  if(Math.random()<0.30)vgiSetTarget(p,Math.random()<0.5?"food":"water");
+  else {s.activity="Resting";s.state="resting";s.lastDecision=now}
+}
+function vgiMove(p,dt){
+  const s=vgiEnsure(p);
+  const dx=s.targetX-s.x,dy=s.targetY-s.y,dist=Math.hypot(dx,dy);
+  if(dist>1.5){
+    const speed=.020*dt;
+    const step=Math.min(dist,speed);
+    s.x+=dx/dist*step;s.y+=dy/dist*step;
+    return false;
+  }
+  s.x=s.targetX;s.y=s.targetY;
+  return true;
+}
+function vgiArrive(p){
+  const s=vgiEnsure(p),now=Date.now();
+  if(s.state==="walkingFood"){
+    s.state="eating";s.activity="Eating on their own";s.dwellUntil=now+15000+Math.random()*8000;
+  }else if(s.state==="walkingWater"){
+    s.state="drinking";s.activity="Drinking on their own";s.dwellUntil=now+15000+Math.random()*8000;
+  }else if(s.state==="walkingRest"){
+    s.state="resting";s.activity="Resting after independent care";s.dwellUntil=now+12000;
+  }
+}
+function vgiCompleteMeal(p){
+  const s=vgiEnsure(p);
+  p.hunger=Math.min(100,Number(p.hunger??55)+24);
+  p.feeding=Math.min(100,Number(p.feeding??55)+16);
+  s.mealCount++;
+  if(!s.firstIndependentMeal){
+    s.firstIndependentMeal=true;
+    if(typeof vghAddMilestone==="function")vghAddMilestone(p,"independent-meal","ATE WITHOUT PROMPTING");
+  }
+}
+function vgiCompleteDrink(p){
+  const s=vgiEnsure(p);
+  p.hydration=Math.min(100,Number(p.hydration??55)+22);
+  s.drinkCount++;
+  if(typeof vgRecordWaterOffer==="function"){
+    try{vgRecordWaterOffer(p,true)}catch(e){}
+  }
+  if(!s.firstIndependentDrink){
+    s.firstIndependentDrink=true;
+    if(typeof vghAddMilestone==="function")vghAddMilestone(p,"independent-drink","FIRST VOLUNTARY DRINK");
+  }
+  if(!s.hydrationStableSince)s.hydrationStableSince=Date.now();
+}
+function vgiCheckHydrationMaintenance(p){
+  const s=vgiEnsure(p);
+  if(s.firstIndependentDrink && Number(p.hydration??0)>=60){
+    if(!s.hydrationStableSince)s.hydrationStableSince=Date.now();
+    if(!s.maintainedHydration && Date.now()-s.hydrationStableSince>=30000){
+      s.maintainedHydration=true;
+      if(typeof vghAddMilestone==="function")vghAddMilestone(p,"hydration-maintained","MAINTAINED HYDRATION WITHOUT FLUID SUPPORT");
+      if(p.healing)p.healing.independenceActions=Math.max(2,Number(p.healing.independenceActions||0));
+    }
+  }else if(Number(p.hydration??0)<55){
+    s.hydrationStableSince=0;
+  }
+}
+function vgiStepPatient(p,dt){
+  const s=vgiEnsure(p),now=Date.now();
+  vgiNeedDecision(p);
+  if(s.state.startsWith("walking")){
+    if(vgiMove(p,dt))vgiArrive(p);
+  }else if(s.state==="eating"){
+    p.hunger=Math.min(100,Number(p.hunger??55)+dt/1800);
+    if(now>=s.dwellUntil){vgiCompleteMeal(p);vgiSetTarget(p,"rest")}
+  }else if(s.state==="drinking"){
+    p.hydration=Math.min(100,Number(p.hydration??55)+dt/1600);
+    if(now>=s.dwellUntil){vgiCompleteDrink(p);vgiSetTarget(p,"rest")}
+  }else if(s.state==="resting"){
+    p.energy=Math.min(100,Number(p.energy??50)+dt/5000);
+  }
+  vgiCheckHydrationMaintenance(p);
+  if(typeof vghAdvance==="function")vghAdvance(p);
+}
+function vgiTick(){
+  const now=performance.now(),dt=Math.min(1000,VG_INDEPENDENT_SIM.last?now-VG_INDEPENDENT_SIM.last:100);
+  VG_INDEPENDENT_SIM.last=now;
+  (state.patients||[]).filter(vgiEligible).forEach(p=>vgiStepPatient(p,dt));
+  // lightweight redraw only for visible healing scene
+  if(state.screen==="clinic"){
+    const p=(state.patients||[]).find(x=>x.id===state.activeId);
+    if(p&&vgiEligible(p)){
+      const a=document.getElementById("vgiAnimal");
+      const st=document.getElementById("vgiActivity");
+      const sim=vgiEnsure(p);
+      if(a){a.style.left=sim.x+"%";a.style.top=sim.y+"%"}
+      if(st)st.textContent=sim.activity;
+      const h=document.getElementById("vgiHydration");
+      const f=document.getElementById("vgiHunger");
+      if(h)h.textContent=Math.round(Number(p.hydration??0))+"%";
+      if(f)f.textContent=Math.round(Number(p.hunger??0))+"%";
+    }
+  }
+}
+function vgiStart(){
+  if(VG_INDEPENDENT_SIM.timer)return;
+  VG_INDEPENDENT_SIM.last=performance.now();
+  VG_INDEPENDENT_SIM.timer=setInterval(vgiTick,250);
+}
+function vgiSceneHTML(p){
+  if(!p||!vgiEligible(p))return"";
+  const s=vgiEnsure(p);
+  const emoji=typeof vgCmdEmoji==="function"?vgCmdEmoji(p):"🐾";
+  return `<div class="vgi-sim">
+    <h3>🍽️ Independent Eating & Drinking</h3>
+    <p class="small">This animal can now begin making its own choices. Eating and drinking here count toward the Healing Journey.</p>
+    <div class="vgi-stage">
+      <div class="vgi-station vgi-bed">🛏️<br>Rest</div>
+      <div class="vgi-station vgi-food">🥣<br>Food</div>
+      <div class="vgi-station vgi-water">💧<br>Water</div>
+      <div id="vgiAnimal" class="vgi-animal" style="left:${s.x}%;top:${s.y}%;transform:translate(-50%,-50%)">${emoji}</div>
+    </div>
+    <div class="vgi-status">
+      <div class="vgi-chip">Activity · <span id="vgiActivity">${s.activity}</span></div>
+      <div class="vgi-chip">Hydration · <span id="vgiHydration">${Math.round(Number(p.hydration??0))}%</span></div>
+      <div class="vgi-chip">Food · <span id="vgiHunger">${Math.round(Number(p.hunger??0))}%</span></div>
+      <div class="vgi-chip">${s.firstIndependentDrink?"✅":"⬜"} Voluntary Drink</div>
+      <div class="vgi-chip">${s.firstIndependentMeal?"✅":"⬜"} Independent Meal</div>
+      <div class="vgi-chip">${s.maintainedHydration?"✅":"⬜"} Hydration Maintained</div>
+    </div>
+  </div>`;
+}
+
+function vgHealingWaterLabel(){return "💧 Offer Water";}
+
+
+/* ===== Living Healing Room Engine ===== */
+const VG_LIVING_HEALING={timer:null,last:0,observation:false};
+function vglrEnsure(p){
+  if(!p)return null;
+  if(!p.livingHealing||typeof p.livingHealing!=="object"){
+    p.livingHealing={
+      x:50,y:60,targetX:50,targetY:60,
+      state:"resting",activity:"Resting quietly",
+      dwellUntil:0,lastDecision:0,lastEvent:0,
+      sleepQuality:50,sleptComfortably:false,
+      stood:false,walked:false,
+      personalityReturn:0,personalityReturned:false,
+      toiletingCount:0,toiletingNormal:false,
+      setbacks:0,lastSetback:"",
+      bondMemory:0,
+      choiceCount:0,
+      notes:[]
+    };
+  }
+  return p.livingHealing;
+}
+function vglrLog(p,msg){
+  const s=vglrEnsure(p);
+  s.notes.unshift(new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})+" · "+msg);
+  s.notes=s.notes.slice(0,16);
+  if(typeof addLog==="function")addLog(p.name+" · "+msg);
+}
+function vglrZones(){
+  return {
+    bed:{x:50,y:16,label:"🛏️ Bed"},
+    food:{x:12,y:74,label:"🥣 Food"},
+    water:{x:84,y:74,label:"💧 Water"},
+    hide:{x:15,y:22,label:"🌙 Quiet Hide"},
+    play:{x:84,y:22,label:"🎾 Play"},
+    walk:{x:50,y:82,label:"🐾 Walk"},
+    comfort:{x:28,y:47,label:"🤲 Comfort"},
+    toilet:{x:72,y:47,label:"🚻 Toilet / Litter"}
+  };
+}
+function vglrSetTarget(p,key,activity){
+  const s=vglrEnsure(p),z=vglrZones()[key]||vglrZones().bed;
+  s.targetX=z.x;s.targetY=z.y;
+  s.state="walking:"+key;
+  s.activity=activity||("Walking to "+z.label.replace(/^[^ ]+ /,""));
+  s.lastDecision=Date.now();
+}
+function vglrNeed(p,key,def=50){return Math.max(0,Math.min(100,Number(p[key]??def)))}
+function vglrChoose(p){
+  const s=vglrEnsure(p),now=Date.now();
+  if(now-s.lastDecision<8000)return;
+  if(s.state.startsWith("walking")||["eating","drinking","sleeping","playing","toileting","comforting","walkingExercise"].includes(s.state))return;
+
+  // Needs-based choices first.
+  if(vglrNeed(p,"hydration",60)<68){vglrSetTarget(p,"water","Choosing to get a drink");return}
+  if(vglrNeed(p,"hunger",60)<68){vglrSetTarget(p,"food","Choosing to eat");return}
+  if(vglrNeed(p,"energy",55)<42 || vglrNeed(p,"pain",30)>55){vglrSetTarget(p,"bed","Going to rest");return}
+  if(vglrNeed(p,"fear",35)>60){vglrSetTarget(p,"hide","Seeking a quiet place");return}
+
+  // Toileting after food/water.
+  const indep=typeof vgiEnsure==="function"?vgiEnsure(p):null;
+  if(indep && (indep.mealCount+indep.drinkCount)>0 && s.toiletingCount<Math.floor((indep.mealCount+indep.drinkCount)/2)){
+    vglrSetTarget(p,"toilet","Heading to toilet / litter area");return
+  }
+
+  // As they recover, behavior becomes more normal and playful.
+  if(s.personalityReturn>=45 && Math.random()<.35){vglrSetTarget(p,"play","Curiosity is returning");return}
+  if(Math.random()<.28){vglrSetTarget(p,"walk","Taking a few steps on their own");return}
+  if(Math.random()<.24){vglrSetTarget(p,"comfort","Approaching for reassurance");return}
+  if(Math.random()<.18){vglrSetTarget(p,"hide","Taking quiet time");return}
+  vglrSetTarget(p,"bed","Settling down to rest");
+}
+function vglrMove(p,dt){
+  const s=vglrEnsure(p),dx=s.targetX-s.x,dy=s.targetY-s.y,dist=Math.hypot(dx,dy);
+  if(dist>1.3){
+    const speed=.018*dt,step=Math.min(dist,speed);
+    s.x+=dx/dist*step;s.y+=dy/dist*step;
+    return false;
+  }
+  s.x=s.targetX;s.y=s.targetY;return true;
+}
+function vglrArrive(p){
+  const s=vglrEnsure(p),now=Date.now();
+  const key=s.state.split(":")[1]||"bed";
+  s.choiceCount++;
+  if(key==="food"){
+    s.state="eating";s.activity="Eating on their own";s.dwellUntil=now+15000+Math.random()*8000;
+  }else if(key==="water"){
+    s.state="drinking";s.activity="Drinking on their own";s.dwellUntil=now+15000+Math.random()*8000;
+  }else if(key==="bed"||key==="hide"){
+    s.state="sleeping";s.activity=key==="hide"?"Sleeping in a quiet hide":"Sleeping comfortably";s.dwellUntil=now+18000+Math.random()*12000;
+  }else if(key==="play"){
+    s.state="playing";s.activity="Showing interest in play";s.dwellUntil=now+12000+Math.random()*8000;
+  }else if(key==="walk"){
+    s.state="walkingExercise";s.activity="Walking independently";s.dwellUntil=now+10000+Math.random()*7000;
+  }else if(key==="comfort"){
+    s.state="comforting";s.activity="Staying nearby for reassurance";s.dwellUntil=now+12000+Math.random()*8000;
+  }else if(key==="toilet"){
+    s.state="toileting";s.activity="Using toilet / litter area";s.dwellUntil=now+7000+Math.random()*5000;
+  }
+}
+function vglrMaybeSetback(p){
+  const s=vglrEnsure(p),now=Date.now();
+  if(now-s.lastEvent<30000)return;
+  s.lastEvent=now;
+  if(Math.random()>.18)return;
+  const ev=[
+    ["A little sore after moving",()=>{p.pain=Math.min(100,vglrNeed(p,"pain",30)+7)}],
+    ["Skipped part of a meal",()=>{p.hunger=Math.max(0,vglrNeed(p,"hunger",60)-7)}],
+    ["Startled by a noise",()=>{p.fear=Math.min(100,vglrNeed(p,"fear",30)+9)}],
+    ["Needed an extra rest",()=>{p.energy=Math.max(0,vglrNeed(p,"energy",55)-8)}]
+  ][Math.floor(Math.random()*4)];
+  ev[1]();s.setbacks++;s.lastSetback=ev[0];vglrLog(p,"Setback: "+ev[0]);
+}
+function vglrTickState(p,dt){
+  const s=vglrEnsure(p),now=Date.now();
+  vglrChoose(p);
+  if(s.state.startsWith("walking")){
+    if(vglrMove(p,dt))vglrArrive(p);
+  }else if(s.state==="eating"){
+    p.hunger=Math.min(100,vglrNeed(p,"hunger",60)+dt/1700);
+    if(now>=s.dwellUntil){
+      if(typeof vgiCompleteMeal==="function")vgiCompleteMeal(p);
+      else p.hunger=Math.min(100,vglrNeed(p,"hunger",60)+20);
+      s.personalityReturn=Math.min(100,s.personalityReturn+8);
+      vglrSetTarget(p,"bed","Returning to rest after eating");
+    }
+  }else if(s.state==="drinking"){
+    p.hydration=Math.min(100,vglrNeed(p,"hydration",60)+dt/1500);
+    if(now>=s.dwellUntil){
+      if(typeof vgiCompleteDrink==="function")vgiCompleteDrink(p);
+      else p.hydration=Math.min(100,vglrNeed(p,"hydration",60)+20);
+      vglrSetTarget(p,"bed","Returning to rest after drinking");
+    }
+  }else if(s.state==="sleeping"){
+    p.energy=Math.min(100,vglrNeed(p,"energy",55)+dt/3500);
+    p.comfort=Math.min(100,vglrNeed(p,"comfort",55)+dt/5500);
+    if(now>=s.dwellUntil){
+      s.sleepQuality=Math.min(100,Math.round((vglrNeed(p,"comfort",55)+vglrNeed(p,"energy",55)+(100-vglrNeed(p,"pain",30)))/3));
+      if(s.sleepQuality>=65 && !s.sleptComfortably){
+        s.sleptComfortably=true;
+        if(typeof vghAddMilestone==="function")vghAddMilestone(p,"slept-comfortably","SLEPT COMFORTABLY");
+      }
+      s.state="resting";s.activity="Waking and observing the room";s.lastDecision=now;
+    }
+  }else if(s.state==="playing"){
+    p.happiness=Math.min(100,vglrNeed(p,"happiness",50)+dt/3000);
+    p.energy=Math.max(0,vglrNeed(p,"energy",55)-dt/8000);
+    s.personalityReturn=Math.min(100,s.personalityReturn+dt/1200);
+    if(now>=s.dwellUntil){
+      if(s.personalityReturn>=60 && !s.personalityReturned){
+        s.personalityReturned=true;
+        if(typeof vghAddMilestone==="function")vghAddMilestone(p,"personality-returned","PERSONALITY RETURNING");
+      }
+      s.state="resting";s.activity="Resting after play";s.lastDecision=now;
+    }
+  }else if(s.state==="walkingExercise"){
+    p.mobility=Math.min(100,vglrNeed(p,"mobility",50)+dt/2600);
+    p.energy=Math.max(0,vglrNeed(p,"energy",55)-dt/9000);
+    if(!s.stood){s.stood=true;if(typeof vghAddMilestone==="function")vghAddMilestone(p,"stood-own","STOOD UP ON THEIR OWN")}
+    if(now>=s.dwellUntil){
+      if(!s.walked){s.walked=true;if(typeof vghAddMilestone==="function")vghAddMilestone(p,"walked-own","WALKED ON THEIR OWN")}
+      if(p.healing)p.healing.strengthActions=Math.max(2,Number(p.healing.strengthActions||0));
+      s.state="resting";s.activity="Resting after walking";s.lastDecision=now;
+    }
+  }else if(s.state==="comforting"){
+    p.trust=Math.min(100,vglrNeed(p,"trust",40)+dt/2600);
+    p.fear=Math.max(0,vglrNeed(p,"fear",30)-dt/2600);
+    s.bondMemory=Math.min(100,s.bondMemory+dt/1800);
+    if(now>=s.dwellUntil){
+      if(s.bondMemory>=45 && typeof vghAddMilestone==="function")vghAddMilestone(p,"bond-memory","REMEMBERS WHO STAYED NEARBY");
+      if(p.healing)p.healing.emotionalActions=Math.max(2,Number(p.healing.emotionalActions||0));
+      s.state="resting";s.activity="Calm after reassurance";s.lastDecision=now;
+    }
+  }else if(s.state==="toileting"){
+    if(now>=s.dwellUntil){
+      s.toiletingCount++;
+      if(s.toiletingCount>=1 && !s.toiletingNormal){
+        s.toiletingNormal=true;
+        if(typeof vghAddMilestone==="function")vghAddMilestone(p,"normal-elimination","NORMAL ELIMINATION");
+      }
+      s.state="resting";s.activity="Returning from toilet / litter area";s.lastDecision=now;
+    }
+  }
+  vglrMaybeSetback(p);
+}
+function vglrReadyChecks(p){
+  const s=vglrEnsure(p),i=typeof vgiEnsure==="function"?vgiEnsure(p):null;
+  return [
+    ["Eating independently",!!(i&&i.firstIndependentMeal)],
+    ["Drinking independently",!!(i&&i.firstIndependentDrink)],
+    ["Hydration maintained",!!(i&&i.maintainedHydration)],
+    ["Comfortable sleep",!!s.sleptComfortably],
+    ["Standing / walking",!!s.walked],
+    ["Normal elimination",!!s.toiletingNormal],
+    ["Personality returning",!!s.personalityReturned],
+    ["Pain manageable",vglrNeed(p,"pain",30)<=40]
+  ];
+}
+function vglrReadyToGo(p){return vglrReadyChecks(p).every(x=>x[1])}
+function vglrObservationToggle(){
+  VG_LIVING_HEALING.observation=!VG_LIVING_HEALING.observation;document.body.classList.toggle("vg-healing-observe",VG_LIVING_HEALING.observation);
+  const p=(state.patients||[]).find(x=>x.id===state.activeId);
+  if(p)vglrLog(p,VG_LIVING_HEALING.observation?"Observation Mode started":"Observation Mode ended");
+  render();
+}
+function vglrManual(id,key){
+  const p=(state.patients||[]).find(x=>x.id===id);if(!p)return;
+  vglrSetTarget(p,key,"Guided toward "+(vglrZones()[key]?.label||key));
+  render();
+}
+function vglrRoomHTML(p){
+  if(!p||!p.admitted)return"";
+  const s=vglrEnsure(p),z=vglrZones(),emoji=typeof vgCmdEmoji==="function"?vgCmdEmoji(p):"🐾";
+  const checks=vglrReadyChecks(p),ready=vglrReadyToGo(p);
+  return `<div class="vglr-wrap">
+    <div class="panel">
+      <h3>🏡 Living Recovery Room</h3>
+      <p class="small">The animal now makes its own choices. Watch for eating, drinking, sleep, walking, toileting and personality returning.</p>
+      <div class="vglr-room">
+        ${Object.entries(z).map(([k,o])=>`<button class="vglr-zone" style="left:${o.x}%;top:${o.y}%;transform:translate(-50%,-50%)" onclick="vglrManual('${p.id}','${k}')">${o.label}</button>`).join("")}
+        <div id="vglrAnimal" class="vglr-animal ${s.state==="sleeping"?"sleeping":""}" style="left:${s.x}%;top:${s.y}%;transform:translate(-50%,-50%)">
+          <div class="vglr-bubble">${s.activity}</div>${emoji}
+        </div>
+      </div>
+      <div class="vglr-dashboard">
+        <div class="vglr-card"><b>Sleep Quality</b>${Math.round(s.sleepQuality)}%</div>
+        <div class="vglr-card"><b>Personality Return</b>${Math.round(s.personalityReturn)}%</div>
+        <div class="vglr-card"><b>Bond Memory</b>${Math.round(s.bondMemory)}%</div>
+        <div class="vglr-card"><b>Independent Choices</b>${s.choiceCount}</div>
+        <div class="vglr-card"><b>Normal Toileting</b>${s.toiletingNormal?"Yes":"Not yet"}</div>
+        <div class="vglr-card"><b>Recent Setbacks</b>${s.setbacks}</div>
+      </div>
+      <div class="vglr-actions">
+        <button onclick="vglrObservationToggle()">👁️ ${VG_LIVING_HEALING.observation?"Exit Observation":"Watch Recovery"}</button>
+        <button onclick="vglrManual('${p.id}','food')">🥣 Encourage Food</button>
+        <button onclick="vglrManual('${p.id}','water')">💧 Encourage Water</button>
+        <button onclick="vglrManual('${p.id}','bed')">🛏 Encourage Rest</button>
+        <button onclick="vglrManual('${p.id}','walk')">🐾 Encourage Walking</button>
+        <button onclick="vglrManual('${p.id}','comfort')">🤲 Stay Nearby</button>
+      </div>
+      <div class="vglr-ready ${ready?"yes":""}">
+        <b>${ready?"❤️ READY TO GO HOME":"🩺 Healing Independence Check"}</b>
+        ${checks.map(c=>`<div>${c[1]?"✅":"⬜"} ${c[0]}</div>`).join("")}
+        ${ready?`<button class="action green" onclick="vghAction('${p.id}','final')">🏠 Final Check & Go Home</button>`:""}
+      </div>
+      <div class="vglr-log">${s.notes.map(n=>`<div>${n}</div>`).join("")||"<div>Recovery room observation has begun.</div>"}</div>
+    </div>
+  </div>`;
+}
+function vglrTick(){
+  const now=performance.now(),dt=Math.min(1000,VG_LIVING_HEALING.last?now-VG_LIVING_HEALING.last:100);
+  VG_LIVING_HEALING.last=now;
+  (state.patients||[]).filter(p=>p.admitted && p.department!=="Surgery" && p.department!=="Nursery" && (p.healing||p.flow?.integratedRecovery)).forEach(p=>vglrTickState(p,dt));
+  if(state.screen==="clinic"){
+    const p=(state.patients||[]).find(x=>x.id===state.activeId);
+    if(p){
+      const s=vglrEnsure(p),el=document.getElementById("vglrAnimal");
+      if(el){el.style.left=s.x+"%";el.style.top=s.y+"%";el.classList.toggle("sleeping",s.state==="sleeping");const b=el.querySelector(".vglr-bubble");if(b)b.textContent=s.activity}
+    }
+  }
+}
+function vglrStart(){
+  if(VG_LIVING_HEALING.timer)return;
+  VG_LIVING_HEALING.last=performance.now();
+  VG_LIVING_HEALING.timer=setInterval(vglrTick,300);
 }
 </script>
 </body>
