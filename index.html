@@ -2071,6 +2071,72 @@ body.vg-focus-mode .vg-cine-shell{margin:0;min-height:calc(100vh - 16px)}
  .vg-care-actions{grid-template-columns:repeat(2,1fr)}
 }
 
+
+/* ===== Advanced Animal Care Depth ===== */
+.vg-advanced-care{margin:12px 0;padding:12px;border:1px solid rgba(137,226,255,.28);border-radius:18px;background:linear-gradient(180deg,rgba(6,25,39,.96),rgba(3,13,22,.96))}
+.vg-ac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.vg-ac-card{padding:10px;border:1px solid #2c5870;border-radius:13px;background:#071824}
+.vg-ac-card h4{margin:0 0 6px;font-size:13px}
+.vg-ac-card .meter{height:8px;border-radius:999px;background:#102b3a;overflow:hidden;margin:5px 0}
+.vg-ac-card .meter i{display:block;height:100%;background:linear-gradient(90deg,#65d2ff,#9fe6d1)}
+.vg-ac-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:7px}
+.vg-ac-note{font-size:10px;opacity:.76;line-height:1.35}
+.vg-ac-event{margin-top:9px;padding:10px;border:1px solid #4a6780;border-radius:12px;background:#091725}
+.vg-ac-timeline{margin-top:9px;max-height:160px;overflow:auto;padding:8px;border:1px solid #234b61;border-radius:11px;background:#05131e}
+.vg-ac-timeline div{padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:10px}
+@media(max-width:700px){.vg-ac-grid{grid-template-columns:1fr}.vg-ac-actions{grid-template-columns:1fr 1fr}}
+
+
+/* ===== Adaptive Multi-Step Care Workflow ===== */
+.vg-flowcare{margin:12px 0;padding:12px;border:1px solid rgba(135,228,255,.30);border-radius:18px;background:linear-gradient(180deg,rgba(5,24,38,.97),rgba(3,13,22,.97))}
+.vg-flow-title{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.vg-priority-strip,.vg-stations{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.vg-priority,.vg-station,.vg-learned-card,.vg-notebook{padding:10px;border-radius:13px;border:1px solid #2b5269;background:#061621}
+.vg-priority.hot{border-color:#b48a62;background:#251b12}
+.vg-step-row{display:flex;gap:5px;flex-wrap:wrap;margin:7px 0}
+.vg-step-dot{padding:5px 7px;border-radius:999px;border:1px solid #345d72;font-size:9px;opacity:.55}
+.vg-step-dot.done{opacity:1;border-color:#4b9676;background:#0c2b21}
+.vg-step-dot.active{opacity:1;border-color:#7cdfff;background:#0b2940}
+.vg-reaction,.vg-clue{padding:8px;border-radius:10px;background:#0b1723;border:1px solid #3a5368;font-size:10px}
+.vg-station button{width:100%;margin-top:7px}
+.vg-learned{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.vg-notebook{max-height:220px;overflow:auto}
+.vg-note-line{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:10px}
+.vg-clue{margin-top:8px}
+@media(max-width:700px){.vg-priority-strip,.vg-stations,.vg-learned{grid-template-columns:1fr}}
+
+
+/* ===== Living Loneliness & Companionship ===== */
+.vg-socialcare{margin:12px 0;padding:12px;border:1px solid rgba(255,170,218,.30);border-radius:18px;background:linear-gradient(180deg,rgba(26,12,31,.95),rgba(5,15,25,.96))}.vg-social-head{display:flex;justify-content:space-between;gap:10px}.vg-lonely-meter{height:12px;border-radius:999px;background:#22192b;overflow:hidden;margin:8px 0}.vg-lonely-meter i{display:block;height:100%;background:linear-gradient(90deg,#75e1c2,#f0b0d8)}.vg-social-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.vg-social-actions button{min-height:58px}.vg-rel-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px}.vg-rel-card,.vg-social-event{padding:9px;border:1px solid #654f71;border-radius:12px;background:#140d1a}.vg-social-log{max-height:150px;overflow:auto;margin-top:8px;padding:8px;border-radius:10px;background:#08131e}.vg-social-log div{font-size:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)}@media(max-width:700px){.vg-social-actions{grid-template-columns:repeat(2,1fr)}.vg-rel-grid{grid-template-columns:1fr}}
+
+
+/* ===== Lonely Animal Matchmaker ===== */
+.vg-matchmaker{margin:12px 0;padding:12px;border:1px solid rgba(255,190,225,.34);border-radius:18px;background:linear-gradient(180deg,rgba(28,12,33,.96),rgba(5,14,24,.97))}
+.vg-match-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.vg-match-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:9px}
+.vg-match-card{padding:10px;border:1px solid #6c5178;border-radius:13px;background:#150d1b}
+.vg-match-score{font-size:20px;font-weight:900}
+.vg-match-reasons{font-size:10px;opacity:.8;margin:5px 0}
+.vg-match-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.vg-match-room{margin-top:9px;padding:10px;border:1px solid #6a5b7f;border-radius:13px;background:#100d18}
+.vg-match-pair{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.vg-match-status{font-size:10px;opacity:.78}
+@media(max-width:700px){.vg-match-list{grid-template-columns:1fr}}
+
+
+/* ===== Emotional Loneliness Intelligence ===== */
+.vg-lonely-intel{margin:12px 0;padding:12px;border:1px solid rgba(255,188,226,.34);border-radius:18px;background:linear-gradient(180deg,rgba(31,12,35,.96),rgba(5,14,25,.97))}
+.vg-li-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.vg-li-cause{margin-top:9px;padding:11px;border:1px solid #75577e;border-radius:13px;background:#160e1c}
+.vg-li-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:9px}
+.vg-li-card{padding:9px;border:1px solid #5b4969;border-radius:12px;background:#110c18}
+.vg-li-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}
+.vg-li-actions button{min-height:58px}
+.vg-li-night{margin-top:9px;padding:10px;border:1px solid #435d81;border-radius:12px;background:#091326}
+.vg-li-memory{margin-top:9px;padding:10px;border:1px solid #684f72;border-radius:12px;background:#120c18}
+.vg-li-memory div{font-size:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+@media(max-width:700px){.vg-li-grid,.vg-li-actions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -8309,6 +8375,16 @@ try{if(typeof vglrStart==="function")vglrStart()}catch(e){}
 try{if(typeof vgCinePass==="function")vgCinePass()}catch(e){}
 
 try{if(typeof vgwStart==="function")vgwStart();if(typeof vgwInstall==="function")vgwInstall()}catch(e){}
+
+try{if(typeof vgaInstall==="function")vgaInstall()}catch(e){}
+
+try{if(typeof vgfInstall==="function")vgfInstall()}catch(e){}
+
+try{if(typeof vgsStart==="function")vgsStart();if(typeof vgsInstall==="function")vgsInstall()}catch(e){}
+
+try{if(typeof vgmStart==="function")vgmStart();if(typeof vgmInstall==="function")vgmInstall()}catch(e){}
+
+try{if(typeof vgliStart==="function")vgliStart();if(typeof vgliInstall==="function")vgliInstall()}catch(e){}
 }
 
 function setGameMenu(open){
@@ -11380,7 +11456,7 @@ function vgwEvaluate(p){
   if(s.sleptComfortably)vgwBreakthrough(p,"peaceful-sleep","FIRST PEACEFUL SLEEP");
   if(s.walked)vgwBreakthrough(p,"first-walk","FIRST INDEPENDENT WALK");
   if(Number(p.fear??30)<25 && !c.noLongerHiding){c.noLongerHiding=true;vgwBreakthrough(p,"not-hiding","NO LONGER HIDING")}
-  if(c.naturalBehavior>=70 && (s.personalityReturned||Number(p.happiness??50)>=70) && !c.actingLikeSelf){
+  if(c.naturalBehavior>=70 && (s.personalityReturned||Number(p.happiness??50)>=70) && (!p.advancedCare || (vgaEnsure(p).sensoryComfort>=60 && vgaEnsure(p).enrichmentInterest>=50)) && !c.actingLikeSelf){
     c.actingLikeSelf=true;vgwBreakthrough(p,"self-again","ACTING LIKE THEMSELF AGAIN");
   }
 }
@@ -11455,6 +11531,532 @@ function vgwInstall(){
   const healing=document.getElementById("vgHealingPanel");if(!healing)return;
   if(healing.querySelector(".vg-wholecare"))return;
   const d=document.createElement("div");d.innerHTML=vgwHTML(p);healing.appendChild(d.firstElementChild);
+}
+
+
+/* ===== Advanced Care Engine ===== */
+function vgaEnsure(p){
+  if(!p)return null;
+  if(!p.advancedCare||typeof p.advancedCare!=="object"){
+    const g=typeof vgwSpeciesGroup==="function"?vgwSpeciesGroup(p):"animal";
+    p.advancedCare={
+      appetiteInterest:48,nutritionTolerance:58,skinCoat:65,woundComfort:60,
+      mobilityConfidence:42,sensoryComfort:55,enrichmentInterest:35,
+      medicationRoutine:0,overnightStability:45,socialConfidence:40,selfCare:35,
+      favoriteFood:"",favoriteEnrichment:"",dislikedStimulus:"",quirk:"",
+      discoveries:[],timeline:[],lastOvernight:0,medsGiven:0,rehabSessions:0,
+      enrichmentRotations:0,skinCareSessions:0,nutritionTrials:0,calmEnvironmentSessions:0
+    };
+    const pools={
+      dog:{foods:["soft chicken-style meal","warm recovery food","small meat bites"],enrich:["snuffle mat","scent search","soft tug toy"],dislike:["metal clatter","fast approach","slippery floor"],quirk:["leans into gentle shoulder rubs","watches every doorway","relaxes when someone sits on the floor"]},
+      cat:{foods:["soft pâté-style meal","warm aromatic food","small fish-style bites"],enrich:["cardboard hide","wand play","window watching"],dislike:["loud voices","direct staring","busy room"],quirk:["slow-blinks when comfortable","prefers elevated resting spots","eats better when no one watches"]},
+      rabbit:{foods:["fresh greens","hay bundle","herb forage"],enrich:["forage box","cardboard tunnel","chew branch"],dislike:["being picked up","sudden footsteps","open exposed spaces"],quirk:["tooth-purrs when relaxed","rearranges bedding","explores after lights dim"]},
+      snake:{foods:["species-appropriate meal","scented feeding cue","small warmed prey simulation"],enrich:["climbing branch","new hide","substrate trail"],dislike:["constant handling","bright exposure","cold draft"],quirk:["chooses the warm hide after activity","investigates new scent trails","rests half-hidden while observing"]},
+      bird:{foods:["soft recovery mash","seed/produce mix","favorite fruit piece"],enrich:["new perch","foraging cup","safe toy"],dislike:["drafts","sudden overhead motion","crowded handling"],quirk:["preens after calming down","vocalizes when staff return","chooses the highest safe perch"]},
+      rodent:{foods:["seed mix","fresh vegetable piece","forage scatter"],enrich:["burrow box","chew tunnel","nesting material"],dislike:["open spaces","strong smells","continuous noise"],quirk:["carries bedding to one corner","stores food before eating","explores edges before center"]},
+      arthropod:{foods:["species-appropriate feeder","moisture-supported feeding","small prey simulation"],enrich:["substrate structure","retreat cork","climb surface"],dislike:["vibration","excess handling","harsh lighting"],quirk:["uses the same retreat repeatedly","emerges when vibration stops","rearranges substrate near shelter"]},
+      animal:{foods:["soft recovery meal","favorite familiar food","small hand-offered bites"],enrich:["quiet exploration","forage puzzle","comfort object"],dislike:["noise","crowding","sudden handling"],quirk:["rests more deeply after familiar care","approaches slowly before accepting contact","shows curiosity as pain improves"]}
+    };
+    const q=pools[g]||pools.animal, pick=a=>a[Math.floor(Math.random()*a.length)];
+    p.advancedCare.favoriteFood=pick(q.foods);
+    p.advancedCare.favoriteEnrichment=pick(q.enrich);
+    p.advancedCare.dislikedStimulus=pick(q.dislike);
+    p.advancedCare.quirk=pick(q.quirk);
+  }
+  return p.advancedCare;
+}
+function vgaLog(p,msg){
+  const a=vgaEnsure(p);
+  a.timeline.unshift(new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+" · "+msg);
+  a.timeline=a.timeline.slice(0,20);
+}
+function vgaDiscover(p,key,text){
+  const a=vgaEnsure(p);
+  if(a.discoveries.some(x=>x.key===key))return;
+  a.discoveries.push({key,text});a.discoveries=a.discoveries.slice(-14);
+  if(typeof vghAddMilestone==="function")vghAddMilestone(p,"advanced-"+key,text);
+}
+function vgaAction(id,action){
+  const p=(state.patients||[]).find(x=>x.id===id);if(!p)return;
+  const a=vgaEnsure(p),wc=typeof vgwEnsure==="function"?vgwEnsure(p):null;
+  if(action==="nutrition"){
+    a.nutritionTrials++;a.appetiteInterest=Math.min(100,a.appetiteInterest+12);a.nutritionTolerance=Math.min(100,a.nutritionTolerance+9);
+    p.hunger=Math.min(100,Number(p.hunger??60)+7);vgaLog(p,"Tried "+a.favoriteFood);
+    if(a.appetiteInterest>=70)vgaDiscover(p,"food-preference","FAVORITE FOOD DISCOVERED");
+  }
+  if(action==="skin"){
+    a.skinCareSessions++;a.skinCoat=Math.min(100,a.skinCoat+12);a.woundComfort=Math.min(100,a.woundComfort+9);
+    p.comfort=Math.min(100,Number(p.comfort??60)+6);vgaLog(p,"Skin / coat / wound comfort care completed");
+    if(a.skinCoat>=82)vgaDiscover(p,"skin-comfort","SKIN & COAT COMFORT RESTORED");
+  }
+  if(action==="rehab"){
+    a.rehabSessions++;a.mobilityConfidence=Math.min(100,a.mobilityConfidence+11);
+    p.mobility=Math.min(100,Number(p.mobility??50)+7);p.energy=Math.max(0,Number(p.energy??55)-3);
+    vgaLog(p,"Gentle mobility confidence session");
+    if(a.mobilityConfidence>=75)vgaDiscover(p,"movement-confidence","MOVING WITH CONFIDENCE");
+  }
+  if(action==="sensory"){
+    a.calmEnvironmentSessions++;a.sensoryComfort=Math.min(100,a.sensoryComfort+14);
+    p.fear=Math.max(0,Number(p.fear??30)-8);p.comfort=Math.min(100,Number(p.comfort??60)+5);
+    if(wc)wc.restQuality=Math.min(100,wc.restQuality+6);
+    vgaLog(p,"Reduced "+a.dislikedStimulus+" and softened the environment");
+    if(a.sensoryComfort>=80)vgaDiscover(p,"sensory-safe","FEELS SAFE IN THE ROOM");
+  }
+  if(action==="enrichment"){
+    a.enrichmentRotations++;a.enrichmentInterest=Math.min(100,a.enrichmentInterest+14);
+    p.happiness=Math.min(100,Number(p.happiness??50)+8);
+    if(wc){wc.boredom=Math.max(0,wc.boredom-16);wc.naturalBehavior=Math.min(100,wc.naturalBehavior+9)}
+    vgaLog(p,"Rotated enrichment: "+a.favoriteEnrichment);
+    if(a.enrichmentInterest>=70)vgaDiscover(p,"favorite-enrichment","FAVORITE ENRICHMENT DISCOVERED");
+  }
+  if(action==="meds"){
+    a.medsGiven++;a.medicationRoutine=Math.min(100,a.medicationRoutine+18);
+    p.pain=Math.max(0,Number(p.pain??30)-5);vgaLog(p,"Simulated medication round completed");
+    if(a.medicationRoutine>=75)vgaDiscover(p,"med-routine","CARE ROUTINE TOLERATED CALMLY");
+  }
+  if(action==="social"){
+    a.socialConfidence=Math.min(100,a.socialConfidence+13);p.trust=Math.min(100,Number(p.trust??40)+7);
+    if(wc)wc.loneliness=Math.max(0,wc.loneliness-14);
+    vgaLog(p,"Patient chose a calm social interaction");
+    if(a.socialConfidence>=75)vgaDiscover(p,"social-confidence","CHOSE TO SEEK COMPANY");
+  }
+  if(action==="selfcare"){
+    a.selfCare=Math.min(100,a.selfCare+15);
+    if(wc)wc.cleanliness=Math.min(100,wc.cleanliness+6);
+    vgaLog(p,"Observed self-care / grooming behavior");
+    if(a.selfCare>=75)vgaDiscover(p,"self-care","SELF-CARE BEHAVIOR RETURNED");
+  }
+  if(action==="overnight"){
+    a.lastOvernight=Date.now();a.overnightStability=Math.min(100,a.overnightStability+18);
+    if(wc)wc.restQuality=Math.min(100,wc.restQuality+10);
+    p.energy=Math.min(100,Number(p.energy??55)+10);vgaLog(p,"Overnight watch completed with quiet checks");
+    if(a.overnightStability>=75)vgaDiscover(p,"overnight","STABLE THROUGH THE NIGHT");
+  }
+  vgaEvaluate(p);render();
+}
+function vgaEvaluate(p){
+  const a=vgaEnsure(p),wc=typeof vgwEnsure==="function"?vgwEnsure(p):null;
+  if(a.appetiteInterest>=75 && Number(p.hunger??0)>=70)vgaDiscover(p,"appetite-back","APPETITE RETURNING");
+  if(a.mobilityConfidence>=80 && Number(p.mobility??0)>=70)vgaDiscover(p,"rehab-complete","REHAB CONFIDENCE RESTORED");
+  if(a.sensoryComfort>=80 && Number(p.fear??100)<=30)vgaDiscover(p,"room-safe","RELAXED IN THE CARE SPACE");
+  if(wc && wc.naturalBehavior>=75 && a.enrichmentInterest>=65)vgaDiscover(p,"natural-behavior","NATURAL BEHAVIOR RETURNED");
+}
+function vgaPct(v){return Math.round(Math.max(0,Math.min(100,Number(v||0))))}
+function vgaCard(title,val,note,button){
+  return `<div class="vg-ac-card"><h4>${title}</h4><div class="meter"><i style="width:${vgaPct(val)}%"></i></div><b>${vgaPct(val)}%</b><div class="vg-ac-note">${note}</div><div class="vg-ac-actions">${button}</div></div>`;
+}
+function vgaHTML(p){
+  if(!p||!p.admitted)return"";
+  const a=vgaEnsure(p);
+  return `<div class="vg-advanced-care">
+    <div class="vg-care-head"><div><h3>🧬 Advanced Daily Care</h3><div class="small">Simulated care gameplay · personalized to ${p.name||"this patient"}</div></div><div class="small">${a.quirk}</div></div>
+    <div class="vg-ac-grid">
+      ${vgaCard("🥣 Nutrition & Appetite",a.appetiteInterest,"Prefers: "+a.favoriteFood,`<button onclick="vgaAction('${p.id}','nutrition')">Try Food</button>`)}
+      ${vgaCard("🧼 Skin / Coat / Wound Comfort",a.skinCoat,"Comfort-focused hygiene and skin care.",`<button onclick="vgaAction('${p.id}','skin')">Care Session</button>`)}
+      ${vgaCard("🐾 Mobility Rehab",a.mobilityConfidence,"Short confidence-building movement sessions.",`<button onclick="vgaAction('${p.id}','rehab')">Rehab</button>`)}
+      ${vgaCard("🌙 Sensory Comfort",a.sensoryComfort,"Sensitive to: "+a.dislikedStimulus,`<button onclick="vgaAction('${p.id}','sensory')">Calm Room</button>`)}
+      ${vgaCard("🎾 Enrichment Rotation",a.enrichmentInterest,"Enjoys: "+a.favoriteEnrichment,`<button onclick="vgaAction('${p.id}','enrichment')">Rotate Enrichment</button>`)}
+      ${vgaCard("💊 Care Routine",a.medicationRoutine,"Fictional medication-round tolerance; no dosing mechanics.",`<button onclick="vgaAction('${p.id}','meds')">Medication Round</button>`)}
+      ${vgaCard("🤝 Social Confidence",a.socialConfidence,"Tracks voluntary contact and reassurance.",`<button onclick="vgaAction('${p.id}','social')">Quiet Visit</button>`)}
+      ${vgaCard("✨ Self Care",a.selfCare,"Grooming, preening, burrowing or similar species behavior.",`<button onclick="vgaAction('${p.id}','selfcare')">Observe Self-Care</button>`)}
+      ${vgaCard("🌌 Overnight Stability",a.overnightStability,"Quiet overnight observation without constantly disturbing rest.",`<button onclick="vgaAction('${p.id}','overnight')">Overnight Watch</button>`)}
+    </div>
+    <div class="vg-ac-event"><b>🐾 Individual Care Quirk</b><div>${p.name||"This patient"} ${a.quirk}.</div></div>
+    <div class="vg-breakthrough"><b>🌟 Care Discoveries</b>${a.discoveries.length?a.discoveries.slice(-8).reverse().map(x=>`<div>✅ ${x.text}</div>`).join(""):"<div class='small'>Preferences and recovery behaviors will be discovered through care.</div>"}</div>
+    <div class="vg-ac-timeline">${a.timeline.length?a.timeline.map(x=>`<div>${x}</div>`).join(""):"<div>No advanced-care events yet.</div>"}</div>
+  </div>`;
+}
+function vgaInstall(){
+  if(state.screen!=="clinic")return;
+  const p=(state.patients||[]).find(x=>x.id===state.activeId);if(!p||!p.admitted)return;
+  const healing=document.getElementById("vgHealingPanel");if(!healing)return;
+  if(healing.querySelector(".vg-advanced-care"))return;
+  const d=document.createElement("div");d.innerHTML=vgaHTML(p);healing.appendChild(d.firstElementChild);
+}
+
+
+/* ===== Adaptive Care Workflow Engine ===== */
+function vgfEnsure(p){
+ if(!p)return null;
+ if(!p.flowCare||typeof p.flowCare!=="object")p.flowCare={
+  chains:{nutrition:{step:0,done:false},mobility:{step:0,done:false},comfort:{step:0,done:false},skin:{step:0,done:false},trust:{step:0,done:false}},
+  lastReaction:"Waiting for the next care interaction.",notebook:[],learned:[],adaptiveStyle:""
+ };
+ return p.flowCare;
+}
+function vgfProfile(p){
+ const f=vgfEnsure(p),a=typeof vgaEnsure==="function"?vgaEnsure(p):null;
+ if(!f.adaptiveStyle){
+  if(Number(p.fear??30)>55)f.adaptiveStyle="Quiet-first";
+  else if(Number(p.trust??40)>65)f.adaptiveStyle="Social reassurance";
+  else if(a&&a.appetiteInterest>60)f.adaptiveStyle="Food-motivated";
+  else if(a&&a.sensoryComfort<50)f.adaptiveStyle="Low-stimulation";
+  else f.adaptiveStyle="Gentle observation";
+ }
+ return f.adaptiveStyle;
+}
+function vgfNote(p,text){const f=vgfEnsure(p);f.notebook.unshift(new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+" · "+text);f.notebook=f.notebook.slice(0,30)}
+function vgfLearn(p,key,text){const f=vgfEnsure(p);if(f.learned.some(x=>x.key===key))return;f.learned.push({key,text});vgfNote(p,"Learned: "+text)}
+function vgfChainDef(chain){return {nutrition:["Smell Food","Small Bite","Half Meal","Full Meal"],mobility:["Shift Weight","Stand","Few Steps","Walk"],comfort:["Quiet Room","Reposition","Settle","Deep Rest"],skin:["Inspect","Clean","Protect","Recheck"],trust:["Observe","Stay Nearby","Approach","Choose Contact"]}[chain]||["Step 1","Step 2","Step 3","Step 4"]}
+function vgfReaction(p,chain,step){
+ const n=p.name||"The patient";
+ const map={
+ nutrition:[`${n} sniffs the food and watches.`,`${n} takes a small taste, then pauses.`,`${n} eats part of the meal without pulling away.`,`${n} finishes the meal with much less hesitation.`],
+ mobility:[`${n} shifts weight carefully.`,`${n} stands briefly, then settles.`,`${n} takes a few careful steps.`,`${n} walks across the room with better confidence.`],
+ comfort:[`${n} notices the quieter room and settles.`,`${n} changes position and relaxes more fully.`,`${n} rests without constantly scanning the room.`,`${n} falls into a deeper, calmer rest.`],
+ skin:[`${n} tolerates the inspection.`,`${n} relaxes a little during cleaning.`,`${n} stops guarding the area as strongly.`,`${n} settles afterward and appears more comfortable.`],
+ trust:[`${n} watches from a safe distance.`,`${n} stays nearby instead of retreating.`,`${n} approaches voluntarily.`,`${n} chooses to remain close after care is finished.`]
+ };
+ return map[chain][step];
+}
+function vgfAction(id,chain){
+ const p=(state.patients||[]).find(x=>x.id===id);if(!p)return;
+ const f=vgfEnsure(p),c=f.chains[chain];if(!c||c.done)return;
+ const defs=vgfChainDef(chain),step=c.step;
+ f.lastReaction=vgfReaction(p,chain,step);vgfNote(p,defs[step]+": "+f.lastReaction);c.step++;
+ if(chain==="nutrition"){p.hunger=Math.min(100,Number(p.hunger??60)+6);if(typeof vgaAction==="function")try{vgaAction(id,"nutrition")}catch(e){}}
+ if(chain==="mobility"){p.mobility=Math.min(100,Number(p.mobility??50)+6);if(typeof vgaAction==="function")try{vgaAction(id,"rehab")}catch(e){}}
+ if(chain==="comfort"){p.comfort=Math.min(100,Number(p.comfort??60)+6);p.fear=Math.max(0,Number(p.fear??30)-5)}
+ if(chain==="skin"){p.comfort=Math.min(100,Number(p.comfort??60)+4);if(typeof vgaAction==="function")try{vgaAction(id,"skin")}catch(e){}}
+ if(chain==="trust"){p.trust=Math.min(100,Number(p.trust??40)+6);p.fear=Math.max(0,Number(p.fear??30)-4)}
+ if(c.step>=defs.length){
+  c.done=true;
+  const learn={nutrition:"Eats more readily when food is introduced gently.",mobility:"Can rebuild confidence through short movement sessions.",comfort:"Rests best after noise is reduced and positioning is adjusted.",skin:"Tolerates skin/wound care better after calm inspection first.",trust:"Trust improves when contact remains voluntary."}[chain];
+  vgfLearn(p,chain,learn);
+  if(typeof vghAddMilestone==="function")vghAddMilestone(p,"care-chain-"+chain,chain.toUpperCase()+" CARE ROUTINE COMPLETED");
+ }
+ render();
+}
+function vgfPriorities(p){
+ const a=typeof vgaEnsure==="function"?vgaEnsure(p):null,w=typeof vgwEnsure==="function"?vgwEnsure(p):null,arr=[];
+ const add=(score,title,why)=>arr.push({score,title,why});
+ add(100-Number(p.hydration??60),"Hydration","Watch for voluntary drinking and stable hydration.");
+ add(100-Number(p.hunger??60),"Appetite","Build from interest to a full independent meal.");
+ add(Number(p.pain??30)+20,"Pain / Comfort","Rest, positioning and low-stress handling may help.");
+ add(100-Number(p.mobility??50),"Mobility","Confidence can return through short controlled steps.");
+ add(Number(p.fear??30)+15,"Fear / Trust","Let the animal choose contact instead of forcing it.");
+ if(w)add(100-w.cleanliness,"Hygiene","Bedding and cleanliness can affect comfort.");
+ if(a)add(100-a.sensoryComfort,"Sensory Stress","Noise, light or handling may interfere with rest.");
+ return arr.sort((x,y)=>y.score-x.score).slice(0,3);
+}
+function vgfChainHTML(p,chain,title,icon){
+ const f=vgfEnsure(p),c=f.chains[chain],defs=vgfChainDef(chain);
+ return `<div class="vg-station"><h4>${icon} ${title}</h4>
+ <div class="vg-step-row">${defs.map((x,i)=>`<span class="vg-step-dot ${i<c.step?"done":i===c.step&&!c.done?"active":""}">${x}</span>`).join("")}</div>
+ <div class="vg-reaction">${c.done?"Routine complete. The result is now part of this animal's care history.":(c.step===0?"Begin gently and watch the animal's response.":f.lastReaction)}</div>
+ <button ${c.done?"disabled":""} onclick="vgfAction('${p.id}','${chain}')">${c.done?"✓ Completed":"Continue "+defs[c.step]}</button></div>`;
+}
+function vgfHTML(p){
+ if(!p||!p.admitted)return"";
+ const f=vgfEnsure(p),prior=vgfPriorities(p),style=vgfProfile(p);
+ return `<div class="vg-flowcare">
+ <div class="vg-flow-title"><div><h3>🩺 Adaptive Care Workflow</h3><div class="small">Care changes based on what ${p.name||"the patient"} shows you.</div></div><div><b>${style}</b><div class="small">care personality</div></div></div>
+ <div class="vg-priority-strip">${prior.map((x,i)=>`<div class="vg-priority ${i===0?"hot":""}"><b>${i===0?"⚠️ ":""}${x.title}</b><div class="small">${x.why}</div></div>`).join("")}</div>
+ <div class="vg-clue"><b>👁️ Current Animal Response</b><div>${f.lastReaction}</div></div>
+ <div class="vg-stations">
+ ${vgfChainHTML(p,"nutrition","Nutrition","🥣")}
+ ${vgfChainHTML(p,"mobility","Mobility","🐾")}
+ ${vgfChainHTML(p,"comfort","Comfort","🌙")}
+ ${vgfChainHTML(p,"skin","Skin / Wound","🧼")}
+ ${vgfChainHTML(p,"trust","Trust","🤝")}
+ </div>
+ <div class="vg-learned">
+  <div class="vg-learned-card"><b>💡 What We Learned</b>${f.learned.length?f.learned.slice(-8).reverse().map(x=>`<div class="vg-note-line">✓ ${x.text}</div>`).join(""):"<div class='small'>Complete care routines to discover what works best for this animal.</div>"}</div>
+  <div class="vg-notebook"><b>📓 Care Notebook</b>${f.notebook.length?f.notebook.map(x=>`<div class="vg-note-line">${x}</div>`).join(""):"<div class='small'>Observations and responses will build into a recovery story here.</div>"}</div>
+ </div></div>`;
+}
+function vgfInstall(){
+ if(state.screen!=="clinic")return;
+ const p=(state.patients||[]).find(x=>x.id===state.activeId);if(!p||!p.admitted)return;
+ const healing=document.getElementById("vgHealingPanel");if(!healing||healing.querySelector(".vg-flowcare"))return;
+ const d=document.createElement("div");d.innerHTML=vgfHTML(p);healing.insertBefore(d.firstElementChild,healing.firstChild);
+}
+
+
+/* ===== Living Loneliness & Companionship Engine ===== */
+const VG_SOCIAL={timer:null};
+function vgsEnsure(p){if(!p)return null;if(!p.socialLife||typeof p.socialLife!=="object")p.socialLife={loneliness:Math.max(0,Math.min(100,Number((p.wholeCare&&p.wholeCare.loneliness)??35))),lastContact:Date.now(),lastEvent:"Watching the room quietly.",comfortObject:false,doorWaiting:false,relationships:{},log:[],socialMilestones:[],preferredStyle:"",lastTick:Date.now()};const s=p.socialLife;if(!s.preferredStyle){const g=typeof vgwSpeciesGroup==="function"?vgwSpeciesGroup(p):"animal";s.preferredStyle={dog:"close company",cat:"nearby without pressure",rabbit:"quiet companionship",snake:"low-contact security",bird:"visual and social contact",rodent:"safe familiar company",arthropod:"low-disturbance security",animal:"gentle company"}[g]||"gentle company"}return s}
+function vgsLog(p,msg){const s=vgsEnsure(p);s.log.unshift(new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+" · "+msg);s.log=s.log.slice(0,18)}
+function vgsMilestone(p,key,label){const s=vgsEnsure(p);if(s.socialMilestones.some(x=>x.key===key))return;s.socialMilestones.push({key,label});vgsLog(p,label);if(typeof vghAddMilestone==="function")vghAddMilestone(p,"social-"+key,label)}
+function vgsRelation(p,q){const s=vgsEnsure(p);if(!s.relationships[q.id])s.relationships[q.id]={name:q.name||"Friend",bond:0,meetings:0,last:"Stranger"};return s.relationships[q.id]}
+function vgsBondLabel(v){return v>=80?"Bonded":v>=60?"Friend":v>=35?"Comfortable":v>=15?"Familiar":"Stranger"}
+function vgsCandidates(p){return (state.patients||[]).filter(q=>q.id!==p.id&&q.admitted&&q.department!=="Surgery").slice(0,5)}
+function vgsBehavior(p){const s=vgsEnsure(p),n=p.name||"The patient";if(s.loneliness>=80)return n+" keeps returning to the door and watches every person who passes.";if(s.loneliness>=65)return n+" has trouble settling alone and keeps checking the room entrance.";if(s.loneliness>=45)return n+" looks up whenever someone enters and seems to want company.";if(s.loneliness>=25)return n+" rests more easily knowing someone is nearby.";return n+" looks secure and is comfortable spending some time independently."}
+function vgsAction(id,action,otherId){const p=(state.patients||[]).find(x=>x.id===id);if(!p)return;const s=vgsEnsure(p);if(action==="sit"){s.loneliness=Math.max(0,s.loneliness-14);s.lastContact=Date.now();p.trust=Math.min(100,Number(p.trust??40)+5);s.lastEvent=p.name+" settles while you sit nearby.";vgsLog(p,"Quiet companionship")}if(action==="talk"){s.loneliness=Math.max(0,s.loneliness-9);p.fear=Math.max(0,Number(p.fear??30)-4);s.lastEvent=p.name+" listens to the familiar voice.";vgsLog(p,"Soft voice reassurance")}if(action==="comfort"){s.comfortObject=true;s.loneliness=Math.max(0,s.loneliness-7);s.lastEvent=p.name+" curls up beside the comfort object.";vgsLog(p,"Comfort object placed")}if(action==="play"){s.loneliness=Math.max(0,s.loneliness-12);p.happiness=Math.min(100,Number(p.happiness??50)+8);s.lastEvent=p.name+" joins a short play session.";vgsLog(p,"Shared play")}if(action==="window"){s.loneliness=Math.max(0,s.loneliness-6);s.lastEvent=p.name+" watches activity outside the room.";vgsLog(p,"Safe visual activity")}if(action==="friend"){const q=(state.patients||[]).find(x=>x.id===otherId);if(q){const r=vgsRelation(p,q),back=vgsRelation(q,p);r.bond=Math.min(100,r.bond+12);back.bond=Math.min(100,back.bond+9);r.last=vgsBondLabel(r.bond);back.last=vgsBondLabel(back.bond);s.loneliness=Math.max(0,s.loneliness-16);vgsEnsure(q).loneliness=Math.max(0,vgsEnsure(q).loneliness-10);s.lastEvent=p.name+" spends calm time near "+q.name+".";vgsLog(p,"Companion visit with "+q.name);if(r.bond>=35)vgsMilestone(p,"comfortable-"+q.id,"COMFORTABLE WITH "+String(q.name).toUpperCase());if(r.bond>=60)vgsMilestone(p,"friend-"+q.id,"MADE A TRUSTED FRIEND");if(r.bond>=80)vgsMilestone(p,"bonded-"+q.id,"BONDED COMPANIONS")}}if(s.loneliness<55&&s.doorWaiting){s.doorWaiting=false;vgsMilestone(p,"door","STOPPED WAITING AT THE DOOR")}if(s.loneliness<25)vgsMilestone(p,"secure","NO LONGER AFRAID OF BEING LEFT ALONE");if(typeof vgwEnsure==="function")vgwEnsure(p).loneliness=s.loneliness;render()}
+function vgsTick(){const now=Date.now();(state.patients||[]).filter(p=>p.admitted).forEach(p=>{const s=vgsEnsure(p),hrs=Math.min(4,(now-(s.lastTick||now))/3600000);s.lastTick=now;if(hrs<=0)return;const factor=(s.preferredStyle==="low-contact security"||s.preferredStyle==="low-disturbance security") ? .35 : 1;s.loneliness=Math.min(100,s.loneliness+hrs*2.2*factor);if(s.comfortObject)s.loneliness=Math.max(0,s.loneliness-hrs*.5);if(s.loneliness>=65)s.doorWaiting=true;s.lastEvent=vgsBehavior(p);if(typeof vgwEnsure==="function")vgwEnsure(p).loneliness=s.loneliness})}
+function vgsStart(){if(!VG_SOCIAL.timer)VG_SOCIAL.timer=setInterval(vgsTick,5000)}
+function vgsHTML(p){if(!p||!p.admitted)return"";const s=vgsEnsure(p),friends=vgsCandidates(p),rels=Object.values(s.relationships).sort((a,b)=>b.bond-a.bond);return `<div class="vg-socialcare"><div class="vg-social-head"><div><h3>❤️ Companionship & Loneliness</h3><div class="small">Prefers ${s.preferredStyle}</div></div><div><b>${Math.round(s.loneliness)}%</b><div class="small">loneliness</div></div></div><div class="vg-lonely-meter"><i style="width:${Math.round(s.loneliness)}%"></i></div><div class="vg-social-event"><b>🐾 Current behavior</b><div>${s.lastEvent||vgsBehavior(p)}</div></div><div class="vg-social-actions"><button onclick="vgsAction('${p.id}','sit')">🪑 Sit Nearby</button><button onclick="vgsAction('${p.id}','talk')">💬 Talk Softly</button><button onclick="vgsAction('${p.id}','comfort')">🧸 Comfort Object</button><button onclick="vgsAction('${p.id}','play')">🎾 Play Together</button><button onclick="vgsAction('${p.id}','window')">🪟 Watch Activity</button></div>${friends.length?`<div class="vg-rel-grid">${friends.map(q=>{const r=vgsRelation(p,q);return `<div class="vg-rel-card"><b>🐾 ${q.name}</b><div class="small">${r.last} · Bond ${Math.round(r.bond)}%</div><button onclick="vgsAction('${p.id}','friend','${q.id}')">Spend Time Together</button></div>`}).join("")}</div>`:`<div class="vg-social-event">No suitable hospital companions nearby right now. Human company and comfort objects still help.</div>`}<div class="vg-breakthrough"><b>💞 Relationship Milestones</b>${s.socialMilestones.length?s.socialMilestones.slice(-8).reverse().map(x=>`<div>✓ ${x.label}</div>`).join(""):`<div class="small">Trust and companionship milestones will appear here.</div>`}</div>${rels.length?`<div class="vg-social-log"><b>Relationship Memory</b>${rels.map(r=>`<div>${r.name} · ${r.last} · Bond ${Math.round(r.bond)}%</div>`).join("")}</div>`:""}<div class="vg-social-log"><b>Companionship Log</b>${s.log.length?s.log.map(x=>`<div>${x}</div>`).join(""):`<div>No companionship events yet.</div>`}</div></div>`}
+function vgsInstall(){if(state.screen!=="clinic")return;const p=(state.patients||[]).find(x=>x.id===state.activeId);if(!p||!p.admitted)return;const healing=document.getElementById("vgHealingPanel");if(!healing||healing.querySelector(".vg-socialcare"))return;const d=document.createElement("div");d.innerHTML=vgsHTML(p);healing.insertBefore(d.firstElementChild,healing.firstChild)}
+
+
+/* ===== Lonely Animal Matchmaker Engine ===== */
+const VG_MATCH={timer:null};
+function vgmEnsure(){
+  if(!state.lonelyMatchmaker||typeof state.lonelyMatchmaker!=="object"){
+    state.lonelyMatchmaker={pairs:{},lastAuto:0};
+  }
+  return state.lonelyMatchmaker;
+}
+function vgmSocialStyle(p){
+  if(typeof vgsEnsure==="function")return vgsEnsure(p).preferredStyle||"gentle company";
+  return "gentle company";
+}
+function vgmGroup(p){
+  if(typeof vgwSpeciesGroup==="function")return vgwSpeciesGroup(p);
+  const s=((p&&p.species)||"").toLowerCase();
+  if(/dog|puppy/.test(s))return"dog";
+  if(/cat|kitten/.test(s))return"cat";
+  if(/rabbit|hare/.test(s))return"rabbit";
+  if(/bird/.test(s))return"bird";
+  if(/hamster|mouse|rat|rodent/.test(s))return"rodent";
+  if(/snake|python|boa/.test(s))return"snake";
+  return"animal";
+}
+function vgmPairKey(a,b){return [String(a.id),String(b.id)].sort().join("::")}
+function vgmCompatibility(a,b){
+  if(!a||!b||a.id===b.id)return {score:0,reasons:["Not a valid match"]};
+  const sa=typeof vgsEnsure==="function"?vgsEnsure(a):{loneliness:50,preferredStyle:"gentle company"};
+  const sb=typeof vgsEnsure==="function"?vgsEnsure(b):{loneliness:50,preferredStyle:"gentle company"};
+  const ga=vgmGroup(a),gb=vgmGroup(b);
+  let score=45,reasons=[];
+  const socialA=!["snake","arthropod"].includes(ga),socialB=!["snake","arthropod"].includes(gb);
+  if(ga===gb){score+=22;reasons.push("similar species needs")}
+  else if(socialA&&socialB){score+=10;reasons.push("both can benefit from social contact")}
+  else {score-=18;reasons.push("different social needs")}
+  if(sa.preferredStyle===sb.preferredStyle){score+=14;reasons.push("matching companionship style")}
+  if(sa.loneliness>=60&&sb.loneliness>=60){score+=14;reasons.push("both are currently lonely")}
+  if(Number(a.fear??30)<55&&Number(b.fear??30)<55){score+=8;reasons.push("both are calm enough for an introduction")}
+  if(Number(a.pain??30)>65||Number(b.pain??30)>65){score-=14;reasons.push("one patient may need more rest first")}
+  if(a.department==="Surgery"||b.department==="Surgery"){score-=30;reasons.push("not appropriate during surgery")}
+  return {score:Math.max(0,Math.min(100,Math.round(score))),reasons:reasons.slice(0,4)};
+}
+function vgmCandidates(p){
+  return (state.patients||[])
+    .filter(q=>q.id!==p.id && q.admitted && q.department!=="Surgery")
+    .map(q=>({q,match:vgmCompatibility(p,q)}))
+    .filter(x=>{
+      const s=typeof vgsEnsure==="function"?vgsEnsure(x.q):{loneliness:50};
+      return s.loneliness>=35 && x.match.score>=45;
+    })
+    .sort((a,b)=>b.match.score-a.match.score)
+    .slice(0,6);
+}
+function vgmPair(a,b){
+  const mm=vgmEnsure(),key=vgmPairKey(a,b);
+  if(!mm.pairs[key]){
+    mm.pairs[key]={
+      a:a.id,b:b.id,stage:"Suggested",meetings:0,comfort:0,
+      autoVisits:false,lastVisit:0,note:"Match suggested by loneliness and compatibility."
+    };
+  }
+  return mm.pairs[key];
+}
+function vgmStage(pair){
+  if(pair.comfort>=80)return"Bonded";
+  if(pair.comfort>=60)return"Friend";
+  if(pair.comfort>=40)return"Comfortable";
+  if(pair.comfort>=20)return"Familiar";
+  return pair.meetings>0?"Introduced":"Suggested";
+}
+function vgmIntro(id,otherId){
+  const a=(state.patients||[]).find(x=>x.id===id),b=(state.patients||[]).find(x=>x.id===otherId);
+  if(!a||!b)return;
+  const comp=vgmCompatibility(a,b); if(comp.score<40)return;
+  const pair=vgmPair(a,b);
+  pair.meetings++; pair.comfort=Math.min(100,pair.comfort+Math.max(6,Math.round(comp.score/10)));
+  pair.stage=vgmStage(pair); pair.lastVisit=Date.now();
+  if(typeof vgsAction==="function"){
+    try{vgsAction(a.id,"friend",b.id)}catch(e){}
+  }else{
+    if(typeof vgsEnsure==="function"){
+      vgsEnsure(a).loneliness=Math.max(0,vgsEnsure(a).loneliness-12);
+      vgsEnsure(b).loneliness=Math.max(0,vgsEnsure(b).loneliness-9);
+    }
+  }
+  if(pair.comfort>=40)pair.autoVisits=true;
+  if(typeof vgsLog==="function"){vgsLog(a,"Matched with "+(b.name||"a companion"));vgsLog(b,"Matched with "+(a.name||"a companion"))}
+  render();
+}
+function vgmToggleAuto(id,otherId){
+  const a=(state.patients||[]).find(x=>x.id===id),b=(state.patients||[]).find(x=>x.id===otherId);if(!a||!b)return;
+  const pair=vgmPair(a,b);pair.autoVisits=!pair.autoVisits;render();
+}
+function vgmAutoTick(){
+  const mm=vgmEnsure(),now=Date.now();
+  if(now-mm.lastAuto<15000)return; mm.lastAuto=now;
+  Object.values(mm.pairs).forEach(pair=>{
+    if(!pair.autoVisits)return;
+    const a=(state.patients||[]).find(x=>x.id===pair.a),b=(state.patients||[]).find(x=>x.id===pair.b);
+    if(!a||!b||!a.admitted||!b.admitted)return;
+    const sa=typeof vgsEnsure==="function"?vgsEnsure(a):null,sb=typeof vgsEnsure==="function"?vgsEnsure(b):null;
+    if(!sa||!sb)return;
+    if(sa.loneliness<28&&sb.loneliness<28)return;
+    if(now-pair.lastVisit<60000)return;
+    pair.lastVisit=now;pair.meetings++;pair.comfort=Math.min(100,pair.comfort+3);pair.stage=vgmStage(pair);
+    sa.loneliness=Math.max(0,sa.loneliness-8);sb.loneliness=Math.max(0,sb.loneliness-8);
+    sa.lastEvent=(a.name||"Patient")+" spends a calm visit with "+(b.name||"their companion")+".";
+    sb.lastEvent=(b.name||"Patient")+" spends a calm visit with "+(a.name||"their companion")+".";
+    if(typeof vgsLog==="function"){vgsLog(a,"Automatic buddy visit with "+(b.name||"friend"));vgsLog(b,"Automatic buddy visit with "+(a.name||"friend"))}
+    if(pair.comfort>=80 && typeof vgsMilestone==="function"){
+      vgsMilestone(a,"auto-bond-"+b.id,"BONDED COMPANIONS");
+      vgsMilestone(b,"auto-bond-"+a.id,"BONDED COMPANIONS");
+    }
+  });
+}
+function vgmStart(){if(!VG_MATCH.timer)VG_MATCH.timer=setInterval(vgmAutoTick,5000)}
+function vgmHTML(p){
+  if(!p||!p.admitted)return"";
+  const cand=vgmCandidates(p),mm=vgmEnsure();
+  const activePairs=Object.values(mm.pairs).filter(pair=>pair.a===p.id||pair.b===p.id).map(pair=>{
+    const oid=pair.a===p.id?pair.b:pair.a,q=(state.patients||[]).find(x=>x.id===oid);
+    return q?{pair,q}:null;
+  }).filter(Boolean);
+  return `<div class="vg-matchmaker">
+    <div class="vg-match-head"><div><h3>💞 Lonely Animal Matchmaker</h3><div class="small">Finds compatible lonely patients and builds companionship gradually.</div></div><div>${cand.length} possible buddies</div></div>
+    <div class="vg-match-list">
+      ${cand.length?cand.map(x=>`<div class="vg-match-card">
+        <div><b>🐾 ${x.q.name}</b> · ${x.q.species||"Animal"}</div>
+        <div class="vg-match-score">${x.match.score}% match</div>
+        <div class="vg-match-reasons">${x.match.reasons.join(" · ")}</div>
+        <div class="vg-match-actions"><button onclick="vgmIntro('${p.id}','${x.q.id}')">🤝 Gentle Introduction</button></div>
+      </div>`).join(""):"<div class='vg-match-card'>No compatible lonely animals are available right now.</div>"}
+    </div>
+    ${activePairs.length?`<div class="vg-match-room"><b>🏡 Companion Connections</b>${activePairs.map(x=>`<div class="vg-match-pair">
+      <b>${x.q.name}</b> · ${vgmStage(x.pair)} · Comfort ${Math.round(x.pair.comfort)}%
+      <div class="vg-match-status">${x.pair.autoVisits?"Automatic calm visits enabled":"Manual introductions only"}</div>
+      <div class="vg-match-actions">
+        <button onclick="vgmIntro('${p.id}','${x.q.id}')">Spend Time Together</button>
+        <button onclick="vgmToggleAuto('${p.id}','${x.q.id}')">${x.pair.autoVisits?"Pause Auto Visits":"Enable Auto Visits"}</button>
+      </div>
+    </div>`).join("")}</div>`:""}
+  </div>`;
+}
+function vgmInstall(){
+  if(state.screen!=="clinic")return;
+  const p=(state.patients||[]).find(x=>x.id===state.activeId);if(!p||!p.admitted)return;
+  const healing=document.getElementById("vgHealingPanel");if(!healing||healing.querySelector(".vg-matchmaker"))return;
+  const social=healing.querySelector(".vg-socialcare"),d=document.createElement("div");d.innerHTML=vgmHTML(p);
+  if(social&&social.nextSibling)healing.insertBefore(d.firstElementChild,social.nextSibling);else healing.appendChild(d.firstElementChild);
+}
+
+
+/* ===== Emotional Loneliness Intelligence Engine ===== */
+function vgliEnsure(p){
+ if(!p)return null;
+ if(!p.lonelyIntel||typeof p.lonelyIntel!=="object")p.lonelyIntel={
+  cause:"Social loneliness",confidence:55,nightLonely:35,grief:0,separation:30,boredom:25,
+  caregiverAttachment:20,companionSeparation:0,lastTrustedName:"",favoriteCaregiver:"Hospital Team",
+  memories:[],nightRounds:0,groupComfort:0,lastCauseCheck:0
+ };
+ return p.lonelyIntel;
+}
+function vgliRemember(p,text){
+ const x=vgliEnsure(p);x.memories.unshift(new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+" · "+text);x.memories=x.memories.slice(0,20);
+}
+function vgliCause(p){
+ const x=vgliEnsure(p),s=typeof vgsEnsure==="function"?vgsEnsure(p):{loneliness:40,relationships:{}},w=typeof vgwEnsure==="function"?vgwEnsure(p):null;
+ const scores=[
+  ["Separation / attachment",x.separation + x.caregiverAttachment*.55],
+  ["Social loneliness",Number(s.loneliness||0)+10],
+  ["Boredom loneliness",(w?Number(w.boredom||0):x.boredom)+5],
+  ["Nighttime loneliness",x.nightLonely],
+  ["Companion separation",x.companionSeparation+x.grief],
+  ["Caregiver attachment",x.caregiverAttachment]
+ ];
+ scores.sort((a,b)=>b[1]-a[1]);x.cause=scores[0][0];x.confidence=Math.min(95,Math.max(45,Math.round(scores[0][1])));
+ return x.cause;
+}
+function vgliClue(p){
+ const x=vgliEnsure(p),cause=vgliCause(p),n=p.name||"The patient";
+ const map={
+  "Separation / attachment":`${n} keeps checking the doorway after familiar people leave.`,
+  "Social loneliness":`${n} settles when another calm animal or person remains nearby.`,
+  "Boredom loneliness":`${n} is awake and alert, but keeps searching for something to do.`,
+  "Nighttime loneliness":`${n} rests during the day but becomes unsettled when the ward grows quiet.`,
+  "Companion separation":`${n} checks places where a familiar companion used to rest.`,
+  "Caregiver attachment":`${n} relaxes much faster when a familiar caregiver returns.`
+ };
+ return map[cause]||`${n} appears to be seeking reassurance.`;
+}
+function vgliAction(id,action){
+ const p=(state.patients||[]).find(q=>q.id===id);if(!p)return;
+ const x=vgliEnsure(p),s=typeof vgsEnsure==="function"?vgsEnsure(p):null,w=typeof vgwEnsure==="function"?vgwEnsure(p):null;
+ if(action==="night"){
+  x.nightRounds++;x.nightLonely=Math.max(0,x.nightLonely-18);x.separation=Math.max(0,x.separation-6);
+  if(s)s.loneliness=Math.max(0,s.loneliness-10);vgliRemember(p,"Night round: quiet check, reassurance, then protected sleep.");
+  if(x.nightRounds>=3&&typeof vgsMilestone==="function")vgsMilestone(p,"night-secure","SLEPT THROUGH A QUIET NIGHT");
+ }
+ if(action==="neighbor"){
+  x.groupComfort=Math.min(100,x.groupComfort+14);if(s)s.loneliness=Math.max(0,s.loneliness-8);
+  vgliRemember(p,"Room arranged so the patient could safely see calm ward activity.");
+ }
+ if(action==="caregiver"){
+  x.caregiverAttachment=Math.min(100,x.caregiverAttachment+8);x.separation=Math.max(0,x.separation-10);
+  if(s){s.loneliness=Math.max(0,s.loneliness-11);s.lastContact=Date.now()}
+  p.trust=Math.min(100,Number(p.trust??40)+5);vgliRemember(p,"Familiar caregiver visit recorded.");
+  if(x.caregiverAttachment>=65&&typeof vgsMilestone==="function")vgsMilestone(p,"trusted-caregiver","RECOGNIZED A TRUSTED CAREGIVER");
+ }
+ if(action==="enrich"){
+  x.boredom=Math.max(0,x.boredom-18);if(w)w.boredom=Math.max(0,w.boredom-20);
+  if(s)s.loneliness=Math.max(0,s.loneliness-5);vgliRemember(p,"Independent enrichment reduced boredom without requiring constant company.");
+ }
+ if(action==="group"){
+  x.groupComfort=Math.min(100,x.groupComfort+18);if(s)s.loneliness=Math.max(0,s.loneliness-12);
+  vgliRemember(p,"Calm social-circle time completed.");
+  if(x.groupComfort>=65&&typeof vgsMilestone==="function")vgsMilestone(p,"social-circle","FOUND A SAFE SOCIAL CIRCLE");
+ }
+ if(action==="memory"){
+  x.grief=Math.max(0,x.grief-8);x.companionSeparation=Math.max(0,x.companionSeparation-8);
+  vgliRemember(p,"Comfort routine acknowledged a missing companion without forcing a new bond.");
+ }
+ vgliCause(p);render();
+}
+function vgliTick(){
+ const now=new Date(),hour=now.getHours();
+ (state.patients||[]).filter(p=>p.admitted).forEach(p=>{
+  const x=vgliEnsure(p),s=typeof vgsEnsure==="function"?vgsEnsure(p):null;
+  if(hour>=22||hour<6)x.nightLonely=Math.min(100,x.nightLonely+.08);
+  if(s&&s.loneliness>65)x.separation=Math.min(100,x.separation+.03);
+  const rels=s&&s.relationships?Object.values(s.relationships):[];
+  if(rels.length&&rels.every(r=>Number(r.bond||0)<15))x.companionSeparation=Math.min(100,x.companionSeparation+.01);
+  vgliCause(p);
+ });
+}
+const VG_LONELY_INTEL={timer:null};
+function vgliStart(){if(!VG_LONELY_INTEL.timer)VG_LONELY_INTEL.timer=setInterval(vgliTick,5000)}
+function vgliHTML(p){
+ if(!p||!p.admitted)return"";
+ const x=vgliEnsure(p),s=typeof vgsEnsure==="function"?vgsEnsure(p):{loneliness:0};
+ const cause=vgliCause(p),night=(new Date().getHours()>=22||new Date().getHours()<6);
+ return `<div class="vg-lonely-intel">
+  <div class="vg-li-head"><div><h3>🧠 Loneliness Cause Detector</h3><div class="small">Not every lonely animal needs the same kind of company.</div></div><div><b>${Math.round(s.loneliness||0)}%</b><div class="small">current loneliness</div></div></div>
+  <div class="vg-li-cause"><b>Likely cause: ${cause}</b><div>${vgliClue(p)}</div><div class="small">Pattern confidence ${x.confidence}%</div></div>
+  <div class="vg-li-grid">
+   <div class="vg-li-card"><b>🚪 Separation</b><div>${Math.round(x.separation)}%</div></div>
+   <div class="vg-li-card"><b>🌙 Night Need</b><div>${Math.round(x.nightLonely)}%</div></div>
+   <div class="vg-li-card"><b>🧸 Boredom</b><div>${Math.round(typeof vgwEnsure==="function"?vgwEnsure(p).boredom:x.boredom)}%</div></div>
+   <div class="vg-li-card"><b>🤲 Caregiver Bond</b><div>${Math.round(x.caregiverAttachment)}%</div></div>
+   <div class="vg-li-card"><b>🐾 Missing Companion</b><div>${Math.round(x.companionSeparation)}%</div></div>
+   <div class="vg-li-card"><b>💞 Group Comfort</b><div>${Math.round(x.groupComfort)}%</div></div>
+  </div>
+  <div class="vg-li-actions">
+   <button onclick="vgliAction('${p.id}','caregiver')">🤲 Familiar Caregiver</button>
+   <button onclick="vgliAction('${p.id}','neighbor')">👀 See Ward Activity</button>
+   <button onclick="vgliAction('${p.id}','enrich')">🧩 Independent Enrichment</button>
+   <button onclick="vgliAction('${p.id}','group')">🐾 Social Circle</button>
+   <button onclick="vgliAction('${p.id}','memory')">💗 Missing-Friend Comfort</button>
+   <button onclick="vgliAction('${p.id}','night')">🌙 Night Round</button>
+  </div>
+  <div class="vg-li-night"><b>${night?"🌌 NIGHT WARD ACTIVE":"☀️ Day Ward"}</b><div>${night?"Some patients become more unsettled when the hospital gets quiet. Night rounds can help without constantly waking them.":"Nighttime loneliness is tracked separately and carries into the next night."}</div></div>
+  <div class="vg-li-memory"><b>📖 Emotional Memory</b>${x.memories.length?x.memories.map(v=>`<div>${v}</div>`).join(""):"<div>No loneliness-specific memories yet.</div>"}</div>
+ </div>`;
+}
+function vgliInstall(){
+ if(state.screen!=="clinic")return;
+ const p=(state.patients||[]).find(q=>q.id===state.activeId);if(!p||!p.admitted)return;
+ const healing=document.getElementById("vgHealingPanel");if(!healing||healing.querySelector(".vg-lonely-intel"))return;
+ const match=healing.querySelector(".vg-matchmaker"),d=document.createElement("div");d.innerHTML=vgliHTML(p);
+ if(match&&match.nextSibling)healing.insertBefore(d.firstElementChild,match.nextSibling);else healing.appendChild(d.firstElementChild);
 }
 </script>
 </body>
