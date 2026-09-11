@@ -2344,6 +2344,76 @@ body.vg-focus-mode .screen.active{
   }
 }
 </style>
+
+<style id="vg-time-css">
+.vg-time-console{margin-top:12px;border:1px solid #63e9ff55;border-radius:18px;background:linear-gradient(#061827ee,#020b12f2);overflow:hidden}
+.vg-time-head{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid #63e9ff2b;font-size:10px;letter-spacing:.1em}
+.vg-hour-odometer{padding:14px 12px 6px;font:900 clamp(28px,7vw,44px)/1 monospace;letter-spacing:.12em;color:#e7ffff;text-shadow:0 0 9px #63e9ff}
+.vg-hour-odometer small{font-size:9px;color:#89dce6;text-shadow:none}
+.vg-time-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;padding:10px 12px}
+.vg-time-cell{padding:9px;border-radius:12px;border:1px solid #63e9ff22;background:#061b2bbb}
+.vg-time-cell span{display:block;font-size:9px;opacity:.65}.vg-time-cell strong{display:block;margin-top:5px;font:800 14px monospace}
+.vg-time-cell.warn strong{color:#ffd36e}.vg-time-cell.hot strong{color:#ff7188}.vg-time-cell.good strong{color:#8fffd5}
+.vg-time-ledline{display:flex;gap:5px;padding:0 12px 11px}.vg-time-ledline i{height:5px;flex:1;border-radius:9px;background:#14303a}
+.vg-time-ledline .on{background:#66edff;box-shadow:0 0 9px #66edffaa}.vg-time-ledline .warn{background:#ffd36e;box-shadow:0 0 9px #ffd36e99}.vg-time-ledline .hot{background:#ff617f;box-shadow:0 0 9px #ff617faa}
+.vg-patient-timebar{margin-top:10px;padding:9px;border-radius:12px;border:1px solid #63e9ff24;background:#03121dcc}
+.vg-patient-timebar .row{display:flex;justify-content:space-between;gap:8px;margin:4px 0;font-size:9px}.vg-patient-timebar b{font-family:monospace}
+.vg-patient-timebar .timeline{margin-top:8px;padding-top:7px;border-top:1px dashed #63e9ff28;font-size:9px;line-height:1.5;color:#acdce5}
+</style>
+
+<style id="vg-ultra-digital-fx">
+/* ===== VET GODS · ULTRA DIGITAL LIGHT EFFECTS ===== */
+@keyframes vgWaveMove{0%{stroke-dashoffset:0}100%{stroke-dashoffset:-140}}
+@keyframes vgArcSpin{to{transform:rotate(360deg)}}
+@keyframes vgFloorPulse{0%,100%{opacity:.18;transform:scaleX(.92)}50%{opacity:.68;transform:scaleX(1)}}
+@keyframes vgStrobe{0%,78%,100%{opacity:.12}80%,84%{opacity:1}86%{opacity:.2}88%{opacity:.8}}
+@keyframes vgPixelRain{0%{transform:translateY(-110%)}100%{transform:translateY(210%)}}
+@keyframes vgBreathGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(95,240,255,.22))}50%{filter:drop-shadow(0 0 22px rgba(95,240,255,.58))}}
+@keyframes vgMeterSweep{0%{left:-35%}100%{left:115%}}
+.vg-photo-shell{isolation:isolate}
+.vg-photo-shell .vg-ambient-beacons{position:absolute;z-index:4;inset:0;pointer-events:none}
+.vg-beacon{position:absolute;width:10px;height:10px;border-radius:50%;background:#6cf5ff;box-shadow:0 0 8px #6cf5ff,0 0 20px #6cf5ff}
+.vg-beacon.b1{left:3%;top:22%;animation:vgStrobe 2.7s steps(1) infinite}
+.vg-beacon.b2{right:3%;top:31%;background:#ff75da;box-shadow:0 0 8px #ff75da,0 0 20px #ff75da;animation:vgStrobe 3.4s steps(1) infinite .6s}
+.vg-beacon.b3{left:5%;bottom:16%;background:#ffd36f;box-shadow:0 0 8px #ffd36f,0 0 20px #ffd36f;animation:vgStrobe 4.1s steps(1) infinite 1s}
+.vg-beacon.b4{right:6%;bottom:12%;animation:vgStrobe 2.9s steps(1) infinite 1.4s}
+.vg-floor-light{position:absolute;z-index:3;left:18%;right:18%;bottom:5%;height:8px;border-radius:50%;
+ background:radial-gradient(ellipse at center,#71efff 0,#71efff44 28%,transparent 70%);
+ filter:blur(2px);animation:vgFloorPulse 2.4s ease-in-out infinite;pointer-events:none}
+.vg-photo-center .vg-scan-arcs{position:absolute;inset:12% 13% 19%;pointer-events:none;animation:vgArcSpin 12s linear infinite}
+.vg-photo-center .vg-scan-arcs:before,.vg-photo-center .vg-scan-arcs:after{
+ content:"";position:absolute;inset:0;border-radius:50%;border:1px solid transparent;border-top-color:#6cefff55;border-right-color:#ff79d933
+}
+.vg-photo-center .vg-scan-arcs:after{inset:12%;animation:vgArcSpin 7s linear infinite reverse;border-top-color:#ffd66b55;border-left-color:#6cefff33}
+.vg-waveform{height:52px;margin-top:8px;border-radius:10px;border:1px solid #62eaff22;background:#03131ecc;overflow:hidden;position:relative}
+.vg-waveform svg{width:100%;height:100%}
+.vg-waveform path{fill:none;stroke:#73efff;stroke-width:2;stroke-dasharray:7 5;animation:vgWaveMove 3s linear infinite;filter:drop-shadow(0 0 4px #73efff)}
+.vg-waveform .pink{stroke:#ff77dc;animation-duration:4.2s}
+.vg-pixel-column{position:absolute;top:0;bottom:0;width:5px;overflow:hidden;opacity:.45;pointer-events:none}
+.vg-pixel-column.left{left:7px}.vg-pixel-column.right{right:7px}
+.vg-pixel-column i{display:block;width:100%;height:12px;margin-bottom:7px;background:#63e9ff;box-shadow:0 0 8px #63e9ff;animation:vgPixelRain 4.5s linear infinite}
+.vg-pixel-column.right i{background:#ff74d8;box-shadow:0 0 8px #ff74d8;animation-duration:5.4s}
+.vg-photo-patient img{animation:vgBreathGlow 4.4s ease-in-out infinite}
+.vg-time-console,.vg-photo-hud{position:relative}
+.vg-time-console:after,.vg-photo-hud:before{content:"";position:absolute;top:0;bottom:0;width:26%;left:-35%;
+ background:linear-gradient(90deg,transparent,rgba(125,245,255,.08),transparent);animation:vgMeterSweep 7s linear infinite;pointer-events:none}
+.vg-time-console .vg-time-head{position:relative}
+.vg-time-console .vg-time-head:after{content:"";position:absolute;right:10px;bottom:4px;width:28px;height:3px;border-radius:4px;background:#62eaff;box-shadow:0 0 10px #62eaff;animation:vgStrobe 1.9s steps(1) infinite}
+.vg-photo-actions button{position:relative;overflow:hidden}
+.vg-photo-actions button:after{content:"";position:absolute;left:8px;right:8px;bottom:6px;height:2px;background:linear-gradient(90deg,#63e9ff,#ff77dc);box-shadow:0 0 7px #63e9ff;opacity:.55}
+.vg-photo-actions button:nth-child(2n):after{animation:vgStrobe 2.2s steps(1) infinite}
+.vg-photo-actions button:nth-child(2n+1):after{animation:vgStrobe 3.1s steps(1) infinite .4s}
+.vg-hud-sparkline{display:flex;gap:3px;align-items:end;height:24px;margin-top:7px}
+.vg-hud-sparkline i{flex:1;min-width:3px;background:#63e9ff;box-shadow:0 0 5px #63e9ff66;border-radius:2px 2px 0 0}
+.vg-hud-sparkline i:nth-child(3n){background:#ff77dc;box-shadow:0 0 5px #ff77dc66}
+.vg-hud-sparkline i:nth-child(4n){background:#ffd36f;box-shadow:0 0 5px #ffd36f66}
+.vg-critical-fx .vg-floor-light{background:radial-gradient(ellipse at center,#ff5e79 0,#ff5e7944 28%,transparent 70%);animation-duration:.9s}
+.vg-critical-fx .vg-waveform path{stroke:#ff7088;filter:drop-shadow(0 0 5px #ff7088)}
+@media(prefers-reduced-motion:reduce){
+ .vg-beacon,.vg-floor-light,.vg-scan-arcs,.vg-scan-arcs:after,.vg-waveform path,.vg-pixel-column i,
+ .vg-photo-patient img,.vg-time-console:after,.vg-photo-hud:before,.vg-time-console .vg-time-head:after,.vg-photo-actions button:after{animation:none!important}
+}
+</style>
 </head>
 <body>
 <div class="vgfx-header">
@@ -6866,6 +6936,8 @@ function surgerySupplyAction(id,action){
  if(p.surgeryStep>=7)route(p,"Recovery");else render();
 }
 function recoveryCare(id,action){
+try{const __p=state.patients.find(x=>x.id===id);if(__p&&typeof vgTimeMark==="function")vgTimeMark(__p,"recheck","Recovery care reassessed");}catch(e){}
+
   if(action==="recheck"){
     const p=state.patients.find(x=>x.id===id); if(!p)return;
     const ok=vgHydrationRecheck(p);
@@ -8627,6 +8699,10 @@ try{if(typeof vgFreshShellPass==="function")vgFreshShellPass()}catch(e){}
 try{requestAnimationFrame(()=>{if(typeof vgDigitalFX==="function")vgDigitalFX()})}catch(e){}
 
 try{requestAnimationFrame(()=>{if(typeof vgScrollSafety==="function")vgScrollSafety()})}catch(e){}
+
+try{requestAnimationFrame(()=>{if(typeof vgInstallHospitalTime==="function")vgInstallHospitalTime()})}catch(e){}
+
+try{requestAnimationFrame(()=>{if(typeof vgUltraDigitalFX==="function")vgUltraDigitalFX()})}catch(e){}
 }
 
 function setGameMenu(open){
@@ -10096,6 +10172,8 @@ function sgAction(id,action){
   sgMaybeEvent(p);renderSurgery();
 }
 function sgTransfer(id){
+try{const __p=state.patients.find(x=>x.id===id);if(__p&&typeof vgTimeMark==="function")vgTimeMark(__p,"surgery","Post-op transfer");}catch(e){}
+
   const p=(state.patients||[]).find(x=>x.id===id);if(!p)return;
   const s=typeof sgEnsure==="function"?sgEnsure(p):null;
   if(s && !s.completed){
@@ -11099,6 +11177,8 @@ function vgiArrive(p){
   }
 }
 function vgiCompleteMeal(p){
+try{if(p&&typeof vgTimeMark==="function")vgTimeMark(p,"meal","Ate independently");}catch(e){}
+
   const s=vgiEnsure(p);
   p.hunger=Math.min(100,Number(p.hunger??55)+24);
   p.feeding=Math.min(100,Number(p.feeding??55)+16);
@@ -11109,6 +11189,8 @@ function vgiCompleteMeal(p){
   }
 }
 function vgiCompleteDrink(p){
+try{if(p&&typeof vgTimeMark==="function")vgTimeMark(p,"drink","Drank independently");}catch(e){}
+
   const s=vgiEnsure(p);
   p.hydration=Math.min(100,Number(p.hydration??55)+22);
   s.drinkCount++;
@@ -12345,6 +12427,8 @@ function vgacReady(p){
  return false;
 }
 function vgacAction(id,act){
+try{const __p=state.patients.find(x=>x.id===id);if(__p&&typeof vgTimeMark==="function")vgTimeMark(__p,"recheck","Advanced case reassessed");}catch(e){}
+
  const p=(state.patients||[]).find(x=>x.id===id);if(!p||!p.advancedCase)return;
  const c=p.advancedCase;c.actions++;
  if(act==="stabilize"){p.oxygen=Math.min(100,Number(p.oxygen??86)+6);p.hydration=Math.min(100,Number(p.hydration??50)+5)}
@@ -12399,7 +12483,9 @@ function vgcmEnsure(p){
 }
 function vgcmReveal(p){const c=vgcmEnsure(p);if(c.hidden.length){const x=c.hidden.shift();c.revealed.push(x);c.evidence.unshift("DISCOVERED · "+x);if(window.vghAddMilestone)vghAddMilestone(p,"finding-"+c.revealed.length,"NEW FINDING · "+x.toUpperCase())}}
 function vgcmBranch(c){const a=[["Stable but hesitant to move.","Protect Rest","Gentle Mobility Trial"],["Distressed when left alone.","Quiet Private Room","Companion Introduction"],["Only sniffs the food.","Leave Food Quietly","Stay Nearby While Eating"],["The room may be adding stress.","Reduce Stimulation","Increase Enrichment"]];c.branch=a[Math.floor(Math.random()*a.length)]}
-function vgcmObserve(id){const p=state.patients.find(x=>x.id===id),c=vgcmEnsure(p);c.obs++;c.evidence.unshift("OBSERVATION · "+p.name+" "+c.clue+".");if(c.obs%2===0)vgcmReveal(p);if(c.obs>=2&&!c.branch)vgcmBranch(c);render()}
+function vgcmObserve(id){
+try{const __p=state.patients.find(x=>x.id===id);if(__p&&typeof vgTimeMark==="function")vgTimeMark(__p,"recheck","Observation round");}catch(e){}
+const p=state.patients.find(x=>x.id===id),c=vgcmEnsure(p);c.obs++;c.evidence.unshift("OBSERVATION · "+p.name+" "+c.clue+".");if(c.obs%2===0)vgcmReveal(p);if(c.obs>=2&&!c.branch)vgcmBranch(c);render()}
 function vgcmChoose(id,n){const p=state.patients.find(x=>x.id===id),c=vgcmEnsure(p),pick=c.branch[n];const good=Math.random()<.72;c.result=good?pick+" helped. Another clue became visible.":pick+" did not solve the underlying need; the case remains stable.";c.evidence.unshift("DECISION · "+c.result);if(good){p.trust=Math.min(100,Number(p.trust||40)+5);vgcmReveal(p)}c.branch=null;if(Math.random()<.4){c.event=["PAIN INCREASED","REFUSED WATER","FEAR SPIKE","APPETITE DROPPED","RESTLESS NIGHT","BREATHING IMPROVED"][Math.floor(Math.random()*6)]}render()}
 function vgcmConsult(id,x){const p=state.patients.find(q=>q.id===id),c=vgcmEnsure(p);if(!c.consults.includes(x))c.consults.push(x);c.evidence.unshift(x+" consult reviewed the case.");if(c.consults.length%2===0)vgcmReveal(p);if(x==="Rehabilitation")p.mobility=Math.min(100,Number(p.mobility||50)+5);if(x==="Behavioral Care")p.trust=Math.min(100,Number(p.trust||40)+5);if(x==="Nutrition")p.hunger=Math.min(100,Number(p.hunger||50)+5);render()}
 function vgcmEvent(id){const p=state.patients.find(q=>q.id===id),c=vgcmEnsure(p);c.evidence.unshift("RESPONDED · "+c.event);c.event="";p.comfort=Math.min(100,Number(p.comfort||50)+4);render()}
@@ -12487,6 +12573,107 @@ function vgScrollSafety(){
 window.addEventListener("pageshow",()=>setTimeout(vgScrollSafety,0));
 window.addEventListener("resize",()=>setTimeout(vgScrollSafety,0));
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)setTimeout(vgScrollSafety,0)});
+
+
+/* ===== VET GODS HOSPITAL TIME SYSTEM ===== */
+const VG_TIME_KEY="VET_GODS_HOSPITAL_TIME_V1";
+const VG_TIME={sessionStarted:Date.now(),careerMs:0,lastSeen:Date.now(),loaded:false,timer:null};
+function vgTimeLoad(){
+ if(VG_TIME.loaded)return;VG_TIME.loaded=true;
+ try{const x=JSON.parse(localStorage.getItem(VG_TIME_KEY)||"{}");VG_TIME.careerMs=Number(x.careerMs||0);VG_TIME.lastSeen=Number(x.lastSeen||Date.now())}catch(e){}
+}
+function vgTimeSave(){
+ vgTimeLoad();const now=Date.now();
+ try{localStorage.setItem(VG_TIME_KEY,JSON.stringify({careerMs:VG_TIME.careerMs+Math.max(0,now-VG_TIME.sessionStarted),lastSeen:now}))}catch(e){}
+}
+function vgCareerMs(){vgTimeLoad();return VG_TIME.careerMs+Math.max(0,Date.now()-VG_TIME.sessionStarted)}
+function vgDur(ms){ms=Math.max(0,Number(ms)||0);const min=Math.floor(ms/60000),d=Math.floor(min/1440),h=Math.floor((min%1440)/60),m=min%60;return d?`${d}d ${h}h`:h?`${h}h ${m}m`:`${m}m`}
+function vgDurShort(ms){ms=Math.max(0,Number(ms)||0);const min=Math.floor(ms/60000),h=Math.floor(min/60),m=min%60;return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}`}
+function vgShift(){const h=new Date().getHours();return h>=6&&h<12?"MORNING SHIFT":h>=12&&h<18?"AFTERNOON SHIFT":h>=18&&h<22?"EVENING SHIFT":"OVERNIGHT SHIFT"}
+function vgEnsurePatientTime(p){
+ if(!p)return;p.timeLog=p.timeLog||{};const n=Date.now();
+ if(!p.timeLog.admittedAt)p.timeLog.admittedAt=n;
+ if(!p.timeLog.lastMealAt)p.timeLog.lastMealAt=n;
+ if(!p.timeLog.lastDrinkAt)p.timeLog.lastDrinkAt=n;
+ if(!p.timeLog.lastRecheckAt)p.timeLog.lastRecheckAt=n;
+ if(!Array.isArray(p.timeLog.events))p.timeLog.events=[];
+}
+function vgStable(p){return p&&Number(p.oxygen||100)>=90&&Number(p.pain||0)<=45&&Number(p.shock||0)<=30&&Number(p.bleeding||0)<=25}
+function vgTimeEvent(p,text){if(!p)return;vgEnsurePatientTime(p);p.timeLog.events.unshift({t:Date.now(),text:String(text||"Care event")});p.timeLog.events=p.timeLog.events.slice(0,8)}
+function vgTimeMark(p,type,text){
+ if(!p)return;vgEnsurePatientTime(p);const n=Date.now();
+ if(type==="meal")p.timeLog.lastMealAt=n;if(type==="drink")p.timeLog.lastDrinkAt=n;if(type==="recheck")p.timeLog.lastRecheckAt=n;if(type==="surgery")p.timeLog.surgeryAt=n;
+ vgTimeEvent(p,text||type)
+}
+function vgSev(ms,type){const h=ms/3600000;if(type==="recheck")return h>=6?"hot":h>=3?"warn":"good";if(type==="water")return h>=8?"hot":h>=4?"warn":"good";if(type==="food")return h>=10?"hot":h>=6?"warn":"good";return"good"}
+function vgPatientTimeHTML(p){
+ if(!p)return"";vgEnsurePatientTime(p);const n=Date.now(),t=p.timeLog;
+ if(vgStable(p)&&!t.stableSince)t.stableSince=n;if(!vgStable(p))t.stableSince=null;
+ const ev=(t.events||[]).slice(0,4).map(e=>`+${vgDurShort(n-e.t)} · ${e.text}`).join("<br>")||"No timestamped care events yet.";
+ return `<div class="vg-patient-timebar">
+ <div class="row"><span>HOURS UNDER CARE</span><b>${vgDur(n-t.admittedAt)}</b></div>
+ <div class="row"><span>STABLE FOR</span><b>${t.stableSince?vgDur(n-t.stableSince):"NOT STABLE"}</b></div>
+ <div class="row"><span>LAST MEAL</span><b>${vgDur(n-t.lastMealAt)} AGO</b></div>
+ <div class="row"><span>LAST INDEPENDENT DRINK</span><b>${vgDur(n-t.lastDrinkAt)} AGO</b></div>
+ <div class="row"><span>LAST REASSESSMENT</span><b>${vgDur(n-t.lastRecheckAt)} AGO</b></div>
+ ${t.surgeryAt?`<div class="row"><span>SINCE SURGERY</span><b>${vgDur(n-t.surgeryAt)}</b></div>`:""}
+ <div class="timeline">${ev}</div></div>`
+}
+function vgHospitalTimeHTML(p){
+ vgTimeLoad();const n=Date.now(),offline=Math.max(0,VG_TIME.sessionStarted-VG_TIME.lastSeen);
+ let meal=0,drink=0,recheck=0;if(p){vgEnsurePatientTime(p);meal=n-p.timeLog.lastMealAt;drink=n-p.timeLog.lastDrinkAt;recheck=n-p.timeLog.lastRecheckAt}
+ return `<div class="vg-time-console"><div class="vg-time-head"><b>⏱ HOSPITAL TIME CORE</b><span>${vgShift()}</span></div>
+ <div class="vg-hour-odometer">${(vgCareerMs()/3600000).toFixed(1).padStart(7,"0")} <small>CAREER HRS</small></div>
+ <div class="vg-time-grid"><div class="vg-time-cell good"><span>SESSION</span><strong>${vgDurShort(n-VG_TIME.sessionStarted)}</strong></div>
+ <div class="vg-time-cell good"><span>RETURN GAP</span><strong>${vgDurShort(offline)}</strong></div>
+ ${p?`<div class="vg-time-cell ${vgSev(meal,"food")}"><span>MEAL AGO</span><strong>${vgDurShort(meal)}</strong></div>
+ <div class="vg-time-cell ${vgSev(drink,"water")}"><span>WATER AGO</span><strong>${vgDurShort(drink)}</strong></div>
+ <div class="vg-time-cell ${vgSev(recheck,"recheck")}"><span>RECHECK AGO</span><strong>${vgDurShort(recheck)}</strong></div>
+ <div class="vg-time-cell good"><span>HOSPITAL DAY</span><strong>${Math.floor((n-p.timeLog.admittedAt)/86400000)+1}</strong></div>`:""}</div>
+ <div class="vg-time-ledline"><i class="on"></i><i class="on"></i><i class="${p&&vgSev(recheck,"recheck")==="hot"?"hot":"on"}"></i><i class="${p&&vgSev(drink,"water")!=="good"?"warn":"on"}"></i><i class="on"></i></div></div>`
+}
+function vgInstallHospitalTime(){
+ const p=(state.patients||[]).find(x=>x.id===state.activeId)||null;if(p)vgEnsurePatientTime(p);
+ const shell=document.querySelector("#clinic.active .vg-photo-shell");if(!shell)return;
+ const old=shell.querySelector(".vg-time-console");if(old)old.remove();
+ const right=shell.querySelector(".vg-photo-side.right");if(right)right.insertAdjacentHTML("beforeend",vgHospitalTimeHTML(p));
+ if(p){const id=shell.querySelector(".vg-photo-id");if(id){const oldp=id.querySelector(".vg-patient-timebar");if(oldp)oldp.remove();id.insertAdjacentHTML("beforeend",vgPatientTimeHTML(p))}}
+}
+function vgTimeTick(){try{vgInstallHospitalTime()}catch(e){}}
+function vgStartHospitalTime(){vgTimeLoad();if(VG_TIME.timer)clearInterval(VG_TIME.timer);VG_TIME.timer=setInterval(vgTimeTick,30000)}
+window.addEventListener("beforeunload",vgTimeSave);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)vgTimeSave();else vgTimeTick()});
+
+try{vgStartHospitalTime();setTimeout(vgTimeTick,300);}catch(e){}
+
+
+/* ===== Ultra digital FX injector ===== */
+function vgUltraDigitalFX(){
+ const shell=document.querySelector("#clinic.active .vg-photo-shell");if(!shell)return;
+ if(!shell.querySelector(".vg-ambient-beacons")){
+   const x=document.createElement("div");x.className="vg-ambient-beacons";
+   x.innerHTML='<i class="vg-beacon b1"></i><i class="vg-beacon b2"></i><i class="vg-beacon b3"></i><i class="vg-beacon b4"></i><div class="vg-floor-light"></div>';
+   shell.appendChild(x);
+ }
+ const center=shell.querySelector(".vg-photo-center");
+ if(center&&!center.querySelector(".vg-scan-arcs")){
+   const a=document.createElement("div");a.className="vg-scan-arcs";center.appendChild(a);
+   const l=document.createElement("div");l.className="vg-pixel-column left";l.innerHTML="<i></i>".repeat(9);center.appendChild(l);
+   const r=document.createElement("div");r.className="vg-pixel-column right";r.innerHTML="<i></i>".repeat(9);center.appendChild(r);
+ }
+ shell.querySelectorAll(".vg-photo-hud").forEach((h,n)=>{
+   if(!h.querySelector(".vg-hud-sparkline")){
+      const s=document.createElement("div");s.className="vg-hud-sparkline";
+      s.innerHTML=Array.from({length:12},(_,i)=>`<i style="height:${7+((i*13+n*9)%18)}px"></i>`).join("");
+      h.appendChild(s);
+   }
+   if((n===0||n===1)&&!h.querySelector(".vg-waveform")){
+      const w=document.createElement("div");w.className="vg-waveform";
+      w.innerHTML='<svg viewBox="0 0 280 50" preserveAspectRatio="none"><path d="M0,28 L20,28 L30,12 L40,38 L52,8 L62,28 L90,28 L102,20 L112,31 L122,28 L150,28 L162,11 L174,39 L185,28 L210,28 L224,17 L236,31 L248,28 L280,28"/><path class="pink" d="M0,34 C20,24 30,42 48,31 S80,20 100,32 S140,40 160,29 S200,18 220,31 S255,38 280,27"/></svg>';
+      h.appendChild(w);
+   }
+ });
+}
 </script>
 </body>
 </html>
