@@ -2137,6 +2137,153 @@ body.vg-focus-mode .vg-cine-shell{margin:0;min-height:calc(100vh - 16px)}
 .vg-li-memory div{font-size:10px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05)}
 @media(max-width:700px){.vg-li-grid,.vg-li-actions{grid-template-columns:1fr}}
 
+
+/* ===== Rare Advanced Case System ===== */
+.vg-advanced-alert{margin:12px 0;padding:12px;border:1px solid rgba(255,120,120,.42);border-radius:18px;background:linear-gradient(180deg,rgba(45,8,12,.96),rgba(12,8,16,.96))}
+.vg-adv-track{margin-top:10px}.vg-adv-stage{padding:8px;border-left:3px solid #4d3b43;margin:4px 0;background:#120b0f}
+.vg-adv-stage.done{border-left-color:#4d9f7c;background:#0c1d18}.vg-adv-stage.active{border-left-color:#ff9b7e;background:#26120d}
+.vg-complication{margin-top:9px;padding:10px;border:1px solid #7e5c40;border-radius:12px;background:#20150a}
+.vg-adv-actions{margin-top:9px}.vg-adv-actions button{width:100%;min-height:58px}
+
+</style>
+
+<style id="case-campaign-css">
+.vg-campaign{margin:12px 0;padding:13px;border:1px solid #87583f;border-radius:18px;background:#0d1119}
+.vg-campaign h2{margin:0}.vg-cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0}
+.vg-cbox{padding:10px;border:1px solid #4f5c6b;border-radius:12px;background:#10151e}
+.vg-cpri{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0}
+.vg-cpri div{padding:8px;border:1px solid #76533e;border-radius:10px;background:#1d120d}
+.vg-cbuttons{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0}
+.vg-cbuttons button{min-height:54px}.vg-cbranch,.vg-cevent{padding:10px;margin:9px 0;border:1px solid #806047;border-radius:12px;background:#21150d}
+.vg-cevent{border-color:#854d4d;background:#240e0e}.vg-cstory{padding:9px;border-left:3px solid #d08a55;background:#151117;margin:8px 0;font-style:italic}
+.vg-shifts{display:flex;gap:6px;overflow:auto;margin:8px 0}.vg-shifts span{flex:0 0 auto;padding:6px 8px;border:1px solid #46566c;border-radius:999px;font-size:10px}.vg-shifts .on{background:#2b180c;border-color:#d08a55}.vg-shifts .done{background:#0c2a20}
+@media(max-width:700px){.vg-cg,.vg-cpri,.vg-cbuttons{grid-template-columns:1fr}}
+</style>
+
+<style id="vg-photo-target-redesign">
+/* ===== VET GODS · PHOTO-TARGET FRESH VISUAL SHELL ===== */
+:root{
+ --vg-neon:#63e9ff;--vg-pink2:#ff78df;--vg-gold2:#ffd67c;--vg-deep:#02070d;
+ --vg-panel2:rgba(3,16,28,.76);--vg-edge2:rgba(99,233,255,.32);
+}
+body{
+ background:
+  radial-gradient(circle at 50% -10%,rgba(46,165,255,.12),transparent 34%),
+  radial-gradient(circle at 15% 35%,rgba(255,70,195,.08),transparent 30%),
+  #01060b!important;
+}
+.screen.active{max-width:1220px;margin:0 auto;padding:8px!important}
+#clinic.active{display:block!important}
+.vg-photo-shell{
+ position:relative;overflow:hidden;border-radius:26px;border:1px solid rgba(99,233,255,.35);
+ min-height:570px;background:#04101a;box-shadow:0 18px 70px rgba(0,0,0,.55),0 0 40px rgba(65,205,255,.09);
+}
+.vg-photo-bg{position:absolute;inset:0;background-image:
+ linear-gradient(180deg,rgba(1,8,14,.18),rgba(1,8,14,.86)),
+ var(--vg-art);background-size:cover;background-position:center;filter:saturate(1.25) contrast(1.05)}
+.vg-photo-grid{position:absolute;inset:0;background:
+ linear-gradient(rgba(92,220,255,.045) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(92,220,255,.045) 1px,transparent 1px);
+ background-size:30px 30px;mask-image:linear-gradient(to bottom,transparent,black 20%,black 85%,transparent)}
+.vg-photo-top{position:relative;z-index:3;padding:14px 16px 4px;display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.vg-photo-brand{font-weight:1000;letter-spacing:.16em;font-size:clamp(20px,5vw,42px);text-shadow:0 0 22px rgba(99,233,255,.38)}
+.vg-photo-sub{font-size:10px;letter-spacing:.13em;opacity:.75}
+.vg-photo-status{padding:8px 11px;border-radius:999px;border:1px solid rgba(255,214,124,.45);background:rgba(18,15,5,.72);font-size:10px}
+.vg-photo-stage{position:relative;z-index:3;display:grid;grid-template-columns:minmax(190px,1fr) minmax(280px,1.65fr) minmax(190px,1fr);gap:12px;padding:10px 14px 16px;align-items:stretch}
+.vg-photo-side{display:flex;flex-direction:column;gap:8px}
+.vg-photo-hud{padding:10px;border:1px solid var(--vg-edge2);border-radius:15px;background:linear-gradient(180deg,rgba(3,24,40,.82),rgba(2,10,18,.82));backdrop-filter:blur(10px);box-shadow:inset 0 0 22px rgba(62,185,255,.04)}
+.vg-photo-hud b{font-size:11px;letter-spacing:.08em}
+.vg-photo-read{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px;font-size:11px}
+.vg-photo-bar{height:5px;background:#081722;border-radius:999px;overflow:hidden;margin-top:4px}
+.vg-photo-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--vg-neon),var(--vg-pink2));box-shadow:0 0 8px rgba(99,233,255,.5)}
+.vg-photo-center{position:relative;min-height:420px;border-radius:23px;border:1px solid rgba(99,233,255,.24);background:radial-gradient(circle at 50% 55%,rgba(60,220,255,.14),rgba(3,9,17,.45) 56%,rgba(2,8,14,.78));overflow:hidden}
+.vg-photo-center:before{content:"";position:absolute;left:12%;right:12%;bottom:7%;height:20%;border-radius:50%;border:1px solid rgba(99,233,255,.25);box-shadow:0 0 35px rgba(99,233,255,.15),inset 0 0 25px rgba(99,233,255,.08);transform:perspective(280px) rotateX(63deg)}
+.vg-photo-patient{position:absolute;inset:44px 12px 88px;display:flex;align-items:center;justify-content:center}
+.vg-photo-patient img{max-width:86%;max-height:100%;object-fit:contain;filter:drop-shadow(0 16px 24px rgba(0,0,0,.65)) drop-shadow(0 0 18px rgba(91,219,255,.16));border-radius:24px}
+.vg-photo-id{position:absolute;left:15px;right:15px;bottom:13px;padding:10px 12px;border:1px solid rgba(99,233,255,.3);border-radius:15px;background:rgba(2,11,20,.78);backdrop-filter:blur(10px)}
+.vg-photo-id h2{margin:0;font-size:22px}
+.vg-photo-id .small{opacity:.75}
+.vg-photo-badge{position:absolute;top:12px;left:12px;padding:7px 9px;border:1px solid rgba(255,120,223,.42);background:rgba(35,8,31,.72);border-radius:999px;font-size:10px}
+.vg-photo-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vg-photo-actions button{min-height:61px;border-radius:14px!important;border:1px solid rgba(99,233,255,.3)!important;background:linear-gradient(180deg,rgba(8,38,59,.9),rgba(3,18,31,.94))!important;box-shadow:inset 0 0 18px rgba(99,233,255,.04)!important}
+.vg-photo-actions button:active{transform:scale(.98)}
+.vg-photo-census{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.vg-photo-census div{padding:8px;border-radius:12px;border:1px solid rgba(99,233,255,.2);background:rgba(2,14,24,.65);text-align:center;font-size:10px}
+.vg-photo-census strong{display:block;font-size:18px;color:#fff}
+.vg-photo-lower{margin-top:12px}
+.vg-photo-lower>.panel,.vg-photo-lower>.hero,.vg-photo-lower>.card,
+#vgHealingPanel>.vg-advanced-alert,#vgHealingPanel>.vg-campaign,#vgHealingPanel>.vg-lonely-intel,#vgHealingPanel>.vg-matchmaker,
+#vgHealingPanel>[class*="vg-"]{
+ border-radius:18px!important;border-color:rgba(99,233,255,.24)!important;
+ background:linear-gradient(180deg,rgba(4,20,34,.92),rgba(2,10,18,.94))!important;
+ box-shadow:0 12px 32px rgba(0,0,0,.28)!important;
+}
+.vg-photo-lower .roster{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}
+.vg-photo-lower .dept-card{border-radius:15px!important;background:rgba(4,19,31,.82)!important;border:1px solid rgba(99,233,255,.2)!important}
+.vg-photo-lower .dept-card img{height:120px!important;object-fit:contain!important;background:radial-gradient(circle,rgba(65,190,255,.10),transparent 70%)!important}
+.vg-photo-section-title{margin:14px 2px 7px;font-size:11px;letter-spacing:.14em;color:#9cecff}
+body.vg-photo-ui .panel,body.vg-photo-ui .card,body.vg-photo-ui .hero{backdrop-filter:blur(8px)}
+body.vg-photo-ui button{touch-action:manipulation}
+@media(max-width:860px){
+ .vg-photo-stage{grid-template-columns:1fr 1.45fr}
+ .vg-photo-side.right{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+ .vg-photo-shell{border-radius:20px;min-height:0}
+ .vg-photo-top{padding:12px 11px 0}
+ .vg-photo-stage{display:flex;flex-direction:column;padding:8px 10px 12px}
+ .vg-photo-center{order:-1;min-height:360px}
+ .vg-photo-side,.vg-photo-side.right{display:grid;grid-template-columns:1fr 1fr}
+ .vg-photo-actions{grid-template-columns:1fr 1fr}
+ .vg-photo-hud{padding:9px}
+ .vg-photo-patient{inset:42px 8px 92px}
+ .vg-photo-patient img{max-width:95%;max-height:100%}
+ .vg-photo-brand{font-size:25px}
+}
+</style>
+
+<style id="vg-digital-light-fx">
+/* ===== VET GODS · DIGITAL LIGHT / FLASH FX ===== */
+@keyframes vgBlink{0%,44%,100%{opacity:.25}45%,74%{opacity:1}}
+@keyframes vgPulse{0%,100%{box-shadow:0 0 4px currentColor}50%{box-shadow:0 0 17px currentColor,0 0 30px currentColor}}
+@keyframes vgSweep{0%{transform:translateX(-120%)}100%{transform:translateX(520%)}}
+@keyframes vgScan{0%{top:-5%}100%{top:105%}}
+@keyframes vgFlicker{0%,100%{opacity:.92}7%{opacity:.62}9%{opacity:1}38%{opacity:.86}40%{opacity:.45}42%{opacity:1}}
+@keyframes vgData{0%{transform:translateY(0)}100%{transform:translateY(-22px)}}
+@keyframes vgAlarm{0%,100%{background:rgba(255,55,75,.05)}50%{background:rgba(255,55,75,.19)}}
+.vg-photo-shell:after{content:"";pointer-events:none;position:absolute;z-index:2;left:0;right:0;height:2px;top:-2%;background:linear-gradient(90deg,transparent,#7ff7ff,transparent);opacity:.25;animation:vgScan 5.5s linear infinite}
+.vg-photo-hud{position:relative;overflow:hidden}
+.vg-photo-hud:after{content:"";position:absolute;pointer-events:none;top:0;bottom:0;width:20%;background:linear-gradient(90deg,transparent,rgba(120,245,255,.09),transparent);animation:vgSweep 5s linear infinite}
+.vg-photo-brand{animation:vgFlicker 8s infinite}
+.vg-ledbank{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.vg-led{width:8px;height:8px;border-radius:50%;background:#15303a;border:1px solid rgba(255,255,255,.14)}
+.vg-led.on{background:#7ef6ff;color:#7ef6ff;animation:vgPulse 1.7s ease-in-out infinite}
+.vg-led.warn{background:#ffd36e;color:#ffd36e;animation:vgBlink 1.25s steps(1) infinite}
+.vg-led.hot{background:#ff5b7d;color:#ff5b7d;animation:vgBlink .72s steps(1) infinite}
+.vg-digital-strip{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:8px}
+.vg-digital-strip i{height:4px;border-radius:5px;background:#14313d}
+.vg-digital-strip i:nth-child(2n){background:#62eaff;box-shadow:0 0 8px rgba(98,234,255,.7);animation:vgBlink 1.8s steps(1) infinite}
+.vg-digital-strip i:nth-child(3n){background:#ff78df;box-shadow:0 0 8px rgba(255,120,223,.6);animation:vgBlink 2.4s steps(1) infinite reverse}
+.vg-corner-lights{position:absolute;z-index:4;top:72px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none}
+.vg-corner-cluster{display:flex;gap:5px}
+.vg-corner-cluster i{width:7px;height:18px;border-radius:5px;background:#17313b;border:1px solid rgba(255,255,255,.12)}
+.vg-corner-cluster i:nth-child(1),.vg-corner-cluster i:nth-child(4){background:#5eeaff;box-shadow:0 0 13px #5eeaff;animation:vgBlink 1.4s steps(1) infinite}
+.vg-corner-cluster i:nth-child(2){background:#ff77dc;box-shadow:0 0 13px #ff77dc;animation:vgBlink 2.1s steps(1) infinite}
+.vg-corner-cluster i:nth-child(5){background:#ffd56f;box-shadow:0 0 13px #ffd56f;animation:vgBlink 1.75s steps(1) infinite}
+.vg-photo-center .vg-radar-ring{position:absolute;left:50%;top:48%;width:72%;aspect-ratio:1;border-radius:50%;border:1px solid rgba(94,234,255,.13);transform:translate(-50%,-50%);pointer-events:none}
+.vg-photo-center .vg-radar-ring:after{content:"";position:absolute;left:50%;top:50%;width:48%;height:1px;transform-origin:left center;background:linear-gradient(90deg,#6ff2ff,transparent);animation:vgRadar 4s linear infinite}
+@keyframes vgRadar{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.vg-live-data{height:42px;overflow:hidden;margin-top:7px;font:9px/1.4 monospace;color:#86dce8;opacity:.72}
+.vg-live-data div{animation:vgData 5s linear infinite}
+.vg-photo-status{position:relative;overflow:hidden}
+.vg-photo-status:before{content:"●";color:#76f7c2;margin-right:6px;animation:vgBlink 1.15s steps(1) infinite}
+.vg-photo-shell.vg-critical-fx{animation:vgAlarm 1.35s ease-in-out infinite}
+.vg-critical-fx .vg-photo-status:before{color:#ff5977;animation-duration:.55s}
+.vg-fx-console{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:7px}
+.vg-fx-console span{height:13px;border-radius:3px;background:#102b36;border:1px solid rgba(92,230,255,.12)}
+.vg-fx-console span:nth-child(4n+1){background:#58e9ff;box-shadow:0 0 10px rgba(88,233,255,.6);animation:vgBlink 1.3s steps(1) infinite}
+.vg-fx-console span:nth-child(5n+2){background:#ff71d6;box-shadow:0 0 9px rgba(255,113,214,.5);animation:vgBlink 2.2s steps(1) infinite}
+@media(prefers-reduced-motion:reduce){.vg-photo-shell:after,.vg-photo-hud:after,.vg-photo-brand,.vg-led,.vg-digital-strip i,.vg-corner-cluster i,.vg-radar-ring:after,.vg-live-data div,.vg-photo-status:before,.vg-photo-shell.vg-critical-fx,.vg-fx-console span{animation:none!important}}
 </style>
 </head>
 <body>
@@ -2513,34 +2660,60 @@ function roster(list,deptName){
       <button onclick="setActive('${p.id}')">Open Patient</button>
     </div>`).join("")}</div>`;
 }
+
+/* ===== Photo-target clinic renderer ===== */
+function vgPhotoMeter(label,val,invert){
+  let n=Number(val);if(!Number.isFinite(n))n=0;
+  let shown=Math.max(0,Math.min(100,n)),fill=invert?100-shown:shown;
+  return `<div class="vg-photo-read"><span>${label}</span><b>${Math.round(shown)}</b></div><div class="vg-photo-bar"><i style="width:${Math.max(2,Math.min(100,fill))}%"></i></div>`;
+}
 function renderClinic(){
+  document.body.classList.add("vg-photo-ui");
   const integrated=typeof vgIntegratedPatients==="function"?vgIntegratedPatients():[];
   const p=dept("Clinic").find(x=>x.id===state.activeId)||dept("Clinic")[0]||integrated[0]||null;
   if(p)state.activeId=p.id;
-  clinic.innerHTML=`
-    <div class="grid2">
-      <div class="panel">${patientHero(p)}
-        ${p&&!((p.flow||{}).integratedRecovery)?`<div class="controls" style="margin-top:12px">
-          <button class="action" onclick="treat(active(),12)">Gentle Care</button>
-          <button class="action green" onclick="treat(active(),24)">Standard Care</button>
-          <button class="action gold" onclick="treat(active(),36)">Intensive Care</button>
-        </div>`:""}
+  const clinicCount=dept("Clinic").filter(x=>!((x.flow||{}).integratedRecovery)).length;
+  const afterCount=integrated.length;
+  const surgCount=dept("Surgery").length;
+  const photo=p?`
+  <div class="vg-photo-shell vg-dashboard-hero">
+    <div class="vg-photo-bg"></div><div class="vg-photo-grid"></div>
+    <div class="vg-photo-top">
+      <div><div class="vg-photo-brand">VET GODS</div><div class="vg-photo-sub">ALL SPECIES · ALL WORLDS · ALWAYS HOPE</div></div>
+      <div class="vg-photo-status">${p.advancedCase?"🚨 ADVANCED CASE":"✦ ACTIVE PATIENT"} · ${p.department||"Clinic"}</div>
+    </div>
+    <div class="vg-photo-stage">
+      <div class="vg-photo-side left">
+        <div class="vg-photo-hud"><b>生命 · VITAL CORE</b>${vgPhotoMeter("OXYGEN",p.oxygen)}${vgPhotoMeter("HYDRATION",p.hydration)}${vgPhotoMeter("COMFORT",p.comfort)}</div>
+        <div class="vg-photo-hud"><b>TRAUMA LOAD</b>${vgPhotoMeter("PAIN",p.pain,true)}${vgPhotoMeter("BLEEDING",p.bleeding,true)}${vgPhotoMeter("SHOCK",p.shock,true)}</div>
+        <div class="vg-photo-hud"><b>HOSPITAL PULSE</b><div class="vg-photo-census"><div><strong>${clinicCount}</strong>Clinic</div><div><strong>${surgCount}</strong>Surgery</div><div><strong>${afterCount}</strong>Aftercare</div></div></div>
       </div>
-      <div class="panel">
-        <h3>Hospital Census</h3>
-        <div class="dept-counts">
-          <div class="chip">Clinic <b>${dept("Clinic").filter(x=>!((x.flow||{}).integratedRecovery)).length}</b></div>
-          <div class="chip">Surgery <b>${dept("Surgery").length}</b></div>
-          <div class="chip">Aftercare <b>${integrated.length}</b></div>
-        </div>
-        <p class="small">Recovery is integrated into the hospital flow and no longer has its own area.</p>
+      <div class="vg-photo-center">
+        <div class="vg-photo-badge">${p.advancedCase?(p.advancedCase.tier||"ADVANCED CASE"):"LIFE SPARK PATIENT"}</div>
+        <div class="vg-photo-patient"><img src="${p.image}" alt="${p.name}"></div>
+        <div class="vg-photo-id"><h2>${p.name}</h2><div class="small">${p.species} · ${p.condition}</div></div>
+      </div>
+      <div class="vg-photo-side right">
+        <div class="vg-photo-hud"><b>CARE CONSOLE</b><div class="vg-photo-actions">
+          ${!((p.flow||{}).integratedRecovery)?`<button onclick="treat(active(),12)">🤲 Gentle Care</button><button onclick="treat(active(),24)">✚ Standard Care</button><button onclick="treat(active(),36)">⚡ Intensive Care</button>`:""}
+          <button onclick="if(typeof vgOpenHealing==='function')vgOpenHealing('${p.id}');else window.scrollTo({top:document.getElementById('vgHealingPanel')?.offsetTop||0,behavior:'smooth'})">💠 Healing Journey</button>
+          <button onclick="if(typeof openAnimalProfile==='function')openAnimalProfile('${p.id}')">🐾 Full Patient</button>
+          <button onclick="if(typeof vgOpenScreen==='function')vgOpenScreen('carelab')">🧠 Care Lab</button>
+        </div></div>
+        <div class="vg-photo-hud"><b>EMOTIONAL SIGNAL</b>${vgPhotoMeter("TRUST",p.trust)}${vgPhotoMeter("STRESS",p.stress,true)}${vgPhotoMeter("MOBILITY",p.mobility)}</div>
+        <div class="vg-photo-hud"><b>STATUS FEED</b><div class="small">${p.advancedCase?"Complex case protocols are active. Investigate, stabilize, reassess, and follow the animal's response.":"Treat the patient, watch the response, and let the next care step unlock naturally."}</div></div>
       </div>
     </div>
-    <div class="panel"><h3>Clinic Patients</h3>${roster(dept("Clinic").filter(x=>!((x.flow||{}).integratedRecovery)),"Clinic")}</div>
-    ${integrated.length?`<div class="hero"><h2>🌿 INTEGRATED AFTERCARE</h2><p>Post-treatment and post-surgery recovery continues right here.</p></div>${integrated.map(vgIntegratedAftercareHTML).join("")}`:""}`;
+  </div>`:`<div class="vg-photo-shell vg-dashboard-hero"><div class="vg-photo-bg"></div><div class="vg-photo-top"><div><div class="vg-photo-brand">VET GODS</div><div class="vg-photo-sub">HOSPITAL READY · AWAITING PATIENT</div></div></div></div>`;
 
+  clinic.innerHTML=photo+`<div class="vg-photo-lower">
+    <div class="vg-photo-section-title">HOSPITAL PATIENTS</div>
+    <div class="panel"><h3>Clinic Patients</h3>${roster(dept("Clinic").filter(x=>!((x.flow||{}).integratedRecovery)),"Clinic")}</div>
+    ${integrated.length?`<div class="vg-photo-section-title">INTEGRATED AFTERCARE</div>${integrated.map(vgIntegratedAftercareHTML).join("")}`:""}
+  </div>`;
   if(p&&typeof clinicEconomyHTML==="function")clinic.innerHTML+=clinicEconomyHTML(p);
 }
+
 function renderSurgery(){
   const el=document.getElementById("surgery");if(!el)return;
   const pts=sgPatients();
@@ -8385,6 +8558,14 @@ try{if(typeof vgsStart==="function")vgsStart();if(typeof vgsInstall==="function"
 try{if(typeof vgmStart==="function")vgmStart();if(typeof vgmInstall==="function")vgmInstall()}catch(e){}
 
 try{if(typeof vgliStart==="function")vgliStart();if(typeof vgliInstall==="function")vgliInstall()}catch(e){}
+
+try{if(typeof vgacInstall==="function")vgacInstall()}catch(e){}
+
+try{if(typeof vgcmInstall==="function")vgcmInstall()}catch(e){}
+
+try{if(typeof vgFreshShellPass==="function")vgFreshShellPass()}catch(e){}
+
+try{requestAnimationFrame(()=>{if(typeof vgDigitalFX==="function")vgDigitalFX()})}catch(e){}
 }
 
 function setGameMenu(open){
@@ -12057,6 +12238,166 @@ function vgliInstall(){
  const healing=document.getElementById("vgHealingPanel");if(!healing||healing.querySelector(".vg-lonely-intel"))return;
  const match=healing.querySelector(".vg-matchmaker"),d=document.createElement("div");d.innerHTML=vgliHTML(p);
  if(match&&match.nextSibling)healing.insertBefore(d.firstElementChild,match.nextSibling);else healing.appendChild(d.firstElementChild);
+}
+
+/* ===== Rare Advanced Case Engine ===== */
+const VG_ADVCASE={count:0,next:0};
+function vgacNext(){ if(!VG_ADVCASE.next||VG_ADVCASE.next<=VG_ADVCASE.count)VG_ADVCASE.next=VG_ADVCASE.count+Math.floor(Math.random()*7)+6; }
+function vgacTier(){
+ const r=Math.random();
+ if(r<.08)return["IMPOSSIBLE PATIENT",96];
+ if(r<.22)return["RARE EXOTIC CASE",91];
+ if(r<.48)return["CRITICAL MULTI-SYSTEM CASE",86];
+ if(r<.75)return["SEVERE CASE",78];
+ return["ADVANCED CASE",70];
+}
+function vgacAssign(p){
+ if(!p||!p.admitted||p.advancedCase)return false;
+ vgacNext();
+ if(VG_ADVCASE.count<VG_ADVCASE.next)return false;
+ const [tier,base]=vgacTier();
+ p.advancedCase={
+  tier,complexity:Math.min(100,base+Math.floor(Math.random()*6)),
+  stage:0,actions:0,completed:false,activeComplication:"",
+  stages:["Emergency Stabilization","Pain & Comfort","Hydration / Nutrition","Diagnostics & Treatment","Complication Management","Mobility Rehab","Emotional Recovery","Overnight Stability","Independence Trial","Final Life Spark Check"],
+  complications:["refuses food after stabilization","night distress appears","mobility drops after rest","wound comfort worsens","independent drinking stalls"],
+  log:["ADVANCED CASE INBOUND · extended care required."]
+ };
+ VG_ADVCASE.next=VG_ADVCASE.count+Math.floor(Math.random()*7)+6;
+ return true;
+}
+function vgacRegister(p){VG_ADVCASE.count++;return vgacAssign(p)}
+function vgacReady(p){
+ const c=p.advancedCase;
+ switch(c.stage){
+  case 0:return Number(p.oxygen??90)>=90&&Number(p.hydration??60)>=55;
+  case 1:return Number(p.pain??50)<=45&&Number(p.comfort??50)>=55;
+  case 2:return Number(p.hydration??60)>=65&&Number(p.hunger??60)>=55;
+  case 3:return c.actions>=4;
+  case 4:return !c.activeComplication&&c.actions>=6;
+  case 5:return Number(p.mobility??50)>=60;
+  case 6:return Number(p.trust??40)>=55&&(!window.vgsEnsure||vgsEnsure(p).loneliness<=55);
+  case 7:return !window.vgaEnsure||Number(vgaEnsure(p).overnightStability??50)>=65;
+  case 8:{const s=p.independentSim||{};return !!(s.firstIndependentMeal&&s.firstIndependentDrink&&s.maintainedHydration)}
+  case 9:return !window.vgwEnsure||!!vgwEnsure(p).actingLikeSelf;
+ }
+ return false;
+}
+function vgacAction(id,act){
+ const p=(state.patients||[]).find(x=>x.id===id);if(!p||!p.advancedCase)return;
+ const c=p.advancedCase;c.actions++;
+ if(act==="stabilize"){p.oxygen=Math.min(100,Number(p.oxygen??86)+6);p.hydration=Math.min(100,Number(p.hydration??50)+5)}
+ if(act==="comfort"){p.pain=Math.max(0,Number(p.pain??55)-7);p.comfort=Math.min(100,Number(p.comfort??50)+7)}
+ if(act==="nutrition"){p.hunger=Math.min(100,Number(p.hunger??45)+7);p.hydration=Math.min(100,Number(p.hydration??55)+5)}
+ if(act==="diagnostics"&&c.stage>=3&&!c.activeComplication&&Math.random()<.55)c.activeComplication=c.complications[Math.floor(Math.random()*c.complications.length)];
+ if(act==="resolve")c.activeComplication="";
+ if(act==="mobility")p.mobility=Math.min(100,Number(p.mobility??45)+8);
+ if(act==="emotional"){p.trust=Math.min(100,Number(p.trust??40)+7);if(window.vgsEnsure)vgsEnsure(p).loneliness=Math.max(0,vgsEnsure(p).loneliness-10)}
+ if(act==="overnight"&&window.vgaEnsure)vgaEnsure(p).overnightStability=Math.min(100,Number(vgaEnsure(p).overnightStability??45)+12);
+ if(act==="independence"&&window.vgiEnsure){const s=vgiEnsure(p);s.firstIndependentMeal=true;s.firstIndependentDrink=true;s.maintainedHydration=(s.maintainedHydration||Math.random()<.7)}
+ c.log.unshift(new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})+" · "+act);
+ if(vgacReady(p)){c.stage++;if(c.stage>=c.stages.length){c.completed=true;c.stage=c.stages.length;if(window.vghAddMilestone)vghAddMilestone(p,"adv-complete","LIFE SPARK RESTORED · ADVANCED CASE COMPLETE")}}
+ render();
+}
+function vgacAct(c){return["stabilize","comfort","nutrition","diagnostics","resolve","mobility","emotional","overnight","independence","diagnostics"][Math.min(c.stage,9)]}
+function vgacLabel(c){return["🚑 Stabilize","❤️ Control Pain","🥣 Support Nutrition","🔬 Advanced Diagnostics","⚠️ Manage Complication","🐾 Rehab Session","💞 Emotional Recovery","🌙 Overnight Monitor","✨ Independence Trial","🌟 Final Check"][Math.min(c.stage,9)]}
+function vgacHTML(p){
+ const c=p&&p.advancedCase;if(!c)return"";
+ const pct=c.completed?100:Math.round(c.stage/c.stages.length*100);
+ return `<div class="vg-advanced-alert"><h3>🚨 ${c.tier}</h3><div><b>${c.complexity}% complexity</b> · ${pct}% complete</div>
+ <div class="vg-adv-track">${c.stages.map((s,i)=>`<div class="vg-adv-stage ${i<c.stage?"done":i===c.stage&&!c.completed?"active":""}">${i<c.stage?"✓":i===c.stage?"▶":"○"} ${s}</div>`).join("")}</div>
+ ${c.activeComplication?`<div class="vg-complication"><b>⚠️ Evolving Complication</b><div>${c.activeComplication}</div></div>`:""}
+ ${c.completed?`<div class="vg-breakthrough"><b>🌟 LIFE SPARK RESTORED</b><div>Advanced case complete.</div></div>`:`<div class="vg-adv-actions"><button onclick="vgacAction('${p.id}','${c.activeComplication?"resolve":vgacAct(c)}')">${c.activeComplication?"🧩 Resolve Complication":vgacLabel(c)}</button></div>`}
+ </div>`;
+}
+function vgacInstall(){
+ if(state.screen!=="clinic")return;
+ const p=(state.patients||[]).find(x=>x.id===state.activeId);if(!p||!p.admitted)return;
+ if(!p.advancedCase)vgacAssign(p);
+ const healing=document.getElementById("vgHealingPanel");if(!healing||healing.querySelector(".vg-advanced-alert"))return;
+ const h=vgacHTML(p);if(!h)return;const d=document.createElement("div");d.innerHTML=h;healing.insertBefore(d.firstElementChild,healing.firstChild);
+}
+
+
+/* ===== Advanced Case Mini Campaigns ===== */
+const VG_CAMPAIGNS=[
+["Trauma Mystery","Found exhausted after an unknown ordeal. Stabilization is only the beginning.",["Pain","Dehydration","Profound fear"],["Soft-tissue injury","Separation distress","Appetite suppression"],"keeps watching the doorway even while resting"],
+["Respiratory Crisis","Breathing difficulty brought this patient in fast. Stress makes every examination harder.",["Breathing distress","Fatigue","Fear"],["Dehydration","Poor appetite","Noise sensitivity"],"breathes easier when the room becomes quiet"],
+["Orthopedic Recovery","The injury can be treated, but confidence in movement has disappeared.",["Pain","Reduced mobility","Guarding"],["Fear of standing","Sleep disruption","Social withdrawal"],"looks toward the floor, then back toward the bed"],
+["Neglect Recovery","Medical stabilization is possible. Learning that food, water and people return may take longer.",["Poor condition","Dehydration","Low trust"],["Food insecurity","Loneliness","Handling sensitivity"],"eats more calmly when nobody reaches toward the bowl"],
+["Rare Exotic Mystery","Normal routines do not fit this species. Environment and behavior are part of the diagnosis.",["Stress","Poor intake","Abnormal behavior"],["Temperature mismatch","Retreat need","Sensory overload"],"repeatedly chooses one corner of the enclosure"],
+["Neurological Watch","The patient is stable enough to observe, but behavior and movement do not quite match.",["Weakness","Disorientation","Fatigue"],["Balance difficulty","Appetite change","Night restlessness"],"reveals small changes in posture between checks"]
+];
+function vgcmEnsure(p){
+ if(!p||!p.advancedCase)return null;
+ if(!p.caseCampaign){
+  const t=VG_CAMPAIGNS[Math.floor(Math.random()*VG_CAMPAIGNS.length)];
+  p.caseCampaign={type:t[0],opening:t[1],known:[...t[2]],hidden:[...t[3]],clue:t[4],revealed:[],evidence:[],consults:[],shift:0,shifts:["Arrival","Morning","Afternoon","Evening","Overnight","Next Morning"],branch:null,result:"",event:"",obs:0,ending:"",priorities:["Stabilize the body","Discover the hidden problem","Learn what this animal needs"]};
+ }
+ return p.caseCampaign;
+}
+function vgcmReveal(p){const c=vgcmEnsure(p);if(c.hidden.length){const x=c.hidden.shift();c.revealed.push(x);c.evidence.unshift("DISCOVERED · "+x);if(window.vghAddMilestone)vghAddMilestone(p,"finding-"+c.revealed.length,"NEW FINDING · "+x.toUpperCase())}}
+function vgcmBranch(c){const a=[["Stable but hesitant to move.","Protect Rest","Gentle Mobility Trial"],["Distressed when left alone.","Quiet Private Room","Companion Introduction"],["Only sniffs the food.","Leave Food Quietly","Stay Nearby While Eating"],["The room may be adding stress.","Reduce Stimulation","Increase Enrichment"]];c.branch=a[Math.floor(Math.random()*a.length)]}
+function vgcmObserve(id){const p=state.patients.find(x=>x.id===id),c=vgcmEnsure(p);c.obs++;c.evidence.unshift("OBSERVATION · "+p.name+" "+c.clue+".");if(c.obs%2===0)vgcmReveal(p);if(c.obs>=2&&!c.branch)vgcmBranch(c);render()}
+function vgcmChoose(id,n){const p=state.patients.find(x=>x.id===id),c=vgcmEnsure(p),pick=c.branch[n];const good=Math.random()<.72;c.result=good?pick+" helped. Another clue became visible.":pick+" did not solve the underlying need; the case remains stable.";c.evidence.unshift("DECISION · "+c.result);if(good){p.trust=Math.min(100,Number(p.trust||40)+5);vgcmReveal(p)}c.branch=null;if(Math.random()<.4){c.event=["PAIN INCREASED","REFUSED WATER","FEAR SPIKE","APPETITE DROPPED","RESTLESS NIGHT","BREATHING IMPROVED"][Math.floor(Math.random()*6)]}render()}
+function vgcmConsult(id,x){const p=state.patients.find(q=>q.id===id),c=vgcmEnsure(p);if(!c.consults.includes(x))c.consults.push(x);c.evidence.unshift(x+" consult reviewed the case.");if(c.consults.length%2===0)vgcmReveal(p);if(x==="Rehabilitation")p.mobility=Math.min(100,Number(p.mobility||50)+5);if(x==="Behavioral Care")p.trust=Math.min(100,Number(p.trust||40)+5);if(x==="Nutrition")p.hunger=Math.min(100,Number(p.hunger||50)+5);render()}
+function vgcmEvent(id){const p=state.patients.find(q=>q.id===id),c=vgcmEnsure(p);c.evidence.unshift("RESPONDED · "+c.event);c.event="";p.comfort=Math.min(100,Number(p.comfort||50)+4);render()}
+function vgcmShift(id){const p=state.patients.find(q=>q.id===id),c=vgcmEnsure(p);c.shift=Math.min(c.shifts.length-1,c.shift+1);c.evidence.unshift("SHIFT · "+c.shifts[c.shift]);if(c.shift%2===0)vgcmReveal(p);if(Math.random()<.35)c.event=["PAIN INCREASED","REFUSED WATER","FEAR SPIKE","APPETITE DROPPED","RESTLESS NIGHT"][Math.floor(Math.random()*5)];render()}
+function vgcmConference(id){const p=state.patients.find(q=>q.id===id),c=vgcmEnsure(p);c.priorities=[c.hidden.length?"Reveal "+c.hidden.length+" hidden finding(s)":"Major findings identified",Number(p.pain||30)>40?"Improve pain / comfort":"Maintain comfort",Number(p.trust||40)<60?"Build emotional safety":"Test independence"];c.evidence.unshift("CASE CONFERENCE · priorities updated.");render()}
+function vgcmEnding(p){const c=vgcmEnsure(p);if(!p.advancedCase.completed)return"";if(!c.ending)c.ending=/Exotic/.test(c.type)?"Specialized sanctuary transition":Number(p.mobility||100)<75?"Long-term rehabilitation":(window.vgsEnsure&&vgsEnsure(p).loneliness<30?"Bonded / supported home transition":"Home transition with Life Book story");return c.ending}
+function vgcmHTML(p){const c=vgcmEnsure(p),end=vgcmEnding(p);return `<div class="vg-campaign">
+<h2>🎬 ADVANCED CASE CAMPAIGN</h2><b>${c.type}</b><div>${c.opening}</div><div class="vg-cstory">“${p.name} ${c.clue}.”</div>
+<div class="vg-cg"><div class="vg-cbox"><b>✓ Known</b>${c.known.concat(c.revealed).map(x=>`<div>• ${x}</div>`).join("")}</div><div class="vg-cbox"><b>? Unknown</b>${c.hidden.length?c.hidden.map(()=>"<div>• Hidden finding</div>").join(""):"<div>All major findings revealed.</div>"}</div></div>
+<div class="vg-cbox"><b>🏥 Case Conference</b><div class="vg-cpri">${c.priorities.map(x=>`<div>${x}</div>`).join("")}</div><button onclick="vgcmConference('${p.id}')">Update Briefing</button></div>
+<div class="vg-shifts">${c.shifts.map((x,i)=>`<span class="${i<c.shift?"done":i===c.shift?"on":""}">${x}</span>`).join("")}</div>
+<div class="vg-cbuttons">${["Surgery","Nutrition","Rehabilitation","Exotic Care","Behavioral Care","Pain & Comfort"].map(x=>`<button onclick="vgcmConsult('${p.id}','${x}')">${c.consults.includes(x)?"✓ ":""}${x}</button>`).join("")}</div>
+<div class="vg-cbuttons"><button onclick="vgcmObserve('${p.id}')">👁️ Observe & Investigate</button><button onclick="vgcmShift('${p.id}')">⏱️ Advance Care Shift</button></div>
+${c.branch?`<div class="vg-cbranch"><b>⚖️ Critical Decision</b><div>${c.branch[0]}</div><div class="vg-cbuttons"><button onclick="vgcmChoose('${p.id}',1)">${c.branch[1]}</button><button onclick="vgcmChoose('${p.id}',2)">${c.branch[2]}</button></div></div>`:""}
+${c.result?`<div class="vg-cbox"><b>Animal Response</b><div>${c.result}</div></div>`:""}
+${c.event?`<div class="vg-cevent"><b>🚨 CONDITION CHANGE</b><div>${c.event}</div><button onclick="vgcmEvent('${p.id}')">Respond & Reassess</button></div>`:""}
+<div class="vg-cbox"><b>🔎 Evidence & Story</b>${c.evidence.slice(0,10).map(x=>`<div>• ${x}</div>`).join("")||"<div>Observe the patient to begin uncovering the case.</div>"}</div>
+${end?`<div class="vg-breakthrough"><b>🏡 CASE ENDING</b><div>${end}</div></div>`:""}</div>`}
+function vgcmInstall(){if(state.screen!=="clinic")return;const p=state.patients.find(x=>x.id===state.activeId);if(!p||!p.advancedCase)return;const h=document.getElementById("vgHealingPanel");if(!h||h.querySelector(".vg-campaign"))return;const d=document.createElement("div");d.innerHTML=vgcmHTML(p);const a=h.querySelector(".vg-advanced-alert");if(a&&a.nextSibling)h.insertBefore(d.firstElementChild,a.nextSibling);else h.insertBefore(d.firstElementChild,h.firstChild)}
+
+
+/* ===== Fresh shell pass across departments ===== */
+function vgFreshShellPass(){
+  document.body.classList.add("vg-photo-ui");
+  const active=document.querySelector(".screen.active");if(!active)return;
+  active.querySelectorAll(".panel,.card,.hero").forEach(x=>x.classList.add("vg-fresh-panel"));
+}
+
+
+/* ===== Digital hospital light FX injector ===== */
+function vgDigitalFX(){
+ const shell=document.querySelector("#clinic.active .vg-photo-shell");if(!shell)return;
+ const p=(state.patients||[]).find(x=>x.id===state.activeId);
+ shell.classList.toggle("vg-critical-fx",!!(p&&(Number(p.oxygen||100)<82||Number(p.shock||0)>65||Number(p.pain||0)>82)));
+ if(!shell.querySelector(".vg-corner-lights")){
+   const c=document.createElement("div");c.className="vg-corner-lights";
+   c.innerHTML=`<div class="vg-corner-cluster">${"<i></i>".repeat(6)}</div><div class="vg-corner-cluster">${"<i></i>".repeat(6)}</div>`;
+   shell.appendChild(c);
+ }
+ if(!shell.querySelector(".vg-radar-ring")){
+   const center=shell.querySelector(".vg-photo-center");if(center){const r=document.createElement("div");r.className="vg-radar-ring";center.appendChild(r)}
+ }
+ shell.querySelectorAll(".vg-photo-hud").forEach((h,n)=>{
+   if(!h.querySelector(".vg-ledbank")){
+     const d=document.createElement("div");d.className="vg-ledbank";
+     d.innerHTML=Array.from({length:10},(_,i)=>`<i class="vg-led ${(i+n)%7===0?"warn":(i+n)%9===0?"hot":i%3===0?"on":""}"></i>`).join("");
+     h.appendChild(d);
+   }
+   if(!h.querySelector(".vg-digital-strip")){
+     const s=document.createElement("div");s.className="vg-digital-strip";s.innerHTML="<i></i>".repeat(8);h.appendChild(s);
+   }
+ });
+ const right=shell.querySelector(".vg-photo-side.right .vg-photo-hud");
+ if(right&&!right.querySelector(".vg-live-data")){
+   const d=document.createElement("div");d.className="vg-live-data";
+   d.innerHTML=`<div>CORE LINK  ${Math.floor(88+Math.random()*12)}%<br>BIOSIGNAL SYNC  ACTIVE<br>LIFE SPARK BUS  STABLE<br>CARE NODE  ${String(Math.floor(Math.random()*999)).padStart(3,"0")}<br>WARD TELEMETRY  STREAMING</div>`;
+   right.appendChild(d);
+   const f=document.createElement("div");f.className="vg-fx-console";f.innerHTML="<span></span>".repeat(20);right.appendChild(f);
+ }
 }
 </script>
 </body>
