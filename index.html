@@ -2285,6 +2285,65 @@ body.vg-photo-ui button{touch-action:manipulation}
 .vg-fx-console span:nth-child(5n+2){background:#ff71d6;box-shadow:0 0 9px rgba(255,113,214,.5);animation:vgBlink 2.2s steps(1) infinite}
 @media(prefers-reduced-motion:reduce){.vg-photo-shell:after,.vg-photo-hud:after,.vg-photo-brand,.vg-led,.vg-digital-strip i,.vg-corner-cluster i,.vg-radar-ring:after,.vg-live-data div,.vg-photo-status:before,.vg-photo-shell.vg-critical-fx,.vg-fx-console span{animation:none!important}}
 </style>
+
+<style id="vg-scroll-safety-repair">
+/* ===== GLOBAL SCROLL SAFETY REPAIR ===== */
+html{
+  height:auto!important;
+  min-height:100%!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y pinch-zoom!important;
+}
+body{
+  height:auto!important;
+  min-height:100vh!important;
+  max-height:none!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y pinch-zoom!important;
+  position:relative!important;
+}
+.screen.active{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  touch-action:pan-y pinch-zoom!important;
+}
+/* Full-screen animal focus may still be used, but its own screen must scroll. */
+body.vg-focus-mode{
+  overflow:hidden!important;
+  touch-action:pan-y pinch-zoom!important;
+}
+body.vg-focus-mode .screen.active{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-y:contain!important;
+  touch-action:pan-y pinch-zoom!important;
+}
+/* Decorative FX must never intercept scrolling/touches. */
+.vg-photo-bg,.vg-photo-grid,.vg-corner-lights,.vg-radar-ring,
+.vg-photo-shell:after,.vg-photo-hud:after,
+.vg-life-spark,.vg-room-glow{
+  pointer-events:none!important;
+}
+/* The scrolling document should stay usable even with sticky/fixed UI. */
+#app,.app,.main,main{
+  max-height:none!important;
+  overflow:visible!important;
+}
+@media(max-width:700px){
+  body:not(.vg-focus-mode) .screen.active{
+    position:relative!important;
+    inset:auto!important;
+    overflow:visible!important;
+  }
+}
+</style>
 </head>
 <body>
 <div class="vgfx-header">
@@ -8566,6 +8625,8 @@ try{if(typeof vgcmInstall==="function")vgcmInstall()}catch(e){}
 try{if(typeof vgFreshShellPass==="function")vgFreshShellPass()}catch(e){}
 
 try{requestAnimationFrame(()=>{if(typeof vgDigitalFX==="function")vgDigitalFX()})}catch(e){}
+
+try{requestAnimationFrame(()=>{if(typeof vgScrollSafety==="function")vgScrollSafety()})}catch(e){}
 }
 
 function setGameMenu(open){
@@ -12399,6 +12460,33 @@ function vgDigitalFX(){
    const f=document.createElement("div");f.className="vg-fx-console";f.innerHTML="<span></span>".repeat(20);right.appendChild(f);
  }
 }
+
+
+/* ===== Scroll lock safety ===== */
+function vgScrollSafety(){
+  const focusActuallyOn =
+    (typeof VG_CMD!=="undefined" && !!VG_CMD.focus) ||
+    (typeof VG_CINEMA!=="undefined" && !!VG_CINEMA.focus);
+  if(!focusActuallyOn) document.body.classList.remove("vg-focus-mode");
+  document.documentElement.style.removeProperty("overflow");
+  if(!document.body.classList.contains("vg-focus-mode")){
+    document.body.style.removeProperty("overflow");
+    document.body.style.removeProperty("height");
+    document.body.style.removeProperty("position");
+  }
+  document.querySelectorAll(".screen.active").forEach(el=>{
+    if(!document.body.classList.contains("vg-focus-mode")){
+      el.style.removeProperty("overflow");
+      el.style.removeProperty("height");
+      el.style.removeProperty("max-height");
+      el.style.removeProperty("position");
+      el.style.removeProperty("inset");
+    }
+  });
+}
+window.addEventListener("pageshow",()=>setTimeout(vgScrollSafety,0));
+window.addEventListener("resize",()=>setTimeout(vgScrollSafety,0));
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)setTimeout(vgScrollSafety,0)});
 </script>
 </body>
 </html>
