@@ -2539,6 +2539,20 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
  .vg-same-panel{width:100%}
 }
 </style>
+
+<style id="vg-intake-advanced-link-css">
+/* ===== Admission Quiz ↔ Advanced Daily Care ===== */
+.vg-intake-quiz{margin-top:12px;padding:12px;border:1px solid rgba(99,233,255,.22);border-radius:15px;background:linear-gradient(180deg,rgba(4,22,36,.86),rgba(2,11,20,.9))}
+.vg-intake-quiz h4{margin:0 0 5px;font-size:13px;letter-spacing:.06em}
+.vg-intake-quiz .small{opacity:.72}
+.vg-intake-q{margin-top:10px;padding-top:9px;border-top:1px solid rgba(99,233,255,.12)}
+.vg-intake-q b{display:block;margin-bottom:7px;font-size:11px}
+.vg-intake-options{display:flex;flex-wrap:wrap;gap:7px}
+.vg-intake-options button{min-height:40px!important;flex:1 1 120px!important;border-radius:10px!important}
+.vg-intake-options button.selected{border-color:#76f4ff!important;box-shadow:0 0 13px rgba(99,233,255,.24)!important;background:linear-gradient(180deg,rgba(15,75,102,.9),rgba(5,33,52,.95))!important}
+.vg-intake-ready{margin-top:10px;padding:8px 10px;border-radius:10px;background:rgba(116,255,157,.07);border:1px solid rgba(116,255,157,.2);font-size:10px}
+.vg-intake-linked{margin:8px 0;padding:8px 10px;border-radius:10px;border:1px solid rgba(255,215,118,.22);background:rgba(255,215,118,.05);font-size:10px}
+</style>
 </head>
 <body>
 <div class="vgfx-header">
@@ -4813,6 +4827,7 @@ function vgAdmitNextClinicArrival(){
   if(!db)return;
   const p=vgDatabaseAnimalToPatient(db);
   vgAssignOwnershipOutcome(p,db);
+  try{if(typeof vgApplyIntakeQuizToPatient==="function")vgApplyIntakeQuizToPatient(p,db)}catch(e){}
   if(!state.usedClinicDbIds.includes(db.dbId))state.usedClinicDbIds.push(db.dbId);
   state.nextClinicPreviewId=null;
   state.patients.push(p);
@@ -4854,6 +4869,7 @@ function vgClinicArrivalHTML(){
         <small>${needs?"Possible surgical/advanced-care case":"Clinic evaluation case"}</small>
       </div>
     </div>
+    ${vgIntakeQuizHTML(db)}
     <div class="controls">
       <button class="action green" onclick="vgAdmitNextClinicArrival()">ADMIT INTO CLINIC</button>
       <button class="action" onclick="vgSkipClinicPreview()">Next Arrival Preview</button>
@@ -12101,6 +12117,7 @@ function vgaHTML(p){
   const a=vgaEnsure(p);
   return `<div class="vg-advanced-care">
     <div class="vg-care-head"><div><h3>🧬 Advanced Daily Care</h3><div class="small">Simulated care gameplay · personalized to ${p.name||"this patient"}</div></div><div class="small">${a.quirk}</div></div>
+    ${typeof vgIntakeLinkedHTML==="function"?vgIntakeLinkedHTML(p):""}
     <div class="vg-ac-grid">
       ${vgaCard("🥣 Nutrition & Appetite",a.appetiteInterest,"Prefers: "+a.favoriteFood,`<button onclick="vgaAction('${p.id}','nutrition')">Try Food</button>`)}
       ${vgaCard("🧼 Skin / Coat / Wound Comfort",a.skinCoat,"Comfort-focused hygiene and skin care.",`<button onclick="vgaAction('${p.id}','skin')">Care Session</button>`)}
@@ -12906,6 +12923,145 @@ function vgSamePageEnter(){
  if(hero)hero.scrollIntoView({behavior:"smooth",block:"end"});
  const next=hero?hero.nextElementSibling:null;
  if(next)setTimeout(()=>next.scrollIntoView({behavior:"smooth",block:"start"}),280);
+}
+
+
+/* ===== Admission Quiz ↔ Advanced Daily Care Engine ===== */
+function vgIntakeQuizState(){
+ state.clinicIntakeQuiz=state.clinicIntakeQuiz||{};
+ return state.clinicIntakeQuiz;
+}
+function vgIntakeQuizFor(db){
+ const root=vgIntakeQuizState();
+ if(!root[db.dbId])root[db.dbId]={appetite:null,mobility:null,behavior:null,completed:false};
+ return root[db.dbId];
+}
+function vgIntakeAnswer(dbId,key,value){
+ const db=VG_ANIMAL_DATABASE.find(x=>x.dbId===dbId);if(!db)return;
+ const q=vgIntakeQuizFor(db);q[key]=value;
+ q.completed=!!(q.appetite&&q.mobility&&q.behavior);
+ if(typeof saveGame==="function")try{saveGame("Intake assessment",true)}catch(e){}
+ render();
+}
+function vgIntakeQuizHTML(db){
+ const q=vgIntakeQuizFor(db);
+ const btn=(key,val,label)=>`<button class="${q[key]===val?"selected":""}" onclick="vgIntakeAnswer('${db.dbId}','${key}','${val}')">${label}</button>`;
+ return `<div class="vg-intake-quiz">
+  <h4>🩺 Admission Care Quiz</h4>
+  <div class="small">These answers become this animal's starting Advanced Daily Care profile.</div>
+
+  <div class="vg-intake-q"><b>1 · How has ${vgEscape(db.name)} been eating?</b>
+   <div class="vg-intake-options">
+    ${btn("appetite","normal","Eating Normally")}
+    ${btn("appetite","reduced","Eating Less")}
+    ${btn("appetite","refusing","Refusing Food")}
+   </div>
+  </div>
+
+  <div class="vg-intake-q"><b>2 · How is movement looking?</b>
+   <div class="vg-intake-options">
+    ${btn("mobility","normal","Moving Normally")}
+    ${btn("mobility","stiff","Stiff / Guarded")}
+    ${btn("mobility","limited","Barely Moving")}
+   </div>
+  </div>
+
+  <div class="vg-intake-q"><b>3 · What is the animal doing emotionally?</b>
+   <div class="vg-intake-options">
+    ${btn("behavior","calm","Calm / Seeking Contact")}
+    ${btn("behavior","nervous","Nervous / Watching")}
+    ${btn("behavior","hiding","Hiding / Avoiding")}
+   </div>
+  </div>
+
+  <div class="vg-intake-ready">${q.completed
+    ?"✓ Intake assessment complete · Advanced Daily Care will open with these findings."
+    :"Choose one answer in each row. You can still admit before completion, but completed answers give a stronger personalized starting profile."}</div>
+ </div>`;
+}
+function vgApplyIntakeQuizToPatient(p,db){
+ if(!p||!db)return;
+ const q=vgIntakeQuizFor(db);
+ const a=typeof vgaEnsure==="function"?vgaEnsure(p):null;
+ p.intakeCareQuiz={...q,dbId:db.dbId,appliedAt:Date.now()};
+ if(!a)return;
+
+ if(q.appetite==="normal"){
+   a.appetiteInterest=Math.max(a.appetiteInterest,72);
+   a.nutritionTolerance=Math.max(a.nutritionTolerance,68);
+   p.hunger=Math.max(Number(p.hunger??55),68);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-appetite-good","INTAKE: EATING NORMALLY");
+ }
+ if(q.appetite==="reduced"){
+   a.appetiteInterest=Math.min(a.appetiteInterest,44);
+   a.nutritionTolerance=Math.min(a.nutritionTolerance,48);
+   p.hunger=Math.min(Number(p.hunger??55),48);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-appetite-low","INTAKE: APPETITE REDUCED");
+ }
+ if(q.appetite==="refusing"){
+   a.appetiteInterest=Math.min(a.appetiteInterest,24);
+   a.nutritionTolerance=Math.min(a.nutritionTolerance,30);
+   p.hunger=Math.min(Number(p.hunger??55),34);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-food-refusal","INTAKE: REFUSING FOOD");
+ }
+
+ if(q.mobility==="normal"){
+   a.mobilityConfidence=Math.max(a.mobilityConfidence,72);
+   p.mobility=Math.max(Number(p.mobility??55),68);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-mobile","INTAKE: MOVING COMFORTABLY");
+ }
+ if(q.mobility==="stiff"){
+   a.mobilityConfidence=Math.min(a.mobilityConfidence,45);
+   p.mobility=Math.min(Number(p.mobility??55),48);
+   p.pain=Math.max(Number(p.pain??30),42);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-stiff","INTAKE: STIFF / GUARDED MOVEMENT");
+ }
+ if(q.mobility==="limited"){
+   a.mobilityConfidence=Math.min(a.mobilityConfidence,25);
+   p.mobility=Math.min(Number(p.mobility??55),30);
+   p.pain=Math.max(Number(p.pain??30),58);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-limited-mobility","INTAKE: SEVERELY LIMITED MOVEMENT");
+ }
+
+ if(q.behavior==="calm"){
+   a.sensoryComfort=Math.max(a.sensoryComfort,68);
+   a.socialConfidence=Math.max(a.socialConfidence,68);
+   p.trust=Math.max(Number(p.trust??45),62);
+   p.fear=Math.min(Number(p.fear??35),28);
+   p.stress=Math.min(Number(p.stress??35),30);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-calm","INTAKE: CALM / SEEKING CONTACT");
+ }
+ if(q.behavior==="nervous"){
+   a.sensoryComfort=Math.min(a.sensoryComfort,48);
+   a.socialConfidence=Math.min(a.socialConfidence,48);
+   p.fear=Math.max(Number(p.fear??35),52);
+   p.stress=Math.max(Number(p.stress??35),48);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-nervous","INTAKE: NERVOUS / WATCHFUL");
+ }
+ if(q.behavior==="hiding"){
+   a.sensoryComfort=Math.min(a.sensoryComfort,30);
+   a.socialConfidence=Math.min(a.socialConfidence,30);
+   p.trust=Math.min(Number(p.trust??45),34);
+   p.fear=Math.max(Number(p.fear??35),68);
+   p.stress=Math.max(Number(p.stress??35),62);
+   if(typeof vgaDiscover==="function")vgaDiscover(p,"intake-hiding","INTAKE: HIDING / AVOIDING CONTACT");
+ }
+
+ if(typeof vgaLog==="function"){
+   vgaLog(p,"Admission assessment linked to Advanced Daily Care.");
+ }
+ if(typeof vgfEnsure==="function"){
+   const f=vgfEnsure(p);
+   f.adaptiveStyle="";
+ }
+}
+function vgIntakeLinkedHTML(p){
+ if(!p||!p.intakeCareQuiz)return"";
+ const q=p.intakeCareQuiz;
+ const nice=v=>({normal:"Normal",reduced:"Reduced",refusing:"Refusing food",stiff:"Stiff / guarded",limited:"Barely moving",calm:"Calm / contact",nervous:"Nervous / watching",hiding:"Hiding / avoiding"}[v]||"Not answered");
+ return `<div class="vg-intake-linked"><b>🩺 Admission Findings Linked</b><br>
+ Appetite: ${nice(q.appetite)} · Movement: ${nice(q.mobility)} · Behavior: ${nice(q.behavior)}
+ </div>`;
 }
 </script>
 </body>
