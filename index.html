@@ -2688,6 +2688,105 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
 @media(max-width:900px){.vg-instrument-grid{grid-template-columns:1fr 1fr}.vg-inst-center{grid-column:1/-1;order:-1}.vg-knob-grid{grid-template-columns:repeat(4,1fr)}}
 @media(max-width:650px){.vg-instrument-grid{display:flex;flex-direction:column}.vg-intake-quizboard{grid-template-columns:1fr}.vg-knob-grid{grid-template-columns:repeat(4,1fr)}.vg-inst-gauges{grid-template-columns:repeat(2,1fr)}}
 </style>
+
+<style id="vg-clinic-gauge-wall-css">
+/* ===== CLINIC GAUGE WALL ===== */
+.vg-clinic-gauge-wall{
+  margin:12px 0;
+  border:1px solid rgba(83,228,255,.32);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(60,190,255,.09),transparent 30%),
+    linear-gradient(180deg,rgba(4,20,34,.95),rgba(2,10,18,.97));
+  box-shadow:0 14px 38px rgba(0,0,0,.35), inset 0 0 28px rgba(77,220,255,.03);
+  overflow:hidden;
+}
+.vg-clinic-gauge-head{
+  display:flex;justify-content:space-between;gap:10px;align-items:center;
+  padding:10px 12px;border-bottom:1px solid rgba(83,228,255,.16)
+}
+.vg-clinic-gauge-head b{font-size:12px;letter-spacing:.1em;color:#b9f7ff}
+.vg-clinic-gauge-head span{font:800 9px monospace;color:#8ddfe8}
+.vg-clinic-gauge-sections{padding:10px}
+.vg-clinic-gauge-section{
+  margin-top:9px;padding:9px;border:1px solid rgba(83,228,255,.16);
+  border-radius:13px;background:rgba(3,17,28,.72)
+}
+.vg-clinic-gauge-section:first-child{margin-top:0}
+.vg-clinic-gauge-section h4{margin:0 0 8px;font-size:9px;letter-spacing:.1em;color:#9defff}
+.vg-clinic-gauge-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px
+}
+.vg-clinic-mini-gauge{
+  position:relative;aspect-ratio:1;min-width:0;
+  border-radius:50%;
+  background:
+    conic-gradient(from -135deg,
+      #ff627e 0deg,
+      #ffd26c 88deg,
+      #6cefa8 178deg,
+      #62eaff 265deg,
+      #10202c 270deg 360deg);
+  padding:7px;
+  box-shadow:0 0 14px rgba(91,225,255,.08);
+}
+.vg-clinic-mini-gauge:before{
+  content:"";position:absolute;inset:11px;border-radius:50%;
+  background:radial-gradient(circle at 50% 38%,#0d2536,#031019 72%);
+  border:1px solid rgba(94,235,255,.22)
+}
+.vg-clinic-mini-gauge .needle{
+  position:absolute;left:50%;top:50%;
+  width:34%;height:2px;background:#f1ffff;
+  transform-origin:0 50%;
+  transform:rotate(calc(-135deg + (var(--v) * 2.7deg)));
+  box-shadow:0 0 5px #fff;z-index:2
+}
+.vg-clinic-mini-gauge .hub{
+  position:absolute;left:50%;top:50%;
+  width:8px;height:8px;border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:#ecffff;box-shadow:0 0 8px #62eaff;z-index:3
+}
+.vg-clinic-mini-gauge .value{
+  position:absolute;left:0;right:0;bottom:22%;
+  text-align:center;z-index:3;font:900 13px monospace;color:#eaffff
+}
+.vg-clinic-mini-gauge .label{
+  position:absolute;left:5px;right:5px;bottom:7%;
+  text-align:center;z-index:3;font-size:7px;letter-spacing:.04em;color:#afe6ec
+}
+.vg-clinic-temp-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px
+}
+.vg-clinic-thermo{
+  padding:8px;text-align:center;border-radius:10px;
+  border:1px solid rgba(83,228,255,.13);background:rgba(2,14,23,.72)
+}
+.vg-clinic-thermo .tube{
+  width:9px;height:74px;margin:auto;border-radius:7px 7px 0 0;
+  border:1px solid rgba(255,255,255,.14);
+  background:#071923;overflow:hidden;display:flex;align-items:flex-end
+}
+.vg-clinic-thermo .fill{
+  width:100%;background:linear-gradient(#ffd06a,#ff657b);box-shadow:0 0 8px #ff7a6f
+}
+.vg-clinic-thermo .bulb{
+  width:20px;height:20px;margin:-3px auto 4px;border-radius:50%;
+  background:#ff6478;box-shadow:0 0 8px #ff647888
+}
+.vg-clinic-thermo b{font:800 12px monospace}.vg-clinic-thermo span{display:block;font-size:7px;opacity:.68}
+.vg-clinic-bar-list{display:flex;flex-direction:column;gap:6px}
+.vg-clinic-bar .top{display:flex;justify-content:space-between;gap:6px;font-size:8px}
+.vg-clinic-bar .track{height:7px;border-radius:999px;background:#0b202b;overflow:hidden;margin-top:3px}
+.vg-clinic-bar .track i{display:block;height:100%;background:linear-gradient(90deg,#60eaff,#ff78d9)}
+@media(max-width:760px){
+  .vg-clinic-gauge-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:520px){
+  .vg-clinic-gauge-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
 </head>
 <body>
 <div class="vgfx-header">
@@ -2711,7 +2810,7 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
     </div>
   </div>
 
-  
+
 <button id="menuToggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="gameMenu">
   ☰ <span>MENU</span>
 </button>
@@ -2729,7 +2828,7 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
     <button id="menuClose" class="menu-close" type="button" aria-label="Close menu">✕</button>
   </div>
   <div class="nav game-menu-nav">
-    <button data-screen="clinic">Clinic</button><button data-screen="surgery">Surgery</button><button data-screen="animalprofile">Animal Profile</button>
+    <button data-screen="clinic">Clinic</button><button data-screen="surgery">Surgery</button><button data-screen="recovery">Recovery</button><button data-screen="animalprofile">Animal Profile</button>
 <button data-screen="habitats">Habitats</button>
 <button data-screen="nursery" onclick="vgOpenScreen('nursery')">🐣 Nursery</button><button data-screen="carelab">Care Lab</button><button data-screen="pets">My Pets</button><button data-screen="status">Status</button><button data-screen="admit">Admit Patient</button><button data-screen="hospital">Hospital+</button><button data-screen="sanctuary">Sanctuary</button><button data-screen="world">World</button><button data-screen="lifebook">Life Book</button><button data-screen="reception">Reception</button><button data-screen="ambulance">Ambulance</button><button data-screen="research">Research</button>
   </div>
@@ -2738,7 +2837,8 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
 
   <section id="clinic" class="screen"></section>
   <section id="surgery" class="screen"></section>
-  
+  <section id="recovery" class="screen"></section>
+
   <section id="animalprofile" class="screen"></section>
 <section id="habitats" class="screen"></section>
 <section id="carelab" class="screen"></section>
@@ -6954,7 +7054,7 @@ function renderAntFarm(){
 
 function vgOpenScreen(name){
 
-  const valid=["clinic","surgery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile","habitats","antfarm","snaketanks","hamstercages","micecages","nursery"];
+  const valid=["clinic","surgery","recovery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile","habitats","antfarm","snaketanks","hamstercages","micecages","nursery"];
   if(!valid.includes(name))return false;
   state.screen=name;
   try{render();}catch(err){console.error("Screen render failed:",name,err);}
@@ -8704,7 +8804,7 @@ function animalProfileHTML(p){
     </div>
     <div class="controls" style="margin-top:10px">
       <button class="action" onclick="state.screen='${String(p.location||"clinic").toLowerCase()==="home"?"pets":String(p.location||"clinic").toLowerCase()}';render()">Go to ${p.location||"Clinic"}</button>
-      
+
       ${p.location==="Clinic"?`<button class="action green" onclick="state.screen='clinic';render()">Open Clinic</button>`:""}
       ${p.location==="Home"?`<button class="action green" onclick="return vgOpenMyPets()">Open My Pets</button>`:""}
     </div>
@@ -8846,8 +8946,8 @@ function render(){
     if(!Array.isArray(state.pets))state.pets=[];
     if(!Array.isArray(state.log))state.log=[];
 
-    const validScreens=["clinic","surgery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile","habitats","antfarm","snaketanks","hamstercages","micecages","nursery"];
-    if(state.screen==="recovery"||!validScreens.includes(state.screen))state.screen="clinic";
+    const validScreens=["clinic","surgery","recovery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile","habitats","antfarm","snaketanks","hamstercages","micecages","nursery"];
+    if(!validScreens.includes(state.screen))state.screen="clinic";
 
     const mercyEl=document.getElementById("mercy");
     const savedEl=document.getElementById("saved");
@@ -8895,7 +8995,7 @@ function render(){
     if(typeof fn==="function")fn();
     else { console.warn("Missing renderer for",state.screen); state.screen="pets"; renderPets(); }
 
-    if(typeof applyTreeDepartmentUI==="function" && ["clinic","surgery"].includes(state.screen)){
+    if(typeof applyTreeDepartmentUI==="function" && ["clinic","surgery","recovery"].includes(state.screen)){
       applyTreeDepartmentUI();
     }
 
@@ -8924,7 +9024,7 @@ function render(){
     }
   }
 
-try{if(typeof vgCmdMount==="function")vgCmdMount()}catch(e){console.error("Command layer mount failed",e)}
+try{if(window.__VG_FULLY_LOADED&&typeof vgCmdMount==="function")vgCmdMount()}catch(e){console.error("Command layer mount failed",e)}
 
 
   try{
@@ -8942,7 +9042,7 @@ try{if(typeof vgEnsureFooter==="function")vgEnsureFooter()}catch(e){}
 
 try{if(typeof vgNormalizeAllPatientStates==="function")vgNormalizeAllPatientStates()}catch(e){}
 
-try{if(typeof vgInstallHealingPanel==="function")vgInstallHealingPanel()}catch(e){console.error("Healing panel failed",e)}
+try{if(window.__VG_FULLY_LOADED&&typeof vgInstallHealingPanel==="function")vgInstallHealingPanel()}catch(e){console.error("Healing panel failed",e)}
 
 try{if(typeof vgiStart==="function")vgiStart()}catch(e){}
 
@@ -8977,6 +9077,8 @@ try{requestAnimationFrame(()=>{if(typeof vgInstallHospitalTime==="function")vgIn
 try{requestAnimationFrame(()=>{if(typeof vgUltraDigitalFX==="function")vgUltraDigitalFX()})}catch(e){}
 
 try{requestAnimationFrame(()=>{if(typeof vgInstallSamePageHero==="function")vgInstallSamePageHero()})}catch(e){}
+
+try{requestAnimationFrame(()=>{if(typeof vgInstallClinicGaugeWall==="function")vgInstallClinicGaugeWall()})}catch(e){}
 }
 
 function setGameMenu(open){
@@ -10777,7 +10879,7 @@ const _vgOriginalOpenScreen = typeof vgOpenScreen==="function" ? vgOpenScreen : 
 vgOpenScreen=function(name){
   const aliases={mypets:"pets","my-pets":"pets","my_pets":"pets"};
   name=aliases[name]||name;
-  const valid=["clinic","surgery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile","habitats","antfarm","snaketanks","hamstercages","micecages","nursery"];
+  const valid=["clinic","surgery","recovery","pets","status","admit","hospital","sanctuary","world","lifebook","reception","ambulance","research","carelab","animalprofile","habitats","antfarm","snaketanks","hamstercages","micecages","nursery"];
   if(!valid.includes(name))name="clinic";
   state.screen=name;
   document.querySelectorAll(".screen").forEach(el=>el.classList.remove("active"));
@@ -13452,6 +13554,347 @@ function vgRadioTune(dbId,mode){
  db.intakeRadio.mode=mode;db.intakeRadio.last=Date.now();
  if(typeof toast==="function")toast("Diagnostic radio: "+mode.toUpperCase());
 }
+
+
+/* ===== Clinic Gauge Wall ===== */
+function vgClinicGauge(label,val){
+ let n=Math.max(0,Math.min(100,Number(val)||0));
+ return `<div class="vg-clinic-mini-gauge" style="--v:${n}">
+   <div class="needle"></div><div class="hub"></div>
+   <div class="value">${Math.round(n)}</div><div class="label">${label}</div>
+ </div>`;
+}
+function vgClinicThermo(label,temp,min=95,max=107){
+ const pct=Math.max(0,Math.min(100,(Number(temp)-min)/(max-min)*100));
+ return `<div class="vg-clinic-thermo"><div class="tube"><div class="fill" style="height:${pct}%"></div></div><div class="bulb"></div><b>${Number(temp).toFixed(1)}°F</b><span>${label}</span></div>`;
+}
+function vgClinicBar(label,val){
+ let n=Math.max(0,Math.min(100,Number(val)||0));
+ return `<div class="vg-clinic-bar"><div class="top"><span>${label}</span><b>${Math.round(n)}%</b></div><div class="track"><i style="width:${n}%"></i></div></div>`;
+}
+function vgClinicGaugeWallHTML(p){
+ if(!p)return "";
+ const q=p.intakeCareQuiz||{};
+ const ac=(typeof vgaEnsure==="function")?vgaEnsure(p):(p.advancedCare||{});
+ const stress=Number(p.stress??45), trust=Number(p.trust??45), mobility=Number(p.mobility??50);
+ const hydration=Number(p.hydration??55), pain=Number(p.pain??35), oxygen=Number(p.oxygen??95);
+ const hunger=Number(p.hunger??55), comfort=Number(p.comfort??55), fear=Number(p.fear??40);
+ const energy=Math.max(0,Math.min(100,Number(p.energy??(100-stress*.45))));
+ const temp=101.3 + (stress>65?0.8:stress>45?0.3:0);
+ const skin=temp-1.2;
+ const ambient=72.0;
+ const appetite = ac&&Number.isFinite(Number(ac.appetiteInterest)) ? Number(ac.appetiteInterest) : hunger;
+ const nutTol = ac&&Number.isFinite(Number(ac.nutritionTolerance)) ? Number(ac.nutritionTolerance) : 55;
+ const mobConf = ac&&Number.isFinite(Number(ac.mobilityConfidence)) ? Number(ac.mobilityConfidence) : mobility;
+ const sensory = ac&&Number.isFinite(Number(ac.sensoryComfort)) ? Number(ac.sensoryComfort) : Math.max(0,100-stress);
+ const social = ac&&Number.isFinite(Number(ac.socialConfidence)) ? Number(ac.socialConfidence) : trust;
+ const organ = {
+   "CARDIAC":Math.max(35,oxygen-8),
+   "RESP":oxygen,
+   "GI":Math.max(20,appetite),
+   "MUSCLE":Math.max(20,mobility),
+   "NEURO":Math.max(30,100-fear*.45),
+   "IMMUNE":Math.max(35,70-(stress*.15)),
+   "ENDO":65,
+   "PAIN CTRL":Math.max(0,100-pain)
+ };
+ return `<section class="vg-clinic-gauge-wall">
+  <div class="vg-clinic-gauge-head"><b>FULL PATIENT READOUT · ${p.name}</b><span>${p.species||"Animal"} · ${p.department||"Clinic"}</span></div>
+  <div class="vg-clinic-gauge-sections">
+
+   <div class="vg-clinic-gauge-section">
+    <h4>CORE VITALS</h4>
+    <div class="vg-clinic-gauge-grid">
+      ${vgClinicGauge("OXYGEN",oxygen)}
+      ${vgClinicGauge("HYDRATION",hydration)}
+      ${vgClinicGauge("PAIN",pain)}
+      ${vgClinicGauge("COMFORT",comfort)}
+      ${vgClinicGauge("HUNGER",hunger)}
+      ${vgClinicGauge("ENERGY",energy)}
+      ${vgClinicGauge("MOBILITY",mobility)}
+      ${vgClinicGauge("FEAR",fear)}
+    </div>
+   </div>
+
+   <div class="vg-clinic-gauge-section">
+    <h4>TEMPERATURE / ENVIRONMENT</h4>
+    <div class="vg-clinic-temp-row">
+      ${vgClinicThermo("BODY TEMP",temp)}
+      ${vgClinicThermo("SKIN TEMP",skin)}
+      ${vgClinicThermo("AMBIENT",ambient,50,100)}
+    </div>
+   </div>
+
+   <div class="vg-clinic-gauge-section">
+    <h4>PERSONALITY / DAILY CARE READOUT</h4>
+    <div class="vg-clinic-gauge-grid">
+      ${vgClinicGauge("TRUST",trust)}
+      ${vgClinicGauge("STRESS",stress)}
+      ${vgClinicGauge("APPETITE",appetite)}
+      ${vgClinicGauge("NUTRITION",nutTol)}
+      ${vgClinicGauge("MOBILITY CONF",mobConf)}
+      ${vgClinicGauge("SENSORY",sensory)}
+      ${vgClinicGauge("SOCIAL",social)}
+      ${vgClinicGauge("CALM",Math.max(0,100-stress))}
+    </div>
+   </div>
+
+   <div class="vg-clinic-gauge-section">
+    <h4>SYSTEM / ORGAN READOUT</h4>
+    <div class="vg-clinic-gauge-grid">
+      ${Object.entries(organ).map(([k,v])=>vgClinicGauge(k,v)).join("")}
+    </div>
+   </div>
+
+   <div class="vg-clinic-gauge-section">
+    <h4>CARE PRIORITIES</h4>
+    <div class="vg-clinic-bar-list">
+      ${vgClinicBar("Stabilize Vitals",100-Math.min(oxygen,hydration))}
+      ${vgClinicBar("Pain Management",pain)}
+      ${vgClinicBar("Nutrition Support",100-appetite)}
+      ${vgClinicBar("Mobility / Rehab",100-mobility)}
+      ${vgClinicBar("Emotional Support",Math.max(stress,fear))}
+      ${vgClinicBar("Trust Building",100-trust)}
+    </div>
+   </div>
+
+  </div>
+ </section>`;
+}
+function vgInstallClinicGaugeWall(){
+ const clinic=document.getElementById("clinic");
+ if(!clinic||!clinic.classList.contains("active"))return;
+ const p=(state.patients||[]).find(x=>x.id===state.activeId)||((typeof admitted==="function")?admitted()[0]:null);
+ if(!p)return;
+ const old=clinic.querySelector(".vg-clinic-gauge-wall");if(old)old.remove();
+ const hero=clinic.querySelector(".vg-photo-shell,.vg-samepage-hero,.vg-dashboard-hero");
+ if(hero)hero.insertAdjacentHTML("afterend",vgClinicGaugeWallHTML(p));
+ else clinic.insertAdjacentHTML("afterbegin",vgClinicGaugeWallHTML(p));
+}
+</script>
+
+<style id="vg-command-layout-css">
+:root{
+ --vgc-bg:#04050b;--vgc-panel:rgba(10,15,31,.88);--vgc-line:rgba(118,239,255,.18);
+ --vgc-cyan:#76efff;--vgc-blue:#11bad7;--vgc-violet:#9d7bff;--vgc-amber:#ffcf68;
+ --vgc-green:#68f0b1;--vgc-red:#ff647c;--vgc-muted:#8490a9;--vgc-text:#edf8ff;
+}
+html{scroll-behavior:smooth}
+body.vg-command-layout{
+ margin:0!important;color:var(--vgc-text)!important;background:
+ radial-gradient(circle at 18% 5%,rgba(75,50,160,.24),transparent 28rem),
+ radial-gradient(circle at 82% 12%,rgba(0,183,214,.16),transparent 25rem),#04050b!important;
+ font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+}
+#vgCommandSpace{position:fixed;inset:0;width:100%;height:100%;z-index:-3;opacity:.75;pointer-events:none}
+body.vg-command-layout:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background-image:linear-gradient(rgba(108,218,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(108,218,255,.025) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(#000,transparent 88%)}
+body.vg-command-layout>.vgfx-header,body.vg-command-layout #app>.top,body.vg-command-layout #menuToggle,body.vg-command-layout .quick-links{display:none!important}
+.vg-command-shell{position:sticky;top:0;z-index:70;border-bottom:1px solid var(--vgc-line);background:rgba(4,5,11,.88);backdrop-filter:blur(20px) saturate(145%);box-shadow:0 12px 45px rgba(0,0,0,.25)}
+.vg-command-inner{width:min(1480px,100%);margin:auto;padding:max(10px,env(safe-area-inset-top)) clamp(12px,3vw,34px) 10px}
+.vg-command-top{display:grid;grid-template-columns:auto minmax(310px,1fr) auto;gap:14px;align-items:center}
+.vg-command-brand{display:flex;align-items:center;gap:11px;min-width:max-content}
+.vg-command-mark{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(118,239,255,.48);border-radius:13px;background:linear-gradient(145deg,rgba(118,239,255,.17),rgba(157,123,255,.15));box-shadow:inset 0 0 18px rgba(118,239,255,.16),0 0 24px rgba(65,194,255,.12)}
+.vg-command-mark svg{width:26px;height:26px}
+.vg-command-brand b{display:block;font-size:.82rem;letter-spacing:.16em}.vg-command-brand small{display:block;margin-top:2px;color:var(--vgc-muted);font:600 .58rem ui-monospace,monospace;letter-spacing:.09em}
+.vg-command-patient{display:grid;grid-template-columns:42px minmax(115px,.55fr) minmax(180px,1fr) auto;gap:10px;align-items:center;min-height:48px;padding:6px 9px;border:1px solid rgba(118,239,255,.15);border-radius:15px;background:linear-gradient(100deg,rgba(28,70,94,.18),rgba(28,22,65,.12));overflow:hidden}
+.vg-command-patient img{width:38px;height:38px;border-radius:11px;object-fit:cover;background:#0b1324}
+.vg-command-patient b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem}.vg-command-patient small{display:block;color:var(--vgc-muted);font-size:.58rem;margin-top:2px}
+#vgCommandWave{display:block;width:100%;height:38px;border-radius:8px;background:rgba(1,6,13,.62)}
+.vg-command-mini{display:flex;gap:5px}.vg-command-mini span{min-width:47px;padding:5px;border:1px solid rgba(118,239,255,.1);border-radius:8px;background:rgba(255,255,255,.02);color:var(--vgc-muted);font:600 .52rem ui-monospace,monospace;text-align:center}.vg-command-mini b{margin-top:2px;color:var(--vgc-cyan);font-size:.65rem}
+.vg-command-stats{display:flex;gap:7px}.vg-command-stat{min-width:70px;padding:8px 9px;border:1px solid rgba(118,239,255,.13);border-radius:11px;background:rgba(255,255,255,.02)}.vg-command-stat span{display:block;color:var(--vgc-muted);font:650 .49rem ui-monospace,monospace;letter-spacing:.06em}.vg-command-stat b{display:block;margin-top:4px;color:var(--vgc-cyan);font:800 .72rem ui-monospace,monospace}
+.vg-command-nav,.vg-command-subnav{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}.vg-command-nav::-webkit-scrollbar,.vg-command-subnav::-webkit-scrollbar{display:none}
+.vg-command-nav{margin-top:9px}.vg-command-subnav{margin-top:7px;padding-top:7px;border-top:1px solid rgba(118,239,255,.07)}
+.vg-command-step,.vg-command-area{position:relative;flex:1;min-width:max-content;border:1px solid rgba(121,151,189,.18)!important;background:rgba(255,255,255,.025)!important;color:var(--vgc-muted)!important;cursor:pointer!important;transition:.2s ease!important}
+.vg-command-step{min-height:41px!important;padding:7px 12px!important;border-radius:12px!important;font:750 .62rem ui-monospace,monospace!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+.vg-command-step:before{content:attr(data-num);display:inline-grid;place-items:center;width:22px;height:22px;margin-right:7px;border:1px solid currentColor;border-radius:50%;font-size:.52rem;vertical-align:middle}
+.vg-command-step:hover,.vg-command-step.active{border-color:rgba(118,239,255,.48)!important;background:rgba(42,182,218,.10)!important;color:var(--vgc-cyan)!important;box-shadow:inset 0 0 22px rgba(57,219,255,.05)!important}
+.vg-command-step.complete{color:var(--vgc-green)!important}.vg-command-step.alert{color:var(--vgc-amber)!important}
+.vg-command-area{flex:0 0 auto;min-height:30px!important;padding:5px 9px!important;border-radius:8px!important;font:700 .54rem ui-monospace,monospace!important;letter-spacing:.06em!important;text-transform:uppercase!important}.vg-command-area:hover,.vg-command-area.active{border-color:rgba(157,123,255,.46)!important;color:#cbbdff!important;background:rgba(157,123,255,.09)!important}
+body.vg-command-layout #app{width:min(1480px,100%)!important;max-width:none!important;margin:0 auto!important;padding:clamp(14px,3vw,32px)!important;overflow:visible!important}
+body.vg-command-layout .screen.active{position:relative!important;display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:clamp(10px,2vw,22px)!important;border:1px solid rgba(118,239,255,.18)!important;border-radius:26px!important;background:linear-gradient(150deg,rgba(14,20,42,.94),rgba(7,9,20,.97))!important;box-shadow:0 24px 80px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.035)!important;overflow:visible!important}
+body.vg-command-layout .screen.active:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;border-radius:inherit;background:linear-gradient(110deg,transparent 28%,rgba(97,232,255,.022) 49%,transparent 68%)}
+body.vg-command-layout .screen.active>*{position:relative;z-index:1}
+body.vg-command-layout .panel,body.vg-command-layout .card,body.vg-command-layout .hero,body.vg-command-layout [class*="-card"]{border-color:rgba(129,231,255,.15)!important;border-radius:18px!important;background:linear-gradient(155deg,rgba(13,20,39,.88),rgba(6,10,23,.9))!important;box-shadow:inset 0 1px rgba(255,255,255,.025),0 10px 35px rgba(0,0,0,.16)!important;color:var(--vgc-text)!important}
+body.vg-command-layout h1,body.vg-command-layout h2,body.vg-command-layout h3,body.vg-command-layout h4{color:var(--vgc-text)!important;letter-spacing:-.01em!important}
+body.vg-command-layout .small,body.vg-command-layout p{color:#9eacc0!important;line-height:1.55!important}
+body.vg-command-layout button:not(.menu-close):not(.vg-command-step):not(.vg-command-area){border:1px solid rgba(118,239,255,.22)!important;border-radius:12px!important;background:linear-gradient(145deg,rgba(18,46,68,.9),rgba(11,18,35,.94))!important;color:#e9fbff!important;box-shadow:inset 0 0 15px rgba(118,239,255,.035)!important;transition:.18s ease!important}
+body.vg-command-layout button:not(:disabled):hover{border-color:rgba(118,239,255,.55)!important;transform:translateY(-1px)}
+body.vg-command-layout button.green,body.vg-command-layout .action.green{border-color:rgba(104,240,177,.45)!important;color:var(--vgc-green)!important;background:rgba(104,240,177,.08)!important}
+body.vg-command-layout button:disabled{opacity:.42!important;filter:grayscale(.4)!important}
+body.vg-command-layout .vg-photo-shell{border-radius:24px!important;border-color:rgba(118,239,255,.3)!important;background:#06101c!important;box-shadow:0 22px 65px rgba(0,0,0,.44),0 0 38px rgba(65,205,255,.07)!important}
+body.vg-command-layout .vg-photo-hud,body.vg-command-layout .vg-inst-panel,body.vg-command-layout .vg-clinic-gauge-section{border-color:rgba(118,239,255,.16)!important;border-radius:15px!important;background:linear-gradient(180deg,rgba(8,25,43,.86),rgba(3,11,22,.9))!important}
+body.vg-command-layout .vg-clinic-gauge-wall{border-radius:22px!important;border-color:rgba(118,239,255,.32)!important;background:linear-gradient(180deg,rgba(5,19,35,.98),rgba(2,8,18,.98))!important;box-shadow:0 18px 55px rgba(0,0,0,.35),0 0 30px rgba(118,239,255,.06)!important}
+body.vg-command-layout .vg-clinic-mini-gauge{box-shadow:0 0 18px rgba(91,225,255,.11),inset 0 0 11px rgba(0,0,0,.3)!important}
+body.vg-command-layout .meter,body.vg-command-layout .progress,body.vg-command-layout [class*="-bar"]{border-radius:999px!important}
+body.vg-command-layout .game-menu{z-index:90!important;border-left:1px solid rgba(118,239,255,.25)!important;background:rgba(5,9,19,.97)!important;backdrop-filter:blur(18px)!important}
+body.vg-command-layout .menu-backdrop{z-index:80!important;background:rgba(0,0,0,.68)!important;backdrop-filter:blur(3px)!important}
+.vg-command-footer{width:min(1480px,100%);margin:0 auto;padding:0 clamp(14px,3vw,32px) max(24px,env(safe-area-inset-bottom));color:#607087;font:.58rem ui-monospace,monospace}.vg-command-footer>div{display:flex;justify-content:space-between;gap:16px;padding-top:14px;border-top:1px solid rgba(129,231,255,.08)}
+@media(max-width:1040px){.vg-command-top{grid-template-columns:auto 1fr}.vg-command-stats{grid-column:1/-1}.vg-command-stat{flex:1}.vg-command-patient{grid-template-columns:38px minmax(110px,.6fr) minmax(170px,1fr) auto}}
+@media(max-width:700px){
+ .vg-command-inner{padding-inline:9px}.vg-command-top{grid-template-columns:1fr}.vg-command-brand small{display:none}.vg-command-patient{grid-template-columns:34px minmax(95px,1fr) minmax(110px,1.2fr);padding:5px 7px}.vg-command-patient img{width:32px;height:32px}.vg-command-mini{display:none}.vg-command-stats{display:grid;grid-template-columns:repeat(3,1fr)}.vg-command-stat{padding:6px 7px}.vg-command-step{flex:0 0 auto!important;min-height:38px!important;padding:6px 9px!important}.vg-command-nav{scroll-snap-type:x proximity}.vg-command-step{scroll-snap-align:start}body.vg-command-layout #app{padding:10px!important}.vg-command-footer>div{flex-direction:column}.vg-clinic-gauge-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.vg-command-step,.vg-command-area{transition:none!important}}
+</style>
+
+<script id="vg-command-layout-js">
+(function(){
+ "use strict";
+ function commandMarkup(){
+  return `<canvas id="vgCommandSpace" aria-hidden="true"></canvas>
+  <header class="vg-command-shell">
+   <div class="vg-command-inner">
+    <div class="vg-command-top">
+     <div class="vg-command-brand">
+      <span class="vg-command-mark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 4v24M4 16h24" stroke="#76efff" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="10.5" stroke="#9d7bff" stroke-width="1.5" stroke-dasharray="3 3"/></svg></span>
+      <span><b>VET GODS</b><small>ORBITAL ANIMAL HOSPITAL · LIVE GAMEPLAY</small></span>
+     </div>
+     <div class="vg-command-patient" aria-live="polite">
+      <img id="vgCmdPatientImg" alt="Current patient">
+      <span><b id="vgCmdPatientName">Waiting for signal</b><small id="vgCmdPatientMeta">No active patient</small></span>
+      <canvas id="vgCommandWave" aria-label="Live patient telemetry"></canvas>
+      <span class="vg-command-mini"><span>O₂<b id="vgCmdOxygen">—</b></span><span>PAIN<b id="vgCmdPain">—</b></span><span>TRUST<b id="vgCmdTrust">—</b></span></span>
+     </div>
+     <div class="vg-command-stats">
+      <span class="vg-command-stat"><span>CREDITS</span><b id="vgCmdCredits">0</b></span>
+      <span class="vg-command-stat"><span>MERCY</span><b id="vgCmdMercy">0</b></span>
+      <span class="vg-command-stat"><span>LIVES</span><b id="vgCmdSaved">0</b></span>
+     </div>
+    </div>
+    <nav class="vg-command-nav" aria-label="Patient care flow">
+     <button class="vg-command-step" data-num="01" data-go="admit">Intake</button>
+     <button class="vg-command-step" data-num="02" data-go="clinic">Clinic</button>
+     <button class="vg-command-step" data-num="03" data-go="surgery">Surgery</button>
+     <button class="vg-command-step" data-num="04" data-go="recovery">Recovery</button>
+     <button class="vg-command-step" data-num="05" data-go="pets">My Pets</button>
+     <button class="vg-command-step" data-num="06" id="vgCmdMore">All Areas</button>
+    </nav>
+    <nav class="vg-command-subnav" aria-label="Hospital gameplay systems">
+     <button class="vg-command-area" data-go="hospital">Hospital+</button><button class="vg-command-area" data-go="carelab">Care Lab</button><button class="vg-command-area" data-go="nursery">Nursery</button><button class="vg-command-area" data-go="habitats">Habitats</button><button class="vg-command-area" data-go="sanctuary">Sanctuary</button><button class="vg-command-area" data-go="reception">Reception</button><button class="vg-command-area" data-go="ambulance">Ambulance</button><button class="vg-command-area" data-go="research">Research</button><button class="vg-command-area" data-go="world">World</button><button class="vg-command-area" data-go="lifebook">Life Book</button><button class="vg-command-area" id="vgCmdSave">Save Game</button>
+    </nav>
+   </div>
+  </header>`;
+ }
+ function activePatient(){
+  try{return (state.patients||[]).find(p=>p.id===state.activeId)||((typeof active==="function")?active():null)||(state.pets||[])[0]||null}catch(e){return null}
+ }
+ function metric(p,key,fallback){
+  try{if(typeof metricValue==="function")return Math.round(metricValue(p,key));}catch(e){}
+  return Math.round(Number(p&&p[key]!==undefined?p[key]:fallback)||0);
+ }
+ function commandSync(){
+  if(typeof state==="undefined")return;
+  const p=activePatient();
+  const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
+  set("vgCmdCredits","$"+Math.round(Number(state.credits||0)).toLocaleString());set("vgCmdMercy",Math.round(Number(state.mercy||0)));set("vgCmdSaved",Math.round(Number(state.saved||0)));
+  const img=document.getElementById("vgCmdPatientImg");
+  if(p){if(img){img.src=p.image||"";img.style.visibility=p.image?"visible":"hidden"}set("vgCmdPatientName",p.name||"Active patient");set("vgCmdPatientMeta",(p.species||"Animal")+" · "+(p.department||p.location||state.screen));set("vgCmdOxygen",metric(p,"oxygen",90)+"%");set("vgCmdPain",metric(p,"pain",0)+"%");set("vgCmdTrust",metric(p,"trust",45)+"%");}
+  else{if(img)img.style.visibility="hidden";set("vgCmdPatientName","Waiting for signal");set("vgCmdPatientMeta","Open Intake to admit an animal");set("vgCmdOxygen","—");set("vgCmdPain","—");set("vgCmdTrust","—")}
+  document.body.dataset.vgScreen=state.screen||"clinic";
+  document.querySelectorAll(".vg-command-step[data-go],.vg-command-area[data-go]").forEach(b=>b.classList.toggle("active",b.dataset.go===state.screen));
+  const phase={admit:0,clinic:1,surgery:2,recovery:3,pets:4}[state.screen];
+  document.querySelectorAll(".vg-command-step[data-go]").forEach((b,i)=>{b.classList.toggle("complete",phase!==undefined&&i<phase);b.classList.toggle("alert",b.dataset.go==="surgery"&&typeof dept==="function"&&dept("Surgery").length>0)});
+  if(state.screen==="clinic"&&typeof vgInstallClinicGaugeWall==="function")try{vgInstallClinicGaugeWall()}catch(e){console.warn("Gauge wall mount skipped",e)}
+ }
+ function installNavigation(){
+  document.querySelectorAll(".vg-command-shell [data-go]").forEach(button=>button.addEventListener("click",()=>{if(typeof vgOpenScreen==="function")vgOpenScreen(button.dataset.go);else{state.screen=button.dataset.go;if(typeof render==="function")render()}}));
+  const more=document.getElementById("vgCmdMore");if(more)more.addEventListener("click",()=>{const original=document.getElementById("menuToggle");if(original)original.click()});
+  const save=document.getElementById("vgCmdSave");if(save)save.addEventListener("click",()=>{if(typeof saveNow==="function")saveNow();else if(typeof saveGame==="function")saveGame("Manual Save",false)});
+ }
+ function startWave(){
+  const canvas=document.getElementById("vgCommandWave");if(!canvas)return;const ctx=canvas.getContext("2d");if(!ctx)return;let offset=0;
+  function frame(){const d=Math.min(devicePixelRatio||1,2),r=canvas.getBoundingClientRect(),w=Math.max(1,r.width),h=Math.max(1,r.height);if(canvas.width!==Math.round(w*d)||canvas.height!==Math.round(h*d)){canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0)}ctx.clearRect(0,0,w,h);ctx.strokeStyle="rgba(118,239,255,.07)";ctx.lineWidth=1;for(let x=0;x<w;x+=22){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}ctx.beginPath();ctx.strokeStyle="#68f0b1";ctx.shadowColor="#68f0b1";ctx.shadowBlur=7;ctx.lineWidth=1.5;const p=activePatient(),speed=Math.max(.7,Math.min(1.7,metric(p,"stress",40)/70+0.7));for(let x=0;x<=w;x+=2){const q=((x+offset)*speed)%120;let y=h*.57+Math.sin((x+offset)*.04);if(q>57&&q<61)y-=11;if(q>=61&&q<65)y+=18;if(q>=65&&q<71)y-=5;x?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();ctx.shadowBlur=0;offset+=.8;requestAnimationFrame(frame)}requestAnimationFrame(frame);
+ }
+ function startSpace(){
+  const canvas=document.getElementById("vgCommandSpace"),gl=canvas&&canvas.getContext("webgl",{alpha:true,antialias:false});if(!gl)return;
+  const vs=`attribute vec2 p;uniform float t;varying float a;void main(){float z=fract(p.y+t*.016);float d=.34+z*1.52;gl_Position=vec4(p.x/d,(z*2.-1.)/d,0.,1.);gl_PointSize=1.+3.*z;a=z;}`;
+  const fs=`precision mediump float;varying float a;void main(){vec2 c=gl_PointCoord-.5;float d=length(c);if(d>.5)discard;vec3 col=mix(vec3(.38,.36,.86),vec3(.42,.96,1.),a);gl_FragColor=vec4(col,(1.-d*2.)*(.14+a*.58));}`;
+  const sh=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s},program=gl.createProgram();gl.attachShader(program,sh(gl.VERTEX_SHADER,vs));gl.attachShader(program,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);gl.useProgram(program);
+  const count=330,data=new Float32Array(count*2);for(let i=0;i<count;i++){data[i*2]=Math.random()*2-1;data[i*2+1]=Math.random()}const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);const loc=gl.getAttribLocation(program,"p");gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);const time=gl.getUniformLocation(program,"t");
+  function resize(){const d=Math.min(devicePixelRatio||1,2);canvas.width=innerWidth*d;canvas.height=innerHeight*d;gl.viewport(0,0,canvas.width,canvas.height)}resize();addEventListener("resize",resize,{passive:true});const started=performance.now();function frame(n){gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);gl.uniform1f(time,(n-started)/1000);gl.drawArrays(gl.POINTS,0,count);requestAnimationFrame(frame)}requestAnimationFrame(frame);
+ }
+ function install(){
+  if(document.querySelector(".vg-command-shell"))return;
+  document.body.classList.add("vg-command-layout");
+  const app=document.getElementById("app");if(!app)return;
+  app.insertAdjacentHTML("beforebegin",commandMarkup());
+  document.body.insertAdjacentHTML("beforeend",`<footer class="vg-command-footer"><div><span>VET GODS // ANIMAL LIFE-SPARK COMMAND</span><span>LOCAL SAVE ACTIVE · ALL DEPARTMENTS CONNECTED</span></div></footer>`);
+  installNavigation();startWave();startSpace();
+  const originalRender=window.render;
+  if(typeof originalRender==="function")window.render=function(){const result=originalRender.apply(this,arguments);commandSync();return result};
+  window.__VG_FULLY_LOADED=true;
+  if(typeof window.render==="function")window.render();else commandSync();
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+<style id="vg-exact-layout-css">
+/* Exact neon-starship hospital console transplanted onto the full Vet Gods engine. */
+:root{--vgx-bg:#04050b;--vgx-panel:rgba(12,16,33,.86);--vgx-line:rgba(129,231,255,.18);--vgx-cyan:#76efff;--vgx-cyan2:#11bad7;--vgx-violet:#9d7bff;--vgx-amber:#ffcf68;--vgx-green:#68f0b1;--vgx-red:#ff647c;--vgx-muted:#8490a9;--vgx-text:#edf8ff}
+.vg-command-shell{padding:0!important}.vg-command-inner{padding:max(12px,env(safe-area-inset-top)) clamp(14px,3vw,38px) 11px!important}
+.vgx-topbar{display:flex;align-items:center;gap:18px;width:min(1480px,100%);margin:auto}.vgx-brand{display:flex;align-items:center;gap:12px;min-width:max-content}.vgx-brand-mark{display:grid;place-items:center;width:41px;height:41px;border:1px solid rgba(118,239,255,.5);border-radius:13px;background:linear-gradient(145deg,rgba(118,239,255,.17),rgba(157,123,255,.15));box-shadow:inset 0 0 18px rgba(118,239,255,.16),0 0 24px rgba(65,194,255,.12)}.vgx-brand-mark svg{width:26px;height:26px}.vgx-brand-copy strong{display:block;font-size:.84rem;letter-spacing:.16em;text-transform:uppercase}.vgx-brand-copy span{display:block;margin-top:2px;color:var(--vgx-muted);font:600 .66rem/1.1 ui-monospace,monospace;letter-spacing:.08em}
+.vgx-flow-nav{display:grid;grid-template-columns:repeat(4,minmax(112px,1fr));gap:8px;flex:1;max-width:790px;margin-inline:auto}.vgx-flow-step{position:relative!important;min-height:44px!important;padding:8px 12px 8px 41px!important;border:1px solid rgba(121,151,189,.18)!important;border-radius:14px!important;background:rgba(255,255,255,.025)!important;color:var(--vgx-muted)!important;text-align:left!important;cursor:pointer!important;box-shadow:none!important}.vgx-flow-step:before{content:attr(data-num);position:absolute;left:10px;top:9px;display:grid;place-items:center;width:25px;height:25px;border:1px solid currentColor;border-radius:50%;font:700 .68rem ui-monospace,monospace}.vgx-flow-step strong{display:block;font-size:.7rem;letter-spacing:.11em;text-transform:uppercase}.vgx-flow-step small{display:block;overflow:hidden;margin-top:2px;font-size:.61rem;text-overflow:ellipsis;white-space:nowrap}.vgx-flow-step.active{border-color:rgba(118,239,255,.48)!important;background:rgba(42,182,218,.1)!important;color:var(--vgx-cyan)!important;box-shadow:inset 0 0 22px rgba(57,219,255,.06)!important}.vgx-flow-step.complete{color:var(--vgx-green)!important}.vgx-facility{display:flex;align-items:center;gap:9px;min-width:max-content;color:var(--vgx-green);font:700 .65rem ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}.vgx-status-dot{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 15px currentColor;animation:vgxPulse 2.2s ease-in-out infinite}@keyframes vgxPulse{50%{opacity:.45;transform:scale(.8)}}
+.vgx-game-nav{display:flex;gap:7px;width:min(1480px,100%);margin:10px auto 0;overflow-x:auto;scrollbar-width:none}.vgx-game-nav::-webkit-scrollbar{display:none}.vgx-game-tab{min-width:max-content!important;padding:8px 13px!important;border:1px solid rgba(129,231,255,.12)!important;border-radius:10px!important;background:rgba(255,255,255,.018)!important;color:var(--vgx-muted)!important;font:720 .61rem ui-monospace,monospace!important;letter-spacing:.08em!important;text-transform:uppercase!important;box-shadow:none!important}.vgx-game-tab.active,.vgx-game-tab:hover{border-color:rgba(118,239,255,.42)!important;background:rgba(118,239,255,.09)!important;color:var(--vgx-cyan)!important}.vgx-game-tab.utility{color:var(--vgx-violet)!important}
+body.vg-command-layout #app{padding:clamp(20px,4vw,48px) clamp(14px,3vw,38px) 80px!important}.vg-exact-layout{position:relative;z-index:2;color:var(--vgx-text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.vg-exact-layout *{box-sizing:border-box}.vgx-hero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,.7fr);gap:16px;align-items:end;margin-bottom:18px;padding:0 2px}.vgx-eyebrow{margin:0 0 10px!important;color:var(--vgx-cyan)!important;font:700 .69rem ui-monospace,monospace!important;letter-spacing:.19em!important;text-transform:uppercase}.vgx-hero h1{max-width:780px;margin:0!important;color:var(--vgx-text)!important;font-size:clamp(2rem,5vw,4.85rem)!important;line-height:.95!important;letter-spacing:-.055em!important}.vgx-hero-copy{max-width:720px;margin:16px 0 0!important;color:#a9b9ce!important;font-size:clamp(.92rem,1.5vw,1.08rem)!important;line-height:1.65!important}.vgx-telemetry{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.vgx-micro-stat{padding:14px;border:1px solid var(--vgx-line);border-radius:16px;background:rgba(10,14,29,.78);box-shadow:inset 0 1px rgba(255,255,255,.025)}.vgx-micro-stat span{display:block;color:var(--vgx-muted);font:700 .59rem ui-monospace,monospace;letter-spacing:.11em;text-transform:uppercase}.vgx-micro-stat strong{display:block;margin-top:8px;color:var(--vgx-cyan);font:700 clamp(.85rem,2vw,1.12rem) ui-monospace,monospace}
+.vgx-workspace{position:relative;overflow:hidden;min-height:620px;border:1px solid rgba(118,239,255,.19);border-radius:28px;background:linear-gradient(150deg,rgba(14,20,42,.94),rgba(7,9,20,.97));box-shadow:0 24px 80px rgba(0,0,0,.42),inset 0 1px rgba(255,255,255,.04)}.vgx-workspace:before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 28%,rgba(97,232,255,.025) 49%,transparent 68%)}.vgx-workspace-head{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 20px;border-bottom:1px solid var(--vgx-line);background:rgba(1,4,12,.32)}.vgx-workspace-title{display:flex;align-items:center;gap:11px;min-width:0}.vgx-signal-bars{display:flex;align-items:flex-end;gap:3px;width:22px;height:18px}.vgx-signal-bars i{flex:1;height:35%;border-radius:2px;background:var(--vgx-cyan);box-shadow:0 0 9px var(--vgx-cyan)}.vgx-signal-bars i:nth-child(2){height:62%}.vgx-signal-bars i:nth-child(3){height:100%}.vgx-workspace-title strong{display:block;overflow:hidden;font-size:.8rem;letter-spacing:.13em;text-overflow:ellipsis;text-transform:uppercase;white-space:nowrap}.vgx-workspace-title small{display:block;margin-top:2px;color:var(--vgx-muted);font:600 .64rem ui-monospace,monospace}.vgx-utilities{display:flex;align-items:center;gap:8px}.vgx-chip{min-height:38px!important;padding:7px 12px!important;border:1px solid rgba(118,239,255,.2)!important;border-radius:11px!important;background:rgba(118,239,255,.055)!important;color:var(--vgx-cyan)!important;font:700 .63rem ui-monospace,monospace!important;letter-spacing:.08em!important;text-transform:uppercase!important;box-shadow:none!important}.vgx-view{position:relative;padding:clamp(14px,2.5vw,26px)}
+.vgx-console{display:grid;grid-template-columns:minmax(220px,.73fr) minmax(0,1.55fr) minmax(245px,.82fr);gap:14px}.vgx-console.two{grid-template-columns:minmax(0,1.38fr) minmax(300px,.82fr)}.vgx-stack{display:grid;align-content:start;gap:14px}.vgx-panel{position:relative;overflow:hidden;border:1px solid rgba(129,231,255,.15);border-radius:20px;background:rgba(6,10,24,.72);box-shadow:inset 0 1px rgba(255,255,255,.025)}.vgx-panel.glow{box-shadow:inset 0 0 28px rgba(61,205,255,.035),0 10px 40px rgba(0,0,0,.16)}.vgx-panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(129,231,255,.1)}.vgx-panel-head h2,.vgx-panel-head h3{margin:0!important;color:var(--vgx-text)!important;font-size:.69rem!important;letter-spacing:.14em!important;text-transform:uppercase}.vgx-panel-head code{color:var(--vgx-muted);font-size:.61rem}.vgx-panel-body{padding:14px}
+.vgx-patient-card{width:100%!important;padding:12px!important;border:1px solid rgba(135,158,197,.14)!important;border-radius:16px!important;background:rgba(255,255,255,.02)!important;text-align:left!important;box-shadow:none!important}.vgx-patient-card+.vgx-patient-card{margin-top:8px}.vgx-patient-card.selected{border-color:rgba(118,239,255,.48)!important;background:linear-gradient(110deg,rgba(118,239,255,.11),rgba(157,123,255,.05))!important;box-shadow:inset 3px 0 var(--vgx-cyan)!important}.vgx-pet-line{display:flex;align-items:center;gap:9px}.vgx-pet-icon{display:grid;place-items:center;width:34px;height:34px;flex:0 0 auto;border:1px solid rgba(118,239,255,.18);border-radius:11px;background:rgba(0,0,0,.23);font-size:1.08rem}.vgx-pet-name{display:block;font-weight:760}.vgx-pet-meta{display:block;margin-top:2px;color:var(--vgx-muted);font-size:.68rem}.vgx-urgency{margin-left:auto;padding:4px 6px;border-radius:6px;background:rgba(255,207,104,.1);color:var(--vgx-amber);font:700 .57rem ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase}
+.vgx-scanner{position:relative;min-height:245px;overflow:hidden;border-bottom:1px solid var(--vgx-line);background:radial-gradient(circle at center,rgba(28,183,220,.11),transparent 60%),#050916}.vgx-scan-canvas{display:block;width:100%;height:245px}.vgx-scanner:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.015),rgba(255,255,255,.015) 1px,transparent 1px,transparent 4px)}.vgx-scan-corners{position:absolute;inset:15px;pointer-events:none;border:1px solid rgba(118,239,255,.08);clip-path:polygon(0 0,28px 0,28px 2px,2px 2px,2px 28px,0 28px,0 0,100% 0,100% 28px,calc(100% - 2px) 28px,calc(100% - 2px) 2px,calc(100% - 28px) 2px,calc(100% - 28px) 0,100% 0,100% 100%,calc(100% - 28px) 100%,calc(100% - 28px) calc(100% - 2px),calc(100% - 2px) calc(100% - 2px),calc(100% - 2px) calc(100% - 28px),100% calc(100% - 28px),100% 100%,0 100%,0 calc(100% - 28px),2px calc(100% - 28px),2px calc(100% - 2px),28px calc(100% - 2px),28px 100%,0 100%);background:var(--vgx-cyan);filter:drop-shadow(0 0 7px var(--vgx-cyan))}.vgx-scan-readout{position:absolute;top:15px;left:15px;z-index:2;color:var(--vgx-cyan);font:700 .61rem/1.5 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;text-shadow:0 0 9px rgba(118,239,255,.7)}.vgx-scan-progress{position:absolute;z-index:2;left:16px;right:16px;bottom:14px;height:5px;overflow:hidden;border:1px solid rgba(118,239,255,.25);border-radius:9px;background:rgba(0,0,0,.35)}.vgx-scan-progress i{display:block;width:var(--scan,0%);height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--vgx-cyan2),var(--vgx-cyan));box-shadow:0 0 14px var(--vgx-cyan);transition:width .18s linear}
+.vgx-subject{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:14px}.vgx-subject h2{margin:0!important;color:var(--vgx-text)!important;font-size:clamp(1.3rem,3vw,1.9rem)!important;letter-spacing:-.025em!important}.vgx-subject p{margin:5px 0 0!important;color:var(--vgx-muted)!important;font-size:.79rem!important;line-height:1.5!important}.vgx-priority{min-width:max-content;padding:7px 9px;border:1px solid currentColor;border-radius:9px;color:var(--vgx-amber);font:750 .62rem ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}.vgx-priority.stable{color:var(--vgx-green)}.vgx-priority.critical{color:var(--vgx-red)}
+.vgx-gauge-grid{display:grid;grid-template-columns:repeat(4,minmax(105px,1fr));gap:8px;padding:12px}.vgx-gauge{min-width:0;padding:9px 7px 11px;border:1px solid rgba(129,231,255,.1);border-radius:16px;background:linear-gradient(160deg,rgba(22,29,52,.76),rgba(5,8,18,.8));text-align:center}.vgx-gauge svg{display:block;width:100%;max-height:118px;filter:drop-shadow(0 0 9px rgba(118,239,255,.1))}.vgx-gauge-label{margin-top:-3px;color:var(--vgx-muted);font:700 .59rem ui-monospace,monospace;letter-spacing:.11em;text-transform:uppercase}.vgx-gauge-value{margin-top:3px;color:var(--vgx-text);font:700 .8rem ui-monospace,monospace}.vgx-arc-bg{fill:none;stroke:rgba(132,159,196,.14);stroke-width:9;stroke-linecap:round}.vgx-arc-ok{fill:none;stroke-width:9;stroke-linecap:round}.vgx-gauge-tick{stroke:rgba(193,236,255,.35);stroke-width:1.25}.vgx-gauge-needle{transform-origin:70px 70px;transition:transform .65s cubic-bezier(.2,.75,.2,1)}.vgx-gauge-needle line{stroke:#e9fbff;stroke-width:2;filter:drop-shadow(0 0 5px var(--vgx-cyan))}.vgx-gauge-needle circle{fill:var(--vgx-cyan);stroke:#e9fbff;stroke-width:2}.vgx-vital-canvas{display:block;width:100%;height:78px;background:rgba(2,6,14,.72)}
+.vgx-dial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.vgx-dial{position:relative;padding:10px 6px;border:1px solid rgba(129,231,255,.1);border-radius:14px;background:rgba(255,255,255,.02);text-align:center}.vgx-knob{--turn:0deg;position:relative;width:62px;height:62px;margin:0 auto 8px;border:1px solid rgba(192,239,255,.3);border-radius:50%;background:radial-gradient(circle at 38% 35%,#27365a,#101529 48%,#050711 50%),conic-gradient(from 225deg,var(--vgx-cyan),var(--vgx-violet),var(--vgx-cyan));box-shadow:inset 0 0 11px rgba(0,0,0,.8),0 0 14px rgba(118,239,255,.08)}.vgx-knob:before{content:"";position:absolute;left:50%;top:8px;width:2px;height:17px;border-radius:3px;background:var(--vgx-cyan);box-shadow:0 0 8px var(--vgx-cyan);transform:translateX(-50%) rotate(var(--turn));transform-origin:1px 23px}.vgx-dial input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize}.vgx-dial label{display:block;color:var(--vgx-muted);font:700 .56rem ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}.vgx-dial output{display:block;margin-top:3px;color:var(--vgx-cyan);font:700 .68rem ui-monospace,monospace}.vgx-temp-array{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:stretch}.vgx-thermometer{position:relative;min-height:164px;border:1px solid rgba(255,255,255,.12);border-radius:24px;background:linear-gradient(to top,var(--vgx-red) 0 var(--heat),rgba(255,255,255,.04) var(--heat) 100%);box-shadow:inset 0 0 12px rgba(0,0,0,.5),0 0 15px rgba(255,100,124,.08)}.vgx-thermometer:before{content:"";position:absolute;left:50%;bottom:-2px;width:31px;height:31px;border:3px solid #18223b;border-radius:50%;background:var(--vgx-red);box-shadow:0 0 13px rgba(255,100,124,.45);transform:translate(-50%,45%)}.vgx-temp-scale{display:grid;align-content:space-between;font:650 .62rem ui-monospace,monospace;color:var(--vgx-muted)}.vgx-temp-scale b{color:var(--vgx-text);font-size:1.1rem}
+.vgx-data-list{display:grid;gap:7px}.vgx-data-row{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:8px 10px;border:1px solid rgba(130,156,193,.09);border-radius:10px;background:rgba(255,255,255,.018)}.vgx-data-row span{color:var(--vgx-muted);font-size:.7rem}.vgx-data-row strong{font:700 .7rem ui-monospace,monospace;text-align:right}.vgx-good{color:var(--vgx-green)!important}.vgx-warn{color:var(--vgx-amber)!important}.vgx-alert{color:var(--vgx-red)!important}.vgx-directives{display:grid;gap:8px}.vgx-directive{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:9px;border:1px solid rgba(129,231,255,.11);border-radius:12px;background:rgba(255,255,255,.02)}.vgx-directive-icon{display:grid;place-items:center;width:29px;height:29px;border-radius:9px;background:rgba(118,239,255,.08)}.vgx-directive strong{display:block;font-size:.72rem}.vgx-directive small{display:block;margin-top:2px;color:var(--vgx-muted);font-size:.61rem}.vgx-directive time{color:var(--vgx-cyan);font:700 .59rem ui-monospace,monospace}
+.vgx-action-bar{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.vgx-btn{min-height:48px!important;padding:11px 14px!important;border:1px solid rgba(125,151,189,.22)!important;border-radius:13px!important;background:rgba(255,255,255,.035)!important;color:var(--vgx-text)!important;font-weight:760!important;letter-spacing:.02em!important;box-shadow:none!important}.vgx-btn:hover{border-color:rgba(118,239,255,.48)!important;background:rgba(118,239,255,.08)!important}.vgx-btn.primary{border-color:rgba(118,239,255,.55)!important;background:linear-gradient(130deg,rgba(17,186,215,.24),rgba(157,123,255,.16))!important}.vgx-btn.green{border-color:rgba(104,240,177,.48)!important;background:rgba(104,240,177,.09)!important;color:var(--vgx-green)!important}.vgx-btn.amber{border-color:rgba(255,207,104,.43)!important;background:rgba(255,207,104,.08)!important;color:var(--vgx-amber)!important}.vgx-btn.full{grid-column:1/-1;width:100%}.vgx-btn small{display:block;margin-top:3px;color:var(--vgx-muted);font-size:.59rem;font-weight:600}.vgx-note{margin:9px 0 0!important;color:var(--vgx-muted)!important;font-size:.67rem!important;line-height:1.55!important}.vgx-funding{height:8px;margin-top:12px;overflow:hidden;border:1px solid rgba(118,239,255,.16);border-radius:99px;background:rgba(255,255,255,.035)}.vgx-funding i{display:block;width:var(--coverage);height:100%;background:linear-gradient(90deg,var(--vgx-violet),var(--vgx-cyan));box-shadow:0 0 14px var(--vgx-cyan)}
+.vgx-patient-map{position:relative;min-height:330px;background:radial-gradient(circle at 50% 48%,rgba(43,180,213,.11),transparent 50%),#050916}.vgx-patient-map svg{display:block;width:100%;height:auto;min-height:330px}.vgx-zone{cursor:pointer;transition:.2s}.vgx-zone:hover,.vgx-zone.active,.vgx-zone.done{fill:rgba(104,240,177,.28);stroke:#68f0b1;filter:drop-shadow(0 0 9px rgba(104,240,177,.5))}.vgx-map-overlay{position:absolute;left:13px;right:13px;bottom:12px;display:flex;justify-content:space-between;color:var(--vgx-muted);font:650 .61rem ui-monospace,monospace}.vgx-protocol-grid,.vgx-recovery-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.vgx-protocol-card,.vgx-care-card{padding:13px;border:1px solid rgba(129,231,255,.12);border-radius:15px;background:rgba(255,255,255,.02)}button.vgx-protocol-card{width:100%;text-align:left!important;box-shadow:none!important}.vgx-protocol-card.done,.vgx-care-card.done{border-color:rgba(104,240,177,.35);background:rgba(104,240,177,.045)}.vgx-protocol-card b,.vgx-care-card b{font-size:.78rem}.vgx-protocol-card p,.vgx-care-card p{min-height:35px;margin:5px 0 10px!important;color:var(--vgx-muted)!important;font-size:.67rem!important;line-height:1.4!important}.vgx-protocol-card span{color:var(--vgx-cyan);font:700 .59rem ui-monospace,monospace}.vgx-care-head{display:flex;justify-content:space-between;gap:8px}.vgx-care-time{color:var(--vgx-cyan);font:700 .57rem ui-monospace,monospace}.vgx-ring{--pct:50;display:grid;place-items:center;width:148px;aspect-ratio:1;margin:4px auto 16px;border-radius:50%;background:conic-gradient(var(--vgx-green) calc(var(--pct)*1%),rgba(129,231,255,.09) 0);box-shadow:0 0 24px rgba(104,240,177,.1)}.vgx-ring:before{content:"";grid-area:1/1;width:118px;aspect-ratio:1;border-radius:50%;background:#090e1d;box-shadow:inset 0 0 17px rgba(0,0,0,.65)}.vgx-ring-copy{position:relative;grid-area:1/1;text-align:center}.vgx-ring-copy b{display:block;color:var(--vgx-green);font:800 1.55rem ui-monospace,monospace}.vgx-ring-copy span{color:var(--vgx-muted);font:700 .59rem ui-monospace,monospace;text-transform:uppercase}.vgx-log{display:grid;gap:8px;max-height:220px;overflow:auto}.vgx-log div{display:grid;grid-template-columns:auto 1fr;gap:9px;padding-bottom:7px;border-bottom:1px solid rgba(129,231,255,.07);color:#aebbd0;font-size:.68rem}.vgx-log time{color:var(--vgx-cyan);font-family:ui-monospace,monospace}
+.vgx-empty{display:grid;place-items:center;min-height:420px;padding:40px;text-align:center}.vgx-empty .vgx-brand-mark{width:76px;height:76px;margin:auto}.vgx-empty h2{margin:20px 0 8px!important;font-size:clamp(1.5rem,4vw,2.5rem)!important}.vgx-empty p{max-width:530px;color:var(--vgx-muted)!important}.vgx-pet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.vgx-home-card{padding:0}.vgx-home-head{display:flex;align-items:center;gap:11px;padding:14px}.vgx-home-icon{display:grid;place-items:center;width:52px;height:52px;border:1px solid rgba(118,239,255,.22);border-radius:16px;background:radial-gradient(circle,rgba(118,239,255,.12),rgba(157,123,255,.05));font-size:1.8rem}.vgx-home-head h3{margin:0!important;font-size:1.05rem!important}.vgx-home-head small{color:var(--vgx-muted)}.vgx-home-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;padding:0 14px 14px}.vgx-home-actions .vgx-btn{min-height:39px!important;padding:7px!important;font-size:.64rem!important}
+@media(max-width:1080px){.vgx-facility{display:none}.vgx-hero{grid-template-columns:1fr}.vgx-console{grid-template-columns:220px minmax(0,1fr)}.vgx-console>.vgx-stack:last-child{grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr))}.vgx-console.two{grid-template-columns:1fr}.vgx-console.two>.vgx-stack:last-child{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.vg-command-inner{padding-inline:10px!important}.vgx-topbar{display:grid;grid-template-columns:1fr auto;gap:10px}.vgx-brand-copy span{display:none}.vgx-flow-nav{grid-column:1/-1;grid-row:2;width:100%;max-width:none;overflow-x:auto}.vgx-flow-step{min-width:128px!important;min-height:40px!important;padding:7px 7px 7px 34px!important}.vgx-flow-step:before{left:7px;top:7px;width:23px;height:23px}.vgx-flow-step small{display:none}.vgx-game-nav{margin-top:7px}.vgx-game-tab{padding:7px 10px!important}body.vg-command-layout #app{padding:25px 10px 60px!important}.vgx-hero h1{font-size:clamp(2.5rem,14vw,4rem)!important}.vgx-telemetry{grid-template-columns:repeat(3,1fr)}.vgx-micro-stat{padding:10px 8px}.vgx-workspace{min-height:0;border-radius:21px}.vgx-workspace-head{padding:12px}.vgx-chip{display:none}.vgx-view{padding:10px}.vgx-console,.vgx-console.two{grid-template-columns:1fr}.vgx-console>.vgx-stack:last-child,.vgx-console.two>.vgx-stack:last-child{grid-column:auto;grid-template-columns:1fr}.vgx-console>.vgx-stack:first-child .vgx-panel-body{display:flex;overflow-x:auto;gap:8px}.vgx-patient-card{min-width:220px;margin:0!important}.vgx-scanner,.vgx-scan-canvas{min-height:215px;height:215px}.vgx-gauge-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vgx-protocol-grid,.vgx-recovery-grid,.vgx-pet-grid{grid-template-columns:1fr}.vgx-home-actions{grid-template-columns:repeat(2,1fr)}}
+@media(prefers-reduced-motion:reduce){.vgx-status-dot{animation:none}.vgx-gauge-needle,.vgx-scan-progress i{transition:none}}
+</style>
+
+<script id="vg-exact-layout-js">
+(function(){
+ "use strict";
+ const VGX={scan:0,scanning:false,scanCase:-1,selectedZone:"Wound",clock:null};
+ const q=(s,r=document)=>r.querySelector(s),qa=(s,r=document)=>Array.from(r.querySelectorAll(s));
+ const clamp=(n,a=0,b=100)=>Math.max(a,Math.min(b,Number(n)||0));
+ const esc=v=>String(v==null?"":v).replace(/[&<>\"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'\"':"&quot;","'":"&#39;"}[c]));
+ const n=(v,f=0)=>Number.isFinite(Number(v))?Number(v):f;
+ function iconFor(p){const s=String((p&&p.species)||p||"").toLowerCase();if(/cat|feline/.test(s))return"🐈";if(/rabbit|hare|lagomorph/.test(s))return"🐇";if(/bird|parrot|owl|hawk|duck|cockatiel/.test(s))return"🐦";if(/snake/.test(s))return"🐍";if(/gecko|lizard|reptile|tortoise/.test(s))return"🦎";if(/horse/.test(s))return"🐎";if(/fox/.test(s))return"🦊";if(/pig/.test(s))return"🐖";if(/goat/.test(s))return"🐐";if(/mouse|mice/.test(s))return"🐁";if(/hamster|guinea|chinchilla|ferret|hedgehog/.test(s))return"🐹";return"🐕"}
+ function patientMetric(p,key,fallback){try{if(typeof metricValue==="function")return clamp(metricValue(p,key))}catch(e){}return clamp(p&&p[key]!=null?p[key]:fallback)}
+ function treeOf(p){try{return typeof ensureTree==="function"?ensureTree(p):(p.tree||{})}catch(e){return p&&p.tree||{}}}
+ function vitals(p,override){const t=treeOf(p||{}),stress=patientMetric(p,"stress",40),pain=patientMetric(p,"pain",25),oxygen=n(override&&override.oxygen,patientMetric(p,"oxygen",95)),hydration=n(t.hydration,p&&p.hydration!=null?p.hydration:65);return{hr:Math.round(n(override&&override.hr,78+stress*.58+pain*.36)),resp:Math.round(n(override&&override.resp,14+stress*.22)),temp:n(override&&override.temp,p&&p.temperature!=null?p.temperature:101.2+patientMetric(p,"infection",0)*.018-patientMetric(p,"shock",0)*.006),hydration:clamp(hydration),oxygen:clamp(oxygen),pain:clamp(pain),stress:clamp(stress),trust:clamp(n(t.trust,p&&p.trust!=null?p.trust:40)),mobility:clamp(n(t.mobility,p&&p.mobility!=null?p.mobility:50)),appetite:clamp(n(t.appetite,p&&p.hunger!=null?p.hunger:55))}}
+ function priority(v){if(v.oxygen<88||v.hydration<42||v.temp>104.5)return"Critical";if(v.oxygen<94||v.hydration<65||v.pain>60||v.stress>72)return"Urgent";return"Stable"}
+ function currentPatient(pool){const all=pool||((state&&state.patients)||[]);return all.find(p=>p.id===state.activeId)||all[0]||null}
+ function money(v){return"$"+Math.round(n(v)).toLocaleString()}
+ function gauge(label,value,min,max,suffix,tone="cyan") {const pct=clamp((value-min)/(max-min),0,1),angle=-120+pct*240,ticks=Array.from({length:11},(_,i)=>{const a=(-120+i*24)*Math.PI/180,x1=70+Math.sin(a)*50,y1=70-Math.cos(a)*50,x2=70+Math.sin(a)*57,y2=70-Math.cos(a)*57;return`<line class="vgx-gauge-tick" x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/>`}).join(""),colors=tone==="warn"?["#ffcf68","#ff647c"]:tone==="good"?["#68f0b1","#76efff"]:["#11bad7","#9d7bff"],gid="vgxg"+Math.random().toString(36).slice(2);return`<div class="vgx-gauge"><svg viewBox="0 0 140 116" role="img" aria-label="${esc(label)} ${esc(value)}${esc(suffix)}"><defs><linearGradient id="${gid}" x1="0" x2="1"><stop stop-color="${colors[0]}"/><stop offset="1" stop-color="${colors[1]}"/></linearGradient></defs><path class="vgx-arc-bg" d="M27 102 A56 56 0 1 1 113 102"/><path class="vgx-arc-ok" style="stroke:url(#${gid})" pathLength="100" stroke-dasharray="${Math.round(pct*100)} 100" d="M27 102 A56 56 0 1 1 113 102"/>${ticks}<g class="vgx-gauge-needle" style="transform:rotate(${angle}deg)"><line x1="70" y1="70" x2="70" y2="27"/><circle cx="70" cy="70" r="5"/></g></svg><div class="vgx-gauge-label">${esc(label)}</div><div class="vgx-gauge-value">${typeof value==="number"&&!Number.isInteger(value)?value.toFixed(1):esc(value)}${esc(suffix)}</div></div>`}
+ function gauges(v){return`<div class="vgx-gauge-grid">${gauge("Heart rate",v.hr,45,220," bpm",v.hr>165?"warn":"cyan")}${gauge("Respiration",v.resp,8,70," rpm",v.resp>42?"warn":"cyan")}${gauge("Temperature",v.temp,96,106,"°F",v.temp>103||v.temp<100?"warn":"good")}${gauge("Hydration",Math.round(v.hydration),0,100,"%",v.hydration<70?"warn":"good")}</div>`}
+ function dial(label,id,value){const turn=-132+value/100*264;return`<div class="vgx-dial"><div class="vgx-knob" style="--turn:${turn}deg"></div><label for="vgx-dial-${id}">${esc(label)}</label><output>${Math.round(value)}%</output><input id="vgx-dial-${id}" data-vgx-dial="${id}" type="range" min="0" max="100" value="${Math.round(value)}" aria-label="${esc(label)}"></div>`}
+ function directives(p,v){const out=[];if(v.hydration<75)out.push(["◇","Hydration support",`Current hydration ${Math.round(v.hydration)}%`,"Now"]);if(v.temp>103||v.temp<100)out.push(["∿","Thermal regulation",`Core temperature ${v.temp.toFixed(1)}°F`,"Now"]);if(v.pain>30)out.push(["+","Pain control check",`Pain signal ${Math.round(v.pain)}%`,"10m"]);if(v.stress>45)out.push(["◌","Low-stimulus comfort",`Stress load ${Math.round(v.stress)}%`,"15m"]);if(v.appetite<70)out.push(["△","Nutrition assessment",`Appetite ${Math.round(v.appetite)}%`,"30m"]);if(v.mobility<65)out.push(["⌁","Mobility reassessment",`Mobility ${Math.round(v.mobility)}%`,"1h"]);return out.slice(0,5)}
+ function directiveHTML(p,v){return`<div class="vgx-directives">${directives(p,v).map(x=>`<div class="vgx-directive"><span class="vgx-directive-icon">${x[0]}</span><div><strong>${x[1]}</strong><small>${x[2]}</small></div><time>${x[3]}</time></div>`).join("")||`<div class="vgx-directive"><span class="vgx-directive-icon">✓</span><div><strong>Signals in safe range</strong><small>Continue scheduled reassessment</small></div><time>30m</time></div>`}</div>`}
+ function patientCard(p,selected){const v=vitals(p);return`<button class="vgx-patient-card ${selected?"selected":""}" data-vgx-patient="${esc(p.id)}"><span class="vgx-pet-line"><span class="vgx-pet-icon">${iconFor(p)}</span><span><span class="vgx-pet-name">${esc(p.name||"Patient")}</span><span class="vgx-pet-meta">${esc(p.species||"Animal")} · ${esc(p.condition||p.department||"Care signal")}</span></span><span class="vgx-urgency">${priority(v)}</span></span></button>`}
+ function hero(eyebrow,title,copy){return`<section class="vgx-hero"><div><p class="vgx-eyebrow">${eyebrow}</p><h1>${title}</h1><p class="vgx-hero-copy">${copy}</p></div><div class="vgx-telemetry"><div class="vgx-micro-stat"><span>Clinic credits</span><strong>${money(state.credits||0)}</strong></div><div class="vgx-micro-stat"><span>Lives saved</span><strong>${String(Math.round(state.saved||0)).padStart(3,"0")}</strong></div><div class="vgx-micro-stat"><span>Shift</span><strong>${typeof EXP!=="undefined"?esc(EXP.time+" "+EXP.shift):"ACTIVE"}</strong></div></div></section>`}
+ function workspace(title,sub,code,content,utility=""){return`<section class="vgx-workspace"><div class="vgx-workspace-head"><div class="vgx-workspace-title"><span class="vgx-signal-bars"><i></i><i></i><i></i></span><div><strong>${title}</strong><small>${sub}</small></div></div><div class="vgx-utilities"><code>${code}</code>${utility}</div></div><div class="vgx-view">${content}</div></section>`}
+ function eventStream(){const logs=(state.log||state.logs||[]).slice(-8).reverse();return`<section class="vgx-console two" style="margin-top:14px"><article class="vgx-panel"><div class="vgx-panel-head"><h3>Hospital event stream</h3><code>VG-OPS://SAVE</code></div><div class="vgx-panel-body"><div class="vgx-log">${logs.length?logs.map((x,i)=>`<div><time>${String(i+1).padStart(2,"0")}</time><span>${esc(typeof x==="string"?x:(x.text||JSON.stringify(x)))}</span></div>`).join(""):`<div><time>00</time><span>Hospital command synchronized. All gameplay systems standing by.</span></div>`}</div></div></article><aside class="vgx-panel"><div class="vgx-panel-head"><h3>Persistent campaign</h3><code>AUTO-SAVE ACTIVE</code></div><div class="vgx-panel-body"><div class="vgx-data-list"><div class="vgx-data-row"><span>Mercy</span><strong class="vgx-good">${Math.round(state.mercy||0)}</strong></div><div class="vgx-data-row"><span>Patients</span><strong>${(state.patients||[]).filter(p=>p.admitted).length}</strong></div><div class="vgx-data-row"><span>Home pets</span><strong>${(state.pets||[]).length}</strong></div></div></div></aside></section>`}
+ function shell(){const box=q(".vg-command-inner");if(!box)return;box.innerHTML=`<div class="vgx-topbar"><div class="vgx-brand"><span class="vgx-brand-mark"><svg viewBox="0 0 32 32" fill="none"><path d="M16 4v24M4 16h24" stroke="#76efff" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="16" r="10.5" stroke="#9d7bff" stroke-width="1.5" stroke-dasharray="3 3"/></svg></span><span class="vgx-brand-copy"><strong>Vet Gods</strong><span>ORBITAL HOSPITAL · DECK 09</span></span></div><nav class="vgx-flow-nav" aria-label="Patient care flow"><button class="vgx-flow-step" data-num="01" data-vgx-go="admit"><strong>Intake</strong><small>Scan + admit</small></button><button class="vgx-flow-step" data-num="02" data-vgx-go="clinic"><strong>Treatment</strong><small>Diagnose + stabilize</small></button><button class="vgx-flow-step" data-num="03" data-vgx-go="surgery"><strong>Surgery</strong><small>Direct control</small></button><button class="vgx-flow-step" data-num="04" data-vgx-go="recovery"><strong>Recovery</strong><small>Daily care</small></button></nav><div class="vgx-facility"><i class="vgx-status-dot"></i> systems nominal</div></div><nav class="vgx-game-nav" aria-label="Vet Gods gameplay areas"><button class="vgx-game-tab" data-vgx-go="pets">⚕ My Pets</button><button class="vgx-game-tab" data-vgx-go="hospital">⌂ Hospital+</button><button class="vgx-game-tab" data-vgx-go="carelab">◎ Care Lab</button><button class="vgx-game-tab" data-vgx-go="habitats">◇ Habitats</button><button class="vgx-game-tab" data-vgx-go="sanctuary">✦ Sanctuary</button><button class="vgx-game-tab" data-vgx-go="ambulance">⌁ Ambulance</button><button class="vgx-game-tab" data-vgx-go="research">▤ Research</button><button class="vgx-game-tab utility" id="vgxAllAreas">All Areas</button><button class="vgx-game-tab utility" id="vgxSave">Save</button></nav>`;qa("[data-vgx-go]",box).forEach(b=>b.addEventListener("click",()=>open(b.dataset.vgxGo)));q("#vgxAllAreas",box)?.addEventListener("click",()=>q("#menuToggle")?.click());q("#vgxSave",box)?.addEventListener("click",()=>{try{if(typeof saveNow==="function")saveNow();else if(typeof saveGame==="function")saveGame("Manual Save",false)}catch(e){}})}
+ function syncShell(){qa("[data-vgx-go]").forEach(b=>b.classList.toggle("active",b.dataset.vgxGo===state.screen));const order={admit:0,clinic:1,surgery:2,recovery:3},phase=order[state.screen];qa(".vgx-flow-step").forEach((b,i)=>b.classList.toggle("complete",phase!=null&&i<phase))}
+ function open(screen){if(typeof vgOpenScreen==="function")vgOpenScreen(screen);else{state.screen=screen;window.render&&window.render()}}
+ function empty(title,copy,target="admit",button="Open patient intake"){return`<div class="vgx-empty"><div><span class="vgx-brand-mark"><svg viewBox="0 0 32 32" fill="none"><path d="M16 4v24M4 16h24" stroke="#76efff" stroke-width="3"/><circle cx="16" cy="16" r="10.5" stroke="#9d7bff" stroke-width="1.5" stroke-dasharray="3 3"/></svg></span><p class="vgx-eyebrow">Awaiting hospital signal</p><h2>${title}</h2><p>${copy}</p><button class="vgx-btn primary" data-vgx-empty-go="${target}">${button}</button></div></div>`}
+ function mount(screen,html){const el=q("#"+screen);if(!el)return;el.innerHTML=`<div class="vg-exact-layout">${html}</div>`;q("[data-vgx-empty-go]",el)?.addEventListener("click",e=>open(e.currentTarget.dataset.vgxEmptyGo))}
+ function renderIntake(){if(VGX.scanCase!==state.nextCase){VGX.scanCase=state.nextCase;VGX.scan=0;VGX.scanning=false}const idx=(state.nextCase||0)%((typeof NAMES!=="undefined"&&NAMES.length)||1),name=typeof NAMES!=="undefined"?NAMES[idx]:"Incoming rescue",species=typeof SPECIES!=="undefined"?SPECIES[idx%SPECIES.length]:(typeof EXP_SPECIES!=="undefined"?EXP_SPECIES[idx%EXP_SPECIES.length]:"Animal"),p={name,species,condition:"Unverified intake signal",stress:64,pain:38,oxygen:92,hydration:58,trust:20},v=vitals(p),cost=185+Math.round((100-v.hydration)*2.4+(100-v.oxygen)*3.5+v.pain*1.2),coverage=Math.min(100,(n(state.credits)+n(state.mercy)*4)/Math.max(1,cost));const queue=Array.from({length:3},(_,i)=>{const j=(idx+i)%((typeof NAMES!=="undefined"&&NAMES.length)||1),qp={name:typeof NAMES!=="undefined"?NAMES[j]:"Rescue signal "+(i+1),species:typeof EXP_SPECIES!=="undefined"?EXP_SPECIES[j%EXP_SPECIES.length]:species,condition:i?"Waiting signal":"Priority arrival",stress:55+i*8,pain:32+i*5,oxygen:95-i*2,hydration:68-i*5};return patientCard(qp,i===0)}).join("");const content=`<div class="vgx-console"><div class="vgx-stack"><section class="vgx-panel"><div class="vgx-panel-head"><h2>Waiting signal</h2><code>QUEUE 03</code></div><div class="vgx-panel-body">${queue}</div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Temperature rail</h3><code>CORE</code></div><div class="vgx-panel-body"><div class="vgx-temp-array"><div class="vgx-thermometer" style="--heat:${clamp((v.temp-96)/10*100,5,100)}%"></div><div class="vgx-temp-scale"><span>106°</span><span>104°</span><b>${v.temp.toFixed(1)}°F</b><span>100°</span><span>96°</span></div></div></div></section></div><div class="vgx-stack"><section class="vgx-panel glow"><div class="vgx-scanner"><canvas class="vgx-scan-canvas" id="vgxScanCanvas"></canvas><div class="vgx-scan-corners"></div><div class="vgx-scan-readout" id="vgxScanReadout">SUBJECT ${esc(name).toUpperCase()}<br>SCAN ${Math.round(VGX.scan).toString().padStart(3,"0")}%<br>${VGX.scan>=100?"PROFILE LOCKED":VGX.scanning?"SWEEP ACTIVE":"AWAITING SWEEP"}</div><div class="vgx-scan-progress" id="vgxScanProgress" style="--scan:${VGX.scan}%"><i></i></div></div><div class="vgx-subject"><div><h2>${esc(name)} <span>${iconFor(species)}</span></h2><p>${esc(species)} · Intake candidate<br>Clinical readings require synchronized verification.</p></div><span class="vgx-priority ${priority(v).toLowerCase()}">${priority(v)}</span></div>${gauges(v)}<canvas class="vgx-vital-canvas" id="vgxVitalCanvas"></canvas></section></div><div class="vgx-stack"><section class="vgx-panel"><div class="vgx-panel-head"><h3>Signal controls</h3><code>RADIO ARRAY</code></div><div class="vgx-panel-body"><div class="vgx-dial-grid">${dial("Scanner gain","gain",62)}${dial("O₂ reserve","oxygen",45)}${dial("Fluid rate","fluids",50)}</div></div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Daily-care link</h3><code>${VGX.scan>=100?directives(p,v).length+" TASKS":"OFFLINE"}</code></div><div class="vgx-panel-body">${VGX.scan>=100?directiveHTML(p,v):`<p class="vgx-note">Care directives will be generated from the intake readings after the bio-scan.</p>`}</div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Admission logic</h3><code>${VGX.scan>=100?"AUTHORIZED":"CALCULATING"}</code></div><div class="vgx-panel-body"><div class="vgx-data-list"><div class="vgx-data-row"><span>Estimated care</span><strong>${VGX.scan>=100?money(cost):"—"}</strong></div><div class="vgx-data-row"><span>Clinic credits</span><strong>${money(state.credits)}</strong></div><div class="vgx-data-row"><span>Mercy reserve</span><strong class="vgx-good">${Math.round(state.mercy||0)}</strong></div></div><div class="vgx-funding" style="--coverage:${VGX.scan>=100?coverage:0}%"><i></i></div><p class="vgx-note">Emergency care remains available. Admission creates a real patient in the hospital census and starts the saved care pathway.</p><div class="vgx-action-bar"><button class="vgx-btn primary full" id="vgxRunScan" ${VGX.scanning||VGX.scan>=100?"disabled":""}>${VGX.scanning?"Scanning…":VGX.scan>=100?"Bio-scan complete":"Run synchronized bio-scan"}<small>SVG gauges + Canvas telemetry</small></button><button class="vgx-btn green full" id="vgxAdmit" ${VGX.scan>=100?"":"disabled"}>Admit patient to clinic</button></div></div></section></div></div>`;mount("admit",hero("Intake command // Bay 01","Every signal tells a story.","Scan the waiting rescue, generate a data-driven care plan, and admit the patient into the full Vet Gods hospital simulation.")+workspace("Intake command // Bay 01",VGX.scan>=100?"Clinical profile synchronized":"Awaiting synchronized patient scan","INTAKE.01",content)+eventStream());drawScanner(p,VGX.scanning);drawVitals(v);bindDials(null);q("#vgxRunScan")?.addEventListener("click",runIntakeScan);q("#vgxAdmit")?.addEventListener("click",()=>{if(VGX.scan<100)return;VGX.scan=0;VGX.scanning=false;if(typeof admitOne==="function")admitOne()})}
+ function runIntakeScan(){if(VGX.scanning||VGX.scan>=100)return;VGX.scanning=true;const btn=q("#vgxRunScan");if(btn){btn.disabled=true;btn.firstChild.textContent="Scanning…"}const timer=setInterval(()=>{if(state.screen!=="admit"){clearInterval(timer);VGX.scanning=false;return}VGX.scan=clamp(VGX.scan+5+Math.random()*5);const bar=q("#vgxScanProgress"),read=q("#vgxScanReadout");if(bar)bar.style.setProperty("--scan",VGX.scan+"%");if(read)read.innerHTML=read.innerHTML.replace(/SCAN \d+%/,"SCAN "+Math.round(VGX.scan).toString().padStart(3,"0")+"%").replace(/AWAITING SWEEP|SWEEP ACTIVE|PROFILE LOCKED/,VGX.scan>=100?"PROFILE LOCKED":"SWEEP ACTIVE");if(VGX.scan>=100){clearInterval(timer);VGX.scanning=false;renderIntake()}},90)}
+ function renderClinicExact(){const list=(state.patients||[]).filter(p=>p.admitted&&(p.department==="Clinic"||p.location==="Clinic")&&!(p.flow&&p.flow.integratedRecovery)),p=currentPatient(list);if(!p){mount("clinic",hero("Treatment command // Bay 02","The clinic is standing by.","Admit a rescue to activate the diagnostic scanner, live vital gauges, care protocols, and treatment pathway.")+workspace("Treatment command // Bay 02","No active clinic patient","TREAT.02",empty("No patient in treatment","The full game is ready. Begin with an intake scan to create the next live case.")));return}state.activeId=p.id;const v=vitals(p),t=treeOf(p),settings=p.commandSettings||(p.commandSettings={gain:62,oxygen:45,fluids:50}),sev=typeof severity==="function"?severity(p):Math.max(v.pain,v.stress,100-v.oxygen),protocols=[ ["oxygen","Oxygen support","Titrate flow from the console and verify saturation.","oxygen"],["fluids","Balanced fluids","Restore hydration and reduce shock under monitoring.","iv"],["pain","Pain protocol","Administer appropriate analgesia and reassess response.","painMeds"],["wound","Wound repair","Clean, inspect, protect, and control bleeding.","bandages"],["comfort","Low-stimulus comfort","Reduce fear and stress before the next procedure.","blankets"],["feed","Nutrition support","Offer species-safe feeding as tolerance allows.","food"]],inv=typeof ECON!=="undefined"?ECON.inventory:{};const content=`<div class="vgx-console"><div class="vgx-stack"><section class="vgx-panel"><div class="vgx-panel-head"><h2>Clinic census</h2><code>${list.length} ACTIVE</code></div><div class="vgx-panel-body">${list.map(x=>patientCard(x,x.id===p.id)).join("")}</div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Temperature rail</h3><code>CORE</code></div><div class="vgx-panel-body"><div class="vgx-temp-array"><div class="vgx-thermometer" style="--heat:${clamp((v.temp-96)*10,5,100)}%"></div><div class="vgx-temp-scale"><span>106°</span><span>104°</span><b>${v.temp.toFixed(1)}°F</b><span>100°</span><span>96°</span></div></div></div></section></div><div class="vgx-stack"><section class="vgx-panel glow"><div class="vgx-scanner"><canvas class="vgx-scan-canvas" id="vgxScanCanvas"></canvas><div class="vgx-scan-corners"></div><div class="vgx-scan-readout">SUBJECT ${esc(p.id).toUpperCase()}<br>PROFILE LOCKED<br>${esc(t.stage||"TREATMENT").toUpperCase()}</div><div class="vgx-scan-progress" style="--scan:100%"><i></i></div></div><div class="vgx-subject"><div><h2>${esc(p.name)} <span>${iconFor(p)}</span></h2><p>${esc(p.species||"Animal")} · ${esc(p.condition||"Active clinical case")}<br>${esc(typeof treeObservation==="function"?treeObservation(p):"The patient is connected to live hospital telemetry.")}</p></div><span class="vgx-priority ${priority(v).toLowerCase()}">${priority(v)}</span></div>${gauges(v)}<canvas class="vgx-vital-canvas" id="vgxVitalCanvas"></canvas></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Required treatment protocol</h3><code>SUPPLY-LINKED</code></div><div class="vgx-panel-body"><div class="vgx-protocol-grid">${protocols.map(x=>`<button class="vgx-protocol-card" data-vgx-clinic="${x[0]}"><b>${x[1]}</b><p>${x[2]}</p><span>${inv[x[3]]==null?"READY":inv[x[3]]+" "+x[3]+" · APPLY"}</span></button>`).join("")}</div></div></section></div><div class="vgx-stack"><section class="vgx-panel"><div class="vgx-panel-head"><h3>Therapy dials</h3><code>DIRECT INPUT</code></div><div class="vgx-panel-body"><div class="vgx-dial-grid">${dial("Signal gain","gain",settings.gain)}${dial("O₂ flow","oxygen",settings.oxygen)}${dial("Fluid rate","fluids",settings.fluids)}</div></div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Patient data</h3><code>VERIFIED</code></div><div class="vgx-panel-body"><div class="vgx-data-list"><div class="vgx-data-row"><span>Clinical severity</span><strong class="${sev<35?"vgx-good":sev>70?"vgx-alert":"vgx-warn"}">${Math.round(sev)}%</strong></div><div class="vgx-data-row"><span>SpO₂</span><strong class="${v.oxygen>=94?"vgx-good":"vgx-warn"}">${Math.round(v.oxygen)}%</strong></div><div class="vgx-data-row"><span>Pain signal</span><strong>${Math.round(v.pain)}%</strong></div><div class="vgx-data-row"><span>Trust</span><strong>${Math.round(v.trust)}%</strong></div></div></div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Advanced daily-care link</h3><code>${directives(p,v).length} TASKS</code></div><div class="vgx-panel-body">${directiveHTML(p,v)}</div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Pathway control</h3><code>${sev<55?"TRANSFER READY":"STABILIZE"}</code></div><div class="vgx-panel-body"><p class="vgx-note">These controls use the full game's examination, treatment, surgery, supply, and recovery state.</p><div class="vgx-action-bar"><button class="vgx-btn primary" id="vgxObserve">Observe + examine</button><button class="vgx-btn" id="vgxGentle">Gentle care</button><button class="vgx-btn amber" id="vgxToSurgery">Surgical path</button><button class="vgx-btn green" id="vgxToRecovery">Medical recovery</button></div></div></section></div></div>`;mount("clinic",hero("Treatment command // Direct care","Read the patient. Change the outcome.","Every gauge, control, intervention, and supply count is connected to this game's real patient and persistent hospital state.")+workspace(`Treatment bay // ${esc(p.name)}`,`${esc(p.species||"Animal")} · ${esc(p.condition||"Live case")}`,"TREAT.02",content,`<button class="vgx-chip" id="vgxFullPatient">Full patient file</button>`)+eventStream());drawScanner(p,false);drawVitals(v);bindDials(p);bindPatientQueue();qa("[data-vgx-clinic]").forEach(b=>b.addEventListener("click",()=>{clinicAction(p.id,b.dataset.vgxClinic);window.render()}));q("#vgxObserve")?.addEventListener("click",()=>{const stage=treeOf(p).stage||"observe",a=stage==="observe"?"observe":stage==="approach"?"approach":stage==="exam"?"exam":stage==="diagnose"?"diagnose":"comfort";treeAction(p.id,a)});q("#vgxGentle")?.addEventListener("click",()=>treat(p,12));q("#vgxToSurgery")?.addEventListener("click",()=>{treeOf(p).stage="surgery";route(p,"Surgery")});q("#vgxToRecovery")?.addEventListener("click",()=>{treeOf(p).stage="recover";route(p,"Recovery")});q("#vgxFullPatient")?.addEventListener("click",()=>typeof openAnimalProfile==="function"&&openAnimalProfile(p.id))}
+ function renderSurgeryExact(){const list=typeof sgPatients==="function"?sgPatients():(state.patients||[]).filter(p=>p.admitted&&p.department==="Surgery"),p=currentPatient(list);if(!p){mount("surgery",hero("Treatment theater // Direct control","The operating table is ready.","Surgical gameplay activates when a clinic patient is routed into the theater.")+workspace("Surgery theater // Bay 03","No surgical patient assigned","SURGERY.03",empty("No patient in surgery","Continue treatment in Clinic or admit a new rescue.","clinic","Return to treatment")));return}state.activeId=p.id;const s=typeof sgEnsure==="function"?sgEnsure(p):{step:p.surgeryStep||0,stability:70,oxygen:p.oxygen||94,bleeding:p.bleeding||20,anesthesia:0,temperature:p.temperature||100,zonesDone:[],history:[],completed:false},v=vitals(p,{oxygen:s.oxygen,temp:s.temperature}),steps=["prepare","stabilize","anesthesia","operate","control","close","postop"],titles=["Prepare field","Stabilize patient","Establish anesthesia","Complete repair","Control bleeding","Close site","Post-op check"];const content=`<div class="vgx-console two"><div class="vgx-stack"><section class="vgx-panel glow"><div class="vgx-panel-head"><h2>Operating table · Direct control</h2><code>${esc(p.name).toUpperCase()} // STEP ${s.step||0}</code></div><div class="vgx-patient-map"><svg viewBox="0 0 720 360" role="img" aria-label="Interactive patient treatment map"><defs><radialGradient id="vgxBodyGlow"><stop stop-color="#1aaac4" stop-opacity=".36"/><stop offset="1" stop-color="#101a35" stop-opacity=".85"/></radialGradient></defs><g fill="url(#vgxBodyGlow)" stroke="#65dff1" stroke-opacity=".6" stroke-width="2"><ellipse class="vgx-zone ${s.zonesDone.includes("Abdomen")?"done":""}" data-vgx-zone="Abdomen" cx="366" cy="185" rx="150" ry="79"/><circle class="vgx-zone ${s.zonesDone.includes("Chest")?"done":""}" data-vgx-zone="Chest" cx="245" cy="170" r="59"/><path class="vgx-zone" data-vgx-zone="Head" d="M156 111 126 50q-5-13 10-9l55 55Z"/><path class="vgx-zone" data-vgx-zone="Head" d="m200 98 49-46q12-11 10 6l-18 67Z"/><path class="vgx-zone ${s.zonesDone.includes("Limb")?"done":""}" data-vgx-zone="Limb" d="M287 236q-22 38-12 74h35q7-41 25-64Z"/><path class="vgx-zone ${s.zonesDone.includes("Wound")?"done":""}" data-vgx-zone="Wound" d="M441 238q38 29 48 72h38q-10-62-36-101Z"/><path class="vgx-zone" data-vgx-zone="Tail" d="M510 172q97-72 147-21-72-5-111 61Z"/></g><g fill="#76efff" font-family="ui-monospace,monospace" font-size="11" opacity=".7"><text x="40" y="45">NEURAL MAP // LIVE</text><text x="555" y="325">BIOFIELD LOCKED</text></g><g stroke="#76efff" stroke-opacity=".15"><path d="M0 180h720"/><path d="M360 0v360"/><circle cx="360" cy="180" r="128" fill="none" stroke-dasharray="5 9"/></g></svg><div class="vgx-map-overlay"><span>Selected zone: <strong id="vgxSelectedZone">${esc(VGX.selectedZone)}</strong></span><span>Tap anatomy to inspect</span></div></div>${gauges(v)}<canvas class="vgx-vital-canvas" id="vgxVitalCanvas"></canvas></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Operating protocol</h3><code>${Math.min(s.step||0,7)}/7 COMPLETE</code></div><div class="vgx-panel-body"><div class="vgx-protocol-grid">${steps.map((x,i)=>`<button class="vgx-protocol-card ${(s.step||0)>i?"done":""}" data-vgx-surgery="${x}" ${(s.step||0)!==i||s.event?"disabled":""}><b>${i+1}. ${titles[i]}</b><p>${i===3?"Inspect an anatomy zone, perform the repair, and monitor the live response.":"Advance the existing surgical engine one controlled step."}</p><span>${(s.step||0)>i?"PATIENT RESPONSE RECORDED":"APPLY"}</span></button>`).join("")}</div></div></section></div><div class="vgx-stack"><section class="vgx-panel"><div class="vgx-panel-head"><h3>Operating telemetry</h3><code>LIVE</code></div><div class="vgx-panel-body"><div class="vgx-data-list"><div class="vgx-data-row"><span>Stability</span><strong class="${s.stability>=65?"vgx-good":"vgx-warn"}">${Math.round(s.stability)}%</strong></div><div class="vgx-data-row"><span>Oxygen</span><strong>${Math.round(s.oxygen)}%</strong></div><div class="vgx-data-row"><span>Bleeding</span><strong class="${s.bleeding<20?"vgx-good":"vgx-alert"}">${Math.round(s.bleeding)}%</strong></div><div class="vgx-data-row"><span>Anesthesia</span><strong>${Math.round(s.anesthesia)}%</strong></div></div></div></section>${s.event?`<section class="vgx-panel"><div class="vgx-panel-head"><h3>Operating-room alert</h3><code class="vgx-alert">ACTIVE</code></div><div class="vgx-panel-body"><p class="vgx-note">${esc(s.event.text)}</p><button class="vgx-btn amber full" id="vgxResolveEvent">${esc(s.event.button)}</button></div></section>`:""}<section class="vgx-panel"><div class="vgx-panel-head"><h3>Transfer gate</h3><code>${s.completed?"OPEN":"LOCKED"}</code></div><div class="vgx-panel-body"><div class="vgx-ring" style="--pct:${Math.round(s.stability)}"><div class="vgx-ring-copy"><b>${Math.round(s.stability)}%</b><span>Stability</span></div></div><button class="vgx-btn green full" id="vgxSurgeryTransfer" ${s.completed?"":"disabled"}>Transfer to recovery<small>${s.completed?"Post-op handoff ready":"Complete the operating protocol first"}</small></button></div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Operating record</h3><code>PERSISTENT</code></div><div class="vgx-panel-body"><div class="vgx-log">${(s.history||[]).slice(0,6).map((x,i)=>`<div><time>${String(i+1).padStart(2,"0")}</time><span>${esc(x)}</span></div>`).join("")||`<div><time>00</time><span>Begin preparation to write the surgical record.</span></div>`}</div></div></section></div></div>`;mount("surgery",hero("Treatment theater // Direct control","Precision changes the outcome.","Operate on the same live patient state, resolve complications, and carry the complete surgical record into recovery.")+workspace(`Surgical theater // ${esc(p.name)}`,`${esc(p.species||"Animal")} · monitored anesthesia`,"SURGERY.03",content)+eventStream());drawVitals(v);qa("[data-vgx-surgery]").forEach(b=>b.addEventListener("click",()=>{sgAction(p.id,b.dataset.vgxSurgery);window.render()}));qa("[data-vgx-zone]").forEach(z=>z.addEventListener("click",()=>{VGX.selectedZone=z.dataset.vgxZone;q("#vgxSelectedZone").textContent=VGX.selectedZone;if(["Chest","Abdomen","Limb","Wound"].includes(VGX.selectedZone)){sgZone(p.id,VGX.selectedZone);window.render()}}));q("#vgxResolveEvent")?.addEventListener("click",()=>{sgResolveEvent(p.id);window.render()});q("#vgxSurgeryTransfer")?.addEventListener("click",()=>{p.postOpHistory=(p.postOpHistory||[]).concat((s.history||[]).slice(0,8));treeOf(p).stage="recover";route(p,"Recovery")})}
+ function recoveryPatients(){return(state.patients||[]).filter(p=>p.admitted&&(p.department==="Recovery"||p.location==="Recovery"||(p.flow&&p.flow.integratedRecovery)))}
+ function renderRecoveryExact(){const list=recoveryPatients(),p=currentPatient(list);if(!p){mount("recovery",hero("Recovery deck // Care network","Recovery is active care.","Route a stabilized medical or surgical patient here to begin the advanced daily-care schedule.")+workspace("Recovery deck // Bay 04","No patient in monitored recovery","CARE.04",empty("Recovery ward is quiet","Continue a Clinic or Surgery pathway until a patient is ready for monitored daily care.","clinic","Return to treatment")));return}state.activeId=p.id;const m=typeof rwEnsure==="function"?rwEnsure(p,0):{},score=typeof rwScore==="function"?rwScore(p):Math.round((100-patientMetric(p,"pain",30)+vitals(p).hydration+vitals(p).mobility)/3),missing=typeof rwMissing==="function"?rwMissing(p):[],v=vitals(p),cards=[["rest","Quiet rest","Low-stimulus rest with pain and comfort monitoring.",m.rests>0],["food","Offer food","Species-safe nutrition with appetite response recorded.",m.meals>0],["water","Offer water","Voluntary hydration is required for safe discharge.",m.waters>0],["comfort","Stay nearby","Quiet companionship lowers stress and builds trust.",m.comforts>0],["walk","Gentle mobility","Short assisted movement with gait observation.",m.walks>0],["recheck","Hydration recheck","Verify independent hydration after the water offer.",m.rechecks>0]];const content=`<div class="vgx-console two"><div class="vgx-stack"><section class="vgx-panel glow"><div class="vgx-panel-head"><h2>Recovery habitat // ${esc(p.name)}</h2><code>MONITORING ACTIVE</code></div><div class="vgx-subject"><div><h2>${iconFor(p)} ${esc(p.name)} is responding</h2><p>Calm habitat engaged. Every daily-care action writes directly back to the persistent recovery engine.</p></div><span class="vgx-priority ${score>=80?"stable":""}">${score>=80?"Discharge range":"Recovering"}</span></div>${gauges(v)}<canvas class="vgx-vital-canvas" id="vgxVitalCanvas"></canvas></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Advanced daily-care schedule</h3><code>${cards.filter(x=>x[4]).length}/${cards.length} LOGGED</code></div><div class="vgx-panel-body"><div class="vgx-recovery-grid">${cards.map(x=>`<article class="vgx-care-card ${x[4]?"done":""}"><div class="vgx-care-head"><b>${x[1]}</b><span class="vgx-care-time">${x[4]?"DONE":"DUE"}</span></div><p>${x[2]}</p><button class="vgx-btn ${x[4]?"green":""}" data-vgx-recovery="${x[0]}">${x[4]?"Repeat + reassess":"Perform care"}</button></article>`).join("")}</div></div></section></div><div class="vgx-stack"><section class="vgx-panel"><div class="vgx-panel-head"><h3>Recovery score</h3><code>LIVE</code></div><div class="vgx-panel-body"><div class="vgx-ring" style="--pct:${score}"><div class="vgx-ring-copy"><b>${score}%</b><span>Recovery</span></div></div><div class="vgx-data-list"><div class="vgx-data-row"><span>Hydration</span><strong class="${v.hydration>=75?"vgx-good":"vgx-warn"}">${Math.round(v.hydration)}%</strong></div><div class="vgx-data-row"><span>Pain</span><strong class="${v.pain<=35?"vgx-good":"vgx-warn"}">${Math.round(v.pain)}%</strong></div><div class="vgx-data-row"><span>Mobility</span><strong>${Math.round(v.mobility)}%</strong></div><div class="vgx-data-row"><span>Observation days</span><strong>${Math.round(p.long&&p.long.recoveryDays||0)}</strong></div></div></div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Care directives</h3><code>FROM INTAKE</code></div><div class="vgx-panel-body">${directiveHTML(p,v)}</div></section><section class="vgx-panel"><div class="vgx-panel-head"><h3>Discharge gate</h3><code>${!missing.length?"AUTHORIZED":"MONITORING"}</code></div><div class="vgx-panel-body"><p class="vgx-note">${missing.length?"Still required: "+esc(missing.join(" · ")):"All recovery checks are satisfied. The saved home-care game is ready."}</p><button class="vgx-btn amber full" id="vgxFinalCheck">Run final recovery check</button><button class="vgx-btn green full" style="margin-top:8px" id="vgxDischarge" ${missing.length?"disabled":""}>Discharge to My Pets<small>Complete case + continue daily care at home</small></button></div></section></div></div>`;mount("recovery",hero("Recovery deck // Care network","Care continues after the crisis.","Food, water, rest, mobility, trust, and rechecks feed the same advanced daily-care and discharge logic used by the full game.")+workspace(`Recovery deck // ${esc(p.name)}`,`${score}% ready · ${missing.length?missing.length+" needs remain":"discharge threshold reached"}`,"CARE.04",content)+eventStream());drawVitals(v);qa("[data-vgx-recovery]").forEach(b=>b.addEventListener("click",()=>{rwAction(p.id,b.dataset.vgxRecovery);state.screen="recovery";window.render()}));q("#vgxFinalCheck")?.addEventListener("click",()=>{rwFinal(p.id);state.screen="recovery";window.render()});q("#vgxDischarge")?.addEventListener("click",()=>{if(typeof rwMissing==="function"&&rwMissing(p).length)return;if(p.flow)p.flow.integratedRecovery=false;p.department="Recovery";p.location="Recovery";discharge(p)})}
+ function renderPetsExact(){const list=state.pets||[];if(!list.length){mount("pets",hero("Home care // Persistent companions","Every rescue can become a life.","Complete a recovery discharge to unlock the patient's saved home-care routines, memories, trust, and daily needs.")+workspace("My Pets // Home network","No recovered companions yet","HOME.05",empty("No pets are home yet","Complete the intake, treatment, and recovery flow to bring an animal into persistent home care.","admit","Begin a rescue")));return}const cards=list.map(p=>{try{ensurePet(p)}catch(e){}const v={hr:Math.round(70+patientMetric(p,"fear",25)*.35),resp:Math.round(14+patientMetric(p,"fear",25)*.13),temp:101.4,hydration:patientMetric(p,"water",p.water||70)},trust=patientMetric(p,"trust",40),comfort=patientMetric(p,"comfort",60);return`<article class="vgx-panel vgx-home-card"><div class="vgx-home-head"><span class="vgx-home-icon">${iconFor(p)}</span><div><h3>${esc(p.name)}</h3><small>${esc(p.species||"Animal")} · ${esc(p.condition||"Recovered")} · Home day ${Math.round(p.petDay||1)}</small></div><span class="vgx-priority stable" style="margin-left:auto">${trust>=70?"Bonded":"Building trust"}</span></div>${gauges(v)}<div class="vgx-panel-body"><div class="vgx-data-list"><div class="vgx-data-row"><span>Comfort</span><strong class="${comfort>=70?"vgx-good":"vgx-warn"}">${Math.round(comfort)}%</strong></div><div class="vgx-data-row"><span>Trust</span><strong>${Math.round(trust)}%</strong></div><div class="vgx-data-row"><span>Food</span><strong>${Math.round(p.hunger||0)}%</strong></div><div class="vgx-data-row"><span>Cleanliness</span><strong>${Math.round(p.cleanliness||0)}%</strong></div></div></div><div class="vgx-home-actions"><button class="vgx-btn" data-vgx-pet="comfort" data-id="${esc(p.id)}">Stay nearby</button><button class="vgx-btn" data-vgx-pet="food" data-id="${esc(p.id)}">Favorite meal</button><button class="vgx-btn" data-vgx-pet="water" data-id="${esc(p.id)}">Fresh water</button><button class="vgx-btn" data-vgx-pet="brush" data-id="${esc(p.id)}">Groom</button><button class="vgx-btn" data-vgx-pet="play" data-id="${esc(p.id)}">Play</button><button class="vgx-btn green" data-vgx-pet="all" data-id="${esc(p.id)}">Full daily care</button></div></article>`}).join("");mount("pets",hero("Home care // Persistent companions","Recovery becomes relationship.","Continue the full game's hunger, water, comfort, cleanliness, happiness, memory, fear, loneliness, and trust systems inside the command layout.")+workspace("My Pets // Home network",`${list.length} recovered companion${list.length===1?"":"s"}`,"HOME.05",`<div class="vgx-pet-grid">${cards}</div>`,"<button class=\"vgx-chip\" id=\"vgxCareAll\">Care for all</button>")+eventStream());qa("[data-vgx-pet]").forEach(b=>b.addEventListener("click",()=>{const id=b.dataset.id,a=b.dataset.vgxPet;if(a==="comfort")petRadarComfort(id);else if(a==="food")petFoodChoice(id,28,"Favorite");else if(a==="water")petFillWater(id);else if(a==="brush")petBrush(id);else if(a==="play")petPlayTap(id);else petQuickCare(id);window.render()}));q("#vgxCareAll")?.addEventListener("click",()=>petCareAllSliders())}
+ function bindPatientQueue(){qa("[data-vgx-patient]").forEach(b=>b.addEventListener("click",()=>{state.activeId=b.dataset.vgxPatient;window.render()}))}
+ function bindDials(p){qa("[data-vgx-dial]").forEach(input=>input.addEventListener("input",()=>{const wrap=input.closest(".vgx-dial"),value=Number(input.value);wrap.querySelector(".vgx-knob").style.setProperty("--turn",(-132+value/100*264)+"deg");wrap.querySelector("output").textContent=Math.round(value)+"%";if(p){p.commandSettings=p.commandSettings||{};p.commandSettings[input.dataset.vgxDial]=value;try{if(typeof saveGame==="function")saveGame("Command dial",true)}catch(e){}}}))}
+ function drawScanner(p,scanning){const canvas=q("#vgxScanCanvas");if(!canvas)return;const ctx=canvas.getContext("2d");if(!ctx)return;let t=0;function frame(){if(!canvas.isConnected)return;const d=Math.min(devicePixelRatio||1,2),r=canvas.getBoundingClientRect(),w=Math.max(1,r.width),h=Math.max(1,r.height);if(canvas.width!==Math.round(w*d)||canvas.height!==Math.round(h*d)){canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0)}ctx.clearRect(0,0,w,h);ctx.save();ctx.translate(w/2,h/2+6);ctx.strokeStyle="rgba(118,239,255,.28)";ctx.fillStyle="rgba(44,183,213,.075)";ctx.lineWidth=2;ctx.beginPath();const s=String(p&&p.species||"").toLowerCase();if(/rabbit|hare/.test(s)){ctx.ellipse(20,24,83,43,0,0,Math.PI*2);ctx.moveTo(-61,1);ctx.arc(-75,-17,29,0,Math.PI*2);ctx.moveTo(-88,-42);ctx.ellipse(-102,-81,10,39,-.25,0,Math.PI*2);ctx.moveTo(-71,-44);ctx.ellipse(-62,-83,10,40,.2,0,Math.PI*2)}else if(/cat/.test(s)){ctx.ellipse(18,18,83,42,0,0,Math.PI*2);ctx.moveTo(-69,2);ctx.arc(-76,-17,31,0,Math.PI*2);ctx.moveTo(-96,-38);ctx.lineTo(-107,-66);ctx.lineTo(-77,-46);ctx.moveTo(-62,-43);ctx.lineTo(-43,-64);ctx.lineTo(-48,-29);ctx.moveTo(94,8);ctx.quadraticCurveTo(142,-37,157,7)}else{ctx.ellipse(20,19,91,45,0,0,Math.PI*2);ctx.moveTo(-73,1);ctx.arc(-84,-19,32,0,Math.PI*2);ctx.moveTo(-98,-45);ctx.lineTo(-106,-70);ctx.lineTo(-77,-50);ctx.moveTo(-66,-48);ctx.lineTo(-43,-65);ctx.lineTo(-48,-34);ctx.moveTo(108,4);ctx.quadraticCurveTo(150,-20,163,-55)}ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(-25,48);ctx.lineTo(-30,88);ctx.moveTo(62,49);ctx.lineTo(75,88);ctx.stroke();for(let i=0;i<3;i++){ctx.beginPath();ctx.strokeStyle=`rgba(118,239,255,${.15-i*.035})`;ctx.ellipse(0,0,125+i*22,72+i*12,0,0,Math.PI*2);ctx.stroke()}const beam=((t%180)/180*2-1)*(w*.42),grad=ctx.createLinearGradient(beam-24,0,beam+24,0);grad.addColorStop(0,"rgba(118,239,255,0)");grad.addColorStop(.5,VGX.scanning||scanning?"rgba(118,239,255,.58)":"rgba(118,239,255,.16)");grad.addColorStop(1,"rgba(118,239,255,0)");ctx.fillStyle=grad;ctx.fillRect(beam,-h/2,48,h);ctx.restore();t+=VGX.scanning||scanning?3:.8;requestAnimationFrame(frame)}frame()}
+ function drawVitals(v){const canvas=q("#vgxVitalCanvas");if(!canvas)return;const ctx=canvas.getContext("2d");if(!ctx)return;let off=0;function frame(){if(!canvas.isConnected)return;const d=Math.min(devicePixelRatio||1,2),r=canvas.getBoundingClientRect(),w=Math.max(1,r.width),h=Math.max(1,r.height);if(canvas.width!==Math.round(w*d)||canvas.height!==Math.round(h*d)){canvas.width=Math.round(w*d);canvas.height=Math.round(h*d);ctx.setTransform(d,0,0,d,0,0)}ctx.clearRect(0,0,w,h);ctx.strokeStyle="rgba(118,239,255,.055)";ctx.lineWidth=1;for(let x=0;x<w;x+=28){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,h);ctx.stroke()}for(let y=0;y<h;y+=19){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke()}ctx.beginPath();ctx.strokeStyle="#68f0b1";ctx.shadowColor="#68f0b1";ctx.shadowBlur=8;ctx.lineWidth=1.8;const speed=clamp(v.hr/130,.7,1.7);for(let x=0;x<=w;x+=2){const p=((x+off)*speed)%150;let y=h*.55+Math.sin((x+off)*.025)*1.5;if(p>73&&p<78)y-=18;if(p>=78&&p<82)y+=30;if(p>=82&&p<89)y-=9;x?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.stroke();ctx.shadowBlur=0;off+=.85;requestAnimationFrame(frame)}frame()}
+ function paint(){if(typeof state==="undefined")return;syncShell();if(state.screen==="admit")renderIntake();else if(state.screen==="clinic")renderClinicExact();else if(state.screen==="surgery")renderSurgeryExact();else if(state.screen==="recovery")renderRecoveryExact();else if(state.screen==="pets")renderPetsExact()}
+ function install(){shell();const previous=window.render;if(typeof previous==="function")window.render=function(){const result=previous.apply(this,arguments);paint();return result};window.vgxRender=paint;paint();if(!VGX.clock)VGX.clock=setInterval(syncShell,2000)}
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
 </script>
 </body>
 </html>
