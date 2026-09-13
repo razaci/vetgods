@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · STABLE SCROLL · HOSPITAL EDITION</title>
+<title>VET GODS · FIXED VIEWPORT · HOSPITAL EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -2290,64 +2290,7 @@ body.vg-photo-ui button{touch-action:manipulation}
 @media(prefers-reduced-motion:reduce){.vg-photo-shell:after,.vg-photo-hud:after,.vg-photo-brand,.vg-led,.vg-digital-strip i,.vg-corner-cluster i,.vg-radar-ring:after,.vg-live-data div,.vg-photo-status:before,.vg-photo-shell.vg-critical-fx,.vg-fx-console span{animation:none!important}}
 </style>
 
-<style id="vg-scroll-safety-repair">
-/* ===== GLOBAL SCROLL SAFETY REPAIR ===== */
-html{
-  height:auto!important;
-  min-height:100%!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  overscroll-behavior-y:auto!important;
-  touch-action:pan-y pinch-zoom!important;
-}
-body{
-  height:auto!important;
-  min-height:100vh!important;
-  max-height:none!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  overscroll-behavior-y:auto!important;
-  touch-action:pan-y pinch-zoom!important;
-  position:relative!important;
-}
-.screen.active{
-  height:auto!important;
-  min-height:0!important;
-  max-height:none!important;
-  overflow:visible!important;
-  touch-action:pan-y pinch-zoom!important;
-}
-/* Full-screen animal focus may still be used, but its own screen must scroll. */
-body.vg-focus-mode{
-  overflow:hidden!important;
-  touch-action:pan-y pinch-zoom!important;
-}
-body.vg-focus-mode .screen.active{
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  -webkit-overflow-scrolling:touch!important;
-  overscroll-behavior-y:contain!important;
-  touch-action:pan-y pinch-zoom!important;
-}
-/* Decorative FX must never intercept scrolling/touches. */
-.vg-photo-bg,.vg-photo-grid,.vg-corner-lights,.vg-radar-ring,
-.vg-photo-shell:after,.vg-photo-hud:after,
-.vg-life-spark,.vg-room-glow{
-  pointer-events:none!important;
-}
-/* The scrolling document should stay usable even with sticky/fixed UI. */
-#app,.app,.main,main{
-  max-height:none!important;
-  overflow:visible!important;
-}
-@media(max-width:700px){
-  body:not(.vg-focus-mode) .screen.active{
-    position:relative!important;
-    inset:auto!important;
-    overflow:visible!important;
-  }
-}
-</style>
+
 
 <style id="vg-time-css">
 .vg-time-console{margin-top:12px;border:1px solid #63e9ff55;border-radius:18px;background:linear-gradient(#061827ee,#020b12f2);overflow:hidden}
@@ -3225,9 +3168,22 @@ button[aria-label*="Sidewall"]{
 </style>
 
 
-<style id="vgAbsoluteStableScrollCss">
-html,body{scroll-behavior:auto!important;overflow-anchor:none!important}
-*{overflow-anchor:none!important}
+
+
+
+<style id="vgSingleViewportControllerCss">
+html,body{
+  scroll-behavior:auto!important;
+  overflow-anchor:none!important;
+  text-size-adjust:100%!important;
+  -webkit-text-size-adjust:100%!important;
+}
+*{
+  overflow-anchor:none!important;
+}
+:focus{
+  scroll-margin:0!important;
+}
 </style>
 
 </head>
@@ -19140,113 +19096,150 @@ else install();
 </script>
 
 
-<script id="vgAbsoluteStableScrollJs">
+
+
+
+<script id="vgSingleViewportControllerJs">
 (function(){
 'use strict';
 
-/* Absolute scroll lock:
-   background game logic may update data, but periodic/background redraws are not
-   allowed to move the player's viewport. */
-let lastUserY=window.scrollY||0;
-let userMovedAt=Date.now();
-let programmaticActionUntil=0;
-let restoring=false;
+/*
+ ONE viewport controller only.
+ It does not continuously "restore" scroll. That was the cause of the staircase jump.
+ It only protects the viewport around DOM redraws and user clicks.
+*/
+let protectedY = window.scrollY || 0;
+let userIsMoving = false;
+let userTimer = 0;
+let internalRestore = false;
+let screenChangeToken = 0;
 
-function recordUserPosition(){
-  if(restoring)return;
-  lastUserY=window.scrollY||document.documentElement.scrollTop||0;
-  userMovedAt=Date.now();
+function currentY(){
+  return window.scrollY || document.documentElement.scrollTop || 0;
 }
-["scroll","wheel","touchmove","pointermove"].forEach(ev=>{
-  window.addEventListener(ev,recordUserPosition,{passive:true});
+function markUserMove(){
+  if(internalRestore)return;
+  userIsMoving=true;
+  protectedY=currentY();
+  clearTimeout(userTimer);
+  userTimer=setTimeout(()=>{userIsMoving=false;protectedY=currentY()},250);
+}
+window.addEventListener("scroll",markUserMove,{passive:true});
+window.addEventListener("wheel",markUserMove,{passive:true});
+window.addEventListener("touchmove",markUserMove,{passive:true});
+
+/* Browser focus should never move the document on its own. */
+try{
+  const nativeFocus=HTMLElement.prototype.focus;
+  if(!nativeFocus.__vgSingleViewport){
+    const focus=function(options){
+      try{
+        const o=Object.assign({},options||{},{preventScroll:true});
+        return nativeFocus.call(this,o);
+      }catch(e){
+        return nativeFocus.call(this);
+      }
+    };
+    focus.__vgSingleViewport=true;
+    HTMLElement.prototype.focus=focus;
+  }
+}catch(e){}
+
+/* Kill automatic element targeting. Explicit game screen changes do not need this. */
+try{
+  Element.prototype.scrollIntoView=function(){ return undefined; };
+  Element.prototype.scrollIntoViewIfNeeded=function(){ return undefined; };
+}catch(e){}
+
+/* Prevent #hash navigation from repositioning the page. */
+document.addEventListener("click",function(e){
+  const a=e.target.closest&&e.target.closest('a[href^="#"]');
+  if(a){
+    e.preventDefault();
+    try{history.replaceState(null,"",location.pathname+location.search)}catch(err){}
+  }
+},true);
+
+window.addEventListener("hashchange",function(){
+  const y=protectedY;
+  try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+  hold(y);
 });
 
-function restore(y){
+/* A short, bounded hold around a redraw. No timers that repeatedly walk the page. */
+function hold(y){
   if(!Number.isFinite(y))return;
-  requestAnimationFrame(()=>{
-    restoring=true;
-    window.scrollTo(0,y);
-    requestAnimationFrame(()=>{
-      window.scrollTo(0,y);
-      restoring=false;
-      lastUserY=y;
-    });
-  });
+  const token=++screenChangeToken;
+  const fix=()=>{
+    if(token!==screenChangeToken)return;
+    const now=currentY();
+    if(Math.abs(now-y)>2){
+      internalRestore=true;
+      window.scrollTo({left:0,top:y,behavior:"auto"});
+      internalRestore=false;
+    }
+  };
+  requestAnimationFrame(fix);
+  setTimeout(fix,25);
+  setTimeout(fix,80);
 }
 
-/* Stop focus calls from scrolling controls into view. */
-const nativeFocus=HTMLElement.prototype.focus;
-HTMLElement.prototype.focus=function(opts){
-  try{return nativeFocus.call(this,Object.assign({},opts||{},{preventScroll:true}))}
-  catch(e){return nativeFocus.call(this)}
-};
-
-/* Prevent scrollIntoView from yanking the page unless explicitly marked. */
-const nativeSIV=Element.prototype.scrollIntoView;
-Element.prototype.scrollIntoView=function(arg){
-  if(this?.dataset?.allowGameScroll==="true")return nativeSIV.call(this,arg);
-};
-
-/* Preserve exact viewport around every known renderer. */
-function wrap(name){
+/* Wrap actual render functions once. */
+function wrapRender(name){
   const old=window[name];
-  if(typeof old!=="function"||old.__vgAbsoluteScroll)return;
+  if(typeof old!=="function" || old.__vgViewportWrapped)return;
   const w=function(){
-    const y=window.scrollY||0;
+    const y=currentY();
     const r=old.apply(this,arguments);
-    restore(y);
+    hold(y);
     return r;
   };
-  w.__vgAbsoluteScroll=true;
+  w.__vgViewportWrapped=true;
   window[name]=w;
 }
 [
  "render","renderClinic","renderRecovery","renderSurgery","renderCareLab",
- "renderAdmit","renderFunding","renderDiagnostics","renderResearch",
- "vgcfNext","vgcfComplete","vgcfAdvance","vggdAct","vgflNextRequired",
- "vgflFinishRemaining","vgffGo","vgclAction","vgccNext","vgccForward","vgccFinish"
-].forEach(wrap);
+ "renderAdmit","renderFunding","renderDiagnostics","renderResearch"
+].forEach(wrapRender);
 
-/* Background intervals are allowed to run, but their DOM work cannot move the page.
-   Short periodic UI redraws are skipped while the user is interacting. */
-const nativeSetInterval=window.setInterval.bind(window);
-if(!window.__vgNoJumpIntervalInstalled){
-  window.__vgNoJumpIntervalInstalled=true;
-  window.setInterval=function(fn,ms){
-    if(typeof fn!=="function")return nativeSetInterval(fn,ms);
-    return nativeSetInterval(function(){
-      const y=window.scrollY||0;
-      const recentlyUsingPage=(Date.now()-userMovedAt)<1800;
-      if(recentlyUsingPage && Number(ms)<=12000)return;
-      let r;
-      try{r=fn.apply(this,arguments)}finally{restore(y)}
-      return r;
-    },ms);
+/* Screen navigation is special:
+   keep the same vertical position instead of jumping to the top of the destination. */
+function wrapNavigation(name){
+  const old=window[name];
+  if(typeof old!=="function" || old.__vgViewportNav)return;
+  const w=function(){
+    const y=currentY();
+    const r=old.apply(this,arguments);
+    protectedY=y;
+    hold(y);
+    return r;
   };
+  w.__vgViewportNav=true;
+  window[name]=w;
 }
+["vgOpenScreen","openScreen","showScreen"].forEach(wrapNavigation);
 
-/* MutationObserver catches late modules that rebuild the active screen. */
-let mutationTimer=null;
-const mo=new MutationObserver(()=>{
-  if(Date.now()<programmaticActionUntil)return;
-  const target=lastUserY;
-  clearTimeout(mutationTimer);
-  mutationTimer=setTimeout(()=>{
-    if(Math.abs((window.scrollY||0)-target)>6)restore(target);
-  },10);
-});
-function install(){
-  mo.observe(document.body,{subtree:true,childList:true});
-  document.addEventListener("click",()=>{
-    programmaticActionUntil=Date.now()+120;
-    lastUserY=window.scrollY||0;
-    setTimeout(()=>restore(lastUserY),20);
-    setTimeout(()=>restore(lastUserY),100);
-    setTimeout(()=>restore(lastUserY),250);
-  },true);
+/* Preserve position for gameplay clicks that redraw their panel. */
+document.addEventListener("pointerdown",function(){
+  protectedY=currentY();
+},true);
+document.addEventListener("click",function(){
+  const y=protectedY;
+  setTimeout(()=>hold(y),0);
+},true);
+
+/* Remove autofocus because it can trigger browser attention jumps before our code runs. */
+function stripAutoFocus(){
+  document.querySelectorAll("[autofocus]").forEach(el=>el.removeAttribute("autofocus"));
 }
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});
-else install();
+stripAutoFocus();
+const mo=new MutationObserver(stripAutoFocus);
+mo.observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:["autofocus"]});
+
+window.VetGodViewportController={
+  holdCurrent:function(){protectedY=currentY();hold(protectedY)},
+  getY:currentY
+};
 })();
 </script>
 
