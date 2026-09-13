@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · AREA LOCKED FLOW</title>
+<title>VET GODS · MY PETS VISIBLE SCREEN</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3411,42 +3411,6 @@ body.vg-focus-mode #vgHospitalAreasBar *{
 </style>
 
 
-<style id="vgMyPetsReopenCss">
-/* Reopen My Pets only. Keep side animal sims blocked. */
-#vgMyPetsReopenBar{
-  position:sticky; top:0; z-index:4800;
-  display:flex; gap:8px; align-items:center; justify-content:space-between;
-  margin:8px 0; padding:8px 10px;
-  border:1px solid #3d6170; border-radius:10px;
-  background:#071821;
-}
-#vgMyPetsReopenBar .vgmp-title{
-  font-size:9px;font-weight:950;letter-spacing:.08em;color:#dff6ff
-}
-#vgMyPetsReopenBar button{
-  min-height:34px;padding:7px 12px;border:1px solid #557f91;border-radius:7px;
-  background:#103042;color:#e9faff;font-size:8px;font-weight:950;cursor:pointer
-}
-#vgMyPetsHome{
-  margin:10px 0;padding:10px;border:1px solid #365868;border-radius:12px;
-  background:linear-gradient(145deg,#07151d,#0b2029);
-}
-#vgMyPetsHome[hidden]{display:none!important}
-.vgmp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.vgmp-card{padding:10px;border:1px solid #315160;border-radius:10px;background:#081923}
-.vgmp-name{font-size:13px;font-weight:1000;color:#ecfbff}
-.vgmp-meta{margin-top:4px;font-size:8px;color:#9ab9c6;line-height:1.45}
-.vgmp-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:8px}
-.vgmp-stat{padding:6px;border:1px solid #263f4b;border-radius:6px;background:#071218;font-size:8px;color:#b9d3dd}
-.vgmp-empty{padding:18px;text-align:center;color:#86a8b7;font-size:9px}
-.vgmp-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-.vgmp-actions button{flex:1;min-width:95px;min-height:32px;font-size:8px}
-@media(max-width:1000px){.vgmp-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:700px){.vgmp-grid{grid-template-columns:1fr}}
-</style>
-
-
-
 <style id="vgNativeMouseScrollCss">
 /* Native browser scrolling only — no viewport pinning or scroll restoration. */
 html{
@@ -3549,6 +3513,103 @@ body.vg-area-session-active .screen.active:not(#clinic){
 [data-panel-number]::before{
   display:none!important;
   content:none!important;
+}
+</style>
+
+
+<style id="vgMyPetsGameplayCss">
+#vgMyPetsGameBar{
+  position:sticky;top:0;z-index:8500;
+  margin:0 0 10px;padding:10px;
+  border:1px solid #3f6b7b;border-radius:12px;
+  background:linear-gradient(180deg,#071722,#0a2230);
+  box-shadow:0 8px 22px rgba(0,0,0,.28);
+}
+#vgMyPetsGameBar .head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap
+}
+#vgMyPetsGameBar .title{
+  font-size:11px;font-weight:1000;letter-spacing:.08em;color:#eafaff
+}
+#vgMyPetsGameBar .sub{
+  font-size:8px;color:#9db9c5
+}
+#vgMyPetsGameBar button{
+  min-height:40px;padding:8px 12px;border-radius:9px;border:1px solid #527b8c;
+  background:#123746;color:#effbff;font-size:8px;font-weight:950;cursor:pointer
+}
+#vgMyPetsHome{
+  margin:10px 0 30px;
+  display:none;
+}
+#vgMyPetsHome.open{display:block}
+.vgmp-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:12px
+}
+.vgmp-card{
+  border:1px solid #315568;border-radius:14px;padding:12px;
+  background:linear-gradient(180deg,rgba(10,28,40,.98),rgba(7,19,28,.98));
+  box-shadow:0 8px 20px rgba(0,0,0,.2)
+}
+.vgmp-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.vgmp-name{font-size:14px;font-weight:1000;color:#f4fdff}
+.vgmp-id{font-size:8px;line-height:1.45;color:#91adba}
+.vgmp-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}
+.vgmp-stat{
+  padding:7px;border:1px solid #274a5a;border-radius:9px;background:#0a1b26
+}
+.vgmp-stat b{display:block;font-size:7px;color:#85a9b8;margin-bottom:4px}
+.vgmp-stat span{font-size:11px;font-weight:950;color:#e8f8ff}
+.vgmp-meter{height:6px;background:#071018;border-radius:20px;overflow:hidden;margin-top:4px}
+.vgmp-meter i{display:block;height:100%;background:linear-gradient(90deg,#5ab5cf,#8ce2b0);width:50%}
+.vgmp-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px}
+.vgmp-actions button{
+  min-height:40px;border-radius:9px;border:1px solid #3e6677;
+  background:#103242;color:#effbff;font-size:8px;font-weight:950;cursor:pointer
+}
+.vgmp-log{
+  margin-top:9px;padding:8px;border-radius:8px;background:#07131b;border:1px solid #203b48;
+  font-size:8px;line-height:1.45;color:#9eb8c3;min-height:34px
+}
+.vgmp-empty{
+  padding:18px;border:1px dashed #355667;border-radius:12px;color:#9fb8c4;text-align:center
+}
+</style>
+
+
+<style id="vgMyPetsVisibleScreenCss">
+#vgMyPetsNavButton{
+  min-height:42px!important;
+  border-color:#557f70!important;
+  background:linear-gradient(180deg,#173d34,#102a25)!important;
+}
+#pets.screen{
+  display:none!important;
+  min-height:100vh!important;
+  height:auto!important;
+  overflow:visible!important;
+  padding:10px 0 60px!important;
+}
+#pets.screen.active{
+  display:block!important;
+}
+#pets #vgMyPetsHome{
+  display:block!important;
+  margin:0!important;
+}
+#pets #vgMyPetsHome.open{
+  display:block!important;
+}
+#pets .vgmp-page-head{
+  margin:0 0 12px;padding:14px;
+  border:1px solid #3e6877;border-radius:14px;
+  background:linear-gradient(180deg,#091b28,#0d2733)
+}
+#pets .vgmp-page-title{
+  font-size:15px;font-weight:1000;letter-spacing:.08em;color:#effcff
+}
+#pets .vgmp-page-sub{
+  margin-top:5px;font-size:9px;line-height:1.5;color:#9dbac5
 }
 </style>
 
@@ -20219,170 +20280,6 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 </script>
 
 
-<script id="vgMyPetsReopenJs">
-(function(){
-'use strict';
-const KEY="vetGodMyPetsReopenedV1";
-let STORE={pets:[],open:false};
-try{STORE=Object.assign(STORE,JSON.parse(localStorage.getItem(KEY)||"{}")||{})}catch(e){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(STORE))}catch(e){}}
-
-function allPatients(){
-  try{return [...(state?.patients||[]),...(state?.pets||[])]}catch(e){return[]}
-}
-function activePatient(){
-  try{return allPatients().find(p=>p.id===state.activeId)||allPatients().find(p=>p.admitted&&!p.discharged)||null}catch(e){return null}
-}
-function clonePet(p){
-  if(!p)return null;
-  return {
-    id:String(p.id||("pet-"+Date.now())),
-    name:p.name||"Rescued Patient",
-    species:p.species||p.type||"Animal",
-    classification:p.classification||"",
-    breed:p.breed||"Unspecified",
-    sex:p.sex||"Unspecified",
-    condition:p.diagnosis||p.condition||p.problem||"Recovered",
-    health:Number(p.health??85),
-    pain:Number(p.pain??20),
-    hydration:Number(p.hydration??75),
-    mobility:Number(p.mobility??65),
-    comfort:Number(p.comfort??75),
-    trust:Number(p.trust??60),
-    adoptedAt:Date.now(),
-    sourceCaseId:String(p.id||""),
-    discharged:true
-  }
-}
-function addPet(p){
-  const pet=clonePet(p);
-  if(!pet)return false;
-  if(!STORE.pets.some(x=>String(x.sourceCaseId||x.id)===String(pet.sourceCaseId||pet.id))){
-    STORE.pets.push(pet); save();
-  }
-  render();
-  return true;
-}
-function esc(v){return String(v??"—").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[s]))}
-function card(p){
- return `<div class="vgmp-card">
-   <div class="vgmp-name">${esc(p.name)}</div>
-   <div class="vgmp-meta">${esc(p.species)}${p.classification?" · "+esc(p.classification):""}<br>${esc(p.breed)} · ${esc(p.sex)}<br>Recovered from: ${esc(p.condition)}</div>
-   <div class="vgmp-stats">
-    <div class="vgmp-stat">Health <b>${Math.round(p.health)}%</b></div>
-    <div class="vgmp-stat">Pain <b>${Math.round(p.pain)}%</b></div>
-    <div class="vgmp-stat">Hydration <b>${Math.round(p.hydration)}%</b></div>
-    <div class="vgmp-stat">Mobility <b>${Math.round(p.mobility)}%</b></div>
-    <div class="vgmp-stat">Comfort <b>${Math.round(p.comfort)}%</b></div>
-    <div class="vgmp-stat">Trust <b>${Math.round(p.trust)}%</b></div>
-   </div>
-   <div class="vgmp-actions">
-    <button onclick="vgMyPetsCare('${esc(p.id)}','food')">OFFER FOOD</button>
-    <button onclick="vgMyPetsCare('${esc(p.id)}','water')">OFFER WATER</button>
-    <button onclick="vgMyPetsCare('${esc(p.id)}','comfort')">COMFORT</button>
-   </div>
- </div>`;
-}
-function ensureUI(){
-  if(!document.getElementById("vgMyPetsReopenBar")){
-    const bar=document.createElement("div");
-    bar.id="vgMyPetsReopenBar";
-    bar.innerHTML=`<div class="vgmp-title">🐾 MY PETS · RESCUED ANIMALS</div><button onclick="vgMyPetsToggle()">OPEN / CLOSE MY PETS</button>`;
-    const host=document.querySelector("#vgHospitalAreasBar")||document.querySelector("#vgCaseControlBar")||document.body.firstElementChild;
-    if(host && host.parentNode)host.parentNode.insertBefore(bar,host.nextSibling); else document.body.prepend(bar);
-  }
-  if(!document.getElementById("vgMyPetsHome")){
-    const home=document.createElement("section");
-    home.id="vgMyPetsHome";
-    home.hidden=!STORE.open;
-    const bar=document.getElementById("vgMyPetsReopenBar");
-    bar.parentNode.insertBefore(home,bar.nextSibling);
-  }
-}
-function render(){
-  ensureUI();
-  const home=document.getElementById("vgMyPetsHome");
-  home.hidden=!STORE.open;
-  home.innerHTML=`<div class="vgmp-title" style="margin-bottom:8px">MY PETS HOME</div>`+
-    (STORE.pets.length?`<div class="vgmp-grid">${STORE.pets.map(card).join("")}</div>`:
-      `<div class="vgmp-empty">No rescued animals yet. Complete a patient case and choose to keep the animal.</div>`);
-}
-function toggle(){
-  STORE.open=!STORE.open;save();render();
-}
-function care(id,type){
-  const p=STORE.pets.find(x=>String(x.id)===String(id));if(!p)return;
-  if(type==="food"){p.health=Math.min(100,p.health+2);p.comfort=Math.min(100,p.comfort+3)}
-  if(type==="water"){p.hydration=Math.min(100,p.hydration+8);p.health=Math.min(100,p.health+1)}
-  if(type==="comfort"){p.comfort=Math.min(100,p.comfort+8);p.trust=Math.min(100,p.trust+5);p.pain=Math.max(0,p.pain-2)}
-  save();render();
-}
-
-/* Keep unwanted side sims hidden/blocked. */
-function blockSideSims(){
-  document.querySelectorAll("[id*='snake' i],[class*='snake' i],[id*='hamster' i],[class*='hamster' i],[id*='mice' i],[class*='mice' i],[id*='mouse' i],[class*='mouse' i]").forEach(el=>{
-    if(!el.closest("#vgMyPetsHome"))el.style.display="none";
-  });
-}
-window.vgMyPetsToggle=toggle;
-window.vgMyPetsCare=care;
-window.VetGodMyPetsReopened={addPet,render,toggle,store:STORE};
-
-/*
-  Hook the Case Complete reward screen so completed animals can be kept.
-  Insert a KEEP IN MY PETS button without restoring snakes/hamsters/mice.
-*/
-function patchRewardScreen(){
-  const ov=document.getElementById("vgCaseCompleteRewardOverlay");
-  if(!ov)return;
-  const btn=document.getElementById("vgCaseCompleteContinue");
-  if(!btn || document.getElementById("vgKeepCompletedPet"))return;
-
-  const keep=document.createElement("button");
-  keep.id="vgKeepCompletedPet";
-  keep.type="button";
-  keep.textContent="🐾 KEEP THIS ANIMAL IN MY PETS";
-  keep.style.cssText="width:100%;margin-top:8px;min-height:48px;border-radius:10px;border:1px solid #5f8a70;background:#173824;color:#effff2;font-size:10px;font-weight:950;cursor:pointer";
-  btn.parentNode.insertBefore(keep,btn);
-
-  keep.addEventListener("click",()=>{
-    let p=null;
-    try{
-      p=activePatient();
-      if(!p){
-        const pats=allPatients().filter(x=>x.discharged||x.sentHome||x.caseComplete);
-        p=pats[pats.length-1]||null;
-      }
-    }catch(e){}
-    if(p){
-      addPet(p);
-      keep.textContent="✓ SAVED TO MY PETS";
-      keep.disabled=true;
-      STORE.open=true;save();render();
-    }
-  });
-}
-
-/* Also auto-link on completed-case events if user has already chosen keep in older flows. */
-function scanCompleted(){
-  allPatients().forEach(p=>{
-    if((p.keepAsPet||p.adoptedToMyPets) && (p.discharged||p.sentHome||p.caseComplete))addPet(p);
-  });
-}
-
-function boot(){
-  ensureUI();render();blockSideSims();patchRewardScreen();scanCompleted();
-  const mo=new MutationObserver(()=>{
-    blockSideSims();patchRewardScreen();
-  });
-  mo.observe(document.body,{childList:true,subtree:true});
-}
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
-})();
-</script>
-
-
-
 <script id="vgNativeMouseScrollJs">
 (function(){
 'use strict';
@@ -20792,6 +20689,444 @@ else boot();
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",clean,{once:true});
   else clean();
+})();
+</script>
+
+
+<script id="vgMyPetsGameplayJs">
+(function(){
+'use strict';
+
+const KEY="vetGodMyPetsGameplayV2";
+const TICK_MS=60000;
+let STORE={pets:[],open:false,lastTick:Date.now()};
+try{STORE=Object.assign(STORE,JSON.parse(localStorage.getItem(KEY)||"{}")||{})}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(STORE))}catch(e){}};
+const clamp=(n,a=0,b=100)=>Math.max(a,Math.min(b,Number(n)||0));
+
+function classify(p){
+  const s=String(p.species||p.type||"animal").toLowerCase();
+  if(s.includes("dog"))return["Canine",p.breed||"Mixed Breed"];
+  if(s.includes("cat"))return["Feline",p.breed||"Domestic Shorthair"];
+  if(s.includes("pig"))return["Porcine",p.breed||"Mixed Breed"];
+  if(s.includes("rabbit"))return["Lagomorph",p.breed||"Mixed Breed"];
+  if(s.includes("horse"))return["Equine",p.breed||"Mixed Breed"];
+  if(s.includes("bird"))return["Avian",p.breed||"Mixed Breed"];
+  return[p.classification||"Companion Animal",p.breed||"Mixed Breed"];
+}
+function sex(p){return p.sex||"Unknown"}
+
+function normalizePet(p){
+  const [classification,breed]=classify(p);
+  const now=Date.now();
+  const q={
+    id:String(p.id||("pet_"+now+"_"+Math.random().toString(36).slice(2,7))),
+    sourceCaseId:p.sourceCaseId||p.id||null,
+    name:p.name||"Rescued Animal",
+    species:p.species||p.type||"Animal",
+    classification,
+    breed,
+    sex:sex(p),
+    condition:p.condition||p.diagnosis||"Recovered",
+    health:clamp(p.health??85),
+    pain:clamp(p.pain??15),
+    hydration:clamp(p.hydration??75),
+    mobility:clamp(p.mobility??70),
+    comfort:clamp(p.comfort??75),
+    trust:clamp(p.trust??65),
+    hunger:clamp(p.hunger??25),
+    thirst:clamp(p.thirst??20),
+    energy:clamp(p.energy??70),
+    lastCare:now,
+    lastUpdate:now,
+    log:["Rescued animal entered My Pets."]
+  };
+  return Object.assign(q,p,{
+    classification,breed,sex:sex(p),
+    log:Array.isArray(p.log)?p.log.slice(-8):q.log,
+    lastUpdate:Number(p.lastUpdate||now)
+  });
+}
+
+function addPet(p){
+  if(!p)return null;
+  const source=String(p.sourceCaseId||p.id||"");
+  let existing=STORE.pets.find(x=>String(x.sourceCaseId||x.id)===source);
+  if(existing)return existing;
+  const pet=normalizePet(p);
+  STORE.pets.unshift(pet);
+  STORE.open=true;
+  save();render();
+  return pet;
+}
+
+function tickPet(p,mins){
+  if(mins<=0)return;
+  p.hunger=clamp(p.hunger+mins*.35);
+  p.thirst=clamp(p.thirst+mins*.45);
+  p.energy=clamp(p.energy-mins*.15);
+  p.comfort=clamp(p.comfort-mins*.08);
+  if(p.hunger>70)p.health=clamp(p.health-mins*.05);
+  if(p.thirst>65)p.hydration=clamp(p.hydration-mins*.12);
+  if(p.hydration<45)p.health=clamp(p.health-mins*.08);
+  if(p.pain>55)p.trust=clamp(p.trust-mins*.05);
+  p.lastUpdate=Date.now();
+}
+function tickAll(){
+  const now=Date.now();
+  STORE.pets.forEach(p=>{
+    const last=Number(p.lastUpdate||now);
+    const mins=Math.min(240,Math.max(0,(now-last)/60000));
+    tickPet(p,mins);
+  });
+  STORE.lastTick=now;
+  save();
+  if(STORE.open)render();
+}
+
+function care(id,action){
+  const p=STORE.pets.find(x=>x.id===id);if(!p)return;
+  tickPet(p,Math.max(0,(Date.now()-Number(p.lastUpdate||Date.now()))/60000));
+  let msg="";
+  if(action==="food"){
+    p.hunger=clamp(p.hunger-35);p.energy=clamp(p.energy+8);p.health=clamp(p.health+2);
+    msg="Food offered. Hunger improved.";
+  }else if(action==="water"){
+    p.thirst=clamp(p.thirst-40);p.hydration=clamp(p.hydration+22);p.health=clamp(p.health+2);
+    msg="Fresh water offered. Hydration improved.";
+  }else if(action==="comfort"){
+    p.comfort=clamp(p.comfort+18);p.trust=clamp(p.trust+12);p.pain=clamp(p.pain-4);
+    msg="Comfort care given. Trust improved.";
+  }else if(action==="pain"){
+    p.pain=clamp(p.pain-15);p.comfort=clamp(p.comfort+8);
+    msg="Pain-support routine completed.";
+  }else if(action==="walk"){
+    if(p.pain<=45){
+      p.mobility=clamp(p.mobility+10);p.energy=clamp(p.energy-6);p.trust=clamp(p.trust+4);
+      msg="Gentle mobility session completed.";
+    }else msg="Pain is too high for a walk. Use pain support first.";
+  }else if(action==="rest"){
+    p.energy=clamp(p.energy+18);p.comfort=clamp(p.comfort+8);p.pain=clamp(p.pain-3);
+    msg="Quiet rest completed.";
+  }else if(action==="careall"){
+    p.hunger=clamp(p.hunger-25);p.thirst=clamp(p.thirst-30);p.hydration=clamp(p.hydration+15);
+    p.comfort=clamp(p.comfort+12);p.trust=clamp(p.trust+8);p.pain=clamp(p.pain-6);p.health=clamp(p.health+3);
+    msg="Full daily care completed.";
+  }
+  p.lastCare=Date.now();p.lastUpdate=Date.now();
+  p.log=Array.isArray(p.log)?p.log:[];
+  p.log.unshift(msg);p.log=p.log.slice(0,8);
+  save();render();
+}
+
+function meter(label,val,invert){
+  const v=clamp(val);
+  const width=invert?100-v:v;
+  return `<div class="vgmp-stat"><b>${label}</b><span>${Math.round(v)}</span><div class="vgmp-meter"><i style="width:${width}%"></i></div></div>`;
+}
+function card(p){
+  return `<div class="vgmp-card" data-pet="${p.id}">
+    <div class="vgmp-top">
+      <div>
+        <div class="vgmp-name">${p.name}</div>
+        <div class="vgmp-id">${p.species} · ${p.classification}<br>${p.breed} · ${p.sex}<br>${p.condition}</div>
+      </div>
+      <button onclick="vgMyPetsCare('${p.id}','careall')">CARE FOR PET</button>
+    </div>
+    <div class="vgmp-stats">
+      ${meter("HEALTH",p.health)}
+      ${meter("PAIN",p.pain,true)}
+      ${meter("HYDRATION",p.hydration)}
+      ${meter("MOBILITY",p.mobility)}
+      ${meter("COMFORT",p.comfort)}
+      ${meter("TRUST",p.trust)}
+      ${meter("HUNGER",p.hunger,true)}
+      ${meter("THIRST",p.thirst,true)}
+      ${meter("ENERGY",p.energy)}
+    </div>
+    <div class="vgmp-actions">
+      <button onclick="vgMyPetsCare('${p.id}','food')">🍽 OFFER FOOD</button>
+      <button onclick="vgMyPetsCare('${p.id}','water')">💧 OFFER WATER</button>
+      <button onclick="vgMyPetsCare('${p.id}','comfort')">🤍 COMFORT</button>
+      <button onclick="vgMyPetsCare('${p.id}','pain')">💊 PAIN SUPPORT</button>
+      <button onclick="vgMyPetsCare('${p.id}','walk')">🐾 GENTLE WALK</button>
+      <button onclick="vgMyPetsCare('${p.id}','rest')">🌙 QUIET REST</button>
+    </div>
+    <div class="vgmp-log">${(p.log&&p.log[0])||"Ready for care."}</div>
+  </div>`;
+}
+
+function ensureUi(){
+  let bar=document.getElementById("vgMyPetsGameBar");
+  if(!bar){
+    bar=document.createElement("div");
+    bar.id="vgMyPetsGameBar";
+    bar.innerHTML=`<div class="head">
+      <div><div class="title">🐾 MY PETS · RESCUED ANIMALS</div>
+      <div class="sub">Ongoing care home for animals you save</div></div>
+      <div>
+        <button onclick="vgMyPetsToggle()">OPEN / CLOSE MY PETS</button>
+        <button onclick="vgMyPetsCareAll()">CARE FOR ALL PETS</button>
+      </div>
+    </div>`;
+    const anchor=document.getElementById("vgHospitalAreasBar")||document.body.firstElementChild;
+    if(anchor&&anchor.parentNode)anchor.parentNode.insertBefore(bar,anchor.nextSibling);
+    else document.body.prepend(bar);
+  }
+  let home=document.getElementById("vgMyPetsHome");
+  if(!home){
+    home=document.createElement("div");home.id="vgMyPetsHome";
+    bar.insertAdjacentElement("afterend",home);
+  }
+  return home;
+}
+
+function render(){
+  const home=ensureUi();
+  home.classList.toggle("open",!!STORE.open);
+  if(!STORE.open)return;
+  if(!STORE.pets.length){
+    home.innerHTML=`<div class="vgmp-empty">No rescued animals are living here yet. Finish a hospital case and choose <b>KEEP THIS ANIMAL IN MY PETS</b>.</div>`;
+    return;
+  }
+  home.innerHTML=`<div class="vgmp-grid">${STORE.pets.map(card).join("")}</div>`;
+}
+
+window.vgMyPetsToggle=function(){
+  STORE.open=!STORE.open;save();render();
+  if(STORE.open)setTimeout(()=>document.getElementById("vgMyPetsHome")?.scrollIntoView({block:"start"}),0);
+};
+window.vgMyPetsCare=function(id,action){care(id,action)};
+window.vgMyPetsCareAll=function(){STORE.pets.forEach(p=>care(p.id,"careall"));save();render()};
+
+/* Link final case-complete reward screen directly into My Pets. */
+function completedPatient(){
+  try{
+    if(window.VetGodCaseCompleteReward && typeof window.VetGodCaseCompleteReward.getPatient==="function"){
+      const q=window.VetGodCaseCompleteReward.getPatient();if(q)return q;
+    }
+  }catch(e){}
+  try{
+    const arr=state?.patients||[];
+    return arr.find(p=>p.id===state.activeId)
+      ||[...arr].reverse().find(p=>p.discharged||p.sentHome||p.caseComplete)
+      ||null;
+  }catch(e){return null}
+}
+
+function installRewardButton(){
+  const card=document.getElementById("vgCaseCompleteRewardCard");
+  if(!card)return;
+  if(document.getElementById("vgKeepCompletedPet"))return;
+  const cont=document.getElementById("vgCaseCompleteContinue");
+  if(!cont)return;
+  const btn=document.createElement("button");
+  btn.id="vgKeepCompletedPet";
+  btn.type="button";
+  btn.textContent="🐾 KEEP THIS ANIMAL IN MY PETS";
+  btn.style.marginBottom="8px";
+  btn.onclick=function(){
+    const p=completedPatient();
+    if(!p){btn.textContent="NO COMPLETED PATIENT FOUND";return}
+    const pet=addPet(p);
+    btn.textContent="✓ SAVED TO MY PETS";
+    btn.disabled=true;
+    STORE.open=true;save();render();
+  };
+  cont.parentNode.insertBefore(btn,cont);
+}
+
+/* Scan completed cases created before this module. */
+function importCompleted(){
+  try{
+    (state?.patients||[]).forEach(p=>{
+      if((p.keepAsPet||p.adoptedToMyPets) && (p.discharged||p.sentHome||p.caseComplete))addPet(p);
+    });
+  }catch(e){}
+}
+
+/* Keep forbidden side sims hidden; My Pets itself stays available. */
+function hideSideSims(){
+  const rx=/(snake|hamster|mice|mouse)/i;
+  document.querySelectorAll("[id],[class]").forEach(el=>{
+    const key=(el.id+" "+el.className);
+    if(rx.test(key) && !el.closest("#vgMyPetsHome,#vgMyPetsGameBar")){
+      el.style.display="none";
+    }
+  });
+}
+
+function boot(){
+  importCompleted();
+  ensureUi();render();hideSideSims();installRewardButton();
+
+  const mo=new MutationObserver(()=>{
+    installRewardButton();
+    hideSideSims();
+  });
+  mo.observe(document.body,{subtree:true,childList:true});
+
+  setInterval(tickAll,TICK_MS);
+}
+
+window.VetGodMyPetsGameplay={addPet,render,care,store:STORE,tick:tickAll};
+
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
+else boot();
+})();
+</script>
+
+
+<script id="vgMyPetsVisibleScreenJs">
+(function(){
+'use strict';
+
+function ensurePetsScreen(){
+  let pets=document.getElementById("pets");
+  if(!pets){
+    pets=document.createElement("section");
+    pets.id="pets";
+    pets.className="screen";
+    pets.innerHTML=`
+      <div class="vgmp-page-head">
+        <div class="vgmp-page-title">🐾 MY PETS · RESCUED ANIMALS</div>
+        <div class="vgmp-page-sub">
+          Animals you save can live here permanently. Feed, hydrate, comfort, support pain,
+          exercise, rest, and care for them over time.
+        </div>
+      </div>
+      <div id="vgMyPetsScreenMount"></div>`;
+    const clinic=document.getElementById("clinic");
+    if(clinic&&clinic.parentNode)clinic.parentNode.appendChild(pets);
+    else document.body.appendChild(pets);
+  }
+  return pets;
+}
+
+function moveMyPetsHomeIntoScreen(){
+  const pets=ensurePetsScreen();
+  const mount=pets.querySelector("#vgMyPetsScreenMount")||pets;
+  const home=document.getElementById("vgMyPetsHome");
+  if(home && home.parentNode!==mount){
+    mount.appendChild(home);
+  }
+  if(home)home.classList.add("open");
+}
+
+function addNavButton(){
+  const bars=[
+    document.getElementById("vgHospitalAreasBar"),
+    document.querySelector(".nav"),
+    document.querySelector(".quick-links")
+  ].filter(Boolean);
+
+  bars.forEach(bar=>{
+    if(bar.querySelector('[data-screen="pets"],#vgMyPetsNavButton'))return;
+    const btn=document.createElement("button");
+    btn.id="vgMyPetsNavButton";
+    btn.type="button";
+    btn.dataset.screen="pets";
+    btn.textContent="🐾 MY PETS";
+    btn.addEventListener("click",function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      openPets();
+    },true);
+    bar.appendChild(btn);
+  });
+}
+
+function openPets(){
+  try{
+    if(window.VetGodMyPetsGameplay?.store){
+      window.VetGodMyPetsGameplay.store.open=true;
+    }
+  }catch(e){}
+  try{
+    if(typeof state!=="undefined"){
+      state.screen="pets";
+    }
+  }catch(e){}
+
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  const pets=ensurePetsScreen();
+  pets.classList.add("active");
+
+  document.querySelectorAll('[data-screen]').forEach(b=>{
+    try{b.classList.toggle("active",b.dataset.screen==="pets")}catch(e){}
+  });
+
+  moveMyPetsHomeIntoScreen();
+  try{window.VetGodMyPetsGameplay?.render?.()}catch(e){}
+  try{window.scrollTo({top:0,left:0,behavior:"auto"})}catch(e){}
+}
+
+function patchMyPetsToggle(){
+  const old=window.vgMyPetsToggle;
+  window.vgMyPetsToggle=function(){
+    openPets();
+  };
+  window.vgMyPetsToggle.__visibleScreen=true;
+  window.vgMyPetsToggle.__old=old;
+}
+
+function patchRender(){
+  if(typeof window.render!=="function"||window.render.__vgPetsVisible)return;
+  const old=window.render;
+  const w=function(){
+    const wanted=(typeof state!=="undefined"&&state.screen==="pets");
+    const r=old.apply(this,arguments);
+    if(wanted){
+      setTimeout(()=>{
+        document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+        ensurePetsScreen().classList.add("active");
+        moveMyPetsHomeIntoScreen();
+        try{window.VetGodMyPetsGameplay?.render?.()}catch(e){}
+      },0);
+    }
+    return r;
+  };
+  w.__vgPetsVisible=true;
+  window.render=w;
+}
+
+function makeKeepButtonOpenPets(){
+  document.addEventListener("click",function(e){
+    if(e.target && e.target.id==="vgKeepCompletedPet"){
+      setTimeout(openPets,60);
+    }
+  },true);
+}
+
+function removeOldFloatingBar(){
+  const bar=document.getElementById("vgMyPetsGameBar");
+  if(bar)bar.style.display="none";
+}
+
+function boot(){
+  ensurePetsScreen();
+  addNavButton();
+  moveMyPetsHomeIntoScreen();
+  patchMyPetsToggle();
+  patchRender();
+  makeKeepButtonOpenPets();
+  removeOldFloatingBar();
+
+  /* Old blockers may still hide the Pets screen. Force only Pets back on. */
+  try{
+    const pets=document.getElementById("pets");
+    if(pets){
+      pets.style.removeProperty("visibility");
+      pets.style.removeProperty("opacity");
+      pets.removeAttribute("hidden");
+    }
+  }catch(e){}
+}
+
+window.VetGodMyPetsVisibleScreen={open:openPets,ensure:ensurePetsScreen};
+
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
+else boot();
 })();
 </script>
 
