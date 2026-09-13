@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · GUIDED CARE DIRECTOR · SUPERCOMPUTER EDITION</title>
+<title>VET GODS · ENDLESS PATIENT FLOW · SUPERCOMPUTER EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3015,6 +3015,27 @@ body:not(.vg-hide-sidewall) #app{padding-right:330px!important}
 .vggd-result{margin-top:8px;padding:9px;border-radius:8px;background:#11291f;border:1px solid #356c57;font-size:9px;line-height:1.45}
 .vggd-override{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.vggd-override button{font-size:8px;min-height:40px}
 @media(max-width:1400px){.vggd-layout{grid-template-columns:1fr 1.5fr}.vggd-layout>.vggd-pane:last-child{grid-column:1/-1}}
+</style>
+
+
+<style id="vgEndlessPatientFlowCss">
+#vgCaseFlowEngine{grid-column:1/-1;margin:0 0 12px;border:1px solid #3b6f88;border-radius:15px;background:linear-gradient(180deg,#081620,#071019);overflow:hidden;box-shadow:0 16px 36px rgba(0,0,0,.26)}
+.vgcf-head{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 13px;border-bottom:1px solid #2b4e61;background:linear-gradient(90deg,rgba(89,222,255,.08),transparent)}
+.vgcf-head h3{margin:0;font-size:13px;letter-spacing:.09em}.vgcf-head p{margin:3px 0 0;font-size:8px;color:#97b6c4}
+.vgcf-loop{display:flex;gap:5px;overflow:hidden;padding:9px 10px;border-bottom:1px solid #203d4c}
+.vgcf-step{flex:1;min-width:92px;text-align:center;padding:7px 4px;border-radius:7px;border:1px solid #29495b;background:#0c1c25;font-size:7px;color:#7f99a6}
+.vgcf-step.done{background:#15382d;border-color:#346b56;color:#91e4c4}.vgcf-step.now{background:#4d3d18;border-color:#8c7330;color:#ffe18a}
+.vgcf-body{display:grid;grid-template-columns:1.15fr .85fr;gap:9px;padding:10px}
+.vgcf-card{border:1px solid #294b5f;border-radius:11px;background:#091821;padding:10px}
+.vgcf-card h4{margin:0 0 7px;font-size:9px;letter-spacing:.1em;color:#b8d7e4}
+.vgcf-title{font-size:18px;font-weight:950;margin-bottom:3px}.vgcf-sub{font-size:9px;color:#9bb4c0;line-height:1.45}
+.vgcf-status{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}.vgcf-status div{padding:7px;border:1px solid #29495b;border-radius:7px;background:#0b1c25;text-align:center}.vgcf-status b{display:block;font-size:14px}.vgcf-status span{display:block;font-size:7px;color:#8da8b5}
+.vgcf-require{margin-top:8px;display:grid;grid-template-columns:repeat(2,1fr);gap:5px}.vgcf-req{padding:7px;border-radius:7px;border:1px solid #29495b;background:#0b1b24;font-size:8px}.vgcf-req.ok{border-color:#326c57;background:#112d24}.vgcf-req.bad{border-color:#77454d;background:#2b151a}
+.vgcf-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.vgcf-actions button{min-height:46px;font-size:8px}
+.vgcf-event{margin-top:8px;padding:8px;border-radius:8px;background:#061019;border:1px solid #29495b;font-size:8px;color:#a6c0cc;line-height:1.45}
+.vgcf-complete{margin-top:8px;padding:11px;border:1px solid #78642c;background:linear-gradient(180deg,#312710,#1d180c);border-radius:9px}.vgcf-complete b{display:block;color:#ffe28f;font-size:15px}.vgcf-complete span{display:block;font-size:8px;color:#c9bc88;margin-top:4px}
+.vgcf-next{width:100%;min-height:58px!important;margin-top:8px!important;background:#154a3c!important;border-color:#4a9d80!important;font-size:11px!important;font-weight:900!important}
+@media(max-width:1350px){.vgcf-body{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -18033,6 +18054,73 @@ function hook(name){const old=window[name];if(typeof old!=="function"||old.__vgg
 ["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","renderPets"].forEach(hook);
 window.vggdAct=act;window.VetGodGuidedCareDirector={render,state:S};
 function install(){render();document.addEventListener("click",e=>{if(!e.target.closest("#vgGuidedDirector"))setTimeout(render,40)},true)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgEndlessPatientFlowJs">
+(function(){
+'use strict';
+const KEY="vetGodEndlessCaseFlowV1";
+const FLOW=["ARRIVAL","STABILIZE","DIAGNOSE","TREAT","SURGERY","RECOVERY","READY","COMPLETE"];
+let S={caseNumber:1,livesSaved:0,lastReward:0,lastEvent:"Case Flow Engine online.",completedCases:[]};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const cap=v=>Math.max(0,Math.min(100,Math.round(Number(v)||0)));
+function active(){try{const a=[...(state?.patients||[]),...(state?.pets||[])];return a.find(x=>x.id===state.activeId)||a.find(x=>x.admitted&&!x.discharged&&!x.sentHome)||null}catch(e){return null}}
+function ensure(p){if(!p)return;p.flow=p.flow||{stage:"ARRIVAL",history:[],completed:false};p.health=cap(p.health??55);p.pain=cap(p.pain??45);p.stress=cap(p.stress??50);p.oxygen=cap(p.oxygen??92);p.hydration=cap(p.hydration??p.water??55);p.mobility=cap(p.mobility??45)}
+function needsSurgery(p){const t=String(p.condition||p.diagnosis||"").toLowerCase();return !!(p.requiresSurgery||/fracture|foreign body|rupture|internal bleed|mass|obstruction|laceration|wound repair/.test(t))}
+function stageOf(p){if(!p)return"ARRIVAL";ensure(p);if(p.flow.completed||p.discharged||p.sentHome)return"COMPLETE";if(p.recoveryCleared)return"READY";if(/recovery/i.test(p.department||p.location||""))return"RECOVERY";if(needsSurgery(p)&&!p.surgeryComplete&&p.treatmentComplete)return"SURGERY";if(p.treatmentComplete||p.problemResolved)return"RECOVERY";if(p.diagnosis||p.condition)return"TREAT";if(p.stabilized||p.health>=60||p.oxygen>=90)return"DIAGNOSE";return"STABILIZE"}
+function setStage(p,st,msg){ensure(p);p.flow.stage=st;p.flow.history.push({t:Date.now(),stage:st,msg:msg||""});S.lastEvent=msg||((p.name||"Patient")+" entered "+st+".");save()}
+function move(p,to){if(!p)return;p.department=to;p.location=to;state.activeId=p.id;try{if(typeof vgMovePatient==="function")vgMovePatient(p,to.toLowerCase())}catch(e){}}
+function reqs(p){ensure(p);return [["Pain ≤ 35",p.pain<=35,p.pain],["Hydration ≥ 60",p.hydration>=60,p.hydration],["Health ≥ 70",p.health>=70,p.health],["Mobility ≥ 55",p.mobility>=55,p.mobility],["Oxygen ≥ 90",p.oxygen>=90,p.oxygen],["Ate",!!(p.ate||p.nutrition>=55||p.hunger>=55),p.ate?"YES":(p.nutrition??p.hunger??"--")],["Drank",!!(p.drank||p.hydration>=65),p.drank?"YES":p.hydration],["Problem resolved",!!(p.problemResolved||p.treatmentComplete),p.problemResolved||p.treatmentComplete?"YES":"NO"]]}
+function ready(p){return reqs(p).every(x=>x[1])}
+function autoAdvance(){
+ const p=active();if(!p)return;ensure(p);let st=stageOf(p);
+ if(st==="TREAT"&&p.treatmentComplete){if(needsSurgery(p)){setStage(p,"SURGERY","Primary treatment complete — transferring to Surgery.");move(p,"Surgery")}else{setStage(p,"RECOVERY","Primary treatment complete — transferring to Recovery.");move(p,"Recovery")}}
+ st=stageOf(p);
+ if(st==="SURGERY"&&p.surgeryComplete){setStage(p,"RECOVERY","Surgery complete — transferring to Recovery.");move(p,"Recovery")}
+ st=stageOf(p);
+ if(st==="RECOVERY"&&ready(p)){p.recoveryCleared=true;setStage(p,"READY",(p.name||"Patient")+" passed recovery readiness.")}
+}
+function rewardFor(p){let r=125;if(needsSurgery(p))r+=160;r+=Math.max(0,Math.round((100-p.pain)*.5));r+=Math.max(0,Math.round((p.health-60)*1.5));return Math.max(125,r)}
+function completeCase(){
+ const p=active();if(!p)return;autoAdvance();
+ if(!p.recoveryCleared&&!ready(p)){S.lastEvent="Case cannot close yet. Finish the unresolved recovery requirements.";render();return}
+ p.recoveryCleared=true;p.flow.completed=true;p.sentHome=true;p.discharged=true;p.admitted=false;
+ const reward=rewardFor(p);S.lastReward=reward;S.livesSaved++;S.caseNumber++;
+ try{if(window.G&&typeof G.money==="number")G.money+=reward;if(window.G&&typeof G.cash==="number")G.cash+=reward;if(state&&typeof state.money==="number")state.money+=reward;if(state&&typeof state.reputation==="number")state.reputation+=Math.max(2,Math.round(reward/60))}catch(e){}
+ S.completedCases.unshift({id:p.id,name:p.name||"Patient",species:p.species||"Animal",reward,when:Date.now()});S.completedCases=S.completedCases.slice(0,30);
+ S.lastEvent=`Case complete: ${p.name||"Patient"} discharged safely. +$${reward}. Life Saved #${S.livesSaved}.`;
+ save();try{if(typeof saveGame==="function")saveGame("Case completed",true)}catch(e){};render()
+}
+const N=["Atlas","Luna","Miso","Nova","Koda","Pip","Juniper","Echo","Mochi","Bramble","Orion","Tilly","Sage","Nico","Willow","Finn"];
+const SP=["Dog","Cat","Rabbit","Goat","Parrot","Dog","Cat","Dog"];
+const C=[["fracture","Closed limb fracture after a fall",true],["dehydration","Dehydration and weakness",false],["wound","Deep contaminated wound",true],["respiratory","Respiratory distress",false],["infection","Soft-tissue infection",false],["foreign body","Suspected intestinal foreign body",true],["arthritis","Painful mobility flare",false],["minor trauma","Bruising and stress after rescue",false]];
+function makePatient(){const i=(Date.now()+S.caseNumber*17)%N.length,j=(Date.now()+S.caseNumber*7)%C.length,c=C[j];return{id:"vgcase_"+Date.now()+"_"+Math.floor(Math.random()*99999),name:N[i],species:SP[(j+S.caseNumber)%SP.length],condition:c[0],diagnosis:c[1],requiresSurgery:c[2],admitted:true,department:"Clinic",location:"Clinic",health:48+Math.floor(Math.random()*20),pain:36+Math.floor(Math.random()*30),stress:35+Math.floor(Math.random()*35),oxygen:88+Math.floor(Math.random()*9),hydration:45+Math.floor(Math.random()*18),water:45+Math.floor(Math.random()*18),mobility:35+Math.floor(Math.random()*22),trust:25+Math.floor(Math.random()*35),comfort:40+Math.floor(Math.random()*22),ate:false,drank:false,flow:{stage:"ARRIVAL",history:[{t:Date.now(),stage:"ARRIVAL",msg:"New patient arrived."}],completed:false}}}
+function nextPatient(){const old=active();if(old&&!old.flow?.completed&&!old.discharged){S.lastEvent="Finish the current patient before loading another.";render();return}const p=makePatient();if(!state.patients)state.patients=[];state.patients.push(p);state.activeId=p.id;state.screen="clinic";setStage(p,"STABILIZE",`${p.name} arrived. New case #${S.caseNumber} started.`);try{if(typeof vgOpenScreen==="function")vgOpenScreen("clinic");else if(typeof render==="function")render()}catch(e){};try{if(typeof saveGame==="function")saveGame("Next patient arrived",true)}catch(e){};render()}
+function advance(k){const p=active();if(!p)return;ensure(p);
+ if(k==="stabilize"){p.stabilized=true;p.health=cap(p.health+10);p.oxygen=Math.max(p.oxygen,92);setStage(p,"DIAGNOSE","Stabilization complete — diagnostic phase unlocked.")}
+ else if(k==="diagnose"){p.diagnosis=p.diagnosis||p.condition||"Primary condition identified";setStage(p,"TREAT","Diagnosis confirmed — treatment phase unlocked.")}
+ else if(k==="treat"){p.problemResolved=true;p.treatmentComplete=true;p.health=cap(p.health+12);p.pain=cap(p.pain-10);if(needsSurgery(p)){setStage(p,"SURGERY","Treatment prep complete — transferring to Surgery.");move(p,"Surgery")}else{setStage(p,"RECOVERY","Primary treatment complete — transferring to Recovery.");move(p,"Recovery")}}
+ else if(k==="surgery"){p.surgeryComplete=true;p.health=cap(p.health+10);p.pain=cap(p.pain-8);setStage(p,"RECOVERY","Surgery complete — transferring to Recovery.");move(p,"Recovery")}
+ else if(k==="recovery"){p.health=Math.max(p.health,76);p.pain=Math.min(p.pain,30);p.hydration=Math.max(p.hydration,68);p.mobility=Math.max(p.mobility,60);p.oxygen=Math.max(p.oxygen,94);p.ate=true;p.drank=true;p.problemResolved=true;p.treatmentComplete=true;p.recoveryCleared=true;setStage(p,"READY","Recovery requirements satisfied — patient is ready for case completion.")}
+ try{if(typeof saveGame==="function")saveGame("Case flow advance",true)}catch(e){};render()
+}
+function flowHTML(p){const st=p?stageOf(p):"ARRIVAL",idx=Math.max(0,FLOW.indexOf(st));return FLOW.map((x,i)=>`<div class="vgcf-step ${i<idx?"done":i===idx?"now":""}">${i<idx?"✓ ":""}${x}</div>`).join("")}
+function html(){
+ const p=active();if(p){ensure(p);autoAdvance()}
+ if(!p)return `<section id="vgCaseFlowEngine"><div class="vgcf-head"><div><h3>♾ CONTINUOUS PATIENT FLOW ENGINE</h3><p>One animal moves through the whole hospital. Finish the case, collect the reward, and load the next patient.</p></div><b>LIVES SAVED ${S.livesSaved}</b></div><div class="vgcf-loop">${flowHTML(null)}</div><div class="vgcf-body"><div class="vgcf-card"><h4>HOSPITAL READY</h4><div class="vgcf-title">No Active Patient</div><div class="vgcf-sub">Hospital progress stays intact. Only the active case changes.</div><button class="vgcf-next" onclick="vgcfNext()">🐾 LOAD NEXT PATIENT</button></div><div class="vgcf-card"><h4>LAST EVENT</h4><div class="vgcf-event">${S.lastEvent}</div></div></div></section>`;
+ const st=stageOf(p),r=reqs(p),isReady=p.recoveryCleared||ready(p);
+ const buttons=(st==="STABILIZE"?`<button onclick="vgcfAdvance('stabilize')">⚕ STABILIZE</button>`:"")+(st==="DIAGNOSE"?`<button onclick="vgcfAdvance('diagnose')">🔬 CONFIRM DIAGNOSIS</button>`:"")+(st==="TREAT"?`<button onclick="vgcfAdvance('treat')">🩺 COMPLETE PRIMARY TREATMENT</button>`:"")+(st==="SURGERY"?`<button onclick="vgcfAdvance('surgery')">✂️ COMPLETE SURGERY</button>`:"")+(st==="RECOVERY"?`<button onclick="vgcfAdvance('recovery')">❤️ COMPLETE RECOVERY CARE</button>`:"")+((st==="READY"||isReady)?`<button onclick="vgcfComplete()">🏆 COMPLETE CASE</button>`:"")+`<button onclick="typeof vgCmdDoNext==='function'&&vgCmdDoNext()">✨ GUIDED NEXT ACTION</button>`;
+ return `<section id="vgCaseFlowEngine"><div class="vgcf-head"><div><h3>♾ CONTINUOUS PATIENT FLOW ENGINE</h3><p>The same animal record moves automatically between departments until the case is finished.</p></div><b>CASE #${S.caseNumber} · SAVED ${S.livesSaved}</b></div><div class="vgcf-loop">${flowHTML(p)}</div><div class="vgcf-body"><div class="vgcf-card"><h4>ACTIVE CASE</h4><div class="vgcf-title">${p.name||"Patient"} · ${st}</div><div class="vgcf-sub">${p.species||"Animal"} · ${p.diagnosis||p.condition||"Assessment underway"} · Department: ${p.department||p.location||"Clinic"}</div><div class="vgcf-status"><div><b>${p.health}</b><span>HEALTH</span></div><div><b>${p.pain}</b><span>PAIN</span></div><div><b>${p.hydration}</b><span>HYDRATION</span></div><div><b>${p.mobility}</b><span>MOBILITY</span></div></div><div class="vgcf-actions">${buttons}</div>${isReady?`<div class="vgcf-complete"><b>✓ READY FOR CASE COMPLETION</b><span>Close the case, award the hospital, remove the animal from the active queue, then load the next patient.</span></div>`:""}</div><div class="vgcf-card"><h4>RECOVERY READINESS</h4><div class="vgcf-require">${r.map(x=>`<div class="vgcf-req ${x[1]?"ok":"bad"}">${x[1]?"✓":"✕"} ${x[0]} · <b>${x[2]}</b></div>`).join("")}</div><div class="vgcf-event">LAST EVENT · ${S.lastEvent}</div>${(p.flow?.completed||p.discharged)?`<button class="vgcf-next" onclick="vgcfNext()">🐾 NEXT PATIENT</button>`:""}</div></div></section>`
+}
+function render(){const scr=document.querySelector(".screen.active")||document.getElementById(state?.screen||"clinic");if(!scr)return;document.getElementById("vgCaseFlowEngine")?.remove();const gd=document.getElementById("vgGuidedDirector"),deck=document.getElementById("vgPersistentDeck");if(gd&&gd.parentElement===scr)gd.insertAdjacentHTML("afterend",html());else if(deck&&deck.parentElement===scr)deck.insertAdjacentHTML("afterend",html());else scr.insertAdjacentHTML("afterbegin",html())}
+function hook(name){const old=window[name];if(typeof old!=="function"||old.__vgcf)return;const w=function(){const r=old.apply(this,arguments);setTimeout(render,0);return r};w.__vgcf=true;window[name]=w}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","renderPets","vgpdApply","vggdAct","rwAction","rwFinal"].forEach(hook);
+window.vgcfAdvance=advance;window.vgcfComplete=completeCase;window.vgcfNext=nextPatient;window.VetGodCaseFlowEngine={render,nextPatient,completeCase,state:S};
+function install(){render();setInterval(()=>{try{autoAdvance();if(document.getElementById("vgCaseFlowEngine"))render()}catch(e){}},9000);document.addEventListener("click",e=>{if(!e.target.closest("#vgCaseFlowEngine"))setTimeout(render,40)},true)}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
