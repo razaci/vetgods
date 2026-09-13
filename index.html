@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · BREED & SEX PATIENT PROFILES</title>
+<title>VET GODS · CASE AREA COMPLETION LOGIC</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3366,6 +3366,41 @@ body.vg-focus-mode #vgHospitalAreasBar *{
 .vg-ai-label{font-size:7px;letter-spacing:.08em;color:#7898a6}
 .vg-ai-value{margin-top:2px;font-size:9px;font-weight:900;color:#daf3ff}
 @media(max-width:900px){.vg-animal-identity{grid-template-columns:1fr}}
+</style>
+
+
+<style id="vgCaseAreaCompletionCss">
+/* Case-area workflow: evidence -> teaching -> follow-up -> finish -> exit */
+.vg-area-workflow{
+  margin:10px 0;padding:10px;border:1px solid #476879;border-radius:11px;
+  background:linear-gradient(145deg,#07161f,#0b202a);
+}
+.vg-aw-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
+.vg-aw-title{font-size:10px;font-weight:950;letter-spacing:.07em;color:#dcf5ff}
+.vg-aw-state{font-size:7px;padding:3px 6px;border:1px solid #486d7c;border-radius:5px;color:#9fc7d6}
+.vg-aw-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.vg-aw-steps button{min-height:46px!important;font-size:8px!important;font-weight:900!important}
+.vg-aw-evidence{background:#17394a!important;border-color:#4d7b91!important}
+.vg-aw-teach{background:#2d334a!important;border-color:#686f9b!important}
+.vg-aw-follow{background:#3b3520!important;border-color:#8a7b43!important}
+.vg-aw-finish{background:#1e4b35!important;border-color:#5a9a72!important}
+.vg-aw-exit{
+  margin-top:8px;width:100%;min-height:44px!important;
+  background:#54252a!important;border-color:#96515a!important;
+  font-size:9px!important;font-weight:950!important
+}
+.vg-aw-log{margin-top:8px;padding:8px;border:1px solid #294858;border-radius:7px;background:#061018;font-size:8px;line-height:1.5;color:#a8c4d0}
+.vg-aw-done{outline:1px solid #6da78b!important;box-shadow:inset 0 0 0 1px rgba(90,180,130,.15)}
+/* Suppress old reward/bonus overlays inside special case areas */
+.vg-case-area-active .reward-popup,
+.vg-case-area-active .bonus-popup,
+.vg-case-area-active .reward-overlay,
+.vg-case-area-active .bonus-overlay,
+.vg-case-area-active [class*="reward"][class*="popup"],
+.vg-case-area-active [class*="bonus"][class*="popup"]{
+  display:none!important;
+}
+@media(max-width:1000px){.vg-aw-steps{grid-template-columns:1fr 1fr}}
 </style>
 
 </head>
@@ -20002,6 +20037,184 @@ function hook(name){
 ["render","renderClinic","renderRecovery","renderSurgery","vgOpenScreen","vgcfNext"].forEach(hook);
 window.VetGodBreedSex={install,classify};
 function boot(){install();document.addEventListener("click",()=>setTimeout(install,30),true)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+})();
+</script>
+
+
+<script id="vgCaseAreaCompletionJs">
+(function(){
+'use strict';
+const KEY="vetGodCaseAreaCompletionV1";
+let DB={};
+try{DB=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){DB={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}};
+
+function patients(){
+ try{return [...(state?.patients||[]),...(state?.pets||[])]}catch(e){return[]}
+}
+function patient(){
+ try{return patients().find(p=>p.id===state.activeId)||patients().find(p=>p.admitted&&!p.discharged)||null}catch(e){return null}
+}
+function areaKey(el){
+ const txt=((el?.querySelector("h1,h2,h3,.title,.panel-title")?.textContent)||el?.id||el?.className||"case-area")
+   .replace(/\s+/g," ").trim().slice(0,80);
+ return txt||"case-area";
+}
+function patientKey(p){return String(p?.id||p?.name||"unknown")}
+function stateFor(p,area){
+ const pk=patientKey(p),ak=areaKey(area);
+ DB[pk]=DB[pk]||{};
+ DB[pk][ak]=DB[pk][ak]||{evidence:false,teaching:false,followup:false,finished:false,notes:[],enteredAt:Date.now()};
+ return DB[pk][ak]
+}
+function note(st,msg){st.notes.unshift(msg);st.notes=st.notes.slice(0,8);save()}
+
+function findArea(el){
+ return el?.closest?.(".panel,.card,.section,.module,[id*='playroom'],[class*='playroom'],[id*='room'],[class*='room']")||null
+}
+function currentArea(){
+ const active=document.querySelector(".vg-case-area-active");
+ if(active)return active;
+ const candidates=[...document.querySelectorAll(".panel,.card,.section,.module,[id*='playroom'],[class*='playroom']")];
+ return candidates.find(isSpecialArea)||null
+}
+function isSpecialArea(el){
+ if(!(el instanceof HTMLElement))return false;
+ const t=((el.id||"")+" "+(el.className||"")+" "+(el.textContent||"")).toLowerCase();
+ return /playroom|pressure testing|mobility.*lab|diagnostic.*room|authorized hospital|teaching.*case|evidence/.test(t);
+}
+function markSpecialAreas(){
+ document.querySelectorAll(".panel,.card,.section,.module,[id*='playroom'],[class*='playroom']").forEach(el=>{
+  if(isSpecialArea(el))el.classList.add("vg-case-area-active")
+ })
+}
+function evidence(area){
+ const p=patient();if(!p||!area)return;
+ const st=stateFor(p,area);st.evidence=true;
+ p.caseEvidence=p.caseEvidence||[];
+ const record={
+  area:areaKey(area),
+  time:Date.now(),
+  summary:`Observed ${p.name||"patient"} in ${areaKey(area)}; findings recorded for the active case.`
+ };
+ p.caseEvidence.push(record);p.caseEvidence=p.caseEvidence.slice(-20);
+ note(st,"Evidence recorded into the patient case.");
+ renderWorkflow(area)
+}
+function teaching(area){
+ const p=patient();if(!p||!area)return;
+ const st=stateFor(p,area);
+ if(!st.evidence){note(st,"Record evidence first so the teaching step has findings to explain.");renderWorkflow(area);return}
+ st.teaching=true;
+ const c=String(p.condition||p.diagnosis||"current condition");
+ note(st,`Teaching complete: findings were connected to ${c}, comfort, behavior, mobility, and the next clinical decision.`);
+ renderWorkflow(area)
+}
+function followup(area){
+ const p=patient();if(!p||!area)return;
+ const st=stateFor(p,area);
+ if(!st.teaching){note(st,"Complete the teaching step before case follow-up.");renderWorkflow(area);return}
+ st.followup=true;
+ p.followUps=p.followUps||[];
+ p.followUps.push({area:areaKey(area),time:Date.now(),status:"reviewed"});
+ p.followUps=p.followUps.slice(-20);
+ note(st,"Case follow-up recorded. This area's findings are now attached to the case.");
+ renderWorkflow(area)
+}
+function finish(area){
+ const p=patient();if(!p||!area)return;
+ const st=stateFor(p,area);
+ if(!st.evidence||!st.teaching||!st.followup){
+  note(st,"Finish requires Evidence → Teaching → Follow-up. Complete the highlighted sequence.");
+  renderWorkflow(area);return
+ }
+ st.finished=true;
+ p.completedAreas=p.completedAreas||{};
+ p.completedAreas[areaKey(area)]=true;
+ note(st,"Area complete. You can exit now without losing the evidence.");
+ save();renderWorkflow(area)
+}
+function exit(area){
+ const p=patient();
+ if(area){
+   const st=p?stateFor(p,area):null;
+   if(st&&!st.finished){
+     note(st,"Exit used before completion. Progress was saved and you can return later.");
+   }
+   area.classList.remove("vg-case-area-active");
+   const overlay=area.closest("[role='dialog'],.overlay,.modal,[id*='Overlay'],[class*='overlay']");
+   if(overlay){
+     overlay.classList.remove("open","active","show");
+     overlay.style.display="none";
+   }else{
+     // If this is an in-page destination, return to Clinic without refreshing.
+     try{
+       if(typeof vgOpenScreen==="function"){vgOpenScreen("clinic");return}
+     }catch(e){}
+   }
+ }
+ try{if(typeof render==="function")render()}catch(e){}
+}
+function workflowHTML(area){
+ const p=patient();
+ if(!p)return"";
+ const st=stateFor(p,area);
+ const done=st.finished?"COMPLETE":st.followup?"FOLLOW-UP RECORDED":st.teaching?"TEACHING COMPLETE":st.evidence?"EVIDENCE RECORDED":"IN PROGRESS";
+ return `<div class="vg-area-workflow" data-area-workflow="1">
+  <div class="vg-aw-head"><div class="vg-aw-title">📋 CASE AREA WORKFLOW · ${areaKey(area)}</div><div class="vg-aw-state">${done}</div></div>
+  <div class="vg-aw-steps">
+   <button class="vg-aw-evidence ${st.evidence?"vg-aw-done":""}" onclick="vgAreaEvidence(this)">1 · RECORD EVIDENCE</button>
+   <button class="vg-aw-teach ${st.teaching?"vg-aw-done":""}" onclick="vgAreaTeach(this)">2 · TEACH / EXPLAIN FINDINGS</button>
+   <button class="vg-aw-follow ${st.followup?"vg-aw-done":""}" onclick="vgAreaFollow(this)">3 · CASE FOLLOW-UP</button>
+   <button class="vg-aw-finish ${st.finished?"vg-aw-done":""}" onclick="vgAreaFinish(this)">4 · FINISH AREA</button>
+  </div>
+  <button class="vg-aw-exit" onclick="vgAreaExit(this)">✕ EXIT AREA / RETURN TO PATIENT CASE</button>
+  <div class="vg-aw-log">${(st.notes.length?st.notes:["Complete the four steps, then exit. Progress saves automatically."]).map(x=>"• "+x).join("<br>")}</div>
+ </div>`
+}
+function renderWorkflow(area){
+ if(!area)return;
+ area.querySelectorAll("[data-area-workflow]").forEach(x=>x.remove());
+ const host=area.querySelector(".content,.body,.panel-body,.card-body")||area;
+ host.insertAdjacentHTML("beforeend",workflowHTML(area));
+ suppressBonuses(area)
+}
+function suppressBonuses(area){
+ if(!area)return;
+ area.querySelectorAll("*").forEach(el=>{
+   const c=((el.className||"")+" "+(el.id||"")).toLowerCase();
+   const txt=(el.textContent||"").trim().toLowerCase();
+   if((/reward|bonus|jackpot|achievement/.test(c) && /popup|overlay|toast|modal|banner/.test(c)) ||
+      (/bonus|reward/.test(txt) && el.children.length<4 && txt.length<120)){
+     if(!el.closest("[data-area-workflow]"))el.style.display="none"
+   }
+ })
+}
+function install(){
+ markSpecialAreas();
+ document.querySelectorAll(".vg-case-area-active").forEach(renderWorkflow);
+}
+function areaFromButton(btn){return btn.closest(".vg-case-area-active")||currentArea()}
+window.vgAreaEvidence=b=>evidence(areaFromButton(b));
+window.vgAreaTeach=b=>teaching(areaFromButton(b));
+window.vgAreaFollow=b=>followup(areaFromButton(b));
+window.vgAreaFinish=b=>finish(areaFromButton(b));
+window.vgAreaExit=b=>exit(areaFromButton(b));
+window.VetGodCaseAreaCompletion={install,evidence,teaching,followup,finish,exit};
+
+function hook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgAreaFlow)return;
+ const w=function(){const r=old.apply(this,arguments);setTimeout(install,35);return r};
+ w.__vgAreaFlow=true;window[name]=w
+}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","vgOpenScreen","vgmlOpen"].forEach(hook);
+
+function boot(){
+ install();
+ const mo=new MutationObserver(()=>{clearTimeout(window.__vgAreaScan);window.__vgAreaScan=setTimeout(install,60)});
+ mo.observe(document.body,{childList:true,subtree:true});
+}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
 </script>
