@@ -16303,5 +16303,136 @@ setTimeout(tick,350);
 </script>
 <!-- ===== END VET GODS 22 ===== -->
 
+
+<!-- ===== VET GODS 23 · PATIENT COMPLETION LOGIC REPAIR ===== -->
+<style id="vg23-completion-style">
+.vg23-complete{margin:12px 0;padding:13px;border:1px solid rgba(91,239,184,.28);border-radius:16px;background:linear-gradient(180deg,rgba(5,30,28,.95),rgba(4,16,25,.96));box-shadow:0 0 24px rgba(65,240,191,.07)}
+.vg23-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.vg23-head h3{margin:0;color:#d9fff1;letter-spacing:.06em}.vg23-head p{margin:4px 0 0;color:#91bdb0;font-size:.75rem;line-height:1.4}.vg23-badge{border:1px solid rgba(96,238,186,.36);border-radius:999px;padding:6px 9px;font-size:.68rem;font-weight:900;color:#aaffdb;white-space:nowrap}
+.vg23-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.vg23-check{display:flex;gap:8px;align-items:flex-start;padding:9px;border:1px solid rgba(120,210,205,.14);border-radius:11px;background:rgba(6,25,34,.72);font-size:.72rem;color:#b8d5d0}.vg23-check b{display:block;color:#f1fffb;margin-bottom:2px}.vg23-check.ok{border-color:rgba(67,225,163,.28);background:rgba(20,66,54,.28)}.vg23-check.block{border-color:rgba(255,185,82,.28);background:rgba(67,44,10,.25)}
+.vg23-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.vg23-actions button{border:1px solid #307f71;border-radius:10px;background:#0b302d;color:#ddfff5;padding:9px 11px;font-weight:850}.vg23-actions button.primary{border-color:#e4c35d;background:#3a300d;color:#fff0ad}.vg23-note{margin-top:9px;padding:9px;border-left:3px solid #58d8bb;background:rgba(88,216,187,.06);font-size:.71rem;line-height:1.45;color:#c7e6de}.vg23-note.warn{border-left-color:#f1bb57;background:rgba(241,187,87,.06)}
+@media(max-width:620px){.vg23-grid{grid-template-columns:1fr}.vg23-head{flex-direction:column}}
+</style>
+<script id="vg23-completion-engine">
+(()=>{'use strict';
+const clamp=(v,a=0,b=100)=>Math.max(a,Math.min(b,Number(v)||0));
+function pBy(id){return (state.patients||[]).find(x=>x.id===id)||(state.pets||[]).find(x=>x.id===id)}
+function ensure(p){
+  p.healing=p.healing||{};p.flow=p.flow||{};p.canonicalCare=p.canonicalCare||{};p.canonicalCare.independence=p.canonicalCare.independence||{};
+  if(typeof vgiEnsure==='function')try{vgiEnsure(p)}catch(e){}
+  if(typeof vgEnsureOralHydrationState==='function')try{vgEnsureOralHydrationState(p)}catch(e){}
+  return p;
+}
+function mealIndependent(p){
+  ensure(p);const sim=p.independentSim||{}, ind=p.canonicalCare.independence||{}, nut=p.canonicalCare.nutrition||{};
+  const yes=!!(sim.firstIndependentMeal||ind.firstIndependentMeal||Number(nut.independence)>=95||Number(nut.ladder)>=5);
+  if(yes){sim.firstIndependentMeal=true;ind.firstIndependentMeal=true;if(nut)nut.independence=Math.max(95,Number(nut.independence||0));}
+  return yes;
+}
+function drinkIndependent(p){
+  ensure(p);if(typeof vgRequiresIndependentWater==='function'&&!vgRequiresIndependentWater(p))return true;
+  const sim=p.independentSim||{}, oral=p.oralHydration||{};
+  const yes=!!(sim.firstIndependentDrink||oral.accepted);
+  if(yes){sim.firstIndependentDrink=true;oral.accepted=true;}
+  return yes;
+}
+function hydrationMaintained(p){
+  ensure(p);if(typeof vgRequiresIndependentWater==='function'&&!vgRequiresIndependentWater(p))return clamp(p.hydration)>=60;
+  const sim=p.independentSim||{}, oral=p.oralHydration||{};
+  const yes=!!(sim.maintainedHydration||oral.maintained) && clamp(p.hydration)>=60;
+  if(yes){sim.maintainedHydration=true;oral.maintained=true;}
+  return yes;
+}
+function reconcile(p){
+  ensure(p);const h=p.healing, lr=p.livingHealing||{}, rw=p.rw||{};
+  mealIndependent(p);drinkIndependent(p);hydrationMaintained(p);
+  // Evidence already earned in newer systems satisfies equivalent older counters.
+  if(mealIndependent(p))rw.meals=Math.max(1,Number(rw.meals||0));
+  if((Number(h.strengthActions)||0)>=2||lr.walked||clamp(p.mobility)>=70)rw.walks=Math.max(1,Number(rw.walks||0));
+  if((Number(h.restActions)||0)>=2||lr.sleptComfortably)rw.rests=Math.max(1,Number(rw.rests||0));
+  // Old "recovery day" was a legacy navigation-era blocker. Completed observed care now counts instead.
+  p.long=p.long||{};
+  const observed=(Number(h.restActions)||0)+(Number(h.strengthActions)||0)+(Number(h.emotionalActions)||0)+(Number(h.independenceActions)||0);
+  if(observed>=4||Number(h.stage)>=7)p.long.recoveryDays=Math.max(1,Number(p.long.recoveryDays||0));
+  // Reconcile living-room milestones from explicit care so autonomous animation is enrichment, not a hard lock.
+  if((Number(h.restActions)||0)>=2){lr.sleptComfortably=true;lr.sleepQuality=Math.max(75,Number(lr.sleepQuality||0));}
+  if((Number(h.strengthActions)||0)>=2){lr.stood=true;lr.walked=true;}
+  if((Number(h.emotionalActions)||0)>=2&&clamp(p.trust)>=50){lr.personalityReturned=true;lr.personalityReturn=Math.max(75,Number(lr.personalityReturn||0));}
+  if((Number(h.independenceActions)||0)>=2 && mealIndependent(p) && hydrationMaintained(p))lr.toiletingNormal=lr.toiletingNormal||false;
+  const bw=p.behaviorWatch||p.behavior||{};
+  if((Number(h.emotionalActions)||0)>=2&&(Number(h.strengthActions)||0)>=2&&(Number(h.restActions)||0)>=2){if(bw&&typeof bw==='object')bw.actingLikeSelf=true;}
+  return p;
+}
+function checks(p){
+  reconcile(p);const h=p.healing||{};const nursery=(p.department==='Nursery'||p.location==='Nursery');
+  const reqWater=typeof vgRequiresIndependentWater==='function'?vgRequiresIndependentWater(p):!nursery;
+  const stable=clamp(p.oxygen??95)>=90 && clamp(p.shock??0)<=35 && clamp(p.bleeding??0)<=25;
+  const pain=clamp(p.pain??0)<=45;
+  const treated=(Number(h.treatmentActions||0)>=2)||/healthy|wellness|checkup/i.test(String(p.condition||''));
+  const rested=Number(h.restActions||0)>=2 || !!p.livingHealing?.sleptComfortably;
+  const strength=Number(h.strengthActions||0)>=2 || !!p.livingHealing?.walked || clamp(p.mobility??50)>=70;
+  const emotional=Number(h.emotionalActions||0)>=2 || (clamp(p.trust??40)>=60 && clamp(p.fear??35)<=45);
+  const food=mealIndependent(p) || (nursery && clamp(p.feeding??0)>=55);
+  const water=!reqWater || (drinkIndependent(p)&&hydrationMaintained(p));
+  return [
+    ['Vitals stabilized',stable,'Use Stabilize / oxygen / bleeding control until oxygen ≥90 and shock/bleeding are controlled.'],
+    ['Pain manageable',pain,'Use Pain Control until pain is 45 or lower.'],
+    ['Primary problem treated',treated,'Complete at least two meaningful treatment actions for the main problem.'],
+    ['Rest cycle completed',rested,'Complete the Rest stage twice or allow comfortable sleep.'],
+    ['Strength / mobility recovered',strength,'Complete supported stand/walk care or restore mobility.'],
+    ['Emotional recovery',emotional,'Use comfort/bond care until fear falls and trust returns.'],
+    ['Independent nutrition',food,'Complete the Nutrition Program through an independent meal.'],
+    ['Independent hydration',water,reqWater?'Offer water, get a voluntary drink, then run a hydration recheck.':'Nursery feeding/weaning rules apply.']
+  ];
+}
+function ready(p){return checks(p).every(x=>x[1])}
+function blockers(p){return checks(p).filter(x=>!x[1])}
+function statusHTML(p){
+  const c=checks(p),bad=c.filter(x=>!x[1]),ok=c.length-bad.length;
+  return `<section class="vg23-complete" id="vg23Completion"><div class="vg23-head"><div><h3>✅ PATIENT COMPLETION COORDINATOR</h3><p>One finish line across Clinic, Nutrition, Behavior, Healing and Aftercare. No hidden legacy Recovery counter can veto completed care.</p></div><span class="vg23-badge">${bad.length?ok+'/'+c.length+' READY':'READY TO DISCHARGE'}</span></div><div class="vg23-grid">${c.map(x=>`<div class="vg23-check ${x[1]?'ok':'block'}"><span>${x[1]?'✅':'⬜'}</span><div><b>${x[0]}</b>${x[1]?'Complete':x[2]}</div></div>`).join('')}</div><div class="vg23-actions"><button onclick="VG23.reconcile('${p.id}')">🔄 Reconcile Completed Care</button><button onclick="VG23.hydration('${p.id}')">💧 Hydration Recheck</button><button onclick="VG23.independence('${p.id}')">🐾 Independence Recheck</button>${bad.length?'':`<button class="primary" onclick="VG23.finish('${p.id}')">🏠 FINAL CHECK · COMPLETE CASE</button>`}</div><div class="vg23-note ${bad.length?'warn':''}">${bad.length?'<b>Still blocking:</b> '+bad.map(x=>x[0]).join(' · '):'<b>All mandatory care requirements are satisfied.</b> Optional Living Healing Room behaviors can continue for flavor, but they no longer trap the patient in hospital.'}</div></section>`;
+}
+function installPanel(){
+  if(!window.state||state.screen!=='clinic')return;const p=pBy(state.activeId);if(!p||!p.admitted)return;const host=document.getElementById('clinic');if(!host)return;host.querySelector('#vg23Completion')?.remove();
+  const heal=host.querySelector('#vgHealingPanel'),nut=host.querySelector('#vg18Nutrition'),cmd=host.querySelector('#vg16Command');const anchor=heal||nut||cmd;
+  if(anchor)anchor.insertAdjacentHTML('afterend',statusHTML(p));else host.insertAdjacentHTML('afterbegin',statusHTML(p));
+}
+function hydration(id){const p=pBy(id);if(!p)return;reconcile(p);if(typeof vgHydrationRecheck==='function')try{vgHydrationRecheck(p)}catch(e){};reconcile(p);if(typeof addLog==='function')addLog(p.name+' · completion hydration recheck');if(typeof render==='function')render();}
+function independence(id){const p=pBy(id);if(!p)return;reconcile(p);const h=p.healing||{};h.independenceActions=Math.max(2,Number(h.independenceActions||0));if(typeof vgHydrationRecheck==='function'&&drinkIndependent(p))try{vgHydrationRecheck(p)}catch(e){};reconcile(p);if(typeof vghAdvance==='function')try{vghAdvance(p)}catch(e){};if(typeof addLog==='function')addLog(p.name+' · independence evidence reconciled across care systems');if(typeof render==='function')render();}
+function complete(id){const p=pBy(id);if(!p)return false;reconcile(p);const bad=blockers(p);if(bad.length){if(typeof addLog==='function')addLog(p.name+' cannot complete yet: '+bad.map(x=>x[0]).join(', '));if(typeof render==='function')render();return false;}
+  p.healing=p.healing||{};p.healing.stage=8;p.healing.progress=100;p.healing.completed=true;if(typeof vghAddMilestone==='function')try{vghAddMilestone(p,'healed','LIFE SPARK RESTORED · Patient journey complete')}catch(e){}
+  p.flow=p.flow||{};p.flow.integratedRecovery=false;
+  // Preserve established outcome/adoption routing, but do not run obsolete recovery counters again.
+  if(typeof vgOfferAdoptionDecision==='function'){
+    try{const r=vgOfferAdoptionDecision(p);if(typeof saveGame==='function')saveGame('Patient completed',true);if(typeof render==='function')render();return r}catch(e){}
+  }
+  p.admitted=false;p.department='Home';p.location='Home';if(typeof addLog==='function')addLog(p.name+' completed care and went home.');if(typeof saveGame==='function')try{saveGame('Patient completed',true)}catch(e){};state.screen='clinic';if(typeof render==='function')render();return true;
+}
+// Repair the stage architecture: hydration/feed stabilization does not demand the later independence milestone.
+const oldStageReady=window.vghStageReady;
+window.vghStageReady=function(p,stage){
+  reconcile(p);const h=p.healing||{};
+  if(stage===2){const nursery=(p.department==='Nursery'||p.location==='Nursery');const hyd=clamp(p.hydration??0)>=60;const fed=clamp(p.feeding??(100-clamp(p.hunger??50)))>=50 || clamp(p.hunger??0)>=55 || Number(h.foodActions||0)>0 || !!p.canonicalCare?.nutrition?.meals?.length;return hyd&&fed;}
+  if(stage===7){return Number(h.independenceActions||0)>=2 && mealIndependent(p) && hydrationMaintained(p) && drinkIndependent(p);}
+  if(stage===8){return ready(p);}
+  return typeof oldStageReady==='function'?oldStageReady(p,stage):false;
+};
+// Living-room autonomous flavor no longer adds invisible mandatory discharge blockers.
+window.vglrReadyChecks=function(p){const c=checks(p);return c.map(x=>[x[0],x[1]])};
+window.vglrReadyToGo=function(p){return ready(p)};
+// Legacy recovery readiness now mirrors the canonical completion coordinator.
+window.rwMissing=function(p){return blockers(p).map(x=>x[0])};
+window.rwScore=function(p){const c=checks(p);return Math.round(c.filter(x=>x[1]).length/c.length*100)};
+// Final discharge uses one source of truth.
+window.dischargeRecoveredPet=function(id){return complete(id)};
+// Enhance the Independence action so a real recheck can resolve evidence already earned elsewhere.
+const oldAction=window.vghAction;
+if(typeof oldAction==='function')window.vghAction=function(id,a){const p=pBy(id);if(p)reconcile(p);if(a==='independence'&&p){const h=p.healing||{};h.independenceActions=Math.max(1,Number(h.independenceActions||0));if(drinkIndependent(p)&&typeof vgHydrationRecheck==='function')try{vgHydrationRecheck(p)}catch(e){}}
+  const r=oldAction.apply(this,arguments);if(p){reconcile(p);if(typeof vghAdvance==='function')try{vghAdvance(p)}catch(e){}}return r;};
+window.VG23={checks,ready,blockers,reconcile:(id)=>{const p=pBy(id);if(p){reconcile(p);if(typeof vghAdvance==='function')try{vghAdvance(p)}catch(e){};if(typeof render==='function')render()}},hydration,independence,finish:complete};
+const oldRenderClinic=window.renderClinic;if(typeof oldRenderClinic==='function'&&!oldRenderClinic.__vg23){const w=function(){const r=oldRenderClinic.apply(this,arguments);setTimeout(installPanel,0);return r};w.__vg23=true;window.renderClinic=w}
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg23){const w=function(){const r=oldRender.apply(this,arguments);setTimeout(installPanel,0);return r};w.__vg23=true;window.render=w}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(installPanel,100));else setTimeout(installPanel,100);
+})();
+</script>
+<!-- ===== END VET GODS 23 ===== -->
 </body>
 </html>
