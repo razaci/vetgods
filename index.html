@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · ENDLESS PATIENT FLOW · SUPERCOMPUTER EDITION</title>
+<title>VET GODS · FAST CASE FLOW · SUPERCOMPUTER EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3036,6 +3036,26 @@ body:not(.vg-hide-sidewall) #app{padding-right:330px!important}
 .vgcf-complete{margin-top:8px;padding:11px;border:1px solid #78642c;background:linear-gradient(180deg,#312710,#1d180c);border-radius:9px}.vgcf-complete b{display:block;color:#ffe28f;font-size:15px}.vgcf-complete span{display:block;font-size:8px;color:#c9bc88;margin-top:4px}
 .vgcf-next{width:100%;min-height:58px!important;margin-top:8px!important;background:#154a3c!important;border-color:#4a9d80!important;font-size:11px!important;font-weight:900!important}
 @media(max-width:1350px){.vgcf-body{grid-template-columns:1fr}}
+</style>
+
+
+<style id="vgFastCaseFlowCss">
+#vgFastLane{
+  grid-column:1/-1;margin:0 0 12px;padding:10px 12px;border:1px solid #4b806f;
+  border-radius:14px;background:linear-gradient(90deg,#0c271f,#0b1720 70%);
+  box-shadow:0 12px 28px rgba(0,0,0,.22)
+}
+.vgfl-top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.vgfl-top h3{margin:0;font-size:13px;letter-spacing:.08em;color:#bff5df}
+.vgfl-top p{margin:3px 0 0;font-size:8px;color:#99b8ad}
+.vgfl-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.vgfl-actions button{min-height:42px!important;font-size:8px!important;padding:7px 11px!important}
+.vgfl-primary{background:#17604c!important;border-color:#55b48e!important;font-weight:900!important}
+.vgfl-finish{background:#57451a!important;border-color:#ab8c37!important;font-weight:900!important}
+.vgfl-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-top:9px}
+.vgfl-box{padding:7px;border:1px solid #2b4d43;border-radius:7px;text-align:center;background:#091914}
+.vgfl-box b{display:block;font-size:13px}.vgfl-box span{font-size:7px;color:#8ba69d}
+.vgfl-note{margin-top:8px;font-size:8px;color:#b9cec6;line-height:1.4}
 </style>
 
 </head>
@@ -18121,6 +18141,149 @@ function hook(name){const old=window[name];if(typeof old!=="function"||old.__vgc
 ["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","renderPets","vgpdApply","vggdAct","rwAction","rwFinal"].forEach(hook);
 window.vgcfAdvance=advance;window.vgcfComplete=completeCase;window.vgcfNext=nextPatient;window.VetGodCaseFlowEngine={render,nextPatient,completeCase,state:S};
 function install(){render();setInterval(()=>{try{autoAdvance();if(document.getElementById("vgCaseFlowEngine"))render()}catch(e){}},9000);document.addEventListener("click",e=>{if(!e.target.closest("#vgCaseFlowEngine"))setTimeout(render,40)},true)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgFastCaseFlowJs">
+(function(){
+'use strict';
+const KEY="vetGodFastCaseFlowV1";
+let S={enabled:true,autoNext:false,last:"Fast Case Flow enabled."};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const cap=v=>Math.max(0,Math.min(100,Math.round(Number(v)||0)));
+function p(){
+ try{
+   const a=[...(state?.patients||[]),...(state?.pets||[])];
+   return a.find(x=>x.id===state.activeId)||a.find(x=>x.admitted&&!x.discharged&&!x.sentHome)||null
+ }catch(e){return null}
+}
+function needsSurgery(x){
+ const t=String(x?.condition||x?.diagnosis||"").toLowerCase();
+ return !!(x?.requiresSurgery||/fracture|foreign body|rupture|internal bleed|mass|obstruction|laceration|wound repair/.test(t))
+}
+function normalize(x){
+ if(!x)return;
+ x.health=cap(x.health??55);x.pain=cap(x.pain??45);x.stress=cap(x.stress??45);
+ x.oxygen=cap(x.oxygen??92);x.hydration=cap(x.hydration??x.water??55);x.mobility=cap(x.mobility??45)
+}
+function stage(x){
+ if(!x)return "NONE";
+ if(x.discharged||x.sentHome||x.flow?.completed)return "COMPLETE";
+ if(x.recoveryCleared)return "READY";
+ if(/recovery/i.test(x.department||x.location||""))return "RECOVERY";
+ if(needsSurgery(x)&&x.treatmentComplete&&!x.surgeryComplete)return "SURGERY";
+ if(x.treatmentComplete||x.problemResolved)return "RECOVERY";
+ if(x.diagnosis||x.condition)return "TREAT";
+ if(x.stabilized||x.health>=60)return "DIAGNOSE";
+ return "STABILIZE"
+}
+function boost(x,kind){
+ normalize(x);
+ if(kind==="stabilize"){
+   x.stabilized=true;x.health=cap(x.health+18);x.oxygen=Math.max(x.oxygen,94);x.stress=cap(x.stress-8);
+   S.last="Stabilized. Diagnosis unlocked."
+ } else if(kind==="diagnose"){
+   x.diagnosis=x.diagnosis||x.condition||"Primary condition confirmed";
+   S.last="Diagnosis confirmed. Treatment unlocked."
+ } else if(kind==="treat"){
+   x.problemResolved=true;x.treatmentComplete=true;x.health=cap(x.health+18);x.pain=cap(x.pain-18);x.stress=cap(x.stress-8);
+   if(needsSurgery(x)){x.department="Surgery";x.location="Surgery";S.last="Primary treatment complete. Patient transferred to Surgery."}
+   else{x.department="Recovery";x.location="Recovery";S.last="Primary treatment complete. Patient transferred to Recovery."}
+ } else if(kind==="surgery"){
+   x.surgeryComplete=true;x.problemResolved=true;x.treatmentComplete=true;x.health=cap(x.health+18);x.pain=cap(x.pain-16);
+   x.department="Recovery";x.location="Recovery";S.last="Surgery complete. Patient transferred to Recovery."
+ } else if(kind==="recovery"){
+   x.health=Math.max(x.health,82);x.pain=Math.min(x.pain,28);x.stress=Math.min(x.stress,30);
+   x.hydration=Math.max(x.hydration,70);x.oxygen=Math.max(x.oxygen,95);x.mobility=Math.max(x.mobility,62);
+   x.ate=true;x.drank=true;x.problemResolved=true;x.treatmentComplete=true;x.recoveryCleared=true;
+   S.last="Recovery targets met. Patient is ready to complete the case."
+ }
+ save();
+ try{if(typeof saveGame==="function")saveGame("Fast case flow",true)}catch(e){}
+ try{if(typeof VetGodCaseFlowEngine?.render==="function")VetGodCaseFlowEngine.render()}catch(e){}
+ render()
+}
+function nextRequired(){
+ const x=p();if(!x)return;
+ const st=stage(x);
+ if(st==="STABILIZE")boost(x,"stabilize");
+ else if(st==="DIAGNOSE")boost(x,"diagnose");
+ else if(st==="TREAT")boost(x,"treat");
+ else if(st==="SURGERY")boost(x,"surgery");
+ else if(st==="RECOVERY")boost(x,"recovery");
+ else if(st==="READY"){try{if(typeof vgcfComplete==="function")vgcfComplete()}catch(e){};S.last="Case completed. Ready for the next patient.";save();setTimeout(render,30)}
+ else if(st==="COMPLETE"){try{if(typeof vgcfNext==="function")vgcfNext()}catch(e){}}
+ else if(st==="NONE"){try{if(typeof vgcfNext==="function")vgcfNext()}catch(e){}}
+}
+function finishRemaining(){
+ const x=p();if(!x){try{vgcfNext()}catch(e){};return}
+ let guard=0;
+ while(guard++<8){
+   const st=stage(x);
+   if(st==="READY"){try{if(typeof vgcfComplete==="function")vgcfComplete()}catch(e){};break}
+   if(st==="COMPLETE")break;
+   if(st==="STABILIZE")boost(x,"stabilize");
+   else if(st==="DIAGNOSE")boost(x,"diagnose");
+   else if(st==="TREAT")boost(x,"treat");
+   else if(st==="SURGERY")boost(x,"surgery");
+   else if(st==="RECOVERY")boost(x,"recovery");
+   else break;
+ }
+ S.last="Remaining required care completed through the guided fast-flow pathway.";
+ save();setTimeout(render,50)
+}
+function toggleAuto(){
+ S.autoNext=!S.autoNext;S.last=S.autoNext?"Auto-next patient enabled.":"Auto-next patient disabled.";save();render()
+}
+function html(){
+ const x=p(),st=stage(x);
+ normalize(x);
+ return `<section id="vgFastLane">
+  <div class="vgfl-top">
+   <div><h3>⚡ FAST CASE FLOW</h3><p>Built so one animal no longer consumes the whole session. Each press completes one meaningful phase.</p></div>
+   <div class="vgfl-actions">
+    <button class="vgfl-primary" onclick="vgflNextRequired()">▶ DO NEXT REQUIRED STEP</button>
+    <button class="vgfl-finish" onclick="vgflFinishRemaining()">⚡ FINISH REQUIRED CARE</button>
+    <button onclick="vgflToggleAuto()">${S.autoNext?"✓ AUTO-NEXT ON":"AUTO-NEXT OFF"}</button>
+   </div>
+  </div>
+  <div class="vgfl-strip">
+   <div class="vgfl-box"><b>${x?st:"READY"}</b><span>PHASE</span></div>
+   <div class="vgfl-box"><b>${x?x.health:"--"}</b><span>HEALTH</span></div>
+   <div class="vgfl-box"><b>${x?x.pain:"--"}</b><span>PAIN</span></div>
+   <div class="vgfl-box"><b>${x?x.hydration:"--"}</b><span>HYDRATION</span></div>
+   <div class="vgfl-box"><b>${x?x.mobility:"--"}</b><span>MOBILITY</span></div>
+   <div class="vgfl-box"><b>${x?(x.department||x.location||"CLINIC"):"NEW CASE"}</b><span>LOCATION</span></div>
+  </div>
+  <div class="vgfl-note">${S.last}</div>
+ </section>`
+}
+function render(){
+ const scr=document.querySelector(".screen.active")||document.getElementById(state?.screen||"clinic");if(!scr)return;
+ document.getElementById("vgFastLane")?.remove();
+ const cf=document.getElementById("vgCaseFlowEngine"),gd=document.getElementById("vgGuidedDirector");
+ if(cf&&cf.parentElement===scr)cf.insertAdjacentHTML("beforebegin",html());
+ else if(gd&&gd.parentElement===scr)gd.insertAdjacentHTML("beforebegin",html());
+ else scr.insertAdjacentHTML("afterbegin",html())
+}
+function maybeAuto(){
+ if(!S.autoNext)return;
+ const x=p();
+ if(x&&(x.discharged||x.sentHome||x.flow?.completed)){
+   setTimeout(()=>{try{if(typeof vgcfNext==="function")vgcfNext()}catch(e){}},800)
+ }
+}
+function hook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgfl)return;
+ const w=function(){const r=old.apply(this,arguments);setTimeout(()=>{render();maybeAuto()},25);return r};w.__vgfl=true;window[name]=w
+}
+["render","renderClinic","renderRecovery","renderSurgery","vgcfComplete","vgcfNext","vgcfAdvance","vggdAct"].forEach(hook);
+window.vgflNextRequired=nextRequired;window.vgflFinishRemaining=finishRemaining;window.vgflToggleAuto=toggleAuto;
+window.VetGodFastCaseFlow={render,state:S};
+function install(){render();document.addEventListener("click",e=>{if(!e.target.closest("#vgFastLane"))setTimeout(()=>{render();maybeAuto()},50)},true)}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
