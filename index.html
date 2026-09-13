@@ -16513,5 +16513,762 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 <!-- ===== END VET GODS 24 ===== -->
 
+
+<!-- ===== VET GODS 25 · LIVING WORLD ENGINE ===== -->
+<style>
+#vg25Pulse{margin:12px 0;padding:13px;border-radius:18px;background:linear-gradient(145deg,rgba(3,17,30,.97),rgba(20,13,38,.95));border:1px solid rgba(111,225,255,.28);box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.vg25-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.vg25-top h3{margin:0}.vg25-clock{font:700 12px/1.2 monospace;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.06)}
+.vg25-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:10px 0}.vg25-stat{padding:8px;border-radius:12px;background:rgba(255,255,255,.045);text-align:center}.vg25-stat b{font-size:18px;display:block}.vg25-stat small{opacity:.68}
+.vg25-feed{display:grid;gap:6px}.vg25-item{width:100%;text-align:left;padding:9px 10px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);display:flex;gap:8px;align-items:center}.vg25-item strong{flex:1}.vg25-item small{opacity:.68}
+.vg25-major{padding:10px;border-radius:12px;background:rgba(255,195,60,.09);border:1px solid rgba(255,195,60,.22);margin:8px 0}.vg25-rel{font-size:11px;opacity:.78;margin-top:3px}
+@media(max-width:650px){.vg25-stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script>
+(function(){
+'use strict';
+const KEY='vetGodsLivingWorldV25',TICK=60000;
+function N(v,d=0){v=Number(v);return isFinite(v)?v:d} function C(v){return Math.max(0,Math.min(100,N(v)))}
+function W(){state.world25=state.world25||{minute:480,day:1,lastReal:Date.now(),events:[],major:null,relationships:{},research:0};return state.world25}
+function patients(){return Array.isArray(state.patients)?state.patients:[]} function pets(){return Array.isArray(state.pets)?state.pets:[]}
+function place(p){return p.location||p.department||(p.admitted?'Clinic':'Home')}
+function ev(text,screen='clinic',id='',priority=1){let w=W();let key=text+'|'+screen+'|'+id;if(w.events.some(x=>x.key===key&&Date.now()-x.real<180000))return;w.events.unshift({key,text,screen,id,priority,real:Date.now(),day:w.day,minute:w.minute});w.events=w.events.slice(0,50)}
+function clock(){let w=W(),h=Math.floor(w.minute/60)%24,m=w.minute%60;return `DAY ${w.day} · ${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
+function ensureAnimal(p){p.world25=p.world25||{location:place(p),activity:'Observe',nextNeed:0,relationships:{},history:[],lastTick:Date.now()};p.world25.location=place(p);return p.world25}
+function rel(a,b,delta=0){if(!a||!b||a.id===b.id)return 0;let w=W(),k=[a.id,b.id].sort().join('~');w.relationships[k]=Math.max(-100,Math.min(100,N(w.relationships[k])+delta));return w.relationships[k]}
+function simulateAnimal(p,mins){
+ let a=ensureAnimal(p),loc=place(p),hour=Math.floor(W().minute/60)%24;
+ if(loc==='Nursery'){a.activity=hour<7||hour>21?'Sleeping':'Feeding / growing';if(hour>=6&&hour<=21&&C(p.feeding??70)<55)ev(`🍼 ${p.name} · Nursery feeding attention`, 'nursery',p.id,2)}
+ else if(loc==='Surgery'){a.activity='Monitored procedure / stabilization';if(C(p.oxygen??96)<90)ev(`🔴 ${p.name} · Surgery oxygen priority`,'surgery',p.id,3)}
+ else if(loc==='Clinic'||p.admitted){a.activity=C(p.pain??0)>45?'Guarding / resting':C(p.stress??0)>55?'Watching environment':'Recovering';if(C(p.hydration??80)<60)ev(`💧 ${p.name} · hydration reassessment due`,'clinic',p.id,2);if(C(p.pain??0)>50)ev(`⚠️ ${p.name} · pain reassessment due`,'clinic',p.id,3)}
+ else if(loc==='Home'||loc==='My Pets'){a.activity=hour<7||hour>22?'Sleeping':C(p.energy??60)>55?'Exploring / playing':'Resting'}
+ if(mins>=15){p.world25.history.unshift({day:W().day,minute:W().minute,text:a.activity});p.world25.history=p.world25.history.slice(0,30)}
+ }
+function relationships(){
+ let all=[...patients(),...pets()].filter(Boolean);for(let i=0;i<all.length;i++)for(let j=i+1;j<all.length;j++){let a=all[i],b=all[j];if(place(a)===place(b)&&['Clinic','Nursery','Sanctuary','Home','My Pets'].includes(place(a))){let v=rel(a,b,.08);if(v>35&&Math.random()<.01)ev(`❤️ ${a.name} & ${b.name} · companionship bond growing`,place(a)==='Nursery'?'nursery':'pets',a.id,1)}}
+}
+function major(){
+ let w=W();if(w.major&&w.major.untilDay>=w.day)return;
+ if(w.major&&w.major.untilDay<w.day){ev(`✨ ${w.major.name} concluded · hospital returning to normal`,'hospital','',1);w.major=null}
+ if(!w.major&&w.day>1&&Math.random()<.035){let pool=[
+ ['MASS CASUALTY NIGHT','Multiple departments are on heightened readiness.','hospital'],
+ ['BLACKOUT DRILL','Emergency-lighting and backup-monitoring protocols active.','hospital'],
+ ['SANCTUARY SURGE','Sanctuary and Reception are coordinating a wave of arrivals.','sanctuary'],
+ ['THE IMPOSSIBLE PATIENT','A hospital-wide mystery case is drawing every specialty together.','carelab'],
+ ['GOD SIEGE','Lore event: the hospital shifts into all-department guardian mode.','world']
+ ];let x=pool[Math.floor(Math.random()*pool.length)];w.major={name:x[0],detail:x[1],screen:x[2],untilDay:w.day+1};ev(`🌌 ${x[0]} · ${x[1]}`,x[2],'',3)}
+}
+function rounds(){
+ let w=W(),h=Math.floor(w.minute/60)%24,m=w.minute%60;if(m<10){if(h===8)ev('☀️ Morning rounds · nutrition, vitals and Nursery checks','hospital','',1);if(h===13)ev('🧪 Day diagnostics round · Care Lab results and mobility checks','carelab','',1);if(h===19)ev('🌆 Evening round · comfort, feeding and handoff','hospital','',1);if(h===23)ev('🌙 Overnight observation round active','hospital','',1)}
+}
+function tick(force=false){
+ if(!window.state)return;let w=W(),now=Date.now(),elapsed=Math.max(0,now-w.lastReal),mins=force?5:Math.floor(elapsed/TICK);if(!mins)return;
+ mins=Math.min(mins,360);w.lastReal=now;w.minute+=mins;while(w.minute>=1440){w.minute-=1440;w.day++}
+ patients().forEach(p=>simulateAnimal(p,mins));pets().forEach(p=>simulateAnimal(p,mins));relationships();rounds();major();save();install();
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(W()))}catch(e){}}
+function load(){try{let x=JSON.parse(localStorage.getItem(KEY)||'null');if(x&&typeof x==='object'&&!state.world25)state.world25=x}catch(e){}W()}
+function stats(){
+ let ps=patients(),ad=ps.filter(p=>p.admitted),surg=ps.filter(p=>place(p)==='Surgery'),nur=ps.filter(p=>place(p)==='Nursery'),ready=0;try{if(window.VG23)ready=ad.filter(p=>VG23.ready(p)).length}catch(e){}
+ return {ad:ad.length,surg:surg.length,nur:nur.length,pets:pets().length,ready}
+}
+function pulse(){
+ let w=W(),st=stats(),items=[...w.events].sort((a,b)=>b.priority-a.priority||b.real-a.real).slice(0,7);
+ return `<section id="vg25Pulse"><div class="vg25-top"><div><h3>🌌 HOSPITAL PULSE · LIVING WORLD</h3><small>One clock · one animal world · every department connected.</small></div><span class="vg25-clock">${clock()}</span></div>
+ ${w.major?`<div class="vg25-major"><b>⚡ WORLD EVENT · ${w.major.name}</b><br>${w.major.detail}<br><button onclick="VG25.go('${w.major.screen}')">Open Event Department</button></div>`:''}
+ <div class="vg25-stats"><div class="vg25-stat"><b>${st.ad}</b><small>Hospitalized</small></div><div class="vg25-stat"><b>${st.surg}</b><small>Surgery</small></div><div class="vg25-stat"><b>${st.nur}</b><small>Nursery</small></div><div class="vg25-stat"><b>${st.pets}</b><small>My Pets</small></div><div class="vg25-stat"><b>${st.ready}</b><small>Ready Home</small></div></div>
+ <div class="vg25-feed">${items.length?items.map(x=>`<button class="vg25-item" onclick="VG25.go('${x.screen}','${x.id||''}')"><span>${x.priority>=3?'🔴':x.priority===2?'🟡':'🔹'}</span><strong>${x.text}</strong><small>${x.screen}</small></button>`).join(''):`<div class="vg25-item"><strong>Hospital stable.</strong><small>World simulation is running.</small></div>`}</div>
+ <div class="vg25-rel">Animal locations, activities, relationships, hospital rounds and events continue from the same shared state instead of becoming separate mini-games.</div></section>`
+}
+function install(){
+ try{if(!window.state)return;let host=document.getElementById(state.screen);if(!host)return;host.querySelector('#vg25Pulse')?.remove();host.insertAdjacentHTML('afterbegin',pulse())}catch(e){}
+}
+function go(screen,id){if(id){let p=patients().find(x=>x.id===id)||pets().find(x=>x.id===id);if(p)state.activeId=p.id}state.screen=screen||'clinic';if(typeof render==='function')render()}
+function hookActions(){
+ if(window.performPatientAction&&!window.performPatientAction.__vg25){let old=window.performPatientAction,w=function(id,a){let r=old.apply(this,arguments),p=patients().find(x=>x.id===id);if(p){ev(`🐾 ${p.name} · ${String(a).replace(/([A-Z])/g,' $1').trim()} completed`,place(p)==='Surgery'?'surgery':'clinic',p.id,1);ensureAnimal(p).history.unshift({day:W().day,minute:W().minute,text:'Care: '+a})}return r};w.__vg25=true;window.performPatientAction=w}
+}
+window.VG25={tick:()=>tick(true),go,refresh:install,clock};
+load();hookActions();
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg25){let w=function(){let r=oldRender.apply(this,arguments);setTimeout(()=>{hookActions();tick();install()},0);return r};w.__vg25=true;window.render=w}
+setInterval(()=>tick(),30000);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{tick(true);install()},180));else setTimeout(()=>{tick(true);install()},180);
+})();
+</script>
+<!-- ===== END VET GODS 25 ===== -->
+
+
+<!-- ===== VET GODS 26 · SPECIES MEDICINE ENGINE ===== -->
+<style>
+#vg26SpeciesMed{margin:14px 0;padding:14px;border-radius:18px;background:linear-gradient(145deg,rgba(5,20,28,.97),rgba(18,14,35,.96));border:1px solid rgba(119,232,184,.30);box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.vg26-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}.vg26-head h3{margin:0 0 4px}.vg26-badge{font:700 11px/1.2 monospace;padding:7px 10px;border-radius:999px;background:rgba(119,232,184,.09);border:1px solid rgba(119,232,184,.25)}
+.vg26-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.vg26-card{padding:10px;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}
+.vg26-card b{display:block;margin-bottom:4px}.vg26-card small{opacity:.72}.vg26-steps{display:grid;gap:7px;margin-top:8px}.vg26-step{display:flex;gap:8px;align-items:center;padding:9px;border-radius:11px;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.06)}
+.vg26-step.done{background:rgba(90,230,150,.07);border-color:rgba(90,230,150,.22)}.vg26-step span{font-size:18px}.vg26-step div{flex:1}.vg26-step small{display:block;opacity:.67;margin-top:2px}
+.vg26-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.vg26-actions button{min-height:42px}.vg26-env{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}.vg26-env div{padding:7px;border-radius:9px;text-align:center;background:rgba(255,255,255,.035);font-size:11px}.vg26-env b{font-size:14px}
+.vg26-note{margin-top:9px;font-size:11px;opacity:.7}.vg26-result{margin-top:9px;padding:9px;border-radius:11px;background:rgba(255,208,80,.08);border-left:3px solid #ffd25f}
+@media(max-width:650px){.vg26-grid{grid-template-columns:1fr}.vg26-env{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script>
+(function(){
+'use strict';
+
+const LIB={
+ canine:{
+  label:'CANINE MEDICINE',icon:'🐕',
+  cases:[
+   ['Trauma / Soft-Tissue Recovery','injury or impact','pain pattern|mobility change|localized swelling','pain-control|injury-assessment|mobility-rebuild'],
+   ['GI Upset / Foreign-Material Watch','dietary indiscretion or swallowed material','appetite change|vomiting pattern|abdominal discomfort','diagnostic-workup|hydration-support|nutrition-restart'],
+   ['Respiratory Presentation','airway or lung irritation/infection pattern','breathing effort|oxygen trend|energy loss','respiratory-support|diagnostic-workup|quiet-recovery'],
+   ['Skin / Wound Recovery','surface injury, contamination, or inflammation','skin lesion|pain response|infection trend','wound-care|infection-control|comfort-support']
+  ]},
+ feline:{
+  label:'FELINE MEDICINE',icon:'🐈',
+  cases:[
+   ['Hidden Pain / Mobility Case','subtle injury or musculoskeletal discomfort','guarding|reduced jumping|withdrawal','low-stress-exam|pain-control|mobility-rebuild'],
+   ['GI / Appetite Case','digestive upset or obstruction concern','reduced appetite|nausea|energy loss','diagnostic-workup|hydration-support|nutrition-restart'],
+   ['Respiratory Presentation','upper or lower airway illness pattern','breathing change|discharge|low energy','respiratory-support|quiet-recovery|diagnostic-workup'],
+   ['Urinary / Stress Presentation','urinary discomfort with stress contribution','frequent attempts|vocalization|hiding','low-stress-exam|hydration-support|diagnostic-workup']
+  ]},
+ reptile:{
+  label:'REPTILE & CHELONIAN MEDICINE',icon:'🦎',
+  cases:[
+   ['Thermal-Gradient Failure','environment outside preferred thermal range','low activity|poor appetite|weak recovery','environment-correction|temperature-gradient|nutrition-restart'],
+   ['Humidity / Shed Disorder','humidity or shedding environment mismatch','retained shed|skin irritation|reduced comfort','environment-correction|humidity-balance|skin-support'],
+   ['Respiratory Husbandry Case','respiratory disease with environmental contribution','open-mouth breathing|nasal discharge|low energy','temperature-gradient|respiratory-support|clean-enclosure'],
+   ['Nutrition / UV-Husbandry Imbalance','diet/light/husbandry mismatch','weakness|poor body condition|skeletal concern','lighting-review|species-nutrition|environment-correction']
+  ]},
+ avian:{
+  label:'AVIAN MEDICINE',icon:'🦜',
+  cases:[
+   ['Nutrition-Linked Illness','imbalanced long-term diet','poor feather quality|appetite change|weakness','species-nutrition|quiet-recovery|diagnostic-workup'],
+   ['Respiratory Presentation','airway disease or environmental irritation','tail bobbing|breathing effort|voice change','respiratory-support|air-quality|quiet-recovery'],
+   ['Foot / Perch Injury','pressure, trauma, or inappropriate perch environment','foot guarding|reduced perching|soreness','perch-correction|pain-control|foot-support'],
+   ['Reproductive Emergency Watch','reproductive difficulty requiring urgent specialist assessment','floor sitting|weakness|straining','stabilize-first|diagnostic-workup|specialist-escalation']
+  ]},
+ rabbit:{
+  label:'RABBIT MEDICINE',icon:'🐇',
+  cases:[
+   ['GI Slowdown Pattern','pain, stress, diet, or dental contribution','reduced eating|low fecal output|abdominal discomfort','pain-control|hydration-support|fiber-nutrition'],
+   ['Dental-Linked Appetite Loss','dental discomfort reducing normal eating','slow eating|weight loss|drooling','oral-assessment|pain-control|nutrition-restart'],
+   ['Sore Feet / Surface Problem','foot pressure and enclosure-surface contribution','reluctant movement|foot soreness|resting more','surface-correction|foot-support|mobility-rebuild'],
+   ['Respiratory Presentation','upper or lower respiratory illness pattern','nasal discharge|breathing change|reduced appetite','quiet-recovery|respiratory-support|diagnostic-workup']
+  ]},
+ rodent:{
+  label:'SMALL RODENT MEDICINE',icon:'🐹',
+  cases:[
+   ['Dental Overgrowth Pattern','continuously growing teeth creating feeding difficulty','drooling|slow eating|weight change','oral-assessment|species-nutrition|comfort-support'],
+   ['Respiratory Case','respiratory illness with environmental stress contribution','breathing noise|low activity|discharge','air-quality|quiet-recovery|diagnostic-workup'],
+   ['Skin / Parasite Watch','skin irritation, infestation, or husbandry issue','scratching|hair loss|skin lesions','skin-assessment|clean-enclosure|comfort-support'],
+   ['Trauma / Limb Injury','fall, enclosure injury, or handling accident','limping|guarding|reduced activity','injury-assessment|pain-control|safe-enclosure']
+  ]},
+ ferret:{
+  label:'FERRET MEDICINE',icon:'🦦',
+  cases:[
+   ['Foreign-Body Pattern','swallowed rubber/plastic or other material','appetite loss|abdominal pain|salivation','diagnostic-workup|hydration-support|specialist-escalation'],
+   ['Endocrine Weakness Pattern','metabolic/endocrine illness pattern','weakness|episodic low energy|behavior change','metabolic-check|diagnostic-workup|specialist-escalation'],
+   ['Cardiorespiratory Watch','cardiac or respiratory presentation','exercise intolerance|breathing effort|weakness','respiratory-support|diagnostic-workup|quiet-recovery'],
+   ['GI Recovery Case','digestive illness or post-procedure recovery','poor appetite|nausea|low energy','hydration-support|nutrition-restart|comfort-support']
+  ]},
+ equine:{
+  label:'EQUINE MEDICINE',icon:'🐴',
+  cases:[
+   ['Colic-Type Presentation','abdominal pain requiring rapid assessment','pawing|restlessness|reduced appetite','stabilize-first|diagnostic-workup|specialist-escalation'],
+   ['Hoof / Laminitis-Type Crisis','hoof pain linked to systemic or loading factors','severe lameness|weight shifting|strong hoof-pulse pattern','hoof-support|pain-control|primary-cause-workup'],
+   ['Lameness / Limb Injury','musculoskeletal injury or strain','uneven gait|swelling|guarding','injury-assessment|pain-control|mobility-rebuild'],
+   ['Wound / Field Trauma','open injury requiring staged wound recovery','bleeding|contamination|pain','stabilize-first|wound-care|infection-control']
+  ]},
+ aquatic:{
+  label:'AQUATIC MEDICINE',icon:'🐠',
+  cases:[
+   ['Water-Quality Crisis','environmental water chemistry stress','surface piping|lethargy|darkening','water-test|water-correction|oxygen-support'],
+   ['Low Dissolved Oxygen','oxygen availability problem','surface breathing|gill effort|weakness','oxygen-support|water-test|stocking-review'],
+   ['Temperature Stress','rapid or inappropriate temperature condition','lethargy|immune stress|behavior change','temperature-correction|water-test|quiet-recovery'],
+   ['Infectious Disease Watch','infection after environmental stress','lesions|abnormal swimming|appetite loss','isolation-review|water-correction|diagnostic-workup']
+  ]},
+ amphibian:{
+  label:'AMPHIBIAN MEDICINE',icon:'🐸',
+  cases:[
+   ['Skin / Water Environment Case','water quality or skin-barrier stress','skin change|low activity|poor appetite','water-test|water-correction|skin-support'],
+   ['Temperature / Humidity Stress','environment outside species needs','hiding|poor appetite|low activity','environment-correction|humidity-balance|temperature-correction'],
+   ['Nutrition / Condition Loss','feeding imbalance or chronic husbandry stress','weight loss|weakness|poor condition','species-nutrition|environment-correction|quiet-recovery'],
+   ['Injury / Handling Trauma','delicate skin or limb injury','guarding|skin damage|reduced movement','low-stress-exam|skin-support|safe-enclosure']
+  ]},
+ arachnid:{
+  label:'ARACHNID MEDICINE',icon:'🕷️',
+  cases:[
+   ['Molt-Safety Case','molt cycle complicated by environment or disturbance','immobility|position change|vulnerability','humidity-balance|disturbance-control|safe-enclosure'],
+   ['Enclosure Stress','temperature, humidity, substrate, or hiding mismatch','persistent hiding|poor feeding|restless movement','environment-correction|safe-enclosure|disturbance-control'],
+   ['Dehydration / Condition Loss','environmental moisture or access problem','reduced activity|poor condition|feeding change','humidity-balance|water-access|quiet-recovery'],
+   ['Trauma / Fall Injury','physical injury from fall or unsafe enclosure','reduced movement|visible injury|guarding','safe-enclosure|disturbance-control|specialist-escalation']
+  ]},
+ colony:{
+  label:'INVERTEBRATE / COLONY MEDICINE',icon:'🐜',
+  cases:[
+   ['Colony Environment Drift','temperature, humidity, crowding, or sanitation imbalance','activity shift|brood stress|reduced foraging','environment-correction|humidity-balance|sanitation-review'],
+   ['Food / Resource Imbalance','resource shortage or unsuitable feeding pattern','poor foraging|low brood growth|worker inactivity','resource-review|species-nutrition|environment-correction'],
+   ['Contamination Watch','mold, spoiled food, or enclosure contamination','avoidance|worker loss|brood decline','sanitation-review|isolation-review|resource-review'],
+   ['Nest Disturbance Stress','excessive disturbance or unsuitable nest structure','erratic movement|brood relocation|reduced feeding','disturbance-control|safe-enclosure|quiet-recovery']
+  ]}
+};
+
+const STEP={
+ 'pain-control':['Pain Control','Reduce discomfort enough for normal behavior to return.'],
+ 'injury-assessment':['Injury Assessment','Localize the injury and establish a safe recovery plan.'],
+ 'mobility-rebuild':['Mobility Rebuild','Gradually restore species-appropriate movement.'],
+ 'diagnostic-workup':['Targeted Investigation','Use simulated exam/lab/imaging evidence to narrow the cause.'],
+ 'hydration-support':['Hydration Support','Restore hydration while tracking voluntary intake separately.'],
+ 'nutrition-restart':['Nutrition Restart','Re-establish safe species-appropriate feeding.'],
+ 'respiratory-support':['Respiratory Support','Stabilize breathing and reduce environmental respiratory stress.'],
+ 'quiet-recovery':['Quiet Recovery','Reduce handling and environmental stress while monitoring response.'],
+ 'wound-care':['Wound Care','Clean, protect, and monitor the simulated wound pathway.'],
+ 'infection-control':['Infection Control','Use the game treatment pathway after diagnostic evidence is obtained.'],
+ 'environment-correction':['Correct Environment','Fix the underlying enclosure/habitat problem rather than only the symptoms.'],
+ 'temperature-gradient':['Thermal Gradient','Restore a species-appropriate warm/cool environmental choice in the simulation.'],
+ 'humidity-balance':['Humidity Balance','Correct simulated humidity conditions appropriate to the species profile.'],
+ 'skin-support':['Skin / Shed Support','Protect skin and track comfort while the underlying environment improves.'],
+ 'clean-enclosure':['Sanitation Reset','Correct enclosure cleanliness and contamination contributors.'],
+ 'lighting-review':['Light / UV Review','Correct the simulated lighting/husbandry profile.'],
+ 'species-nutrition':['Species Nutrition','Use a diet strategy appropriate to this species family.'],
+ 'air-quality':['Air Quality','Correct ventilation, irritants, and simulated air-quality stress.'],
+ 'perch-correction':['Perch / Foot Environment','Change the simulated perch/surface setup to reduce pressure.'],
+ 'foot-support':['Foot Support','Protect sore feet while monitoring movement and comfort.'],
+ 'stabilize-first':['Stabilize First','Prioritize immediate physiology before deeper investigation.'],
+ 'specialist-escalation':['Specialist Escalation','Bring the appropriate specialty service into the case.'],
+ 'fiber-nutrition':['Fiber-Focused Nutrition','Restore the simulated rabbit feeding pathway and monitor GI recovery.'],
+ 'oral-assessment':['Oral / Dental Assessment','Investigate mouth and dental contribution to feeding difficulty.'],
+ 'surface-correction':['Surface Correction','Change enclosure flooring/surface conditions contributing to injury.'],
+ 'comfort-support':['Comfort Support','Reduce fear, pain behavior, and handling burden.'],
+ 'skin-assessment':['Skin Assessment','Investigate lesions, parasites, or irritation before targeted care.'],
+ 'safe-enclosure':['Safe Enclosure','Remove simulated environmental injury risks and improve shelter.'],
+ 'metabolic-check':['Metabolic Check','Run the simulated metabolic/endocrine evidence pathway.'],
+ 'hoof-support':['Hoof Support','Protect the painful hoof and limit harmful loading in the simulation.'],
+ 'primary-cause-workup':['Primary-Cause Workup','Investigate the systemic contributor rather than treating hoof pain alone.'],
+ 'water-test':['Water Test','Check simulated oxygen, temperature, pH/ammonia trend, and habitat stability.'],
+ 'water-correction':['Correct Water Environment','Address the environmental water problem driving the case.'],
+ 'oxygen-support':['Oxygen / Aeration Support','Restore simulated oxygen availability and reassess respiratory behavior.'],
+ 'stocking-review':['Stocking / Load Review','Check crowding and environmental biological load.'],
+ 'temperature-correction':['Temperature Correction','Restore a stable species-appropriate simulated temperature.'],
+ 'isolation-review':['Isolation / Biosecurity Review','Reduce simulated transmission risk while evidence is gathered.'],
+ 'low-stress-exam':['Low-Stress Examination','Gather information while minimizing fear and restraint.'],
+ 'disturbance-control':['Disturbance Control','Stop unnecessary handling and let vulnerable invertebrate behavior stabilize.'],
+ 'water-access':['Water Access Review','Correct safe species-appropriate simulated access to moisture/water.'],
+ 'sanitation-review':['Sanitation Review','Remove contamination sources and reset enclosure cleanliness.'],
+ 'resource-review':['Resource Review','Correct food/water/space availability for the colony.']
+};
+
+function family(p){
+ let s=String(p.species||p.breed||'').toLowerCase();
+ if(/dog|canine|puppy/.test(s))return'canine';
+ if(/cat|feline|kitten/.test(s))return'feline';
+ if(/rabbit|bunny/.test(s))return'rabbit';
+ if(/horse|pony|equine/.test(s))return'equine';
+ if(/bird|parrot|cockatiel|parakeet|pigeon|raptor|avian/.test(s))return'avian';
+ if(/ferret/.test(s))return'ferret';
+ if(/fish|koi|goldfish|aquatic|axolotl/.test(s))return'aquatic';
+ if(/frog|toad|newt|salamander|amphib/.test(s))return'amphibian';
+ if(/spider|tarantula|scorpion|arachnid/.test(s))return'arachnid';
+ if(/ant|insect|beetle|roach|mantis|colony/.test(s))return'colony';
+ if(/snake|python|boa|gecko|lizard|dragon|tortoise|turtle|reptile/.test(s))return'reptile';
+ if(/hamster|mouse|mice|rat|gerbil|guinea|rodent/.test(s))return'rodent';
+ return'canine';
+}
+function hash(x){let h=2166136261,s=String(x||'patient');for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return Math.abs(h>>>0)}
+function ensure(p){
+ if(!p)return null;if(p.speciesMedicine26)return p.speciesMedicine26;
+ let f=family(p),lib=LIB[f],seed=hash(p.id||p.name),c=lib.cases[seed%lib.cases.length];
+ let severity=['MILD','MODERATE','SEVERE','COMPLEX'][(seed>>3)%4];
+ let modifiers=['environmental contributor','nutrition contributor','stress contributor','secondary inflammation','mobility complication','dehydration complication'];
+ let mod=modifiers[(seed>>6)%modifiers.length];
+ p.speciesMedicine26={family:f,label:lib.label,icon:lib.icon,case:c[0],cause:c[1],evidence:c[2].split('|'),steps:c[3].split('|'),done:{},severity,modifier:mod,score:0,last:'Case pathway generated from species + presentation.',environment:envFor(f,seed)};
+ return p.speciesMedicine26
+}
+function envFor(f,seed){
+ let base={temp:'STABLE',humidity:'STABLE',air:'GOOD',substrate:'SAFE'};
+ if(f==='reptile')base={temp:(seed%3?'LOW':'UNSTABLE'),humidity:(seed%2?'LOW':'HIGH'),air:'FAIR',substrate:'REVIEW'};
+ if(f==='avian')base={temp:'STABLE',humidity:'REVIEW',air:(seed%2?'FAIR':'GOOD'),substrate:'PERCH'};
+ if(f==='aquatic')base={temp:(seed%2?'UNSTABLE':'STABLE'),humidity:'WATER',air:'O₂ CHECK',substrate:'CHEMISTRY'};
+ if(f==='amphibian')base={temp:'REVIEW',humidity:'HIGH NEED',air:'GOOD',substrate:'WATER/SKIN'};
+ if(f==='arachnid'||f==='colony')base={temp:'REVIEW',humidity:'REVIEW',air:'GOOD',substrate:'NEST'};
+ if(f==='equine')base={temp:'FIELD',humidity:'N/A',air:'GOOD',substrate:'FOOTING'};
+ return base
+}
+function active(){try{return (state.patients||[]).find(x=>x.id===state.activeId)||(state.patients||[]).find(x=>x.admitted)||null}catch(e){return null}}
+function action(id){
+ let p=active();if(!p)return;let m=ensure(p);if(!m.steps.includes(id))return;
+ m.done[id]=true;m.score=Object.keys(m.done).filter(k=>m.done[k]).length;
+ let label=STEP[id]?.[0]||id;m.last=`${label} completed. ${m.score}/${m.steps.length} species-specific objectives satisfied.`;
+ // Meaningful but non-prescriptive game-state effects.
+ if(/pain|comfort|quiet|disturbance/.test(id)){p.pain=Math.max(0,N(p.pain,30)-8);p.stress=Math.max(0,N(p.stress,40)-10);p.trust=Math.min(100,N(p.trust,45)+6)}
+ if(/hydration|water-access|water-correction/.test(id))p.hydration=Math.min(100,N(p.hydration,55)+12);
+ if(/nutrition|fiber/.test(id)){p.hunger=Math.min(100,N(p.hunger,45)+12);p.energy=Math.min(100,N(p.energy,50)+8)}
+ if(/respiratory|oxygen/.test(id))p.oxygen=Math.min(100,N(p.oxygen,90)+5);
+ if(/mobility|hoof|foot|injury|surface/.test(id))p.mobility=Math.min(100,N(p.mobility,50)+8);
+ if(/environment|temperature|humidity|air-quality|perch|safe-enclosure|sanitation|stocking|lighting/.test(id)){m.environment.temp='CORRECTED';m.environment.humidity='CORRECTED';m.environment.air='GOOD';m.environment.substrate='SAFE'}
+ if(/diagnostic|assessment|workup|metabolic|water-test|oral/.test(id))m.evidence.push('new simulated finding supports the active pathway');
+ if(m.score>=m.steps.length){m.last=`Species pathway complete: underlying ${m.cause} addressed in the simulation. Continue normal recovery and independence checks.`;p.infection=Math.max(0,N(p.infection)-10);p.shock=Math.max(0,N(p.shock)-8)}
+ try{if(window.VG25&&VG25.refresh)VG25.refresh()}catch(e){}
+ try{if(typeof addLog==='function')addLog(`${p.name} · ${label} · species medicine pathway`)}catch(e){}
+ try{if(typeof saveGame==='function')saveGame('Species medicine care',true)}catch(e){}
+ render()
+}
+function panel(p){
+ let m=ensure(p),steps=m.steps.map(id=>{let x=STEP[id]||[id,''];return `<div class="vg26-step ${m.done[id]?'done':''}"><span>${m.done[id]?'✅':'⬜'}</span><div><b>${x[0]}</b><small>${x[1]}</small></div>${m.done[id]?'':`<button onclick="VG26.act('${id}')">DO</button>`}</div>`}).join('');
+ let e=m.environment;
+ return `<section id="vg26SpeciesMed"><div class="vg26-head"><div><h3>${m.icon} SPECIES MEDICINE ENGINE</h3><small>${m.label} · species changes the problem, evidence, environment and solution path.</small></div><span class="vg26-badge">${m.severity} · ${m.score}/${m.steps.length}</span></div>
+ <div class="vg26-grid"><div class="vg26-card"><b>Active Species Case</b>${m.case}<small>Likely game cause: ${m.cause}. Variable modifier: ${m.modifier}.</small></div>
+ <div class="vg26-card"><b>Evidence Pattern</b>${m.evidence.slice(-5).join(' · ')}<small>This is fictionalized educational simulation logic, not real veterinary instructions.</small></div></div>
+ <div class="vg26-card" style="margin-top:9px"><b>Habitat / Biological Context</b><div class="vg26-env"><div><b>${e.temp}</b><br>Temperature</div><div><b>${e.humidity}</b><br>Humidity / Water</div><div><b>${e.air}</b><br>Air / Oxygen</div><div><b>${e.substrate}</b><br>Surface / Habitat</div></div></div>
+ <div class="vg26-card" style="margin-top:9px"><b>Case-Specific Solution Path</b><div class="vg26-steps">${steps}</div></div>
+ <div class="vg26-result"><b>Response:</b> ${m.last}</div>
+ <div class="vg26-note">Vet Gods uses real-world veterinary concepts as inspiration, but deliberately omits medication doses and real treatment protocols. Real sick animals need a veterinarian.</div></section>`
+}
+function install(){
+ try{if(!window.state)return;let p=active();if(!p)return;ensure(p);if(!['clinic','carelab','habitats','surgery','nursery'].includes(state.screen))return;let host=document.getElementById(state.screen);if(!host)return;host.querySelector('#vg26SpeciesMed')?.remove();let anchor=host.querySelector('#vg25Pulse')||host.firstElementChild;if(anchor)anchor.insertAdjacentHTML('afterend',panel(p));else host.insertAdjacentHTML('afterbegin',panel(p))}catch(e){}
+}
+function seedAll(){try{(state.patients||[]).forEach(ensure)}catch(e){}}
+window.VG26={act:action,ensure,family,refresh:install};
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg26){let w=function(){seedAll();let r=oldRender.apply(this,arguments);setTimeout(install,0);return r};w.__vg26=true;window.render=w}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{seedAll();install()},220));else setTimeout(()=>{seedAll();install()},220);
+})();
+</script>
+<!-- ===== END VET GODS 26 ===== -->
+
+
+<!-- ===== VET GODS 27 · CONSEQUENCE & COMPLICATION ENGINE ===== -->
+<style>
+#vg27Consequences{margin:14px 0;padding:14px;border-radius:18px;background:linear-gradient(145deg,rgba(8,16,30,.97),rgba(31,13,29,.96));border:1px solid rgba(255,158,112,.28);box-shadow:0 12px 34px rgba(0,0,0,.25)}
+.vg27-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.vg27-head h3{margin:0}.vg27-chip{font:700 11px monospace;padding:7px 10px;border-radius:999px;background:rgba(255,170,110,.08);border:1px solid rgba(255,170,110,.24)}
+.vg27-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.vg27-card{padding:10px;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}
+.vg27-card b{display:block;margin-bottom:4px}.vg27-card small{opacity:.7}.vg27-list{display:grid;gap:6px;margin-top:7px}.vg27-row{padding:8px;border-radius:10px;background:rgba(255,255,255,.035);font-size:12px}.vg27-row.warn{border-left:3px solid #ffb15e}.vg27-row.good{border-left:3px solid #6ee7a8}
+.vg27-curve{display:grid;gap:5px}.vg27-curve div{display:flex;justify-content:space-between;gap:8px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px}
+.vg27-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.vg27-actions button{min-height:42px}.vg27-resource{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}.vg27-resource div{padding:7px;border-radius:9px;text-align:center;background:rgba(255,255,255,.035);font-size:11px}.vg27-outcome{padding:9px;margin-top:9px;border-radius:11px;background:rgba(102,219,255,.07);border-left:3px solid #72d9ff}
+@media(max-width:650px){.vg27-grid{grid-template-columns:1fr}.vg27-resource{grid-template-columns:repeat(2,1fr)}}
+</style>
+<script>
+(function(){
+'use strict';
+const STEP_MS=60000;
+function n(v,d=0){v=Number(v);return isFinite(v)?v:d} function c(v){return Math.max(0,Math.min(100,n(v)))}
+function active(){try{return (state.patients||[]).find(x=>x.id===state.activeId)||(state.patients||[]).find(x=>x.admitted)||null}catch(e){return null}}
+function hash(x){let h=0,s=String(x||'patient');for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return Math.abs(h)}
+function ensure(p){
+ if(!p)return null;if(p.consequence27)return p.consequence27;let h=hash(p.id||p.name);
+ const resp=['SLOW','AVERAGE','STRONG'][h%3],pain=['LOW','NORMAL','HIGH'][(h>>2)%3],stress=['CALM','NORMAL','SENSITIVE'][(h>>4)%3],app=['FAST','HESITANT','SLOW'][(h>>6)%3],trust=['CAUTIOUS','SOCIAL','INDEPENDENT'][(h>>8)%3],res=['FRAGILE','AVERAGE','RESILIENT'][(h>>10)%3];
+ p.consequence27={biology:{response:resp,pain,stress,appetite:app,trust,resilience:res},pending:[],complications:[],secondary:[],history:[],lastTick:Date.now(),lastAction:'No consequence event yet.',outcome:null,surgery:{preop:false,procedure:false,postop:false},resources:{},caseStarted:Date.now()};
+ return p.consequence27
+}
+function log(p,text,type='EVENT'){let q=ensure(p);q.history.unshift({at:Date.now(),type,text});q.history=q.history.slice(0,40);q.lastAction=text;try{if(typeof addLog==='function')addLog(`${p.name} · ${text}`)}catch(e){}}
+function schedule(p,kind,label,mins,effect){let q=ensure(p),mult=q.biology.response==='SLOW'?1.45:q.biology.response==='STRONG'?.75:1;q.pending.push({kind,label,due:Date.now()+mins*STEP_MS*mult,effect,created:Date.now()});log(p,`${label} started · response expected over time`,'TREATMENT')}
+function apply(p,x){
+ let e=x.effect||{};for(let k in e){if(k==='pain'||k==='stress'||k==='bleeding'||k==='shock'||k==='infection'||k==='fear'||k==='hunger')p[k]=c(n(p[k])+e[k]);else p[k]=c(n(p[k])+e[k])}
+ log(p,`Response detected: ${x.label}`,'RESPONSE')
+}
+function environmentResolved(p){let m=p.speciesMedicine26;if(!m)return true;let env=m.environment||{};return !m.steps?.some(x=>/environment|temperature|humidity|water-correction|air-quality|perch|surface|safe-enclosure|sanitation|stocking|lighting/.test(x)&&!m.done?.[x])}
+function primaryResolved(p){let m=p.speciesMedicine26;return !m||m.steps.every(x=>m.done?.[x])}
+function complications(p){
+ let q=ensure(p),add=(id,label,why)=>{if(!q.complications.some(x=>x.id===id)){q.complications.push({id,label,why,resolved:false});log(p,`⚠️ Complication discovered: ${label}`,'COMPLICATION')}};
+ if(c(p.pain)>55&&c(p.hunger)<55)add('pain-appetite','Pain-limited appetite','Pain is suppressing normal feeding behavior.');
+ if(c(p.stress)>60&&c(p.trust)<45)add('fear-care','Fear limiting recovery','Stress is interfering with voluntary care milestones.');
+ if(c(p.hydration)<55)add('dehydration','Secondary dehydration','Hydration has become a separate recovery problem.');
+ if(c(p.mobility)<45&&c(p.pain)>45)add('deconditioning','Mobility deconditioning','Pain and inactivity are slowing strength recovery.');
+ if(primaryResolved(p)&&!environmentResolved(p))add('recurrence','Recurrence risk','Symptoms may improve, but the underlying environment remains incorrect.');
+ if((p.oxygen??100)<90)add('resp','Respiratory instability','Oxygen trend requires stabilization before routine recovery.');
+}
+function resolveComplications(p){
+ let q=ensure(p);q.complications.forEach(x=>{if(x.id==='pain-appetite'&&c(p.pain)<=40&&c(p.hunger)>=55)x.resolved=true;if(x.id==='fear-care'&&c(p.stress)<=48&&c(p.trust)>=55)x.resolved=true;if(x.id==='dehydration'&&c(p.hydration)>=65)x.resolved=true;if(x.id==='deconditioning'&&c(p.mobility)>=65&&c(p.pain)<=40)x.resolved=true;if(x.id==='recurrence'&&environmentResolved(p))x.resolved=true;if(x.id==='resp'&&c(p.oxygen)>=92)x.resolved=true})
+}
+function tick(){
+ let now=Date.now();(state.patients||[]).forEach(p=>{let q=ensure(p),due=q.pending.filter(x=>x.due<=now);q.pending=q.pending.filter(x=>x.due>now);due.forEach(x=>apply(p,x));complications(p);resolveComplications(p);q.lastTick=now});install()
+}
+function treat(kind){
+ let p=active();if(!p)return;let q=ensure(p);
+ const map={
+ comfort:['Comfort / Pain Strategy',8,{pain:-10,stress:-7,trust:5}],
+ fluids:['Hydration Support',12,{hydration:12,shock:-5,energy:4}],
+ nutrition:['Nutrition Restart',18,{hunger:14,energy:8,stress:-3}],
+ mobility:['Supported Mobility',20,{mobility:10,energy:4,pain:-3}],
+ respiratory:['Respiratory Stabilization',7,{oxygen:7,stress:-4,shock:-3}],
+ environment:['Environmental Correction',25,{stress:-8,energy:5,hydration:4}],
+ diagnostics:['Diagnostic Reassessment',10,{trust:2}]
+ };
+ let x=map[kind];if(!x)return;schedule(p,kind,x[0],x[1],x[2]);
+ if(kind==='environment'&&p.speciesMedicine26){let m=p.speciesMedicine26;m.steps.forEach(id=>{if(/environment|temperature|humidity|water-correction|air-quality|perch|surface|safe-enclosure|sanitation|stocking|lighting/.test(id))m.done[id]=true});m.environment={temp:'CORRECTED',humidity:'CORRECTED',air:'GOOD',substrate:'SAFE'}}
+ if(kind==='diagnostics'&&q.secondary.length<2){let pool=['Hidden pain contributor','Nutrition complication','Environmental contributor','Secondary inflammation','Stress-mediated appetite loss'];let label=pool[hash(p.name+q.history.length)%pool.length];q.secondary.push(label);log(p,`New contributing factor considered: ${label}`,'DISCOVERY')}
+ render()
+}
+function surgery(stage){
+ let p=active();if(!p)return;let q=ensure(p);if(stage==='preop'){q.surgery.preop=true;schedule(p,'preop','Pre-op stabilization',8,{oxygen:3,shock:-5,stress:-4})}
+ if(stage==='procedure'&&q.surgery.preop){q.surgery.procedure=true;schedule(p,'procedure','Procedure recovery response',15,{pain:7,stress:5,bleeding:-10})}
+ if(stage==='postop'&&q.surgery.procedure){q.surgery.postop=true;schedule(p,'postop','Post-op recovery',25,{pain:-12,stress:-8,mobility:5,energy:5})}
+ render()
+}
+function outcome(p){
+ let q=ensure(p);if(q.outcome)return q.outcome;let f=String(p.species||'').toLowerCase();
+ if(/wild|raptor|frog|turtle|snake/.test(f))return'Wildlife Release / Sanctuary Review';
+ if(p.ownerStatus==='Custom Intake')return'Returned Home / Follow-Up';
+ if(c(p.trust)>75&&Math.random()<.25)return'My Pets / Adoption Review';
+ return'Returned Home / Follow-Up'
+}
+function resources(){
+ let ps=(state.patients||[]).filter(p=>p.admitted),surg=ps.filter(p=>(p.department||p.location)==='Surgery').length,crit=ps.filter(p=>c(p.oxygen)<90||c(p.shock)>45).length;
+ return {oxygen:crit?'IN USE':'AVAILABLE',imaging:ps.length>4?'QUEUE':'AVAILABLE',isolation:ps.some(p=>c(p.infection)>55)?'IN USE':'AVAILABLE',surgery:surg?'OCCUPIED':'AVAILABLE',specialist:ps.length>6?'BUSY':'AVAILABLE',nursery:ps.filter(p=>(p.department||p.location)==='Nursery').length>3?'BUSY':'AVAILABLE'}
+}
+function panel(p){
+ let q=ensure(p),r=resources(),pending=q.pending.slice().sort((a,b)=>a.due-b.due),comp=q.complications,open=comp.filter(x=>!x.resolved);
+ return `<section id="vg27Consequences"><div class="vg27-head"><div><h3>⚡ CONSEQUENCE & COMPLICATION ENGINE</h3><small>Care unfolds over time. Biology, environment, decisions and secondary problems change the recovery path.</small></div><span class="vg27-chip">${open.length?open.length+' ACTIVE COMPLICATION'+(open.length>1?'S':''):'RECOVERY TRACKING'}</span></div>
+ <div class="vg27-grid"><div class="vg27-card"><b>Individual Biology</b><div class="vg27-list"><div class="vg27-row">Treatment response · <b>${q.biology.response}</b></div><div class="vg27-row">Pain sensitivity · ${q.biology.pain}</div><div class="vg27-row">Stress · ${q.biology.stress}</div><div class="vg27-row">Appetite return · ${q.biology.appetite}</div><div class="vg27-row">Trust style · ${q.biology.trust}</div><div class="vg27-row">Resilience · ${q.biology.resilience}</div></div></div>
+ <div class="vg27-card"><b>Active / Discovered Problems</b><div class="vg27-list">${comp.length?comp.map(x=>`<div class="vg27-row ${x.resolved?'good':'warn'}">${x.resolved?'✅':'⚠️'} ${x.label}<small>${x.why}</small></div>`).join(''):'<div class="vg27-row good">No secondary complication currently detected.</div>'}${q.secondary.map(x=>`<div class="vg27-row">🔎 ${x}</div>`).join('')}</div></div></div>
+ <div class="vg27-grid"><div class="vg27-card"><b>Treatment Response Queue</b><div class="vg27-curve">${pending.length?pending.map(x=>`<div><span>${x.label}</span><strong>${Math.max(1,Math.ceil((x.due-Date.now())/STEP_MS))}m</strong></div>`).join(''):'<div><span>No delayed response pending.</span><strong>—</strong></div>'}</div><small>Game minutes are accelerated simulation time; effects are deliberately non-prescriptive.</small></div>
+ <div class="vg27-card"><b>Hospital Resources</b><div class="vg27-resource">${Object.entries(r).map(([k,v])=>`<div><b>${v}</b><br>${k}</div>`).join('')}</div></div></div>
+ <div class="vg27-actions"><button onclick="VG27.treat('comfort')">🤲 Comfort / Pain</button><button onclick="VG27.treat('fluids')">💧 Hydration</button><button onclick="VG27.treat('nutrition')">🍽 Nutrition</button><button onclick="VG27.treat('mobility')">🐾 Mobility</button><button onclick="VG27.treat('respiratory')">🫁 Respiratory</button><button onclick="VG27.treat('environment')">🌡 Fix Environment</button><button onclick="VG27.treat('diagnostics')">🔬 Reassess</button></div>
+ ${(p.surgeryRequired||p.department==='Surgery')?`<div class="vg27-actions"><button onclick="VG27.surgery('preop')">${q.surgery.preop?'✅':'⬜'} Pre-op</button><button onclick="VG27.surgery('procedure')">${q.surgery.procedure?'✅':'⬜'} Procedure</button><button onclick="VG27.surgery('postop')">${q.surgery.postop?'✅':'⬜'} Post-op</button></div>`:''}
+ <div class="vg27-outcome"><b>Likely successful outcome:</b> ${outcome(p)}<br><small>Final destination remains dependent on the existing completion/discharge system.</small></div></section>`
+}
+function install(){try{if(!window.state||!['clinic','surgery','carelab','habitats','nursery'].includes(state.screen))return;let p=active(),host=document.getElementById(state.screen);if(!p||!host)return;ensure(p);complications(p);resolveComplications(p);host.querySelector('#vg27Consequences')?.remove();let a=host.querySelector('#vg26SpeciesMed')||host.querySelector('#vg25Pulse')||host.firstElementChild;if(a)a.insertAdjacentHTML('afterend',panel(p));else host.insertAdjacentHTML('afterbegin',panel(p))}catch(e){}}
+window.VG27={treat,surgery,tick,refresh:install};
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg27){let w=function(){let r=oldRender.apply(this,arguments);setTimeout(()=>{tick();install()},0);return r};w.__vg27=true;window.render=w}
+setInterval(tick,30000);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{tick();install()},250));else setTimeout(()=>{tick();install()},250);
+})();
+</script>
+<!-- ===== END VET GODS 27 ===== -->
+
+
+<!-- ===== VET GODS 28 · MISSION & CASE CAMPAIGN ENGINE ===== -->
+<style>
+#vg28Mission{margin:14px 0;padding:14px;border-radius:19px;background:linear-gradient(145deg,rgba(7,15,30,.98),rgba(29,13,42,.97));border:1px solid rgba(185,135,255,.30);box-shadow:0 14px 38px rgba(0,0,0,.28)}
+.vg28-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}.vg28-head h3{margin:0}.vg28-rank{font:800 11px monospace;padding:7px 10px;border-radius:999px;background:rgba(185,135,255,.10);border:1px solid rgba(185,135,255,.28)}
+.vg28-hero{margin-top:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08)}.vg28-hero strong{font-size:16px}.vg28-hero small{display:block;opacity:.68;margin-top:3px}
+.vg28-progress{height:9px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden;margin:9px 0}.vg28-progress i{display:block;height:100%;background:linear-gradient(90deg,#76e6ff,#c993ff);border-radius:99px}
+.vg28-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:9px;margin-top:9px}.vg28-card{padding:10px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.075)}
+.vg28-list{display:grid;gap:6px;margin-top:7px}.vg28-row{display:flex;gap:8px;align-items:flex-start;padding:8px;border-radius:10px;background:rgba(255,255,255,.035);font-size:12px}.vg28-row.done{opacity:.65}.vg28-row span{font-size:17px}.vg28-row div{flex:1}.vg28-row small{display:block;opacity:.67;margin-top:2px}
+.vg28-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.vg28-actions button{min-height:42px}.vg28-alert{margin-top:9px;padding:9px;border-radius:11px;background:rgba(255,196,75,.08);border-left:3px solid #ffc44b}
+.vg28-reward{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}.vg28-reward div{padding:8px;border-radius:10px;background:rgba(255,255,255,.035);text-align:center;font-size:11px}
+.vg28-campaign{margin-top:9px;padding:10px;border-radius:12px;background:rgba(101,216,255,.055);border:1px solid rgba(101,216,255,.16)}
+@media(max-width:650px){.vg28-grid{grid-template-columns:1fr}.vg28-reward{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+'use strict';
+function n(v,d=0){v=Number(v);return isFinite(v)?v:d} function c(v){return Math.max(0,Math.min(100,n(v)))}
+function active(){try{return (state.patients||[]).find(x=>x.id===state.activeId)||(state.patients||[]).find(x=>x.admitted)||null}catch(e){return null}}
+function hash(x){let h=5381,s=String(x||'mission');for(let i=0;i<s.length;i++)h=((h<<5)+h)^s.charCodeAt(i);return Math.abs(h>>>0)}
+function world(){
+ state.mission28=state.mission28||{shift:null,history:[],campaign:{name:'THE SANCTUARY CRISIS',chapter:1,clues:[],complete:false},rewards:[],returning:[],shiftNo:0};
+ return state.mission28
+}
+function family(p){try{return window.VG26?VG26.family(p):String(p.species||'animal').toLowerCase()}catch(e){return'animal'}}
+function speciesGoal(p){
+ let f=family(p);
+ let map={reptile:['Investigate husbandry/environment','Correct environmental contributor'],avian:['Observe low-stress behavior','Review air/perch/nutrition contributor'],rabbit:['Restore voluntary eating','Check pain/dental/GI contributor'],aquatic:['Test habitat water conditions','Correct water/oxygen contributor'],equine:['Localize pain/primary cause','Complete safe mobility recovery'],ferret:['Investigate hidden contributor','Complete specialist recovery plan'],arachnid:['Minimize disturbance','Correct enclosure contributor'],colony:['Inspect colony environment','Restore stable resources'],rodent:['Check dental/environment contributor','Restore normal feeding/activity'],canine:['Identify primary problem','Restore independent recovery'],feline:['Use low-stress investigation','Restore independent recovery']};
+ return map[f]||['Identify primary problem','Restore independent recovery']
+}
+function objectives(p){
+ let sg=speciesGoal(p);
+ return [
+  {id:'stabilize',label:'Stabilize patient',why:'Get immediate physiology into a safe game range.',done:()=>c(p.oxygen??96)>=92&&c(p.shock??0)<=35&&c(p.bleeding??0)<=30},
+  {id:'investigate',label:sg[0],why:'Use the case-specific systems instead of guessing.',done:()=>!!(p.speciesMedicine26&&(p.speciesMedicine26.score>0||p.consequence27?.secondary?.length))},
+  {id:'primary',label:sg[1],why:'Treat the underlying species-specific problem.',done:()=>!p.speciesMedicine26||p.speciesMedicine26.steps.every(x=>p.speciesMedicine26.done?.[x])},
+  {id:'comfort',label:'Control pain and distress',why:'Comfort should improve before independence.',done:()=>c(p.pain??0)<=40&&c(p.stress??0)<=50},
+  {id:'independence',label:'Restore independent food / water / movement',why:'Recovery must become the animal’s own behavior.',done:()=>c(p.hydration??70)>=65&&c(p.mobility??70)>=60&&c(p.hunger??70)>=55},
+  {id:'complications',label:'Resolve active complications',why:'Do not discharge while a discovered problem remains active.',done:()=>!(p.consequence27?.complications||[]).some(x=>!x.resolved)},
+  {id:'final',label:'Complete final recovery check',why:'Finish through the established Vet Gods completion system.',done:()=>{try{return window.VG23?VG23.ready(p):false}catch(e){return false}}}
+ ]
+}
+function missionFor(p){
+ let w=world(),h=hash((p.id||p.name)+w.shiftNo),types=['EMERGENCY ARRIVAL','MYSTERY CASE','RECOVERY TURNAROUND','SPECIES CHALLENGE','GUARDIAN CASE'];
+ return {patientId:p.id,title:types[h%types.length],started:Date.now(),bonus:h%2?'Discover the underlying contributor before final recovery.':'Finish with all complications resolved.',complete:false}
+}
+function startShift(){
+ let w=world(),ps=(state.patients||[]).filter(p=>p.admitted);if(!ps.length){try{state.screen='admit';render()}catch(e){}return}
+ w.shiftNo++;let p=active()||ps[0];w.shift={number:w.shiftNo,started:Date.now(),primary:missionFor(p),secondary:ps.filter(x=>x.id!==p.id).slice(0,3).map(missionFor),events:[],complete:false,score:0};
+ state.activeId=p.id;try{if(typeof addLog==='function')addLog(`Shift ${w.shiftNo} started · ${p.name} primary case`)}catch(e){};render()
+}
+function completeMission(m,p){
+ let os=objectives(p),done=os.filter(x=>x.done()).length;if(done<os.length)return false;
+ if(!m.complete){m.complete=true;m.completed=Date.now();reward(p);try{if(window.VG24&&VG24.archiveFollowup)VG24.archiveFollowup(p)}catch(e){}}
+ return true
+}
+function reward(p){
+ let w=world(),pool=[['Mercy Shard','Difficult recovery commemorated'],['Atlas Entry',`${p.species||'Animal'} knowledge added`],['Patient Portrait',`${p.name} added to guardian history`],['Guardian Mark','Hospital title progress earned'],['Rare Case File','Unusual future case seed earned']];
+ let x=pool[hash(p.name+w.rewards.length)%pool.length];w.rewards.unshift({name:x[0],detail:x[1],patient:p.name,at:Date.now()});w.rewards=w.rewards.slice(0,20);
+ w.returning.push({id:p.id,name:p.name,species:p.species,breed:p.breed,image:p.image||p.img,trust:p.trust,fear:p.fear,due:(window.VG25?VG25.clock():'future shift'),source:JSON.parse(JSON.stringify({name:p.name,species:p.species,breed:p.breed,trust:p.trust,fear:p.fear,condition:p.condition}))});
+ try{state.mercy=n(state.mercy)+25}catch(e){}
+}
+function evaluate(){
+ let w=world(),sh=w.shift;if(!sh)return;let all=[sh.primary,...sh.secondary],complete=0;
+ all.forEach(m=>{let p=(state.patients||[]).find(x=>x.id===m.patientId);if(p&&completeMission(m,p))complete++});
+ sh.score=all.length?Math.round(100*complete/all.length):0;
+ if(complete===all.length&&!sh.complete){sh.complete=true;sh.completed=Date.now();w.history.unshift({number:sh.number,score:sh.score,completed:Date.now(),cases:all.length});w.history=w.history.slice(0,20);campaignAdvance()}
+}
+function campaignAdvance(){
+ let w=world(),c=w.campaign,sh=w.shift;if(!c||c.complete)return;
+ let clue=['Shared environmental signature','Similar nutrition history','Matching rescue-location clue','Repeated stress behavior','Common habitat equipment','Linked intake timeline'][(sh.number-1)%6];
+ if(!c.clues.includes(clue))c.clues.push(clue);
+ if(c.clues.length>=3)c.chapter=2;if(c.clues.length>=5)c.chapter=3;if(c.clues.length>=6)c.complete=true
+}
+function gotoMission(id){
+ let p=(state.patients||[]).find(x=>x.id===id);if(p){state.activeId=p.id;state.screen=(p.department||p.location)==='Surgery'?'surgery':'clinic';render()}
+}
+function followup(i){
+ let w=world(),r=w.returning[i];if(!r)return;
+ let base=(typeof makePatient==='function'?makePatient():null)||(typeof expPatient==='function'?expPatient():{})||{};
+ Object.assign(base,r.source,{id:'return-'+Date.now(),name:r.name,species:r.species,breed:r.breed,trust:Math.min(100,n(r.trust,50)+8),fear:Math.max(0,n(r.fear,35)-8),admitted:true,department:'Clinic',location:'Clinic',returningPatient:true,previousVisit:true,condition:'Follow-Up / New Concern'});
+ state.patients.push(base);state.activeId=base.id;state.screen='clinic';w.returning.splice(i,1);try{if(typeof addLog==='function')addLog(`${base.name} returned and recognizes the hospital.`)}catch(e){};render()
+}
+function panel(){
+ let w=world(),sh=w.shift,p=active();if(!sh)return `<section id="vg28Mission"><div class="vg28-head"><div><h3>🎮 MISSION DIRECTOR</h3><small>The hospital systems are ready. Start a shift and Vet Gods will turn the living world into objectives.</small></div><span class="vg28-rank">FREE PLAY ALWAYS OPEN</span></div><div class="vg28-actions"><button onclick="VG28.start()">▶ START SHIFT</button></div>${w.returning.length?`<div class="vg28-alert">❤️ ${w.returning.length} returning patient follow-up${w.returning.length>1?'s':''} available. <button onclick="VG28.followup(0)">Receive Follow-Up</button></div>`:''}</section>`;
+ let all=[sh.primary,...sh.secondary],pm=(state.patients||[]).find(x=>x.id===sh.primary.patientId),os=pm?objectives(pm):[],done=os.filter(x=>x.done()).length,pct=os.length?Math.round(done/os.length*100):0;
+ let campaign=w.campaign;
+ return `<section id="vg28Mission"><div class="vg28-head"><div><h3>🎮 SHIFT ${sh.number} · ${sh.complete?'COMPLETE':'ACTIVE'}</h3><small>Mission Director connects Reception → Clinic → Care Lab → Species Medicine → Habitat → Recovery → Life Book.</small></div><span class="vg28-rank">${sh.score}% SHIFT SCORE</span></div>
+ ${pm?`<div class="vg28-hero"><strong>${sh.primary.title} · ${pm.name}</strong><small>${pm.species||'Animal'} · ${pm.condition||pm.speciesMedicine26?.case||'Active case'} · Bonus: ${sh.primary.bonus}</small><div class="vg28-progress"><i style="width:${pct}%"></i></div>${done}/${os.length} primary objectives complete</div>`:'<div class="vg28-alert">Primary patient is no longer hospitalized. Complete or select another active case.</div>'}
+ <div class="vg28-grid"><div class="vg28-card"><b>PRIMARY CASE OBJECTIVES</b><div class="vg28-list">${os.map(x=>`<div class="vg28-row ${x.done()?'done':''}"><span>${x.done()?'✅':'⬜'}</span><div><b>${x.label}</b><small>${x.why}</small></div></div>`).join('')}</div></div>
+ <div class="vg28-card"><b>SHIFT CASE BOARD</b><div class="vg28-list">${all.map(m=>{let x=(state.patients||[]).find(p=>p.id===m.patientId);return `<button class="vg28-row ${m.complete?'done':''}" onclick="VG28.goto('${m.patientId}')"><span>${m.complete?'⭐':'🐾'}</span><div><b>${x?x.name:'Completed patient'} · ${m.title}</b><small>${m.complete?'Case completed':'Open this case'}</small></div></button>`}).join('')}</div></div></div>
+ <div class="vg28-campaign"><b>🌌 CAMPAIGN · ${campaign.name}</b><br>Chapter ${campaign.chapter} · ${campaign.complete?'Pattern solved':'Hospital-wide pattern developing'}<div class="vg28-list">${campaign.clues.slice(-4).map(x=>`<div class="vg28-row">🔎 ${x}</div>`).join('')||'<div class="vg28-row">Complete shifts to discover whether cases are connected.</div>'}</div></div>
+ ${sh.complete?`<div class="vg28-alert"><b>🏆 SHIFT COMPLETE · GUARDIAN SHIFT</b><br>${all.length} case${all.length!==1?'s':''} resolved · ${sh.score}% score · campaign evidence updated.<div class="vg28-actions"><button onclick="VG28.newShift()">Start Next Shift</button></div></div>`:''}
+ <div class="vg28-card" style="margin-top:9px"><b>Recent Rewards</b><div class="vg28-reward">${w.rewards.slice(0,3).map(x=>`<div><b>${x.name}</b><br>${x.patient}<br><small>${x.detail}</small></div>`).join('')||'<div>No shift rewards yet.</div>'}</div></div>
+ ${w.returning.length?`<div class="vg28-alert">❤️ RETURNING PATIENT AVAILABLE · ${w.returning[0].name} remembers this hospital. <button onclick="VG28.followup(0)">Receive Follow-Up</button></div>`:''}</section>`
+}
+function install(){try{if(!window.state)return;evaluate();let host=document.getElementById(state.screen);if(!host)return;host.querySelector('#vg28Mission')?.remove();let a=host.querySelector('#vg25Pulse')||host.firstElementChild;if(a)a.insertAdjacentHTML('afterend',panel());else host.insertAdjacentHTML('afterbegin',panel())}catch(e){}}
+function newShift(){world().shift=null;render()}
+window.VG28={start:startShift,goto:gotoMission,followup,newShift,refresh:install,evaluate};
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg28){let w=function(){let r=oldRender.apply(this,arguments);setTimeout(install,0);return r};w.__vg28=true;window.render=w}
+setInterval(()=>{try{evaluate();install()}catch(e){}},30000);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(install,280));else setTimeout(install,280);
+})();
+</script>
+<!-- ===== END VET GODS 28 ===== -->
+
+
+<!-- ===== VET GODS 29 · ANIMAL AI & MEMORY ENGINE ===== -->
+<style>
+#vg29AI{margin:14px 0;padding:14px;border-radius:19px;background:linear-gradient(145deg,rgba(5,19,25,.98),rgba(18,15,37,.97));border:1px solid rgba(92,236,209,.28);box-shadow:0 14px 38px rgba(0,0,0,.28)}
+.vg29-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.vg29-head h3{margin:0}.vg29-chip{font:800 11px monospace;padding:7px 10px;border-radius:999px;background:rgba(92,236,209,.08);border:1px solid rgba(92,236,209,.24)}
+.vg29-scene{position:relative;height:210px;margin-top:10px;border-radius:16px;overflow:hidden;background:radial-gradient(circle at 50% 30%,rgba(100,210,255,.11),transparent 35%),linear-gradient(180deg,#0b1823,#091018);border:1px solid rgba(255,255,255,.08)}
+.vg29-gridline{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:28px 28px}
+.vg29-station{position:absolute;width:58px;height:42px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);font-size:10px;text-align:center;padding-top:7px}.vg29-animal{position:absolute;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:rgba(255,255,255,.09);border:1px solid rgba(117,238,217,.35);box-shadow:0 0 25px rgba(85,230,211,.16);transition:left 3.8s ease,top 3.8s ease}
+.vg29-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:9px}.vg29-card{padding:10px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.075)}.vg29-card b{display:block;margin-bottom:4px}.vg29-card small{opacity:.7}
+.vg29-traits{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.vg29-traits span{font-size:10px;padding:5px 7px;border-radius:999px;background:rgba(255,255,255,.055)}.vg29-memory{display:grid;gap:5px;margin-top:6px}.vg29-memory div{padding:7px;border-radius:9px;background:rgba(255,255,255,.035);font-size:11px}
+.vg29-thought{margin-top:9px;padding:10px;border-radius:12px;background:rgba(255,205,91,.07);border-left:3px solid #ffd05c}.vg29-bars{display:grid;gap:6px;margin-top:7px}.vg29-bar{display:grid;grid-template-columns:70px 1fr 34px;gap:6px;align-items:center;font-size:10px}.vg29-bar i{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}.vg29-bar i:after{content:"";display:block;height:100%;width:var(--v);background:linear-gradient(90deg,#6fe5d0,#8bbcff)}
+@media(max-width:650px){.vg29-grid{grid-template-columns:1fr}.vg29-scene{height:190px}}
+</style>
+<script>
+(function(){
+'use strict';
+function n(v,d=0){v=Number(v);return isFinite(v)?v:d}function c(v){return Math.max(0,Math.min(100,n(v)))}
+function hash(x){let h=2166136261,s=String(x||'animal');for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return Math.abs(h>>>0)}
+function active(){try{return (state.patients||[]).find(x=>x.id===state.activeId)||(state.pets||[]).find(x=>x.id===state.activeId)||(state.patients||[]).find(x=>x.admitted)||null}catch(e){return null}}
+function fam(p){try{return window.VG26?VG26.family(p):'canine'}catch(e){return'canine'}}
+const ICON={canine:'🐕',feline:'🐈',rabbit:'🐇',equine:'🐴',avian:'🦜',reptile:'🦎',aquatic:'🐠',amphibian:'🐸',arachnid:'🕷️',colony:'🐜',rodent:'🐹',ferret:'🦦'};
+const STATIONS={bed:[8,66,'🛏️ REST'],water:[28,18,'💧 WATER'],food:[64,18,'🍽️ FOOD'],hide:[82,65,'🏠 HIDE'],caregiver:[46,67,'🧑‍⚕️ CARE'],explore:[47,39,'✨ EXPLORE']};
+function ensure(p){
+ if(!p)return null;if(p.animalAI29)return p.animalAI29;let h=hash(p.id||p.name),pick=(a,shift)=>a[(h>>shift)%a.length];
+ p.animalAI29={traits:[
+  pick(['BOLD','CAUTIOUS'],0),pick(['SOCIAL','SOLITARY'],2),pick(['FOOD-MOTIVATED','PICKY'],4),pick(['CURIOUS','RESERVED'],6),pick(['PLAYFUL','CALM'],8)
+ ],learned:[],memories:[],bonds:{player:n(p.trust,35)},activity:'Observing',station:'bed',since:Date.now(),nextDecision:Date.now()+8000+(h%8000),thought:'Watching the room and learning what feels safe.',recognition:n(p.returningPatient?65:0),lastNeed:'safety'};
+ return p.animalAI29
+}
+function remember(p,text,strength=1){let a=ensure(p);if(a.memories.some(x=>x.text===text)){let m=a.memories.find(x=>x.text===text);m.strength=Math.min(10,m.strength+strength);m.at=Date.now()}else a.memories.unshift({text,strength,at:Date.now()});a.memories=a.memories.slice(0,12)}
+function needs(p){
+ let pain=c(p.pain),stress=c(p.stress),hyd=c(p.hydration??70),hunger=c(p.hunger??70),energy=c(p.energy??60),trust=c(p.trust??35);
+ return {pain,stress,thirst:100-hyd,hunger:100-hunger,fatigue:100-energy,safety:Math.max(stress,100-trust),social:Math.max(0,55-trust),curiosity:Math.max(15,energy-stress/2)}
+}
+function choose(p){
+ let a=ensure(p),q=needs(p),f=fam(p),opts=[];
+ function add(station,score,activity,thought){opts.push({station,score,activity,thought})}
+ add('bed',q.fatigue+q.pain*.7,'Resting','Rest feels safer than movement right now.');
+ add('water',q.thirst+(a.traits.includes('CAUTIOUS')?q.stress*.15:0),'Investigating water','Thirst is pulling attention toward water.');
+ add('food',q.hunger+(a.traits.includes('FOOD-MOTIVATED')?22:0)-q.pain*.25,'Considering food','Appetite is returning enough to investigate food.');
+ add('hide',q.safety+(a.traits.includes('CAUTIOUS')?18:0),'Seeking safety','The room still feels uncertain, so shelter wins.');
+ add('caregiver',a.bonds.player*.65-q.stress*.3+(a.traits.includes('SOCIAL')?18:0),'Approaching caregiver','A familiar caregiver feels safer than the rest of the room.');
+ add('explore',q.curiosity+(a.traits.includes('CURIOUS')?20:0)-q.pain*.45,'Exploring','Energy and curiosity are beginning to beat caution.');
+ if(f==='reptile'){add('hide',q.safety+20,'Thermoregulating / sheltering','Choosing a protected environmental zone.');add('explore',45-q.pain,'Changing thermal zone','Moving between environmental zones as condition allows.')}
+ if(f==='avian'){add('hide',q.safety+12,'Perching quietly','A higher, quieter position feels secure.')}
+ if(f==='aquatic'){add('explore',55+(100-c(p.oxygen??96)),'Changing water zone','Swimming behavior reflects oxygen and environmental comfort.')}
+ if(f==='arachnid'||f==='colony')add('hide',70,'Sheltering / nest behavior','Minimizing disturbance is the preferred behavior.');
+ opts.sort((x,y)=>y.score-x.score);let x=opts[0];a.station=x.station;a.activity=x.activity;a.thought=x.thought;a.lastNeed=Object.entries(q).sort((x,y)=>y[1]-x[1])[0][0];a.since=Date.now();a.nextDecision=Date.now()+18000+(hash(p.name+a.activity+Date.now())%22000);
+ // behavior creates small, slow state changes
+ if(x.station==='water'&&q.thirst>30){p.hydration=c(n(p.hydration,60)+3);remember(p,'Found water safely',.5)}
+ if(x.station==='food'&&q.hunger>25){p.hunger=c(n(p.hunger,55)+3);p.energy=c(n(p.energy,55)+1);remember(p,'Ate voluntarily',.7)}
+ if(x.station==='bed'){p.energy=c(n(p.energy,55)+2);p.stress=c(n(p.stress,40)-1)}
+ if(x.station==='caregiver'){p.trust=c(n(p.trust,35)+2);p.stress=c(n(p.stress,40)-1);a.bonds.player=c(a.bonds.player+2);remember(p,'Caregiver presence felt safe',1)}
+ if(x.station==='explore')p.mobility=c(n(p.mobility,55)+1)
+ if(p.returningPatient&&a.recognition<100){a.recognition=c(a.recognition+3);if(a.recognition>=75&&!a.learned.includes('RECOGNIZES HOSPITAL')){a.learned.push('RECOGNIZES HOSPITAL');remember(p,'Recognized the treatment room',3)}}
+}
+function observeAction(p,label){
+ let a=ensure(p),t=String(label||'').toLowerCase();
+ if(/food|feed|nutrition/.test(t))remember(p,'Food was offered during care',1);
+ if(/water|fluid|hydrat/.test(t))remember(p,'Hydration care was gentle',1);
+ if(/comfort|gentle|quiet|pain/.test(t)){remember(p,'Gentle care reduced fear',1);a.bonds.player=c(a.bonds.player+2)}
+ if(/exam|scan|test|diagn/.test(t)&&c(p.stress)>55)remember(p,'Clinical equipment felt stressful',1);
+}
+function tick(){
+ let all=[...(state.patients||[]),...(state.pets||[])];all.forEach(p=>{let a=ensure(p);if(Date.now()>=a.nextDecision)choose(p)});install()
+}
+function stationPos(a){return STATIONS[a.station]||STATIONS.bed}
+function bars(p){let q=needs(p);return [['Pain',q.pain],['Stress',q.stress],['Thirst',q.thirst],['Hunger',q.hunger],['Fatigue',q.fatigue],['Safety need',q.safety]].map(x=>`<div class="vg29-bar"><span>${x[0]}</span><i style="--v:${Math.round(x[1])}%"></i><b>${Math.round(x[1])}</b></div>`).join('')}
+function panel(p){
+ let a=ensure(p),pos=stationPos(a),icon=ICON[fam(p)]||'🐾';
+ return `<section id="vg29AI"><div class="vg29-head"><div><h3>🧠 ANIMAL AI · MEMORY</h3><small>${p.name} chooses behavior from needs, personality, memory, species and trust—not random wandering.</small></div><span class="vg29-chip">${a.activity.toUpperCase()}</span></div>
+ <div class="vg29-scene"><div class="vg29-gridline"></div>${Object.entries(STATIONS).map(([k,x])=>`<div class="vg29-station" style="left:${x[0]}%;top:${x[1]}%;transform:translate(-50%,-50%)">${x[2]}</div>`).join('')}<div class="vg29-animal" style="left:${pos[0]}%;top:${pos[1]}%;transform:translate(-50%,-50%)">${icon}</div></div>
+ <div class="vg29-thought"><b>OBSERVED</b><br>${a.thought}<br><small>Dominant current need: ${a.lastNeed} · player bond ${Math.round(a.bonds.player)}${p.returningPatient?` · recognition ${Math.round(a.recognition)}`:''}</small></div>
+ <div class="vg29-grid"><div class="vg29-card"><b>Persistent Personality</b><div class="vg29-traits">${a.traits.map(x=>`<span>${x}</span>`).join('')}${a.learned.map(x=>`<span>★ ${x}</span>`).join('')}</div><div class="vg29-bars">${bars(p)}</div></div>
+ <div class="vg29-card"><b>Animal Memory</b><div class="vg29-memory">${a.memories.slice(0,6).map(x=>`<div>🧠 ${x.text} <small>memory ${x.strength.toFixed(1)}</small></div>`).join('')||'<div>New patient · memories are forming now.</div>'}</div></div></div></section>`
+}
+function install(){try{if(!window.state||!['clinic','pets','nursery','sanctuary','habitats','surgery','carelab'].includes(state.screen))return;let p=active(),host=document.getElementById(state.screen);if(!p||!host)return;ensure(p);host.querySelector('#vg29AI')?.remove();let a=host.querySelector('#vg28Mission')||host.querySelector('#vg25Pulse')||host.firstElementChild;if(a)a.insertAdjacentHTML('afterend',panel(p));else host.insertAdjacentHTML('afterbegin',panel(p))}catch(e){}}
+function hook(){
+ if(window.performPatientAction&&!window.performPatientAction.__vg29){let old=window.performPatientAction,w=function(id,label){let r=old.apply(this,arguments),p=(state.patients||[]).find(x=>x.id===id);if(p)observeAction(p,label);return r};w.__vg29=true;window.performPatientAction=w}
+ if(window.vghAction&&!window.vghAction.__vg29){let old=window.vghAction,w=function(id,label){let r=old.apply(this,arguments),p=(state.patients||[]).find(x=>x.id===id);if(p)observeAction(p,label);return r};w.__vg29=true;window.vghAction=w}
+}
+window.VG29={tick,ensure,remember,refresh:install};
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg29){let w=function(){hook();let r=oldRender.apply(this,arguments);setTimeout(install,0);return r};w.__vg29=true;window.render=w}
+hook();setInterval(tick,7000);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{tick();install()},320));else setTimeout(()=>{tick();install()},320);
+})();
+</script>
+<!-- ===== END VET GODS 29 ===== -->
+
+
+<!-- ===== VET GODS 30 · DEEP SIMULATION LOGIC ENGINE ===== -->
+<style>
+#vg30Deep{margin:14px 0;padding:14px;border-radius:19px;background:linear-gradient(145deg,rgba(7,14,28,.985),rgba(15,27,31,.975));border:1px solid rgba(104,205,255,.26);box-shadow:0 14px 40px rgba(0,0,0,.3)}
+.vg30-head{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}.vg30-head h3{margin:0}.vg30-chip{font:800 11px monospace;padding:7px 10px;border-radius:999px;background:rgba(104,205,255,.08);border:1px solid rgba(104,205,255,.24)}
+.vg30-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:9px}.vg30-card{padding:10px;border-radius:13px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.075)}
+.vg30-card b{display:block;margin-bottom:4px}.vg30-card small{opacity:.7}.vg30-list{display:grid;gap:6px;margin-top:7px}.vg30-row{padding:8px;border-radius:10px;background:rgba(255,255,255,.035);font-size:12px}
+.vg30-row.warn{border-left:3px solid #ffb15e}.vg30-row.good{border-left:3px solid #63e6a6}.vg30-row.info{border-left:3px solid #78caff}
+.vg30-meter{display:grid;grid-template-columns:90px 1fr 45px;gap:7px;align-items:center;font-size:10px;margin:6px 0}.vg30-meter i{height:7px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}.vg30-meter i:after{content:"";display:block;width:var(--v);height:100%;background:linear-gradient(90deg,#79e5ff,#b08bff)}
+.vg30-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}.vg30-actions button{min-height:42px}.vg30-debug{margin-top:9px;padding:10px;border-radius:12px;background:rgba(255,223,120,.055);border:1px dashed rgba(255,223,120,.22);font:11px/1.45 monospace}
+.vg30-diff{display:grid;gap:5px}.vg30-diff div{display:grid;grid-template-columns:1fr 52px;gap:8px;padding:6px;border-radius:8px;background:rgba(255,255,255,.03)}.vg30-diff strong{text-align:right}
+.vg30-banner{margin-top:9px;padding:10px;border-radius:12px;background:rgba(255,126,126,.07);border-left:3px solid #ff8a8a}
+@media(max-width:650px){.vg30-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+'use strict';
+function n(v,d=0){v=Number(v);return isFinite(v)?v:d}function c(v){return Math.max(0,Math.min(100,n(v)))}
+function now(){return Date.now()}function active(){try{return (state.patients||[]).find(x=>x.id===state.activeId)||(state.pets||[]).find(x=>x.id===state.activeId)||(state.patients||[]).find(x=>x.admitted)||null}catch(e){return null}}
+function fam(p){try{return window.VG26?VG26.family(p):'canine'}catch(e){return'canine'}}
+function hash(x){let h=0,s=String(x||'x');for(let i=0;i<s.length;i++)h=((h<<5)-h+s.charCodeAt(i))|0;return Math.abs(h)}
+const DEFAULT_DIFFS={
+ canine:['Soft-tissue pain','GI upset','Respiratory problem','Skin/wound issue'],
+ feline:['Stress-linked urinary problem','GI/appetite disorder','Respiratory problem','Hidden pain'],
+ rabbit:['GI slowdown','Dental-linked appetite loss','Pain/stress anorexia','Respiratory problem'],
+ avian:['Nutrition-linked disease','Respiratory disease','Perch/foot problem','Reproductive emergency'],
+ reptile:['Husbandry failure','Respiratory disease','Nutrition/UV imbalance','Shed/humidity disorder'],
+ aquatic:['Water-quality crisis','Low oxygen','Temperature stress','Infectious problem'],
+ equine:['Colic-type problem','Hoof/laminitis-type issue','Lameness','Field trauma'],
+ ferret:['Foreign-body pattern','Endocrine weakness','Cardiorespiratory issue','GI recovery problem'],
+ rodent:['Dental overgrowth','Respiratory issue','Skin/parasite problem','Trauma'],
+ amphibian:['Water/skin environment problem','Temperature/humidity stress','Nutrition loss','Trauma'],
+ arachnid:['Molt risk','Enclosure stress','Dehydration','Fall trauma'],
+ colony:['Environment drift','Resource imbalance','Contamination','Nest stress']
+};
+function ensure(p){
+ if(!p)return null;if(p.deepSim30)return p.deepSim30;let f=fam(p),base=DEFAULT_DIFFS[f]||DEFAULT_DIFFS.canine,h=hash(p.id||p.name);
+ p.deepSim30={
+  snapshots:[],events:[],why:[],differentials:base.map((x,i)=>({label:x,score:i===h%base.length?58:Math.max(12,38-i*6),tested:false})),
+  workingDiagnosis:null,trend:'UNKNOWN',forecast:'BASELINE',lastTick:now(),lastSnapshot:0,relapseRisk:0,populationClue:null,
+  resources:{oxygen:false,imaging:false,isolation:false,specialist:false},tested:{},actionCooldowns:{},lastPlayerAction:'none',hiddenCauseResolved:false
+ };
+ return p.deepSim30
+}
+function snap(p){return {at:now(),oxygen:c(p.oxygen??96),hydration:c(p.hydration??70),pain:c(p.pain??0),stress:c(p.stress??0),hunger:c(p.hunger??70),energy:c(p.energy??65),mobility:c(p.mobility??65),shock:c(p.shock??0),infection:c(p.infection??0),trust:c(p.trust??35)}}
+function addWhy(p,text){let d=ensure(p);d.why.unshift({at:now(),text});d.why=d.why.slice(0,18)}
+function addEvent(p,text,type='SIM'){let d=ensure(p);d.events.unshift({at:now(),type,text});d.events=d.events.slice(0,24);addWhy(p,text)}
+function takeSnapshot(p){
+ let d=ensure(p);if(now()-d.lastSnapshot<15000)return;d.snapshots.push(snap(p));d.snapshots=d.snapshots.slice(-12);d.lastSnapshot=now()
+}
+function trend(p){
+ let d=ensure(p),a=d.snapshots;if(a.length<3)return'GATHERING DATA';let x=a[a.length-3],y=a[a.length-1];
+ let score=(y.oxygen-x.oxygen)*1.3+(y.hydration-x.hydration)+(x.pain-y.pain)+(x.stress-y.stress)+(y.energy-x.energy)+(y.mobility-x.mobility)+(x.shock-y.shock)*1.3+(x.infection-y.infection);
+ d.trend=score>10?'IMPROVING':score<-10?'DETERIORATING':Math.abs(score)<4?'STALLED':'MIXED';return d.trend
+}
+function physiology(p){
+ let d=ensure(p),before=snap(p),reason=[];
+ // cascades: pain/stress suppress food and mobility
+ if(before.pain>60){p.hunger=c(before.hunger-1.5);p.mobility=c(before.mobility-1);reason.push('high pain suppressed appetite and movement')}
+ if(before.stress>65){p.hunger=c(n(p.hunger)-1);p.trust=c(before.trust-.7);reason.push('high stress reduced voluntary intake and trust')}
+ if(before.hydration<50){p.energy=c(before.energy-1.1);p.mobility=c(n(p.mobility)-.6);reason.push('low hydration reduced energy')}
+ if(before.hunger<45){p.energy=c(n(p.energy)-.8);reason.push('poor intake reduced energy')}
+ if(before.energy<40){p.mobility=c(n(p.mobility)-.8);reason.push('low energy reduced mobility')}
+ // positive cascade
+ if(before.pain<35&&before.stress<45&&before.hydration>65){p.energy=c(n(p.energy)+.5);p.hunger=c(n(p.hunger)+.4);reason.push('comfort + hydration supported recovery')}
+ // respiratory instability
+ if(before.oxygen<90){p.stress=c(n(p.stress)+1.2);p.shock=c(n(p.shock)+.7);reason.push('low oxygen increased physiologic stress')}
+ reason.forEach(r=>addWhy(p,'Cascade: '+r))
+}
+function diagnosticUpdate(p,test){
+ let d=ensure(p),cool=d.actionCooldowns[test]||0;if(now()<cool){addEvent(p,`Repeated ${test} provided no new information.`,'TEST');return false}
+ d.actionCooldowns[test]=now()+45000;d.tested[test]=(d.tested[test]||0)+1;let h=hash(p.name+test+d.tested[test]),f=fam(p);
+ d.differentials.forEach((x,i)=>{let mod=((h>>(i+1))%17)-8;x.score=c(x.score+mod);if(test==='environment'&&/environment|husbandry|water|temperature|resource|nest/i.test(x.label))x.score=c(x.score+22);if(test==='mobility'&&/pain|lameness|hoof|trauma|foot/i.test(x.label))x.score=c(x.score+18);if(test==='nutrition'&&/GI|appetite|dental|nutrition|foreign/i.test(x.label))x.score=c(x.score+18);if(test==='respiratory'&&/respiratory|oxygen|cardio/i.test(x.label))x.score=c(x.score+24)});
+ d.differentials.sort((a,b)=>b.score-a.score);d.workingDiagnosis=d.differentials[0].score>=68?d.differentials[0].label:null;
+ addEvent(p,`${test} evidence updated differential probabilities.`,'TEST');return true
+}
+function relapse(p){
+ let d=ensure(p),m=p.speciesMedicine26,envBad=m&&m.steps?.some(id=>/environment|temperature|humidity|water-correction|air-quality|perch|surface|safe-enclosure|sanitation|stocking|lighting/.test(id)&&!m.done?.[id]);
+ d.relapseRisk=envBad?Math.min(100,35+c(p.stress)*.25):Math.max(0,d.relapseRisk-6);
+ if(envBad&&d.relapseRisk>60&&c(p.pain)<35&&c(p.stress)<45){p.stress=c(n(p.stress)+4);p.hunger=c(n(p.hunger)-3);addEvent(p,'Symptoms improved, but unresolved primary environment created a relapse signal.','RELAPSE')}
+}
+function population(p){
+ let d=ensure(p),f=fam(p);if(!['aquatic','colony','rodent','avian','reptile'].includes(f))return;
+ let peers=(state.patients||[]).filter(x=>x.id!==p.id&&fam(x)===f&&x.admitted);if(peers.length<2)return;
+ let similar=peers.filter(x=>Math.abs(c(x.stress)-c(p.stress))<20||Math.abs(c(x.hydration)-c(p.hydration))<15);
+ if(similar.length>=2&&!d.populationClue){d.populationClue=`Pattern detected across ${similar.length+1} ${f} patients`;addEvent(p,d.populationClue,'POPULATION')}
+}
+function resourcePressure(){
+ let ps=(state.patients||[]).filter(p=>p.admitted),crit=ps.filter(p=>c(p.oxygen)<90||c(p.shock)>50),inf=ps.filter(p=>c(p.infection)>55),surg=ps.filter(p=>p.department==='Surgery'||p.location==='Surgery');
+ return {oxygen:crit.length,imaging:ps.filter(p=>ensure(p).tested.imaging).length,isolation:inf.length,surgery:surg.length,specialist:ps.filter(p=>ensure(p).workingDiagnosis===null&&ensure(p).differentials[0].score<65).length}
+}
+function triage(p){
+ let s=0;s+=(100-c(p.oxygen??96))*2;s+=c(p.shock)*1.6;s+=c(p.bleeding)*1.5;s+=c(p.pain)*.5;s+=(100-c(p.hydration??70))*.5;
+ let t=ensure(p).trend;if(t==='DETERIORATING')s+=35;if(t==='STALLED')s+=10;return Math.round(s)
+}
+function forecast(p){
+ let d=ensure(p),t=trend(p),comp=(p.consequence27?.complications||[]).filter(x=>!x.resolved).length;
+ d.forecast=t==='IMPROVING'&&comp===0?'AHEAD OF CURVE':t==='DETERIORATING'?'BEHIND CURVE':t==='STALLED'?'STALLED / REASSESS':'ON CURVE';return d.forecast
+}
+function simulate(){
+ (state.patients||[]).forEach(p=>{let d=ensure(p);takeSnapshot(p);physiology(p);relapse(p);population(p);trend(p);forecast(p);d.lastTick=now()});install()
+}
+function mediatedCare(kind){
+ let p=active();if(!p)return;let a=p.animalAI29||window.VG29?.ensure?.(p),d=ensure(p),map={
+ water:{need:100-c(p.hydration??70),memory:'Water offered',test:'environment'},
+ food:{need:100-c(p.hunger??70),memory:'Food offered',test:'nutrition'},
+ comfort:{need:c(p.pain)+c(p.stress),memory:'Comfort offered',test:'mobility'},
+ rest:{need:100-c(p.energy??65),memory:'Rest opportunity',test:'mobility'}
+ },x=map[kind];if(!x)return;
+ d.lastPlayerAction=kind;
+ let willingness=50+(a?.bonds?.player||c(p.trust??35))*.35-c(p.stress)*.25-c(p.pain)*.15+x.need*.25;
+ if(kind==='food'&&a?.traits?.includes('FOOD-MOTIVATED'))willingness+=15;if(kind==='water'&&c(p.hydration)<45)willingness+=18;
+ if(willingness>=55){
+  if(kind==='water'){p.hydration=c(n(p.hydration)+6);addEvent(p,'Water was offered → patient approached → voluntary drinking occurred → hydration improved.','AI CARE')}
+  if(kind==='food'){p.hunger=c(n(p.hunger)+6);p.energy=c(n(p.energy)+2);addEvent(p,'Food was offered → patient investigated → voluntary intake occurred → energy response followed.','AI CARE')}
+  if(kind==='comfort'){p.pain=c(n(p.pain)-5);p.stress=c(n(p.stress)-5);p.trust=c(n(p.trust)+3);addEvent(p,'Comfort offered → patient accepted contact → distress decreased.','AI CARE')}
+  if(kind==='rest'){p.energy=c(n(p.energy)+5);p.stress=c(n(p.stress)-3);addEvent(p,'Quiet rest offered → patient settled → energy recovered.','AI CARE')}
+  try{window.VG29?.remember?.(p,x.memory+' safely',1)}catch(e){}
+ }else{
+  p.stress=c(n(p.stress)+1);addEvent(p,`${x.memory} → patient declined because current fear/pain outweighed willingness.`,'AI CARE')
+ }
+ diagnosticUpdate(p,x.test);render()
+}
+function runTest(test){let p=active();if(!p)return;diagnosticUpdate(p,test);render()}
+function panel(p){
+ let d=ensure(p),r=resourcePressure(),diffs=d.differentials.slice(0,4),t=trend(p),fc=forecast(p),priority=triage(p);
+ return `<section id="vg30Deep"><div class="vg30-head"><div><h3>⚙️ DEEP SIMULATION LOGIC</h3><small>Trends, cascades, diagnostic probabilities, relapse, triage, AI-mediated care and transparent WHY logic.</small></div><span class="vg30-chip">TRIAGE ${priority}</span></div>
+ <div class="vg30-grid"><div class="vg30-card"><b>Recovery Trend</b><div class="vg30-row ${t==='DETERIORATING'?'warn':t==='IMPROVING'?'good':'info'}">${t} · ${fc}</div><div class="vg30-meter"><span>Relapse risk</span><i style="--v:${Math.round(d.relapseRisk)}%"></i><strong>${Math.round(d.relapseRisk)}%</strong></div>${d.populationClue?`<div class="vg30-banner">🧩 ${d.populationClue}</div>`:''}</div>
+ <div class="vg30-card"><b>Differential Reasoning</b><div class="vg30-diff">${diffs.map(x=>`<div><span>${x.label}</span><strong>${Math.round(x.score)}%</strong></div>`).join('')}</div><small>${d.workingDiagnosis?'Working diagnosis: '+d.workingDiagnosis:'Evidence is still insufficient for a confident working diagnosis.'}</small></div></div>
+ <div class="vg30-grid"><div class="vg30-card"><b>AI-Mediated Care</b><div class="vg30-actions"><button onclick="VG30.care('water')">💧 Offer Water</button><button onclick="VG30.care('food')">🍽 Offer Food</button><button onclick="VG30.care('comfort')">🤲 Comfort</button><button onclick="VG30.care('rest')">🛏 Quiet Rest</button></div><small>These actions create opportunities. The patient's AI decides whether to accept them.</small></div>
+ <div class="vg30-card"><b>Diagnostic Tests</b><div class="vg30-actions"><button onclick="VG30.test('environment')">🌡 Environment</button><button onclick="VG30.test('nutrition')">🥣 Nutrition</button><button onclick="VG30.test('respiratory')">🫁 Respiratory</button><button onclick="VG30.test('mobility')">🐾 Mobility</button><button onclick="VG30.test('imaging')">🩻 Imaging</button></div><small>Repeating a test immediately does not reveal infinite new information.</small></div></div>
+ <div class="vg30-card" style="margin-top:9px"><b>Hospital Resource Pressure</b><div class="vg30-list"><div class="vg30-row">Oxygen demand · ${r.oxygen}</div><div class="vg30-row">Isolation demand · ${r.isolation}</div><div class="vg30-row">Surgery occupancy · ${r.surgery}</div><div class="vg30-row">Specialist demand · ${r.specialist}</div></div></div>
+ <div class="vg30-debug"><b>WHY / SIMULATION DEBUG</b><br>${d.why.slice(0,7).map(x=>'• '+x.text).join('<br>')||'• No simulation events yet.'}<br><br>No hidden blocker is introduced here; this layer explains state changes and feeds the existing visible completion system.</div></section>`
+}
+function install(){try{if(!window.state||!['clinic','surgery','carelab','habitats','nursery','pets','sanctuary'].includes(state.screen))return;let p=active(),host=document.getElementById(state.screen);if(!p||!host)return;ensure(p);host.querySelector('#vg30Deep')?.remove();let a=host.querySelector('#vg29AI')||host.querySelector('#vg28Mission')||host.firstElementChild;if(a)a.insertAdjacentHTML('afterend',panel(p));else host.insertAdjacentHTML('afterbegin',panel(p))}catch(e){}}
+window.VG30={simulate,refresh:install,care:mediatedCare,test:runTest,ensure,triage,forecast};
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg30){let w=function(){let r=oldRender.apply(this,arguments);setTimeout(install,0);return r};w.__vg30=true;window.render=w}
+setInterval(simulate,12000);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{simulate();install()},350));else setTimeout(()=>{simulate();install()},350);
+})();
+</script>
+<!-- ===== END VET GODS 30 ===== -->
+
 </body>
 </html>
