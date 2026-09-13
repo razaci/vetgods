@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · NO FLASH POPUPS</title>
+<title>VET GODS · EVENT DRIVEN STABLE UI</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3431,6 +3431,17 @@ body.vg-focus-mode #vgHospitalAreasBar *{
   visibility:hidden!important;
   pointer-events:none!important;
 }
+</style>
+
+
+<style id="vgEventDrivenStableUiCss">
+html,body{
+  scroll-behavior:auto!important;
+  overflow-anchor:none!important;
+  -webkit-text-size-adjust:100%!important;
+  text-size-adjust:100%!important;
+}
+*{overflow-anchor:none!important}
 </style>
 
 </head>
@@ -20325,6 +20336,142 @@ function install(){
 window.VetGodNoFlashPopups={scan:removeInterrupts};
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});
 else install();
+})();
+</script>
+
+
+<script id="vgEventDrivenStableUiJs">
+(function(){
+'use strict';
+
+let userY=window.scrollY||0;
+let restoring=false;
+let inUserAction=false;
+let userActionTimer=0;
+
+function y(){return window.scrollY||document.documentElement.scrollTop||0}
+function capture(){if(!restoring)userY=y()}
+["scroll","wheel","touchmove"].forEach(ev=>window.addEventListener(ev,capture,{passive:true}));
+
+function restore(pos=userY){
+  if(!Number.isFinite(pos))return;
+  restoring=true;
+  window.scrollTo({top:pos,left:0,behavior:"auto"});
+  requestAnimationFrame(()=>{
+    window.scrollTo({top:pos,left:0,behavior:"auto"});
+    restoring=false;
+    userY=pos;
+  });
+}
+
+try{
+  Element.prototype.scrollIntoView=function(){};
+  Element.prototype.scrollIntoViewIfNeeded=function(){};
+}catch(e){}
+try{
+  const nf=HTMLElement.prototype.focus;
+  HTMLElement.prototype.focus=function(opts){
+    try{return nf.call(this,Object.assign({},opts||{},{preventScroll:true}))}
+    catch(e){return nf.call(this)}
+  };
+}catch(e){}
+
+document.addEventListener("click",function(e){
+  const a=e.target.closest&&e.target.closest('a[href^="#"]');
+  if(a){
+    e.preventDefault();
+    try{history.replaceState(null,"",location.pathname+location.search)}catch(err){}
+  }
+},true);
+
+document.addEventListener("pointerdown",()=>{
+  userY=y();inUserAction=true;
+  clearTimeout(userActionTimer);
+  userActionTimer=setTimeout(()=>inUserAction=false,500);
+},true);
+
+document.addEventListener("click",()=>{
+  const pos=userY;
+  setTimeout(()=>restore(pos),20);
+  setTimeout(()=>restore(pos),90);
+},true);
+
+const RENDER_NAMES=[
+ "render","renderClinic","renderRecovery","renderSurgery","renderCareLab",
+ "renderAdmit","renderFunding","renderDiagnostics","renderResearch",
+ "renderRecoveryHomeFlow","renderCaseDirector","renderMyPets"
+];
+
+function wrapRenderer(name){
+  const old=window[name];
+  if(typeof old!=="function"||old.__vgEventStable)return;
+  const w=function(){
+    const pos=y();
+    const explicit=inUserAction || window.__vgAllowRender===true;
+    if(!explicit)return;
+    let r;
+    try{r=old.apply(this,arguments)}finally{restore(pos)}
+    return r;
+  };
+  w.__vgEventStable=true;
+  window[name]=w;
+}
+RENDER_NAMES.forEach(wrapRenderer);
+
+["vgOpenScreen","openScreen","showScreen"].forEach(name=>{
+  const old=window[name];
+  if(typeof old!=="function"||old.__vgEventNav)return;
+  const w=function(){
+    const pos=y();
+    window.__vgAllowRender=true;
+    try{return old.apply(this,arguments)}
+    finally{
+      window.__vgAllowRender=false;
+      restore(pos);
+    }
+  };
+  w.__vgEventNav=true;
+  window[name]=w;
+});
+
+const nativeSetInterval=window.setInterval.bind(window);
+window.setInterval=function(fn,ms){
+  if(typeof fn!=="function")return nativeSetInterval(fn,ms);
+  const src=String(fn).toLowerCase();
+  const visual=/render|innerhtml|insertadjacenthtml|replacechildren|scroll|focus|classlist/.test(src);
+  if(Number(ms)<=15000 && visual){
+    return nativeSetInterval(function(){}, Math.max(Number(ms)||1000,1000));
+  }
+  return nativeSetInterval(function(){
+    const pos=y();
+    let r;
+    try{r=fn.apply(this,arguments)}
+    finally{
+      if(!inUserAction && Math.abs(y()-pos)>2)restore(pos);
+    }
+    return r;
+  },ms);
+};
+
+function stripAF(root=document){
+  root.querySelectorAll?.("[autofocus]").forEach(el=>el.removeAttribute("autofocus"));
+}
+stripAF();
+const afmo=new MutationObserver(ms=>{
+  ms.forEach(m=>m.addedNodes.forEach(n=>{
+    if(n.nodeType===1)stripAF(n)
+  }))
+});
+afmo.observe(document.documentElement,{subtree:true,childList:true});
+
+window.vgStableRefresh=function(){
+  const pos=y();
+  window.__vgAllowRender=true;
+  try{if(typeof window.render==="function")window.render()}
+  finally{window.__vgAllowRender=false;restore(pos)}
+};
+
+window.VetGodStableUI={capture,restore,refresh:window.vgStableRefresh};
 })();
 </script>
 
