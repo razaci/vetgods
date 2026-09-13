@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · FIXED VIEWPORT · HOSPITAL EDITION</title>
+<title>VET GODS · MOBILITY PRESSURE LAB · HOSPITAL EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3184,6 +3184,58 @@ html,body{
 :focus{
   scroll-margin:0!important;
 }
+</style>
+
+
+<style id="vgMobilityPressureLabCss">
+#vgMobilityLabOverlay{
+  position:fixed;inset:0;z-index:20000;
+  display:none;align-items:flex-start;justify-content:center;
+  padding:22px;background:rgba(2,8,12,.94);overflow:auto
+}
+#vgMobilityLabOverlay.open{display:flex}
+.vgml-shell{
+  width:min(1380px,96vw);margin:auto;
+  border:1px solid #4e7890;border-radius:18px;
+  background:linear-gradient(145deg,#07141d,#0b1d27 60%,#111827);
+  box-shadow:0 28px 70px rgba(0,0,0,.55);overflow:hidden
+}
+.vgml-head{
+  position:sticky;top:0;z-index:2;
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;
+  padding:13px 15px;border-bottom:1px solid #345465;
+  background:rgba(7,20,29,.98);backdrop-filter:blur(8px)
+}
+.vgml-head h2{margin:0;font-size:17px;letter-spacing:.08em;color:#d9f3ff}
+.vgml-head p{margin:3px 0 0;font-size:8px;color:#90aeba}
+.vgml-exit{
+  min-height:44px!important;padding:8px 14px!important;
+  background:#54252a!important;border-color:#96515a!important;
+  font-weight:900!important;font-size:9px!important
+}
+.vgml-grid{display:grid;grid-template-columns:1.05fr 1.25fr .8fr;gap:10px;padding:12px}
+.vgml-panel{border:1px solid #2c4c5e;border-radius:11px;background:#081721;padding:10px}
+.vgml-panel h3{margin:0 0 8px;font-size:10px;letter-spacing:.08em;color:#bcd7e2}
+.vgml-paws{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vgml-paw{
+  min-height:108px!important;text-align:left!important;padding:10px!important;
+  background:#0c202a!important;border-color:#31586a!important
+}
+.vgml-paw.selected{background:#17372f!important;border-color:#5b9f82!important}
+.vgml-paw b{display:block;font-size:12px;margin-bottom:4px}
+.vgml-paw span{font-size:8px;color:#99b4bf}
+.vgml-meter{height:8px;border-radius:6px;background:#132730;overflow:hidden;margin:6px 0}
+.vgml-meter i{display:block;height:100%;background:linear-gradient(90deg,#4d8aa2,#6eddb9)}
+.vgml-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.vgml-actions button{min-height:52px!important;font-size:8px!important}
+.vgml-primary{background:#174133!important;border-color:#4f9277!important}
+.vgml-readout{display:grid;grid-template-columns:1fr auto;gap:7px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:8px}
+.vgml-readout b{color:#8de0c4}
+.vgml-log{max-height:220px;overflow:auto;padding:8px;border:1px solid #274656;border-radius:8px;background:#061018;font-size:8px;line-height:1.5}
+.vgml-open-btn{
+  background:#163648!important;border-color:#46728a!important;font-weight:900!important
+}
+@media(max-width:1050px){.vgml-grid{grid-template-columns:1fr}.vgml-head{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -19240,6 +19292,185 @@ window.VetGodViewportController={
   holdCurrent:function(){protectedY=currentY();hold(protectedY)},
   getY:currentY
 };
+})();
+</script>
+
+
+<script id="vgMobilityPressureLabJs">
+(function(){
+'use strict';
+const KEY="vetGodMobilityLabV1";
+let S={open:false,selected:"front-left",log:["Mobility & Paw Pressure Lab ready."],returnY:0};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const cap=v=>Math.max(0,Math.min(100,Math.round(Number(v)||0)));
+
+function patient(){
+ try{
+  const a=[...(state?.patients||[]),...(state?.pets||[])];
+  return a.find(x=>x.id===state.activeId)||a.find(x=>x.admitted&&!x.discharged&&!x.sentHome)||null
+ }catch(e){return null}
+}
+function init(p){
+ if(!p)return;
+ p.mobilityLab=p.mobilityLab||{
+   paws:{
+    "front-left":{pressure:52,pain:0,weight:52},
+    "front-right":{pressure:50,pain:0,weight:50},
+    "rear-left":{pressure:48,pain:0,weight:48},
+    "rear-right":{pressure:50,pain:0,weight:50}
+   },
+   gait:50,symmetry:50,stance:50,tests:0
+ };
+ p.mobility=cap(p.mobility??45);
+ p.pain=cap(p.pain??40);
+}
+function addLog(msg){
+ S.log.unshift(msg);S.log=S.log.slice(0,14);save()
+}
+function selectedPaw(p){init(p);return p.mobilityLab.paws[S.selected]||p.mobilityLab.paws["front-left"]}
+function simulatePressure(p,key){
+ const paw=p.mobilityLab.paws[key];
+ const base=50 + Math.floor(Math.random()*13)-6;
+ const painBias=Math.round((p.pain||0)*.18);
+ const injured=/fracture|wound|trauma|arthritis/i.test(String(p.condition||p.diagnosis||""));
+ paw.pressure=cap(base-(injured?painBias:Math.round(painBias*.4)));
+ paw.weight=cap(paw.pressure + Math.floor(Math.random()*7)-3);
+ paw.pain=cap(Math.max(0,(p.pain||0)+(50-paw.pressure)/2));
+}
+function runPressure(){
+ const p=patient();if(!p)return;
+ init(p);simulatePressure(p,S.selected);
+ p.mobilityLab.tests++;
+ const paw=selectedPaw(p);
+ addLog(`${S.selected.toUpperCase()} pressure test: ${paw.pressure}% load · pain response ${paw.pain}.`);
+ render()
+}
+function runAll(){
+ const p=patient();if(!p)return;
+ init(p);
+ Object.keys(p.mobilityLab.paws).forEach(k=>simulatePressure(p,k));
+ const vals=Object.values(p.mobilityLab.paws).map(x=>x.pressure);
+ const hi=Math.max(...vals),lo=Math.min(...vals);
+ p.mobilityLab.symmetry=cap(100-(hi-lo)*2);
+ p.mobilityLab.gait=cap((p.mobility||45)+(p.mobilityLab.symmetry-50)*.25);
+ p.mobilityLab.stance=cap((p.mobilityLab.symmetry+p.mobility)/2);
+ p.mobilityLab.tests++;
+ addLog(`Four-paw test complete. Symmetry ${p.mobilityLab.symmetry}% · gait ${p.mobilityLab.gait}%.`);
+ render()
+}
+function guardedMobility(){
+ const p=patient();if(!p)return;init(p);
+ if(p.pain>45){
+   p.mobility=cap(p.mobility-3);
+   addLog("Guarded mobility test stopped early because pain is still too high.");
+ }else{
+   p.mobility=cap(p.mobility+9);
+   p.mobilityLab.gait=cap(p.mobilityLab.gait+7);
+   addLog("Guarded mobility test completed safely. Mobility improved.");
+ }
+ render()
+}
+function support(){
+ const p=patient();if(!p)return;init(p);
+ p.pain=cap(p.pain-6);p.mobility=cap(p.mobility+4);
+ addLog("Supportive positioning reduced discomfort and improved weight bearing.");
+ render()
+}
+function open(){
+ S.returnY=window.scrollY||0;S.open=true;save();
+ ensureOverlay();document.getElementById("vgMobilityLabOverlay")?.classList.add("open");
+ document.body.style.overflow="hidden";render()
+}
+function close(){
+ S.open=false;save();
+ document.getElementById("vgMobilityLabOverlay")?.classList.remove("open");
+ document.body.style.overflow="";
+ requestAnimationFrame(()=>window.scrollTo(0,S.returnY||0))
+}
+function pick(k){S.selected=k;save();render()}
+function html(){
+ const p=patient();
+ if(!p)return `<div class="vgml-shell"><div class="vgml-head"><div><h2>🐾 MOBILITY & PAW PRESSURE LAB</h2><p>No active patient.</p></div><button class="vgml-exit" onclick="vgmlClose()">✕ EXIT / BACK TO CASE</button></div></div>`;
+ init(p);
+ const paws=[["front-left","FRONT LEFT"],["front-right","FRONT RIGHT"],["rear-left","REAR LEFT"],["rear-right","REAR RIGHT"]];
+ return `<div class="vgml-shell">
+  <div class="vgml-head">
+   <div><h2>🐾 MOBILITY & PAW PRESSURE LAB</h2><p>${p.name||"Patient"} · ${p.species||"Animal"} · reusable mobility diagnostics workspace</p></div>
+   <button class="vgml-exit" onclick="vgmlClose()">✕ EXIT / BACK TO CASE</button>
+  </div>
+  <div class="vgml-grid">
+   <div class="vgml-panel"><h3>PAW PRESSURE MAP</h3>
+    <div class="vgml-paws">${paws.map(([k,n])=>{
+      const q=p.mobilityLab.paws[k];
+      return `<button class="vgml-paw ${S.selected===k?"selected":""}" onclick="vgmlPick('${k}')"><b>${n}</b><span>Pressure ${q.pressure}% · Weight ${q.weight}% · Pain ${q.pain}</span><div class="vgml-meter"><i style="width:${q.pressure}%"></i></div></button>`
+    }).join("")}</div>
+   </div>
+   <div class="vgml-panel"><h3>TESTING & MOBILITY WORK</h3>
+    <div class="vgml-actions">
+      <button class="vgml-primary" onclick="vgmlPressure()">TEST SELECTED PAW</button>
+      <button class="vgml-primary" onclick="vgmlAll()">RUN FOUR-PAW PRESSURE TEST</button>
+      <button onclick="vgmlGuarded()">GUARDED MOBILITY TEST</button>
+      <button onclick="vgmlSupport()">SUPPORTIVE POSITIONING</button>
+    </div>
+    <div style="margin-top:9px">
+      <div class="vgml-readout"><span>Overall Mobility</span><b>${p.mobility}</b></div>
+      <div class="vgml-readout"><span>Pain</span><b>${p.pain}</b></div>
+      <div class="vgml-readout"><span>Gait Score</span><b>${p.mobilityLab.gait}</b></div>
+      <div class="vgml-readout"><span>Pressure Symmetry</span><b>${p.mobilityLab.symmetry}%</b></div>
+      <div class="vgml-readout"><span>Stance Stability</span><b>${p.mobilityLab.stance}%</b></div>
+      <div class="vgml-readout"><span>Tests Run</span><b>${p.mobilityLab.tests}</b></div>
+    </div>
+   </div>
+   <div class="vgml-panel"><h3>SESSION LOG</h3><div class="vgml-log">${S.log.map(x=>"• "+x).join("<br>")}</div></div>
+  </div>
+ </div>`
+}
+function ensureOverlay(){
+ let el=document.getElementById("vgMobilityLabOverlay");
+ if(!el){
+   el=document.createElement("div");el.id="vgMobilityLabOverlay";
+   document.body.appendChild(el)
+ }
+}
+function render(){
+ ensureOverlay();
+ const el=document.getElementById("vgMobilityLabOverlay");
+ if(el)el.innerHTML=html();
+ if(S.open)el?.classList.add("open");
+}
+function addAccessButton(){
+ const bar=document.querySelector("#vgCaseControlBar .vgcc-actions");
+ if(bar&&!document.getElementById("vgMobilityLabOpen")){
+   const b=document.createElement("button");
+   b.id="vgMobilityLabOpen";b.className="vgml-open-btn";
+   b.textContent="🐾 PAW PRESSURE LAB";
+   b.onclick=open;bar.appendChild(b)
+ }
+ document.querySelectorAll("button").forEach(btn=>{
+   if(btn.id==="vgMobilityLabOpen")return;
+   const t=(btn.textContent||"").toLowerCase();
+   if(/pressure.*(paw|foot|feet)|paw.*pressure|foot.*pressure/.test(t)){
+     btn.onclick=function(e){e?.preventDefault();open()}
+   }
+ })
+}
+function hook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgml)return;
+ const w=function(){const r=old.apply(this,arguments);setTimeout(()=>{addAccessButton();render()},20);return r};
+ w.__vgml=true;window[name]=w
+}
+["render","renderClinic","renderRecovery","renderSurgery","vgccNext","vgccForward"].forEach(hook);
+
+window.vgmlOpen=open;window.vgmlClose=close;window.vgmlPick=pick;
+window.vgmlPressure=runPressure;window.vgmlAll=runAll;window.vgmlGuarded=guardedMobility;window.vgmlSupport=support;
+window.VetGodMobilityLab={open,close,render,state:S};
+
+function install(){
+ ensureOverlay();render();addAccessButton();
+ document.addEventListener("click",()=>setTimeout(addAccessButton,25),true)
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
 
