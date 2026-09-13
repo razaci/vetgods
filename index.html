@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · MOBILITY PRESSURE LAB · HOSPITAL EDITION</title>
+<title>VET GODS · BREED & SEX PATIENT PROFILES</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3236,6 +3236,136 @@ html,body{
   background:#163648!important;border-color:#46728a!important;font-weight:900!important
 }
 @media(max-width:1050px){.vgml-grid{grid-template-columns:1fr}.vgml-head{grid-template-columns:1fr}}
+</style>
+
+
+<style id="vgHospitalAreasRestoredCss">
+#vgHospitalAreasBar{
+  position:sticky;
+  top:58px;
+  z-index:19000;
+  margin:0 0 10px;
+  padding:8px 10px;
+  border:1px solid #365f73;
+  border-radius:0 0 12px 12px;
+  background:linear-gradient(90deg,rgba(5,17,24,.98),rgba(11,30,40,.98));
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+  backdrop-filter:blur(8px);
+  opacity:1!important;
+  filter:none!important;
+  pointer-events:auto!important;
+}
+#vgHospitalAreasBar *{
+  opacity:1!important;
+  filter:none!important;
+  pointer-events:auto!important;
+}
+.vgha-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:7px;
+}
+.vgha-head b{
+  font-size:10px;
+  letter-spacing:.08em;
+  color:#dff6ff;
+}
+.vgha-head span{
+  font-size:8px;
+  color:#91adba;
+}
+.vgha-grid{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:6px;
+}
+.vgha-grid button{
+  min-height:43px!important;
+  padding:7px 8px!important;
+  font-size:8px!important;
+  font-weight:900!important;
+  background:#0c2632!important;
+  border:1px solid #315c70!important;
+  color:#d9eef7!important;
+}
+.vgha-grid button:hover{
+  background:#133847!important;
+}
+.vgha-grid button.current{
+  background:#174b3b!important;
+  border-color:#58a184!important;
+  box-shadow:inset 0 0 0 1px rgba(100,210,170,.16);
+}
+.vgha-grid button.surgery{
+  background:#3a2530!important;
+  border-color:#8a5068!important;
+}
+.vgha-grid button.recovery{
+  background:#213a46!important;
+  border-color:#50859a!important;
+}
+.vgha-grid button.pressure{
+  background:#2f3520!important;
+  border-color:#75864a!important;
+}
+body.vg-focus-mode #vgHospitalAreasBar,
+body.vg-focus-mode #vgHospitalAreasBar *{
+  opacity:1!important;
+  filter:none!important;
+  pointer-events:auto!important;
+}
+@media(max-width:1250px){
+  .vgha-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+</style>
+
+
+<style id="vgCaseCompletionRepairCss">
+#vgCaseFinishPanel{
+  margin:8px 0 12px;padding:10px;border:1px solid #5b755d;border-radius:12px;
+  background:linear-gradient(90deg,#0c211b,#102a25);
+}
+.vgcfp-grid{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.vgcfp-title{font-size:11px;font-weight:950;letter-spacing:.06em;color:#dfffe9}
+.vgcfp-sub{font-size:8px;color:#a9c7b3;margin-top:3px}
+.vgcfp-btns{display:flex;gap:7px;flex-wrap:wrap}
+.vgcfp-btns button{min-height:42px!important;font-size:8px!important;font-weight:950!important}
+.vgcfp-finish{background:#245f43!important;border-color:#68ad84!important}
+.vgcfp-next{background:#234b62!important;border-color:#6591a8!important}
+@media(max-width:1000px){.vgcfp-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style id="vgPanelNumberingCss">
+.vg-panel-number{
+  position:absolute!important;
+  top:5px!important;left:5px!important;
+  z-index:5000!important;
+  min-width:25px!important;height:25px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:0 6px!important;
+  border:1px solid #77a7ba!important;border-radius:6px!important;
+  background:#07151d!important;color:#e6f8ff!important;
+  font:900 11px/1 monospace!important;
+  letter-spacing:0!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.4)!important;
+  pointer-events:none!important;
+}
+.vg-numbered-panel{position:relative!important}
+</style>
+
+
+<style id="vgBreedSexCss">
+.vg-animal-identity{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+  margin:6px 0 8px;padding:7px;border:1px solid #315365;border-radius:8px;background:#081721
+}
+.vg-ai-field{padding:6px 7px;border:1px solid rgba(100,150,170,.2);border-radius:6px;background:#0b202a}
+.vg-ai-label{font-size:7px;letter-spacing:.08em;color:#7898a6}
+.vg-ai-value{margin-top:2px;font-size:9px;font-weight:900;color:#daf3ff}
+@media(max-width:900px){.vg-animal-identity{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -19471,6 +19601,408 @@ function install(){
  document.addEventListener("click",()=>setTimeout(addAccessButton,25),true)
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgHospitalAreasRestoredJs">
+(function(){
+'use strict';
+
+const AREAS=[
+  ["clinic","🏥 CLINIC"],
+  ["surgery","✂️ SURGERY"],
+  ["recovery","❤️ RECOVERY"],
+  ["admit","➕ INTAKE"],
+  ["carelab","🔬 DIAGNOSTICS"],
+  ["research","📚 RESEARCH"],
+  ["pressure","🐾 PAW PRESSURE LAB"]
+];
+
+function current(){
+  try{return String(state?.screen||"clinic").toLowerCase()}catch(e){return"clinic"}
+}
+function go(area){
+  if(area==="pressure"){
+    try{if(typeof vgmlOpen==="function"){vgmlOpen();return}}catch(e){}
+  }
+  try{
+    if(typeof vgOpenScreen==="function"){vgOpenScreen(area);return}
+    if(window.state){state.screen=area;if(typeof render==="function")render()}
+  }catch(e){}
+}
+function html(){
+  const cur=current();
+  return `<nav id="vgHospitalAreasBar" aria-label="Hospital Areas">
+    <div class="vgha-head">
+      <b>🏥 HOSPITAL AREAS</b>
+      <span>Core departments are always available — choose where you want to work.</span>
+    </div>
+    <div class="vgha-grid">
+      ${AREAS.map(([id,label])=>{
+        const cls=[
+          cur===id?"current":"",
+          id==="surgery"?"surgery":"",
+          id==="recovery"?"recovery":"",
+          id==="pressure"?"pressure":""
+        ].filter(Boolean).join(" ");
+        return `<button class="${cls}" onclick="vgHospitalGo('${id}')">${label}</button>`;
+      }).join("")}
+    </div>
+  </nav>`
+}
+function install(){
+  document.getElementById("vgHospitalAreasBar")?.remove();
+  const caseBar=document.getElementById("vgCaseControlBar");
+  if(caseBar){
+    caseBar.insertAdjacentHTML("afterend",html());
+  }else{
+    const app=document.getElementById("app")||document.body;
+    app.insertAdjacentHTML("afterbegin",html());
+  }
+}
+function refresh(){
+  const bar=document.getElementById("vgHospitalAreasBar");
+  if(!bar){install();return}
+  const cur=current();
+  bar.querySelectorAll("button").forEach(btn=>{
+    const oc=btn.getAttribute("onclick")||"";
+    const m=oc.match(/vgHospitalGo\('([^']+)'\)/);
+    btn.classList.toggle("current",!!m&&m[1]===cur);
+  });
+}
+function hook(name){
+  const old=window[name];
+  if(typeof old!=="function"||old.__vgha)return;
+  const w=function(){
+    const r=old.apply(this,arguments);
+    setTimeout(()=>{install();refresh()},25);
+    return r;
+  };
+  w.__vgha=true;
+  window[name]=w;
+}
+["render","renderClinic","renderSurgery","renderRecovery","renderCareLab","vgOpenScreen"].forEach(hook);
+
+window.vgHospitalGo=go;
+window.VetGodHospitalAreas={install,refresh,go};
+
+function boot(){
+  install();
+  document.addEventListener("click",()=>setTimeout(refresh,20),true);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
+else boot();
+})();
+</script>
+
+
+<script id="vgCaseCompletionRepairJs">
+(function(){
+'use strict';
+const KEY="vetGodCaseCompletionRepairV1";
+let R={completedIds:{},last:"Case completion system ready."};
+try{Object.assign(R,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const saveR=()=>{try{localStorage.setItem(KEY,JSON.stringify(R))}catch(e){}};
+
+function allPatients(){
+ try{return [...(state?.patients||[]),...(state?.pets||[])]}catch(e){return[]}
+}
+function active(){
+ try{
+  const a=allPatients();
+  return a.find(p=>p.id===state.activeId)||
+         a.find(p=>p.admitted&&!p.discharged&&!p.sentHome&&!p.flow?.completed)||
+         null
+ }catch(e){return null}
+}
+function surgeryCase(p){
+ const t=String(p?.condition||p?.diagnosis||"").toLowerCase();
+ return !!(p?.requiresSurgery||/fracture|foreign body|rupture|internal bleed|mass|obstruction|laceration|wound repair/.test(t))
+}
+function normalizeReady(p){
+ p.problemResolved=true;
+ p.treatmentComplete=true;
+ p.caseComplete=true;
+ if(surgeryCase(p))p.surgeryComplete=true;
+ p.health=Math.max(+p.health||0,82);
+ p.pain=Math.min(Number.isFinite(+p.pain)?+p.pain:100,28);
+ p.stress=Math.min(Number.isFinite(+p.stress)?+p.stress:100,28);
+ p.oxygen=Math.max(+p.oxygen||0,95);
+ p.hydration=Math.max(+(p.hydration??p.water)||0,70);
+ p.mobility=Math.max(+p.mobility||0,62);
+ p.comfort=Math.max(+p.comfort||0,72);
+ p.hunger=Math.min(Number.isFinite(+p.hunger)?+p.hunger:100,30);
+ p.thirst=Math.min(Number.isFinite(+p.thirst)?+p.thirst:100,25);
+ p.ate=true;p.drank=true;p.recoveryCleared=true;
+ p.department="Recovery";p.location="Recovery";
+ p.flow=p.flow||{};p.flow.stage="READY";
+}
+function removeFromQueues(p){
+ const id=p.id;
+ const keys=["clinicQueue","surgeryQueue","recoveryQueue","admitQueue","activeCases","hospitalMap"];
+ try{
+  keys.forEach(k=>{
+   if(Array.isArray(state?.[k]))state[k]=state[k].filter(x=>(typeof x==="object"?x.id:x)!==id)
+  });
+ }catch(e){}
+}
+function finish(){
+ const p=active();
+ if(!p){R.last="No active patient to finish.";saveR();renderPanel();return}
+ normalizeReady(p);
+
+ // One authoritative completion path.
+ p.recoveryCleared=true;
+ p.sentHome=true;
+ p.discharged=true;
+ p.admitted=false;
+ p.department="Home";
+ p.location="Home";
+ p.flow.completed=true;
+ p.flow.stage="COMPLETE";
+ p.completedAt=Date.now();
+
+ removeFromQueues(p);
+
+ if(!R.completedIds[p.id]){
+   R.completedIds[p.id]=Date.now();
+   try{
+    if(window.state){
+      state.livesSaved=(+state.livesSaved||0)+1;
+      state.funds=(+state.funds||0)+125;
+    }
+   }catch(e){}
+ }
+ try{
+   if(state.activeId===p.id)state.activeId=null;
+   if(typeof saveGame==="function")saveGame("Case completed",true);
+ }catch(e){}
+
+ R.last=(p.name||"Patient")+" completed care and left the hospital. NEXT PATIENT is unlocked.";
+ saveR();
+
+ // Do not call the older competing completion engines here.
+ try{if(typeof render==="function")render()}catch(e){}
+ setTimeout(()=>{renderPanel();try{window.scrollTo(0,0)}catch(e){}},40)
+}
+function loadNext(){
+ // First try the game's existing generator/admission pathway.
+ const before=active();
+ try{
+   if(typeof vgcfNext==="function"){vgcfNext()}
+   else if(typeof admitNext==="function"){admitNext()}
+   else if(typeof vgOpenScreen==="function"){vgOpenScreen("admit")}
+ }catch(e){}
+ setTimeout(()=>{
+   const p=active();
+   if(p){
+     p.sentHome=false;p.discharged=false;p.admitted=true;
+     p.department=p.department||"Clinic";p.location=p.location||"Clinic";
+     p.flow=p.flow||{};if(!p.flow.stage||p.flow.stage==="COMPLETE")p.flow.stage="ARRIVAL";
+     try{state.activeId=p.id}catch(e){}
+     R.last=(p.name||"New patient")+" is now the active case.";
+   }else{
+     R.last="Intake is open — select/admit the next patient.";
+     try{if(typeof vgOpenScreen==="function")vgOpenScreen("admit")}catch(e){}
+   }
+   saveR();renderPanel()
+ },120)
+}
+function panelHTML(){
+ const p=active();
+ const name=p?.name||"No active patient";
+ return `<section id="vgCaseFinishPanel">
+  <div class="vgcfp-grid">
+   <div>
+    <div class="vgcfp-title">🏁 CASE EXIT · ${name}</div>
+    <div class="vgcfp-sub">${R.last} This is the authoritative end-of-case control; it is intentionally allowed to bypass a stuck legacy requirement.</div>
+   </div>
+   <div class="vgcfp-btns">
+    ${p?`<button class="vgcfp-finish" onclick="vgRepairFinishCase()">✓ COMPLETE & DISCHARGE CURRENT PATIENT</button>`:""}
+    <button class="vgcfp-next" onclick="vgRepairNextPatient()">▶ NEXT PATIENT</button>
+   </div>
+  </div>
+ </section>`
+}
+function renderPanel(){
+ document.getElementById("vgCaseFinishPanel")?.remove();
+ const areas=document.getElementById("vgHospitalAreasBar");
+ const casebar=document.getElementById("vgCaseControlBar");
+ const anchor=areas||casebar;
+ if(anchor)anchor.insertAdjacentHTML("afterend",panelHTML());
+ else (document.getElementById("app")||document.body).insertAdjacentHTML("afterbegin",panelHTML())
+}
+function patchOldFinishButtons(){
+ document.querySelectorAll("button").forEach(b=>{
+  const t=(b.textContent||"").toLowerCase();
+  if(/finish current case|complete.*case|send home|discharge/.test(t) && b.id!=="vgRepairFinishCase"){
+    // Redirect obvious legacy end-of-case controls to the canonical path.
+    if(!/next patient/.test(t))b.onclick=finish;
+  }
+ })
+}
+function hook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgfinishrepair)return;
+ const w=function(){const r=old.apply(this,arguments);setTimeout(()=>{renderPanel();patchOldFinishButtons()},30);return r};
+ w.__vgfinishrepair=true;window[name]=w
+}
+["render","renderClinic","renderRecovery","renderSurgery","vgOpenScreen"].forEach(hook);
+
+window.vgRepairFinishCase=finish;
+window.vgRepairNextPatient=loadNext;
+window.VetGodCaseCompletionRepair={finish,loadNext,active,render:renderPanel};
+
+function boot(){renderPanel();patchOldFinishButtons();document.addEventListener("click",()=>setTimeout(patchOldFinishButtons,30),true)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
+})();
+</script>
+
+
+<script id="vgPanelNumberingJs">
+(function(){
+'use strict';
+const KEY="vetGodPanelNumbersV1";
+let registry={};
+try{registry=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){registry={}}
+let next=Math.max(0,...Object.values(registry).map(Number).filter(Number.isFinite))+1;
+
+function keyFor(el){
+ if(el.id)return"id:"+el.id;
+ const heading=el.querySelector(":scope > h1,:scope > h2,:scope > h3,:scope > h4,.panel-title,.card-title,.section-title");
+ const text=(heading?.textContent||el.getAttribute("aria-label")||"").trim().replace(/\s+/g," ").slice(0,80);
+ if(text)return"title:"+text;
+ const parent=el.parentElement;
+ const siblings=parent?[...parent.children].filter(x=>isPanel(x)):[];
+ return"path:"+(parent?.id||parent?.className||"root")+"-"+Math.max(0,siblings.indexOf(el));
+}
+function isPanel(el){
+ if(!(el instanceof HTMLElement))return false;
+ if(el.classList.contains("vg-panel-number"))return false;
+ if(el.id==="vgMobilityLabOverlay")return false;
+ const c=(" "+el.className+" ").toLowerCase();
+ const id=(el.id||"").toLowerCase();
+ return /\b(panel|card|section|module|deck|director|telemetry|readout|flow|engine|lab|board)\b/.test(c) ||
+        /(panel|director|telemetry|flow|engine|lab|board|casecontrol|hospitalareas|casefinish)/.test(id);
+}
+function number(el){
+ if(el.dataset.vgPanelNumber)return;
+ const key=keyFor(el);
+ if(!registry[key]){registry[key]=next++;try{localStorage.setItem(KEY,JSON.stringify(registry))}catch(e){}}
+ const n=registry[key];
+ el.dataset.vgPanelNumber=n;
+ el.classList.add("vg-numbered-panel");
+ const badge=document.createElement("span");
+ badge.className="vg-panel-number";
+ badge.textContent=n;
+ badge.setAttribute("aria-label","Panel "+n);
+ el.insertBefore(badge,el.firstChild);
+}
+function scan(root=document){
+ const all=[...(root.querySelectorAll?root.querySelectorAll("*"):[])];
+ all.filter(isPanel).forEach(number);
+}
+function install(){
+ scan();
+ const mo=new MutationObserver(ms=>{
+   ms.forEach(m=>m.addedNodes.forEach(n=>{
+     if(n.nodeType===1){if(isPanel(n))number(n);scan(n)}
+   }))
+ });
+ mo.observe(document.body,{childList:true,subtree:true});
+}
+window.VetGodPanelNumbers={scan,registry};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgBreedSexJs">
+(function(){
+'use strict';
+const BREEDS={
+ dog:["Labrador Retriever","German Shepherd","Golden Retriever","Australian Shepherd","Border Collie","Beagle","Boxer","Siberian Husky","Great Dane","Chihuahua","Mixed Breed"],
+ cat:["Domestic Shorthair","Domestic Longhair","Maine Coon","Siamese","Ragdoll","Bengal","Persian","Russian Blue","American Shorthair","Mixed Breed"],
+ pig:["Yorkshire","Berkshire","Duroc","Hampshire","Tamworth","Large Black","Kunekune","Vietnamese Pot-Bellied","Mixed Breed"],
+ rabbit:["Holland Lop","Mini Rex","Netherland Dwarf","Lionhead","Flemish Giant","English Lop","Mixed Breed"],
+ horse:["Quarter Horse","Thoroughbred","Arabian","Appaloosa","Morgan","Paint Horse","Draft Cross","Mixed Breed"],
+ bird:["Cockatiel","Budgerigar","African Grey","Amazon Parrot","Macaw","Conure","Domestic Pigeon","Mixed"],
+ goat:["Nigerian Dwarf","Boer","Nubian","Alpine","LaMancha","Saanen","Mixed Breed"],
+ sheep:["Merino","Suffolk","Dorper","Hampshire","Dorset","Mixed Breed"]
+};
+function hash(s){
+ let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return Math.abs(h)
+}
+function classify(p){
+ if(!p)return;
+ const sp=String(p.species||p.type||"Animal").toLowerCase();
+ const key=Object.keys(BREEDS).find(k=>sp.includes(k));
+ const seed=hash(String(p.id||p.name||sp));
+ if(!p.breed){
+   const a=BREEDS[key]||["Mixed / Unspecified"];
+   p.breed=a[seed%a.length]
+ }
+ if(!p.sex)p.sex=(seed%2===0?"Female":"Male");
+ p.classification=p.classification||(
+   key==="dog"?"Canine":
+   key==="cat"?"Feline":
+   key==="pig"?"Porcine":
+   key==="rabbit"?"Lagomorph":
+   key==="horse"?"Equine":
+   key==="bird"?"Avian":
+   key==="goat"?"Caprine":
+   key==="sheep"?"Ovine":"Animal"
+ )
+}
+function all(){
+ try{return [...(state?.patients||[]),...(state?.pets||[])]}catch(e){return[]}
+}
+function active(){
+ try{return all().find(p=>p.id===state.activeId)||all().find(p=>p.admitted&&!p.discharged)||null}catch(e){return null}
+}
+function card(){
+ const p=active();if(!p)return"";
+ classify(p);
+ return `<div class="vg-animal-identity" id="vgAnimalIdentity">
+   <div class="vg-ai-field"><div class="vg-ai-label">SPECIES / CLASSIFICATION</div><div class="vg-ai-value">${p.species||p.type||"Animal"} · ${p.classification}</div></div>
+   <div class="vg-ai-field"><div class="vg-ai-label">BREED</div><div class="vg-ai-value">${p.breed}</div></div>
+   <div class="vg-ai-field"><div class="vg-ai-label">SEX</div><div class="vg-ai-value">${p.sex}</div></div>
+ </div>`
+}
+function install(){
+ all().forEach(classify);
+ document.querySelectorAll("#vgAnimalIdentity").forEach(x=>x.remove());
+ const targets=[
+   document.querySelector("#vgGuidedDirector"),
+   document.querySelector("#vgClinicalLogic"),
+   document.querySelector("#vgCaseFinishPanel")
+ ].filter(Boolean);
+ const target=targets[0];
+ if(target){
+   const head=target.querySelector("h1,h2,h3,.vgcc-title,.vgcfp-title")||target.firstElementChild;
+   if(head)head.insertAdjacentHTML("afterend",card())
+ }
+ // Add breed/sex to visible patient cards without duplicating.
+ document.querySelectorAll("[data-patient-id],.patient-card,.animal-card").forEach(el=>{
+   if(el.querySelector(".vg-card-breedsex"))return;
+   const id=el.dataset.patientId;
+   const p=all().find(x=>String(x.id)===String(id));
+   if(!p)return;classify(p);
+   const d=document.createElement("div");d.className="vg-card-breedsex";
+   d.style.cssText="font-size:8px;color:#9fc0cd;margin-top:4px";
+   d.textContent=`${p.breed} · ${p.sex}`;
+   el.appendChild(d)
+ })
+}
+function hook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgbreedsex)return;
+ const w=function(){const r=old.apply(this,arguments);setTimeout(install,25);return r};
+ w.__vgbreedsex=true;window[name]=w
+}
+["render","renderClinic","renderRecovery","renderSurgery","vgOpenScreen","vgcfNext"].forEach(hook);
+window.VetGodBreedSex={install,classify};
+function boot(){install();document.addEventListener("click",()=>setTimeout(install,30),true)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
 </script>
 
