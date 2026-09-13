@@ -16434,5 +16434,84 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 <!-- ===== END VET GODS 23 ===== -->
+
+<!-- ===== VET GODS 24 · LIVING CASE DIRECTOR ===== -->
+<style>
+#vg24Director{margin:14px 0;padding:14px;border:1px solid rgba(80,220,255,.28);border-radius:18px;background:linear-gradient(145deg,rgba(3,20,34,.96),rgba(12,17,37,.94));box-shadow:0 12px 34px rgba(0,0,0,.24)}
+.vg24-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}.vg24-head h3{margin:0 0 4px}.vg24-chip{padding:6px 10px;border-radius:999px;border:1px solid rgba(255,210,90,.4);font-size:12px}
+.vg24-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:10px}.vg24-card{padding:10px;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09)}
+.vg24-card b{display:block;margin-bottom:5px}.vg24-card small{opacity:.78}.vg24-next{font-size:16px}.vg24-timeline{max-height:230px;overflow:auto}.vg24-event{padding:7px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:12px}
+.vg24-event time{opacity:.6;margin-right:7px}.vg24-response{border-left:3px solid #ffd45c;padding-left:9px}.vg24-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.vg24-actions button{min-height:42px}
+.vg24-banner{margin-top:10px;padding:10px;border-radius:12px;background:rgba(255,210,80,.08)}.vg24-world{display:grid;gap:6px}.vg24-world div{font-size:12px;padding:7px;border-radius:9px;background:rgba(255,255,255,.035)}
+@media(max-width:650px){.vg24-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+'use strict';
+const KEY='vetGodsLivingCaseDirectorV24';
+function now(){return Date.now()} function clamp(v,a=0,b=100){v=Number(v);return Math.max(a,Math.min(b,isFinite(v)?v:0))}
+function P(){try{return (state.patients||[]).find(x=>x.id===state.activeId)||(state.patients||[]).find(x=>x.admitted)||null}catch(e){return null}}
+function meta(p){p.caseDirector=p.caseDirector||{timeline:[],responses:[],diagnostics:{revealed:[]},followUp:null,lastVitals:null,lastActionAt:0};return p.caseDirector}
+function stamp(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+function event(p,text,type='CARE'){let m=meta(p);m.timeline.unshift({at:now(),time:stamp(),type,text:String(text)});m.timeline=m.timeline.slice(0,80)}
+function vitals(p){return {oxygen:clamp(p.oxygen??95),hydration:clamp(p.hydration??70),pain:clamp(p.pain??35),stress:clamp(p.stress??35),trust:clamp(p.trust??45),mobility:clamp(p.mobility??55),energy:clamp(p.energy??55)}}
+function diff(a,b){let out=[];if(!a||!b)return out;for(const k of Object.keys(b)){let d=Math.round(b[k]-a[k]);if(Math.abs(d)>=3)out.push(`${k} ${d>0?'↑':'↓'} ${Math.abs(d)}`)}return out}
+function problem(p){if((p.oxygen??100)<90)return'Low oxygen / respiratory stability';if((p.bleeding||0)>18)return'Active bleeding';if((p.shock||0)>22)return'Shock / perfusion';if((p.pain??0)>45)return'Pain control';if((p.hydration??100)<60)return'Hydration';if((p.stress??0)>55)return'Stress / fear';if((p.mobility??100)<55)return'Mobility recovery';if(p.hiddenDiagnosis&&!meta(p).diagnostics.revealed.includes('diagnosis'))return'Diagnostic uncertainty';return p.condition||p.diagnosis||'Recovery and independence'}
+function next(p){let x=problem(p);if(x.includes('oxygen'))return['Oxygen / Stabilize','Restore respiratory stability before advancing care.'];if(x.includes('bleeding'))return['Control bleeding','Hemostasis takes priority over routine care.'];if(x.includes('Shock'))return['IV support / Stabilize','Improve perfusion, then reassess response.'];if(x.includes('Pain'))return['Pain Control','Reduce guarding and stress before demanding activity or feeding.'];if(x.includes('Hydration'))return['Offer Water / Clinical Fluids','Stabilize hydration; voluntary drinking remains a separate milestone.'];if(x.includes('Stress'))return['Comfort / Quiet Rest','Lower fear and watch for voluntary approach behavior.'];if(x.includes('Mobility'))return['Mobility Check / Gentle Walk','Rebuild strength without forcing a painful trial.'];if(x.includes('Diagnostic'))return['Run Relevant Test','Reveal evidence before committing to definitive treatment.'];try{if(window.VG23){let b=VG23.blockers(p);if(b.length)return[b[0][0],b[0][2]]}}catch(e){}return['Final Check','Review the whole journey and complete the case when ready.']}
+function discover(p){
+ let m=meta(p);if(!p.hiddenDiagnosis||m.diagnostics.revealed.includes('diagnosis'))return;
+ let n=m.diagnostics.revealed.length;
+ const clues=['pattern','system','diagnosis'];let c=clues[Math.min(n,2)];m.diagnostics.revealed.push(c);
+ let text=c==='pattern'?'Testing reveals a consistent abnormal pattern.':c==='system'?`Evidence localizes the problem toward ${p.condition||'the affected system'}.`:`Diagnosis revealed: ${p.diagnosis||p.condition||'underlying clinical condition'}.`;
+ event(p,text,'DISCOVERY');
+}
+function response(p,label,before){let after=vitals(p),d=diff(before,after);if(d.length){let text=`Response after ${label}: ${d.join(' · ')}`;meta(p).responses.unshift({at:now(),text});meta(p).responses=meta(p).responses.slice(0,20);event(p,text,'RESPONSE')}}
+function hook(){
+ if(window.performPatientAction&&!window.performPatientAction.__vg24){let old=window.performPatientAction;let w=function(id,a){let p=(state.patients||[]).find(x=>x.id===id)||P(),b=p?vitals(p):null,r=old.apply(this,arguments);if(p){meta(p).lastActionAt=now();event(p,String(a).replace(/([A-Z])/g,' $1').trim(),'ACTION');if(a==='runTest')discover(p);setTimeout(()=>{response(p,a,b);install()},30)}return r};w.__vg24=true;window.performPatientAction=w}
+ if(window.vghAction&&!window.vghAction.__vg24){let old=window.vghAction;let w=function(id,a){let p=(state.patients||[]).find(x=>x.id===id)||P(),b=p?vitals(p):null,r=old.apply(this,arguments);if(p){event(p,'Healing care: '+a,'HEALING');setTimeout(()=>{response(p,a,b);install()},30)}return r};w.__vg24=true;window.vghAction=w}
+}
+function debrief(p){
+ let m=meta(p),mil=(p.canonicalCare?.milestones||p.milestones||[]);return {name:p.name||'Patient',diagnosis:p.diagnosis||p.condition||'Resolved clinical case',events:m.timeline.length,milestones:Array.isArray(mil)?mil.length:0};
+}
+function archiveFollowup(p){
+ let m=meta(p);if(m.followUp)return;m.followUp={dueAt:now()+((3+Math.floor(Math.random()*12))*24*3600*1000),trust:p.trust||50,previous:p.diagnosis||p.condition||'previous care',ready:false};
+ try{let all=JSON.parse(localStorage.getItem(KEY)||'{}');all[p.id]=m.followUp;localStorage.setItem(KEY,JSON.stringify(all))}catch(e){}
+}
+function worldEvents(){
+ const h=new Date().getHours(),arr=[];
+ if(h<6||h>=22)arr.push('🌙 Overnight observation round active');
+ else if(h<12)arr.push('☀️ Morning feeding and reassessment round');
+ else if(h<18)arr.push('🧪 Day shift: labs, imaging and mobility checks moving through hospital');
+ else arr.push('🌆 Evening comfort, nutrition and handoff round');
+ let p=P();if(p&&(p.pain??0)>50)arr.push(`⚠️ ${p.name}: pain reassessment priority`);
+ if(p&&(p.hydration??100)<60)arr.push(`💧 ${p.name}: hydration attention due`);
+ try{let all=JSON.parse(localStorage.getItem(KEY)||'{}');for(let id in all)if(all[id].dueAt<=now())arr.push('🔁 A previously discharged patient is eligible for a follow-up visit')}catch(e){}
+ return arr.slice(0,4)
+}
+function html(p){
+ let m=meta(p),n=next(p),last=m.responses[0]?.text||'Treat the patient and the director will compare the before/after response.',timeline=m.timeline.slice(0,12);
+ return `<section id="vg24Director"><div class="vg24-head"><div><h3>🧭 LIVING CASE DIRECTOR</h3><small>One continuous story from arrival → discovery → treatment → response → recovery → discharge.</small></div><span class="vg24-chip">${p.hiddenDiagnosis&&!m.diagnostics.revealed.includes('diagnosis')?'MYSTERY ACTIVE':'CASE ACTIVE'}</span></div>
+ <div class="vg24-grid"><div class="vg24-card"><b>Current Problem</b>${problem(p)}<small>Highest-priority issue detected from the canonical patient state.</small></div>
+ <div class="vg24-card vg24-next"><b>Recommended Next</b>${n[0]}<small>${n[1]}</small></div>
+ <div class="vg24-card vg24-response"><b>Latest Treatment Response</b>${last}</div>
+ <div class="vg24-card"><b>Diagnostic Discovery</b>${m.diagnostics.revealed.length?m.diagnostics.revealed.join(' → '):'No new evidence revealed yet.'}<small>${p.hiddenDiagnosis?'Relevant tests progressively reveal the hidden case.':'Known case: testing still adds supporting evidence.'}</small></div></div>
+ <div class="vg24-grid"><div class="vg24-card"><b>Patient Timeline</b><div class="vg24-timeline">${timeline.length?timeline.map(e=>`<div class="vg24-event"><time>${e.time}</time><b>${e.type}</b> · ${e.text}</div>`).join(''):'Care events will appear here automatically.'}</div></div>
+ <div class="vg24-card"><b>Hospital Activity</b><div class="vg24-world">${worldEvents().map(x=>`<div>${x}</div>`).join('')}</div><div class="vg24-banner"><b>Continuity</b><br>Completed cases retain a compact follow-up record so returning patients can remember prior care and trust.</div></div></div>
+ <div class="vg24-actions"><button onclick="VG24.observe()">👁 Observe & Record</button><button onclick="VG24.test()">🧪 Investigate Case</button><button onclick="VG24.refresh()">🔄 Reassess Director</button></div></section>`
+}
+function install(){try{if(!window.state||state.screen!=='clinic')return;let p=P(),host=document.getElementById('clinic');if(!p||!host)return;host.querySelector('#vg24Director')?.remove();let anchor=host.querySelector('#vg23Completion')||host.querySelector('#vgBehaviorWatch')||host.querySelector('#vg18Nutrition')||host.querySelector('#vg16Command');if(anchor)anchor.insertAdjacentHTML('beforebegin',html(p));else host.insertAdjacentHTML('afterbegin',html(p))}catch(e){}}
+function observe(){let p=P();if(!p)return;let text=(p.stress??0)>55?'Patient remains watchful/avoidant; quiet observation recommended.':(p.trust??0)>60?'Patient voluntarily engages with caregiver and environment.':(p.pain??0)>45?'Guarded behavior remains visible during movement.':'Patient shows stable, increasingly natural behavior.';event(p,text,'OBSERVATION');install()}
+function test(){let p=P();if(!p)return;discover(p);try{if(window.performPatientAction)performPatientAction(p.id,'runTest')}catch(e){}install()}
+function finishHook(){
+ if(window.VG23&&VG23.finish&&!VG23.finish.__vg24){let old=VG23.finish;let w=function(id){let p=(state.patients||[]).find(x=>x.id===id)||P();if(p&&VG23.ready(p)){event(p,'FINAL LIFE SPARK CHECK PASSED','OUTCOME');archiveFollowup(p);let d=debrief(p);try{localStorage.setItem('vg24LastDebrief',JSON.stringify(d))}catch(e){}}return old.apply(this,arguments)};w.__vg24=true;VG23.finish=w}
+}
+window.VG24={refresh:install,observe,test,archiveFollowup};
+hook();finishHook();
+const oldRender=window.render;if(typeof oldRender==='function'&&!oldRender.__vg24){let w=function(){let r=oldRender.apply(this,arguments);setTimeout(()=>{hook();finishHook();install()},0);return r};w.__vg24=true;window.render=w}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(()=>{hook();finishHook();install()},150));else setTimeout(()=>{hook();finishHook();install()},150);
+})();
+</script>
+<!-- ===== END VET GODS 24 ===== -->
+
 </body>
 </html>
