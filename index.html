@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · CORE CLINICAL LOGIC · SUPERCOMPUTER EDITION</title>
+<title>VET GODS · STABLE CASE CONTROL · SUPERCOMPUTER EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3155,6 +3155,37 @@ body.vg-focus-mode #vgFastLane{opacity:1!important}
 .vgcl-clue.found{border-color:#356c57;background:#112b23}
 .vgcl-small{font-size:7px;color:#87a2ae;line-height:1.4}
 @media(max-width:1450px){.vgcl-grid{grid-template-columns:1fr 1fr}.vgcl-grid>.vgcl-panel:last-child{grid-column:1/-1}}
+</style>
+
+
+<style id="vgStableCaseControlCss">
+html{overflow-anchor:auto}
+body.vg-user-scrolling *{scroll-behavior:auto!important}
+#vgCaseControlBar{
+  position:sticky;top:0;z-index:9999;
+  margin:0 0 10px;padding:9px 10px;
+  border:1px solid #4f7f95;border-radius:0 0 12px 12px;
+  background:linear-gradient(90deg,rgba(5,17,24,.98),rgba(10,31,42,.98));
+  box-shadow:0 10px 24px rgba(0,0,0,.32);
+  backdrop-filter:blur(8px)
+}
+.vgcc-wrap{display:grid;grid-template-columns:1.2fr auto;gap:10px;align-items:center}
+.vgcc-title{font-size:11px;font-weight:950;letter-spacing:.07em;color:#d9f3ff}
+.vgcc-sub{font-size:8px;color:#9db8c4;margin-top:2px}
+.vgcc-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.vgcc-actions button{min-height:38px!important;padding:7px 10px!important;font-size:8px!important}
+.vgcc-next{background:#17604c!important;border-color:#5ab18f!important;font-weight:900!important}
+.vgcc-forward{background:#24465a!important;border-color:#4c7d96!important;font-weight:900!important}
+.vgcc-finish{background:#5b4617!important;border-color:#aa8c37!important;font-weight:900!important}
+.vgcc-stage{
+  display:inline-block;margin-left:7px;padding:3px 6px;border:1px solid #426c7c;
+  border-radius:5px;background:#0a202a;color:#9edbec;font-size:7px
+}
+.vgcc-warning{color:#ffd88d}
+@media(max-width:1250px){
+ .vgcc-wrap{grid-template-columns:1fr}
+ .vgcc-actions{justify-content:flex-start}
+}
 </style>
 
 </head>
@@ -18784,6 +18815,199 @@ function hook(name){
 ["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","vgcfNext","vgcfComplete","vgcfAdvance","vggdAct","vgflNextRequired"].forEach(hook);
 window.vgclAction=act;window.VetGodClinicalLogic={render,state:S};
 function install(){render();setInterval(()=>{try{tick();if(document.getElementById("vgClinicalLogic"))render()}catch(e){}},60000)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgStableCaseControlJs">
+(function(){
+'use strict';
+const KEY="vetGodStableCaseControlV1";
+let S={last:"Case Control online.",renderLock:false};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+let userScrolling=false,scrollTimer=null,lastY=window.scrollY||0;
+function markScrolling(){
+  userScrolling=true;document.body.classList.add("vg-user-scrolling");
+  clearTimeout(scrollTimer);
+  scrollTimer=setTimeout(()=>{userScrolling=false;document.body.classList.remove("vg-user-scrolling")},450);
+}
+window.addEventListener("scroll",markScrolling,{passive:true});
+window.addEventListener("wheel",markScrolling,{passive:true});
+window.addEventListener("touchmove",markScrolling,{passive:true});
+
+function patient(){
+ try{
+   const a=[...(state?.patients||[]),...(state?.pets||[])];
+   return a.find(x=>x.id===state.activeId)||a.find(x=>x.admitted&&!x.discharged&&!x.sentHome)||null
+ }catch(e){return null}
+}
+function needSurgery(p){
+ const t=String(p?.condition||p?.diagnosis||"").toLowerCase();
+ return !!(p?.requiresSurgery||/fracture|foreign body|rupture|internal bleed|mass|obstruction|laceration|wound repair/.test(t))
+}
+function stage(p){
+ if(!p)return"NO PATIENT";
+ if(p.discharged||p.sentHome||p.flow?.completed)return"COMPLETE";
+ if(p.recoveryCleared)return"READY TO COMPLETE";
+ if(/recovery/i.test(p.department||p.location||""))return"RECOVERY";
+ if(needSurgery(p)&&p.treatmentComplete&&!p.surgeryComplete)return"SURGERY";
+ if(!p.treatmentComplete&&!p.problemResolved)return"TREATMENT";
+ return"RECOVERY"
+}
+function safeRender(fn){
+ if(S.renderLock)return;
+ const y=window.scrollY||document.documentElement.scrollTop||0;
+ S.renderLock=true;
+ try{fn&&fn()}catch(e){}
+ requestAnimationFrame(()=>{
+   if(Math.abs((window.scrollY||0)-y)>4) window.scrollTo(0,y);
+   requestAnimationFrame(()=>{
+     if(Math.abs((window.scrollY||0)-y)>4) window.scrollTo(0,y);
+     S.renderLock=false;
+   });
+ });
+}
+function nextAction(){
+ const p=patient();
+ if(!p){try{if(typeof vgcfNext==="function")vgcfNext();else if(typeof vgOpenScreen==="function")vgOpenScreen("admit")}catch(e){};return}
+ const st=stage(p);
+ if(st==="COMPLETE"){try{vgcfNext()}catch(e){};return}
+ if(st==="READY TO COMPLETE"){try{vgcfComplete()}catch(e){};return}
+ if(st==="SURGERY"){try{vgOpenScreen("surgery")}catch(e){};return}
+ if(st==="RECOVERY"){try{vgOpenScreen("recovery")}catch(e){};return}
+ if(typeof vgclAction==="function"){
+   const c=p.clinical||{};
+   if((p.oxygen??100)<89)return vgclAction("oxygen");
+   if((p.stress??0)>68)return vgclAction("calm");
+   if((p.pain??0)>55)return vgclAction("pain");
+   if(!c.tests?.exam)return vgclAction("exam");
+   const cond=String(p.condition||p.diagnosis||"").toLowerCase();
+   if(/fracture|wound|foreign|arthritis/.test(cond)&&!c.tests?.imaging)return vgclAction("imaging");
+   if(/infection|dehydration/.test(cond)&&!c.tests?.lab)return vgclAction("lab");
+ }
+ try{if(typeof vgflNextRequired==="function")vgflNextRequired();else if(typeof vgcfAdvance==="function")vgcfAdvance("treat")}catch(e){}
+}
+function moveForward(){
+ const p=patient();if(!p)return nextAction();
+ const st=stage(p);
+ if(st==="TREATMENT"){
+   try{
+     if(typeof vgflFinishRemaining==="function"){vgflFinishRemaining();S.last="Required treatment pathway completed.";save();return}
+     if(typeof vgcfAdvance==="function"){vgcfAdvance("treat");return}
+   }catch(e){}
+ }
+ if(st==="SURGERY"){try{if(typeof vgcfAdvance==="function")vgcfAdvance("surgery");else vgOpenScreen("surgery")}catch(e){};return}
+ if(st==="RECOVERY"){try{if(typeof vgcfAdvance==="function")vgcfAdvance("recovery");else vgOpenScreen("recovery")}catch(e){};return}
+ if(st==="READY TO COMPLETE"){try{vgcfComplete()}catch(e){};return}
+ if(st==="COMPLETE"){try{vgcfNext()}catch(e){};return}
+ nextAction()
+}
+function finishCurrent(){
+ const p=patient();if(!p){try{vgcfNext()}catch(e){};return}
+ // Deliberate rescue route for a stuck case: satisfy the game's own readiness targets,
+ // complete the active case, then leave next-patient loading to the player/auto-next.
+ p.problemResolved=true;p.treatmentComplete=true;
+ if(needSurgery(p))p.surgeryComplete=true;
+ p.health=Math.max(Number(p.health)||0,82);
+ p.pain=Math.min(Number(p.pain)||100,28);
+ p.stress=Math.min(Number(p.stress)||100,30);
+ p.oxygen=Math.max(Number(p.oxygen)||0,95);
+ p.hydration=Math.max(Number(p.hydration??p.water)||0,70);
+ p.mobility=Math.max(Number(p.mobility)||0,62);
+ p.comfort=Math.max(Number(p.comfort)||0,70);
+ p.ate=true;p.drank=true;p.recoveryCleared=true;
+ p.department="Recovery";p.location="Recovery";
+ if(p.flow){p.flow.stage="READY"}
+ S.last=(p.name||"Patient")+" was moved through the stuck-case rescue pathway and is ready to complete.";
+ save();
+ try{
+   if(typeof saveGame==="function")saveGame("Stuck case rescue",true);
+   if(typeof vgcfComplete==="function")vgcfComplete();
+ }catch(e){}
+ setTimeout(render,40)
+}
+function labelFor(p){
+ const st=stage(p);
+ if(st==="NO PATIENT")return["NO ACTIVE PATIENT","Load the next animal and begin care."];
+ if(st==="COMPLETE")return[(p.name||"Patient")+" · CASE COMPLETE","This animal is finished. Load the next patient."];
+ if(st==="READY TO COMPLETE")return[(p.name||"Patient")+" · READY","All major care requirements are satisfied. Complete the case."];
+ if(st==="SURGERY")return[(p.name||"Patient")+" · SURGERY NEXT","Treatment is complete; this case needs the operating theater."];
+ if(st==="RECOVERY")return[(p.name||"Patient")+" · RECOVERY NEXT","Finish pain, hydration, mobility and readiness checks."];
+ return[(p.name||"Patient")+" · TREATMENT","Continue the highlighted clinical action. If the case is stuck, use MOVE PATIENT FORWARD."]
+}
+function html(){
+ const p=patient(),st=stage(p),lab=labelFor(p);
+ return `<div id="vgCaseControlBar">
+  <div class="vgcc-wrap">
+   <div>
+    <div class="vgcc-title">⚕ CASE CONTROL · ${lab[0]} <span class="vgcc-stage">${st}</span></div>
+    <div class="vgcc-sub">${lab[1]} <span class="vgcc-warning">${S.last||""}</span></div>
+   </div>
+   <div class="vgcc-actions">
+    <button class="vgcc-next" onclick="vgccNext()">▶ NEXT REQUIRED ACTION</button>
+    <button class="vgcc-forward" onclick="vgccForward()">⇢ MOVE PATIENT FORWARD</button>
+    <button class="vgcc-finish" onclick="vgccFinish()">✓ FINISH CURRENT CASE</button>
+   </div>
+  </div>
+ </div>`
+}
+function render(){
+ if(userScrolling)return;
+ const oldY=window.scrollY||0;
+ document.getElementById("vgCaseControlBar")?.remove();
+ const app=document.getElementById("app")||document.body;
+ app.insertAdjacentHTML("afterbegin",html());
+ requestAnimationFrame(()=>{if(Math.abs((window.scrollY||0)-oldY)>4)window.scrollTo(0,oldY)})
+}
+function preserveHook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgscroll)return;
+ const w=function(){
+   const y=window.scrollY||0;
+   const r=old.apply(this,arguments);
+   requestAnimationFrame(()=>requestAnimationFrame(()=>{
+     if(Math.abs((window.scrollY||0)-y)>4)window.scrollTo(0,y);
+   }));
+   setTimeout(render,30);
+   return r
+ };
+ w.__vgscroll=true;window[name]=w
+}
+[
+ "render","renderClinic","renderRecovery","renderSurgery","renderCareLab",
+ "vgcfNext","vgcfComplete","vgcfAdvance","vggdAct","vgflNextRequired",
+ "vgflFinishRemaining","vgffGo","vgclAction"
+].forEach(preserveHook);
+
+window.vgccNext=nextAction;
+window.vgccForward=moveForward;
+window.vgccFinish=finishCurrent;
+window.VetGodStableCaseControl={render,state:S};
+
+function neutralizeJumpingIntervals(){
+ // Preserve scroll around known periodic UI refreshes without disabling gameplay timers.
+ const nativeSetInterval=window.setInterval;
+ if(window.__vgStableIntervalPatch)return;
+ window.__vgStableIntervalPatch=true;
+ window.setInterval=function(fn,ms){
+   if(typeof fn!=="function")return nativeSetInterval(fn,ms);
+   const wrapped=function(){
+     if(userScrolling && ms<=10000)return;
+     const y=window.scrollY||0;
+     const r=fn.apply(this,arguments);
+     requestAnimationFrame(()=>{if(Math.abs((window.scrollY||0)-y)>4)window.scrollTo(0,y)});
+     return r
+   };
+   return nativeSetInterval(wrapped,ms)
+ }
+}
+function install(){
+ neutralizeJumpingIntervals();
+ render();
+ document.addEventListener("click",()=>setTimeout(render,60),true);
+}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
