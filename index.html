@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · CELESTIAL ANIMAL HOSPITAL · 30-DEEP SIMULATION</title>
+<title>VET GODS · DESKTOP SUPERCOMPUTER EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -2844,6 +2844,148 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
  .vgpd-patient{grid-template-columns:1fr}.vgpd-grid{grid-template-columns:1fr}
  .vgpd-vitals{grid-template-columns:repeat(4,1fr)}
  .vgpd-action{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+
+
+<style id="vgDesktopSupercomputerCss">
+:root{
+  --vgdesk-gap:12px;
+  --vgdesk-panel:#08141f;
+  --vgdesk-panel2:#0d1d2b;
+  --vgdesk-line:#315a73;
+  --vgdesk-cyan:#83e7ff;
+  --vgdesk-green:#7ff0c2;
+  --vgdesk-gold:#ffd56b;
+}
+html,body{min-width:1180px!important;overflow-x:auto!important}
+body{
+  background:
+    radial-gradient(circle at 15% 0%,rgba(56,152,212,.10),transparent 25%),
+    radial-gradient(circle at 90% 10%,rgba(112,64,180,.08),transparent 25%),
+    #03070c!important;
+}
+#app{max-width:1880px!important;padding:14px 18px!important}
+.vg-title-upgrade,.vgfx-header,.vg-space-masthead{max-width:1880px!important}
+.top{grid-template-columns:minmax(420px,1.3fr) minmax(700px,2fr)!important;align-items:stretch}
+.brand{min-height:116px;display:flex;flex-direction:column;justify-content:center}
+.brand h1{font-size:40px!important}
+.stats{align-content:center}
+.nav{grid-template-columns:repeat(12,minmax(90px,1fr))!important;position:sticky;top:0;z-index:70;background:#03070cec;padding:8px;border:1px solid #20394a;border-radius:12px}
+.nav button{min-height:58px!important;font-size:12px!important}
+.screen.active{
+  display:grid!important;
+  grid-template-columns:minmax(0,2.4fr) minmax(330px,.8fr);
+  gap:var(--vgdesk-gap);
+  align-items:start;
+}
+.screen.active>#vgPersistentDeck,
+.screen.active>.hero,
+.screen.active>.vg-dept-banner,
+.screen.active>.vg-screen-banner,
+.screen.active>.vg-dashboard-hero,
+.screen.active>.vg-command-grid,
+.screen.active>.vgfx-scene{
+  grid-column:1/-1;
+}
+.screen.active>.panel,
+.screen.active>.card,
+.screen.active>.dept-scene,
+.screen.active>.tree-shell,
+.screen.active>.recovery-sim{
+  grid-column:1/2;
+}
+.screen.active>.statgrid,
+.screen.active>.stats,
+.screen.active>.vg-side-panel,
+.screen.active>.report,
+.screen.active>.log{
+  grid-column:2/3;
+}
+.panel,.card,.dept-scene,.tree-stage,.vg-main-panel,.vg-side-panel{
+  border-color:#2c536a!important;
+  background:linear-gradient(180deg,#0b1925,#07121c)!important;
+  box-shadow:0 14px 32px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.025)!important;
+}
+#vgPersistentDeck{grid-column:1/-1!important}
+#vgPersistentDeck .vgpd-body{
+  display:grid;
+  grid-template-columns:minmax(0,1.4fr) minmax(620px,1.6fr);
+  gap:12px;
+}
+#vgPersistentDeck .vgpd-patient{grid-column:1/-1;grid-template-columns:1.2fr 1.8fr}
+#vgPersistentDeck .vgpd-grid{grid-column:1/2;grid-template-columns:repeat(3,1fr)}
+#vgPersistentDeck .vgpd-action{grid-column:2/3;grid-template-columns:repeat(4,1fr);align-content:start;margin-top:0}
+#vgPersistentDeck .vgpd-log{grid-column:1/-1}
+.vgpd-vitals{grid-template-columns:repeat(8,1fr)!important}
+.vgpd-vital{min-height:64px;display:flex;flex-direction:column;justify-content:center}
+.vgpd-vital b{font-size:18px}
+.vgpd-module{min-height:150px}
+.vgpd-dial{grid-template-columns:74px 1fr 42px;font-size:10px}
+.vgpd-switches button{min-height:54px!important}
+.vgpd-action button{min-height:56px!important;font-size:10px!important}
+.vg-super-grid{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0;
+}
+.vg-super-panel{
+  min-height:180px;border:1px solid #2c536a;border-radius:12px;padding:10px;
+  background:linear-gradient(180deg,#0b1925,#07111a);
+}
+.vg-super-panel h4{margin:0 0 7px;font-size:10px;letter-spacing:.11em;color:#b9d9e8}
+.vg-super-readout{display:grid;grid-template-columns:1fr auto;gap:5px;font-size:9px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.vg-super-readout b{color:#8beccf}
+.vg-wave{
+  height:72px;margin-top:8px;border:1px solid #294b5f;border-radius:7px;
+  background:
+    linear-gradient(rgba(80,180,220,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(80,180,220,.05) 1px,transparent 1px),
+    radial-gradient(circle at 20% 50%,rgba(60,220,180,.10),transparent 36%),
+    #061019;
+  background-size:12px 12px,12px 12px,auto,auto;
+  position:relative;overflow:hidden;
+}
+.vg-wave:after{
+  content:"";position:absolute;left:-30%;top:50%;width:160%;height:2px;
+  background:linear-gradient(90deg,transparent,#6feec3 18%,#6feec3 21%,transparent 24%,transparent 36%,#6feec3 39%,#6feec3 42%,transparent 45%);
+  filter:drop-shadow(0 0 5px #6feec3);animation:vgWaveMove 2.2s linear infinite;
+}
+@keyframes vgWaveMove{to{transform:translateX(28%)}}
+.vg-desktop-sidewall{
+  position:fixed;right:12px;top:84px;width:300px;max-height:calc(100vh - 100px);overflow:auto;
+  z-index:65;border:1px solid #2c536a;border-radius:12px;background:#07111be8;padding:9px;
+  box-shadow:0 12px 28px rgba(0,0,0,.32);
+}
+.vg-desktop-sidewall h4{margin:0 0 7px;font-size:10px;letter-spacing:.1em}
+.vg-side-row{display:grid;grid-template-columns:1fr auto;gap:6px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:9px}
+.vg-side-row b{color:#8fe7cf}
+.vg-desktop-toggle{
+  position:fixed;right:14px;bottom:14px;z-index:80;padding:9px 12px!important;border-radius:8px!important;
+}
+body.vg-hide-sidewall .vg-desktop-sidewall{display:none}
+body.vg-hide-sidewall #app{max-width:1880px!important}
+body:not(.vg-hide-sidewall) #app{padding-right:330px!important}
+.roster{grid-template-columns:repeat(8,minmax(0,1fr))!important}
+.animal-strip{grid-template-columns:repeat(10,minmax(0,1fr))!important}
+.ward-board{grid-template-columns:repeat(8,minmax(0,1fr))!important}
+.controls{grid-template-columns:repeat(6,1fr)!important}
+.tree-actions{grid-template-columns:repeat(5,1fr)!important}
+.exp-grid,.econ-grid,.book-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.pet-home-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.pet-care-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.mixed-care-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.vg-pain-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.vg-pain-stage{grid-template-columns:repeat(4,1fr)!important}
+.recovery-room{height:520px!important}
+.tree-patient{grid-template-columns:260px 1fr!important}
+.tree-patient img{max-height:240px!important}
+.hero{grid-template-columns:320px 1fr!important}
+.hero img{max-height:260px!important}
+.vgfx-scene>img{aspect-ratio:3.6/1!important;max-height:360px;object-fit:cover}
+@media(max-width:1500px){
+  .vg-desktop-sidewall{width:250px}
+  body:not(.vg-hide-sidewall) #app{padding-right:280px!important}
+  .screen.active{grid-template-columns:minmax(0,2fr) minmax(300px,.8fr)}
+  .vg-super-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 </style>
 
@@ -17651,6 +17793,121 @@ function install(){
   },true);
   setInterval(function(){autoSupport(); if(document.getElementById("vgPersistentDeck"))render()},12000);
 }
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgDesktopSupercomputerJs">
+(function(){
+'use strict';
+const KEY="vetGodDesktopSupercomputerV1";
+let S={sidewall:true,renderCount:0,lastEvent:"Desktop command core initialized."};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function active(){
+  try{
+    const all=[...(state?.patients||[]),...(state?.pets||[])];
+    return all.find(x=>x.id===state.activeId)||all.find(x=>x.admitted&&!x.discharged)||all[0]||null
+  }catch(e){return null}
+}
+function n(v,d){v=Number(v);return Number.isFinite(v)?Math.round(v):d}
+function pulse(){
+  const p=active();
+  let clinic=0,surg=0,rec=0,pets=0;
+  try{
+    clinic=(state.patients||[]).filter(x=>/clinic|care/i.test(x.department||x.location||"")).length;
+    surg=(state.patients||[]).filter(x=>/surg/i.test(x.department||x.location||"")).length;
+    rec=(state.patients||[]).filter(x=>/recov/i.test(x.department||x.location||"")).length;
+    pets=(state.pets||[]).length;
+  }catch(e){}
+  return {p,clinic,surg,rec,pets}
+}
+function superPanelHTML(){
+  const x=pulse(),p=x.p;
+  if(!p)return `<div class="vg-super-grid">
+    <div class="vg-super-panel"><h4>HOSPITAL CORE</h4><div class="vg-super-readout"><span>STATUS</span><b>STANDBY</b></div><div class="vg-wave"></div></div>
+    <div class="vg-super-panel"><h4>NETWORK</h4><div class="vg-super-readout"><span>CLINIC</span><b>${x.clinic}</b></div><div class="vg-super-readout"><span>SURGERY</span><b>${x.surg}</b></div><div class="vg-super-readout"><span>RECOVERY</span><b>${x.rec}</b></div></div>
+    <div class="vg-super-panel"><h4>COMPANIONS</h4><div class="vg-super-readout"><span>MY PETS</span><b>${x.pets}</b></div></div>
+    <div class="vg-super-panel"><h4>COMPUTE</h4><div class="vg-super-readout"><span>UI MODE</span><b>DESKTOP</b></div><div class="vg-super-readout"><span>RENDERS</span><b>${S.renderCount}</b></div></div>
+  </div>`;
+  return `<div class="vg-super-grid">
+    <div class="vg-super-panel"><h4>LIVE TELEMETRY</h4>
+      <div class="vg-super-readout"><span>HEALTH</span><b>${n(p.health,65)}%</b></div>
+      <div class="vg-super-readout"><span>OXYGEN</span><b>${n(p.oxygen,92)}%</b></div>
+      <div class="vg-super-readout"><span>PAIN</span><b>${n(p.pain,40)}</b></div>
+      <div class="vg-wave"></div>
+    </div>
+    <div class="vg-super-panel"><h4>BEHAVIOR CORE</h4>
+      <div class="vg-super-readout"><span>STRESS</span><b>${n(p.stress,45)}</b></div>
+      <div class="vg-super-readout"><span>TRUST</span><b>${n(p.trust,40)}</b></div>
+      <div class="vg-super-readout"><span>COMFORT</span><b>${n(p.comfort,55)}</b></div>
+      <div class="vg-super-readout"><span>PERSONALITY</span><b>${String(p.personality||p.temperament||"UNKNOWN").toUpperCase()}</b></div>
+    </div>
+    <div class="vg-super-panel"><h4>CASE ENGINE</h4>
+      <div class="vg-super-readout"><span>PATIENT</span><b>${p.name||"ACTIVE"}</b></div>
+      <div class="vg-super-readout"><span>SPECIES</span><b>${p.species||"Animal"}</b></div>
+      <div class="vg-super-readout"><span>CONDITION</span><b>${p.condition||p.diagnosis||"Active case"}</b></div>
+      <div class="vg-super-readout"><span>DEPARTMENT</span><b>${p.department||p.location||state?.screen||"Clinic"}</b></div>
+    </div>
+    <div class="vg-super-panel"><h4>HOSPITAL NETWORK</h4>
+      <div class="vg-super-readout"><span>CLINIC</span><b>${x.clinic}</b></div>
+      <div class="vg-super-readout"><span>SURGERY</span><b>${x.surg}</b></div>
+      <div class="vg-super-readout"><span>RECOVERY</span><b>${x.rec}</b></div>
+      <div class="vg-super-readout"><span>MY PETS</span><b>${x.pets}</b></div>
+    </div>
+  </div>`;
+}
+function decorateDeck(){
+  const deck=document.getElementById("vgPersistentDeck");
+  if(!deck)return;
+  deck.querySelector(".vg-super-grid")?.remove();
+  const body=deck.querySelector(".vgpd-body");
+  if(body)body.insertAdjacentHTML("afterbegin",superPanelHTML());
+}
+function sidewallHTML(){
+  const x=pulse(),p=x.p;
+  return `<aside class="vg-desktop-sidewall" id="vgDesktopSidewall">
+    <h4>🖥 SUPERCOMPUTER SIDEBAR</h4>
+    <div class="vg-side-row"><span>ACTIVE SCREEN</span><b>${String(state?.screen||"clinic").toUpperCase()}</b></div>
+    <div class="vg-side-row"><span>PATIENT</span><b>${p?(p.name||"ACTIVE"):"NONE"}</b></div>
+    <div class="vg-side-row"><span>CLINIC LOAD</span><b>${x.clinic}</b></div>
+    <div class="vg-side-row"><span>SURGERY LOAD</span><b>${x.surg}</b></div>
+    <div class="vg-side-row"><span>RECOVERY LOAD</span><b>${x.rec}</b></div>
+    <div class="vg-side-row"><span>OWNED PETS</span><b>${x.pets}</b></div>
+    <div class="vg-side-row"><span>RENDER PASSES</span><b>${S.renderCount}</b></div>
+    <div class="vg-side-row"><span>LAST CORE EVENT</span><b>${S.lastEvent}</b></div>
+    <div class="vg-wave"></div>
+  </aside>`;
+}
+function renderSide(){
+  document.getElementById("vgDesktopSidewall")?.remove();
+  document.body.insertAdjacentHTML("beforeend",sidewallHTML());
+  document.body.classList.toggle("vg-hide-sidewall",!S.sidewall);
+}
+function renderAll(){
+  S.renderCount++;
+  decorateDeck();
+  renderSide();
+  save();
+}
+function toggleSide(){
+  S.sidewall=!S.sidewall;save();renderSide();
+}
+function hook(name){
+  const old=window[name];if(typeof old!=="function"||old.__vgdesk)return;
+  const wrap=function(){const r=old.apply(this,arguments);setTimeout(renderAll,0);return r};
+  wrap.__vgdesk=true;window[name]=wrap;
+}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","renderPets"].forEach(hook);
+
+function install(){
+  document.body.insertAdjacentHTML("beforeend",`<button class="vg-desktop-toggle" onclick="vgDesktopToggle()">🖥 TOGGLE SIDEWALL</button>`);
+  renderAll();
+  document.addEventListener("click",()=>setTimeout(renderAll,35),true);
+}
+window.vgDesktopToggle=toggleSide;
+window.VetGodDesktopSupercomputer={render:renderAll,state:S};
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
