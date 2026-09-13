@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · ALL SCREENS STABLE SCROLL</title>
+<title>VET GODS · AREA LOCKED CASE FLOW</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3532,6 +3532,32 @@ body{
 .screen.active:not(#clinic) .recovery-sim{
   animation:none!important;
   transition:none!important;
+}
+</style>
+
+
+<style id="vgAreaLockedFlowCss">
+#vgAreaSessionBar{
+  position:sticky;top:0;z-index:9000;
+  display:none;
+  margin:0 0 10px;padding:9px 10px;
+  border:1px solid #456879;border-radius:10px;
+  background:linear-gradient(180deg,#071821,#0a202b);
+  box-shadow:0 6px 18px rgba(0,0,0,.28);
+}
+#vgAreaSessionBar.open{display:block}
+.vg-as-head{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.vg-as-title{font-size:10px;font-weight:1000;letter-spacing:.08em;color:#e7f8ff}
+.vg-as-status{font-size:8px;color:#9dbbc7}
+.vg-as-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.vg-as-actions button{
+  min-height:40px;border-radius:8px;border:1px solid #4f7282;
+  background:#123444;color:#effbff;font-size:8px;font-weight:950;cursor:pointer
+}
+.vg-as-actions .finish{background:#173f2c;border-color:#5c8b6e}
+.vg-as-note{margin-top:7px;font-size:8px;line-height:1.45;color:#8fb0bd}
+body.vg-area-session-active .screen.active:not(#clinic){
+  scroll-margin-top:70px;
 }
 </style>
 
@@ -20583,6 +20609,237 @@ function boot(){
 window.VetGodAllScreensStableScroll={
   normalize:normalizeActiveScreen,
   repatch:patchRender
+};
+
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
+else boot();
+})();
+</script>
+
+
+<script id="vgAreaLockedFlowJs">
+(function(){
+'use strict';
+
+const KEY="vetGodAreaLockedFlowV1";
+let S={lockedScreen:null,completed:{},last:""};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}")||{})}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+const AREA_LABELS={
+  surgery:"SURGERY",
+  recovery:"RECOVERY",
+  admit:"INTAKE",
+  diagnostics:"DIAGNOSTICS",
+  research:"RESEARCH",
+  authoredhospital:"AUTHORIZED HOSPITAL",
+  livinghospital:"LIVING HOSPITAL",
+  pets:"MY PETS"
+};
+
+function currentScreen(){
+  try{return String(state?.screen||document.querySelector(".screen.active")?.id||"clinic")}catch(e){return"clinic"}
+}
+function isSecondary(s=currentScreen()){return s && s!=="clinic"}
+function label(s){return AREA_LABELS[s]||String(s||"AREA").replace(/[-_]/g," ").toUpperCase()}
+
+function activePatient(){
+  try{
+    const arr=[...(state?.patients||[]),...(state?.pets||[])];
+    return arr.find(p=>p.id===state.activeId)||arr.find(p=>p.admitted&&!p.discharged)||null
+  }catch(e){return null}
+}
+
+function ensureBar(){
+  let bar=document.getElementById("vgAreaSessionBar");
+  if(bar)return bar;
+  bar=document.createElement("div");
+  bar.id="vgAreaSessionBar";
+  bar.innerHTML=`
+    <div class="vg-as-head">
+      <div class="vg-as-title" id="vgAreaSessionTitle">AREA SESSION</div>
+      <div class="vg-as-status" id="vgAreaSessionStatus">LOCKED IN THIS AREA</div>
+    </div>
+    <div class="vg-as-actions">
+      <button class="finish" type="button" onclick="vgFinishCurrentArea()">✓ FINISH THIS AREA</button>
+      <button type="button" onclick="vgExitCurrentArea()">↩ EXIT TO CLINIC / CASE</button>
+    </div>
+    <div class="vg-as-note" id="vgAreaSessionNote">
+      Actions in this area stay in this area. Finish or exit deliberately when you are done.
+    </div>`;
+  const host=document.querySelector("#vgHospitalAreasBar")||document.body.firstElementChild;
+  if(host&&host.parentNode)host.parentNode.insertBefore(bar,host.nextSibling);
+  else document.body.prepend(bar);
+  return bar;
+}
+
+function renderBar(){
+  const bar=ensureBar(),s=currentScreen();
+  if(!isSecondary(s)){
+    bar.classList.remove("open");
+    document.body.classList.remove("vg-area-session-active");
+    return
+  }
+  bar.classList.add("open");
+  document.body.classList.add("vg-area-session-active");
+  document.getElementById("vgAreaSessionTitle").textContent=`AREA SESSION · ${label(s)}`;
+  document.getElementById("vgAreaSessionStatus").textContent=S.completed[s]?"AREA COMPLETE":"LOCKED IN THIS AREA";
+  document.getElementById("vgAreaSessionNote").textContent=
+    S.completed[s]
+      ? "This area is complete. Exit when ready, or use the hospital navigation to choose the next department."
+      : "Work Kota's case here. Buttons may update the patient, evidence, tests, or treatment, but they will not silently move you to another screen.";
+}
+
+function lock(s=currentScreen()){
+  if(!isSecondary(s))return;
+  S.lockedScreen=s;save();renderBar();
+}
+function unlock(){
+  S.lockedScreen=null;save();
+}
+
+function markAreaComplete(){
+  const s=currentScreen();
+  if(!isSecondary(s))return;
+  S.completed[s]=true;
+  const p=activePatient();
+  if(p){
+    p.completedAreas=p.completedAreas||{};
+    p.completedAreas[label(s)]=true;
+    p.caseEvidence=p.caseEvidence||[];
+    p.caseEvidence.push({
+      area:label(s),
+      time:Date.now(),
+      summary:`${label(s)} work completed and recorded for ${p.name||"patient"}.`
+    });
+    p.caseEvidence=p.caseEvidence.slice(-30);
+
+    /* Helpful case progression without teleporting. */
+    if(s==="diagnostics"||s==="admit"){
+      p.clinical=p.clinical||{};
+      p.clinical.examined=true;
+      p.clinical.diagnosed=true;
+    }
+    if(s==="surgery"){
+      p.surgeryComplete=true;
+      p.primaryResolved=true;
+      if(p.clinical)p.clinical.primaryResolved=true;
+    }
+    if(s==="recovery"){
+      p.recoveryCleared=true;
+      p.health=Math.max(Number(p.health||0),82);
+      p.pain=Math.min(Number(p.pain??100),28);
+      p.hydration=Math.max(Number(p.hydration||0),70);
+      p.mobility=Math.max(Number(p.mobility||0),62);
+    }
+  }
+  save();
+  renderBar();
+}
+
+function goClinic(){
+  unlock();
+  try{
+    if(typeof vgOpenScreen==="function"){vgOpenScreen("clinic");return}
+    if(typeof openScreen==="function"){openScreen("clinic");return}
+    if(state){state.screen="clinic"; if(typeof render==="function")render()}
+  }catch(e){}
+}
+window.vgFinishCurrentArea=function(){
+  markAreaComplete();
+  const el=document.getElementById("vgAreaSessionNote");
+  if(el)el.textContent="Area complete. Your work is recorded. Press EXIT TO CLINIC / CASE when you are ready.";
+};
+window.vgExitCurrentArea=function(){
+  goClinic();
+};
+
+/*
+  Prevent ordinary buttons inside a secondary screen from silently changing departments.
+  We snapshot the current area before the click, then restore it if the button tried to
+  teleport elsewhere. Explicit navigation, Finish, and Exit buttons are exempt.
+*/
+function explicitNavigation(el){
+  if(!el)return false;
+  if(el.closest("#vgHospitalAreasBar,#vgAreaSessionBar,.nav,.quick-links"))return true;
+  const t=(el.textContent||"").trim().toLowerCase();
+  return /exit|return to clinic|back to case|finish this area|open \/ close my pets/.test(t);
+}
+
+document.addEventListener("click",function(e){
+  const before=currentScreen();
+  if(!isSecondary(before))return;
+  const active=document.querySelector(".screen.active");
+  if(!active || !active.contains(e.target))return;
+  if(explicitNavigation(e.target))return;
+
+  lock(before);
+  const scrollY=window.scrollY;
+
+  setTimeout(()=>{
+    const after=currentScreen();
+    if(after!==before && S.lockedScreen===before && !S.completed[before]){
+      try{
+        state.screen=before;
+        window.__vgAllowSecondaryRender=true;
+        if(typeof render==="function")render();
+      }catch(err){}
+      finally{
+        window.__vgAllowSecondaryRender=false;
+        window.scrollTo({top:scrollY,left:0,behavior:"auto"});
+      }
+      const note=document.getElementById("vgAreaSessionNote");
+      if(note)note.textContent=`Stayed in ${label(before)}. That action was recorded without moving you to another department.`;
+    }
+    renderBar();
+  },0);
+},true);
+
+/*
+  Navigation buttons can enter a new area only deliberately.
+  Once entered, that area becomes the locked work session.
+*/
+document.addEventListener("click",function(e){
+  const nav=e.target.closest&&e.target.closest("#vgHospitalAreasBar button,.nav button,.quick-links button");
+  if(!nav)return;
+  setTimeout(()=>{
+    const s=currentScreen();
+    if(isSecondary(s))lock(s);
+    else {unlock();renderBar()}
+  },20);
+},true);
+
+/* If a render occurs while locked, keep the same screen. */
+function patchRender(){
+  const old=window.render;
+  if(typeof old!=="function"||old.__vgAreaLocked)return;
+  const w=function(){
+    const wanted=S.lockedScreen;
+    if(wanted && isSecondary(wanted) && state && state.screen!==wanted && !S.completed[wanted]){
+      state.screen=wanted;
+    }
+    const r=old.apply(this,arguments);
+    renderBar();
+    return r;
+  };
+  w.__vgAreaLocked=true;
+  window.render=w;
+}
+
+function boot(){
+  ensureBar();
+  const s=currentScreen();
+  if(isSecondary(s))lock(s);
+  else renderBar();
+  patchRender();
+}
+
+window.VetGodAreaLockedFlow={
+  finish:markAreaComplete,
+  exit:goClinic,
+  lock,
+  unlock,
+  state:S
 };
 
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
