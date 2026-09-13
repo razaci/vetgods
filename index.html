@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · FAST CASE FLOW · SUPERCOMPUTER EDITION</title>
+<title>VET GODS · CORE CLINICAL LOGIC · SUPERCOMPUTER EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3058,6 +3058,105 @@ body:not(.vg-hide-sidewall) #app{padding-right:330px!important}
 .vgfl-note{margin-top:8px;font-size:8px;color:#b9cec6;line-height:1.4}
 </style>
 
+
+<style id="vgCoreHospitalOnlyCss">
+/* Core hospital only: remove pet-life and habitat simulator detours */
+button[onclick*="vgOpenMyPets"],
+button[onclick*="'pets'"],button[onclick*='"pets"'],
+button[onclick*="'habitats'"],button[onclick*='"habitats"'],
+button[onclick*="'antfarm'"],button[onclick*='"antfarm"'],
+button[onclick*="'snaketanks'"],button[onclick*='"snaketanks"'],
+button[onclick*="'hamstercages'"],button[onclick*='"hamstercages"'],
+button[onclick*="'micecages'"],button[onclick*='"micecages"'],
+[data-screen="pets"],[data-screen="habitats"],[data-screen="antfarm"],
+[data-screen="snaketanks"],[data-screen="hamstercages"],[data-screen="micecages"],
+#pets,#habitats,#antfarm,#snaketanks,#hamstercages,#micecages,
+.pet-home-grid,.pet-care-grid,.mixed-care-grid,.animal-sim,.habitat-sim,.sim-cage,
+[id*="antFarm"],[id*="AntFarm"],[id*="snakeTank"],[id*="SnakeTank"],
+[id*="hamster"],[id*="Hamster"],[id*="mice"],[id*="Mice"],
+[id*="myPets"],[id*="MyPets"]{
+  display:none!important;
+}
+</style>
+
+
+<style id="vgFocusFlowCss">
+#vgFocusFlow{
+  grid-column:1/-1;margin:0 0 12px;border:1px solid #4b7690;border-radius:15px;
+  background:linear-gradient(135deg,#08141d,#0b1d28 65%,#101827);overflow:hidden;
+  box-shadow:0 14px 32px rgba(0,0,0,.25)
+}
+.vgff-head{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 14px;border-bottom:1px solid #294b5e}
+.vgff-head h2{margin:0;font-size:15px;letter-spacing:.08em;color:#d3efff}
+.vgff-head p{margin:3px 0 0;font-size:8px;color:#91adba}
+.vgff-focus{padding:12px 14px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.7fr);gap:10px}
+.vgff-main{border:1px solid #315a6f;border-radius:11px;background:#091923;padding:12px}
+.vgff-main .eyebrow{font-size:7px;letter-spacing:.12em;color:#8db5c6}
+.vgff-main h3{margin:4px 0 3px;font-size:21px}
+.vgff-main .why{font-size:9px;color:#a9bfca;line-height:1.45}
+.vgff-next{
+  width:100%;min-height:64px!important;margin-top:10px!important;
+  background:#17604c!important;border-color:#5cb594!important;font-size:12px!important;font-weight:950!important;
+  box-shadow:0 0 22px rgba(76,203,157,.12)
+}
+.vgff-side{border:1px solid #315a6f;border-radius:11px;background:#07141d;padding:10px}
+.vgff-side h4{margin:0 0 7px;font-size:9px;letter-spacing:.1em;color:#bed9e5}
+.vgff-areas{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.vgff-area{min-height:45px!important;font-size:8px!important;opacity:.45;filter:saturate(.6)}
+.vgff-area.current{opacity:1;filter:none;background:#4a3c18!important;border-color:#8b7130!important}
+.vgff-area.next{opacity:1;filter:none;background:#153a30!important;border-color:#4c9078!important}
+.vgff-status{margin-top:8px;padding:8px;border-radius:8px;background:#0c2029;border:1px solid #2f5264;font-size:8px;color:#a9c2cc}
+.vgff-mini{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:8px}
+.vgff-mini div{padding:7px;border:1px solid #29495b;border-radius:7px;text-align:center;background:#0a1a23}
+.vgff-mini b{display:block;font-size:13px}.vgff-mini span{font-size:7px;color:#86a5b2}
+body.vg-focus-mode .screen.active>.panel:not(#vgFocusFlow),
+body.vg-focus-mode .screen.active>.card,
+body.vg-focus-mode .screen.active>.dept-scene,
+body.vg-focus-mode .screen.active>.tree-shell,
+body.vg-focus-mode .screen.active>.recovery-sim{
+  opacity:.72;transition:opacity .2s ease
+}
+body.vg-focus-mode #vgFocusFlow,
+body.vg-focus-mode #vgCaseFlowEngine,
+body.vg-focus-mode #vgGuidedDirector,
+body.vg-focus-mode #vgFastLane{opacity:1!important}
+.vgff-toggle{min-height:38px!important;font-size:8px!important}
+@media(max-width:1400px){.vgff-focus{grid-template-columns:1fr}}
+</style>
+
+
+<style id="vgClinicalLogicCss">
+#vgClinicalLogic{
+  grid-column:1/-1;margin:0 0 12px;border:1px solid #496e84;border-radius:15px;
+  background:linear-gradient(135deg,#07141d,#0b1b26 62%,#10192a);overflow:hidden;
+  box-shadow:0 14px 34px rgba(0,0,0,.25)
+}
+.vgcl-head{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:11px 13px;border-bottom:1px solid #294c5e}
+.vgcl-head h3{margin:0;font-size:14px;letter-spacing:.08em;color:#d2edfa}
+.vgcl-head p{margin:3px 0 0;font-size:8px;color:#91aebb}
+.vgcl-badge{padding:6px 9px;border:1px solid #3e6e83;border-radius:7px;font-size:8px;color:#83e4c6}
+.vgcl-grid{display:grid;grid-template-columns:1fr 1.35fr .85fr;gap:9px;padding:10px}
+.vgcl-panel{border:1px solid #294b5c;border-radius:10px;background:#081721;padding:10px;min-height:190px}
+.vgcl-panel h4{margin:0 0 7px;font-size:9px;letter-spacing:.09em;color:#b7d4e0}
+.vgcl-row{display:grid;grid-template-columns:1fr auto;gap:6px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:8px}
+.vgcl-row b{color:#8ce2c4}
+.vgcl-meter{height:7px;border-radius:5px;background:#13242d;overflow:hidden;margin:3px 0 7px}
+.vgcl-meter i{display:block;height:100%;background:linear-gradient(90deg,#4f8ea5,#6de1bd)}
+.vgcl-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.vgcl-actions button{min-height:48px!important;font-size:8px!important;text-align:left!important;padding:7px!important}
+.vgcl-actions button.best{background:#143c31!important;border-color:#4a8d73!important}
+.vgcl-actions button.risk{background:#3c1e25!important;border-color:#7f4650!important}
+.vgcl-actions button.done{opacity:.45!important}
+.vgcl-log{max-height:130px;overflow:auto;font-size:8px;line-height:1.45;padding:7px;border-radius:7px;background:#061019;border:1px solid #284858}
+.vgcl-event{margin-top:7px;padding:8px;border-radius:8px;background:#10261f;border:1px solid #35604f;font-size:8px;line-height:1.45;color:#b9d6ca}
+.vgcl-alert{background:#2e171c;border-color:#74424b;color:#e6bec5}
+.vgcl-clues{display:grid;grid-template-columns:1fr;gap:5px}
+.vgcl-clue{padding:6px;border-radius:7px;border:1px solid #29495b;background:#0b1b24;font-size:8px}
+.vgcl-clue.found{border-color:#356c57;background:#112b23}
+.vgcl-small{font-size:7px;color:#87a2ae;line-height:1.4}
+@media(max-width:1450px){.vgcl-grid{grid-template-columns:1fr 1fr}.vgcl-grid>.vgcl-panel:last-child{grid-column:1/-1}}
+</style>
+
 </head>
 <body>
 <div class="vgfx-header">
@@ -3088,7 +3187,7 @@ body:not(.vg-hide-sidewall) #app{padding-right:330px!important}
 <div class="quick-links" aria-label="Quick areas">
   <button type="button" data-screen="clinic">Clinic</button>
   <button type="button" data-screen="admit">Admit Animal</button>
-  <button type="button" data-screen="pets">My Pets</button>
+  
   <button type="button" data-screen="reception">Reception</button>
 </div>
 
@@ -3100,8 +3199,8 @@ body:not(.vg-hide-sidewall) #app{padding-right:330px!important}
   </div>
   <div class="nav game-menu-nav">
     <button data-screen="clinic">Clinic</button><button data-screen="surgery">Surgery</button><button data-screen="recovery">Recovery</button><button data-screen="animalprofile">Animal Profile</button>
-<button data-screen="habitats">Habitats</button>
-<button data-screen="nursery" onclick="vgOpenScreen('nursery')">🐣 Nursery</button><button data-screen="carelab">Care Lab</button><button data-screen="pets">My Pets</button><button data-screen="status">Status</button><button data-screen="admit">Admit Patient</button><button data-screen="hospital">Hospital+</button><button data-screen="sanctuary">Sanctuary</button><button data-screen="world">World</button><button data-screen="lifebook">Life Book</button><button data-screen="reception">Reception</button><button data-screen="ambulance">Ambulance</button><button data-screen="research">Research</button>
+
+<button data-screen="nursery" onclick="vgOpenScreen('nursery')">🐣 Nursery</button><button data-screen="carelab">Care Lab</button><button data-screen="status">Status</button><button data-screen="admit">Admit Patient</button><button data-screen="hospital">Hospital+</button><button data-screen="sanctuary">Sanctuary</button><button data-screen="world">World</button><button data-screen="lifebook">Life Book</button><button data-screen="reception">Reception</button><button data-screen="ambulance">Ambulance</button><button data-screen="research">Research</button>
   </div>
 </div>
 
@@ -10507,7 +10606,7 @@ function renderNursery(){
         <div class="vgn-kicker">Tiny lives · big futures</div>
         <h2>💗 NURSERY</h2>
         <p>A living room for newborns, orphans, hatchlings and growing babies. Feed, warm, comfort and watch them develop.</p>
-        <div class="actions"><button onclick="nRound()">🩺 Nursery Rounds</button><button onclick="vgOpenMyPets()">🐾 My Pets</button><button onclick="vgOpenScreen('clinic')">🏥 Clinic</button></div>
+        <div class="actions"><button onclick="nRound()">🩺 Nursery Rounds</button><button onclick="vgOpenScreen('clinic')">🏥 Clinic</button></div>
       </div>
     </div>
     <div class="vgn-summary">
@@ -11114,7 +11213,7 @@ function vgCmdHTML(){
       </div>
       <div class="vg-command-actions">
         <button onclick="vgCmdDoNext()">✨ ${n.label}</button>
-        <button onclick="vgCmdBackToAnimal()">↩ Animal</button><button onclick="vgOpenMyPets()">🐾 My Pets</button>
+        <button onclick="vgCmdBackToAnimal()">↩ Animal</button>
         <button onclick="VG_CMD.accessOpen=!VG_CMD.accessOpen;vgCmdMount()">♿</button>
       </div>
     </div>
@@ -11239,7 +11338,7 @@ function vgHospitalDashboardHTML(){
       <div class="actions">
         <button onclick="vgCmdDoNext()">✨ ${next.label}</button>
         <button onclick="vgOpenScreen('admit')">➕ Admit Animal</button>
-        <button onclick="vgOpenMyPets()">🐾 My Pets</button>
+        
       </div>
     </div>
   </div>
@@ -14008,11 +14107,11 @@ body.vg-command-layout .menu-backdrop{z-index:80!important;background:rgba(0,0,0
      <button class="vg-command-step" data-num="02" data-go="clinic">Clinic</button>
      <button class="vg-command-step" data-num="03" data-go="surgery">Surgery</button>
      <button class="vg-command-step" data-num="04" data-go="recovery">Recovery</button>
-     <button class="vg-command-step" data-num="05" data-go="pets">My Pets</button>
+     
      <button class="vg-command-step" data-num="06" id="vgCmdMore">All Areas</button>
     </nav>
     <nav class="vg-command-subnav" aria-label="Hospital gameplay systems">
-     <button class="vg-command-area" data-go="hospital">Hospital+</button><button class="vg-command-area" data-go="carelab">Care Lab</button><button class="vg-command-area" data-go="nursery">Nursery</button><button class="vg-command-area" data-go="habitats">Habitats</button><button class="vg-command-area" data-go="sanctuary">Sanctuary</button><button class="vg-command-area" data-go="reception">Reception</button><button class="vg-command-area" data-go="ambulance">Ambulance</button><button class="vg-command-area" data-go="research">Research</button><button class="vg-command-area" data-go="world">World</button><button class="vg-command-area" data-go="lifebook">Life Book</button><button class="vg-command-area" id="vgCmdSave">Save Game</button>
+     <button class="vg-command-area" data-go="hospital">Hospital+</button><button class="vg-command-area" data-go="carelab">Care Lab</button><button class="vg-command-area" data-go="nursery">Nursery</button><button class="vg-command-area" data-go="sanctuary">Sanctuary</button><button class="vg-command-area" data-go="reception">Reception</button><button class="vg-command-area" data-go="ambulance">Ambulance</button><button class="vg-command-area" data-go="research">Research</button><button class="vg-command-area" data-go="world">World</button><button class="vg-command-area" data-go="lifebook">Life Book</button><button class="vg-command-area" id="vgCmdSave">Save Game</button>
     </nav>
    </div>
   </header>`;
@@ -15650,7 +15749,7 @@ body.vg-hospital-entered #vgSamePageHero{display:none!important;visibility:hidde
  function reportsPanel(p,c){const d=root(),latest=d.reports[0];return`<div class="vgd-stage"><div class="vgd-panel"><h3>Case Conclusions and Performance Grades</h3><p>A final report compares arrival damage, evidence, diagnosis, treatment, complications, resource use, patient response, and continuing care.</p>${p?`<button class="vgd-action selected" data-vgd-close><b>Complete ${h(p.name)} case report</b><small>Requires supported diagnosis · 2 treatments · 1 recheck</small></button>`:""}<div class="vgd-log" style="margin-top:8px">${d.reports.map(r=>`<div><b>${h(r.name)} · GRADE ${r.grade} · ${r.score}%</b><br>${h(r.diagnosis)} · ${r.treatments.length} treatments · ${h(r.continuing)}</div>`).join("")||`<div>No completed Director reports yet.</div>`}</div></div><aside class="vgd-panel">${latest?`<h3>Latest conclusion</h3><div class="vgd-report"><div class="vgd-grade">${latest.grade}</div><b>${h(latest.name)} · ${latest.score}%</b><p>${h(latest.diagnosis)}</p><span class="vgd-chip">${latest.evidence.length} evidence</span><span class="vgd-chip">${latest.treatments.length} treatments</span><span class="vgd-chip">${latest.complications} complications</span></div>`:`<h3>Report readiness</h3><div class="vgd-row"><span>Diagnosis</span><b>${c?.correct?"READY":"PENDING"}</b></div><div class="vgd-row"><span>Treatments</span><b>${c?.treatments.length||0}/2</b></div><div class="vgd-row"><span>Rechecks</span><b>${c?.rechecks||0}/1</b></div>`}</aside></div>`}
  function standby(){return`<div class="vgd-panel"><h3>Hospital Director standing by</h3><p>Admit or select a patient to activate the connected case systems. Shift, development, staff, follow-ups, and reports remain available.</p></div>`}
  function panel(p,c){const tab=root().tab;if(tab==="case")return casePanel(p,c);if(tab==="vitals")return p?vitalsPanel(p,c):standby();if(tab==="forecast")return p?forecastPanel(p,c):standby();if(tab==="complications")return p?complicationsPanel(p,c):standby();if(tab==="evidence")return p?evidencePanel(p,c):standby();if(tab==="shift")return shiftPanel(p,c);if(tab==="staff")return staffPanel(p);if(tab==="upgrades")return upgradesPanel();if(tab==="followups")return followupsPanel(p,c);return reportsPanel(p,c)}
- function markup(p,c){const d=root();return`<section class="vgd-shell" id="vgdDirector"><div class="vgd-head"><div class="vgd-title"><b>HOSPITAL DIRECTOR · TEN CONNECTED SYSTEMS</b><span>Hidden cases · live vitals · staff · economy · consequences</span></div><button class="vgd-open" data-vgd-toggle>${d.open?"Collapse":"Open Director"}</button></div>${d.open?`<div class="vgd-body">${topStatus(p,c)}<div class="vgd-tabs">${TABS.map(([k,label])=>`<button class="vgd-tab ${d.tab===k?"active":""}" data-vgd-tab="${k}">${label}</button>`).join("")}</div>${panel(p,c)}<div class="vgd-mini-nav"><button data-vgd-screen="admit">Intake</button><button data-vgd-screen="clinic">Treatment</button><button data-vgd-screen="surgery">Surgery</button><button data-vgd-screen="recovery">Recovery</button><button data-vgd-screen="pets">My Pets</button></div></div>`:""}</section>`}
+ function markup(p,c){const d=root();return`<section class="vgd-shell" id="vgdDirector"><div class="vgd-head"><div class="vgd-title"><b>HOSPITAL DIRECTOR · TEN CONNECTED SYSTEMS</b><span>Hidden cases · live vitals · staff · economy · consequences</span></div><button class="vgd-open" data-vgd-toggle>${d.open?"Collapse":"Open Director"}</button></div>${d.open?`<div class="vgd-body">${topStatus(p,c)}<div class="vgd-tabs">${TABS.map(([k,label])=>`<button class="vgd-tab ${d.tab===k?"active":""}" data-vgd-tab="${k}">${label}</button>`).join("")}</div>${panel(p,c)}<div class="vgd-mini-nav"><button data-vgd-screen="admit">Intake</button><button data-vgd-screen="clinic">Treatment</button><button data-vgd-screen="surgery">Surgery</button><button data-vgd-screen="recovery">Recovery</button></div></div>`:""}</section>`}
  function bind(rootEl,p,c){q("[data-vgd-toggle]",rootEl)?.addEventListener("click",()=>{root().open=!root().open;rerender()});qa("[data-vgd-tab]",rootEl).forEach(b=>b.addEventListener("click",()=>{root().tab=b.dataset.vgdTab;rerender()}));qa("[data-vgd-evidence]",rootEl).forEach(b=>b.addEventListener("click",()=>evidence(c,b.dataset.vgdEvidence)));qa("[data-vgd-dx]",rootEl).forEach(b=>b.addEventListener("click",()=>diagnose(c,b.dataset.vgdDx)));qa("[data-vgd-forecast]",rootEl).forEach(b=>b.addEventListener("click",()=>{c.forecast=b.dataset.vgdForecast;rerender()}));qa("[data-vgd-treat]",rootEl).forEach(b=>b.addEventListener("click",()=>applyTreatment(p,c,b.dataset.vgdTreat)));q("[data-vgd-recheck]",rootEl)?.addEventListener("click",()=>recheck(p,c));q("[data-vgd-monitor]",rootEl)?.addEventListener("click",()=>complication(p,c));qa("[data-vgd-resolve]",rootEl).forEach(b=>b.addEventListener("click",()=>resolveComp(p,c,b.dataset.vgdResolve)));q("[data-vgd-shift]",rootEl)?.addEventListener("click",advanceShift);qa("[data-vgd-patient]",rootEl).forEach(b=>b.addEventListener("click",()=>{state.activeId=b.dataset.vgdPatient;root().tab="case";rerender()}));qa("[data-vgd-staff]",rootEl).forEach(b=>b.addEventListener("click",()=>assign(b.dataset.vgdStaff)));qa("[data-vgd-upgrade]",rootEl).forEach(b=>b.addEventListener("click",()=>buy(b.dataset.vgdUpgrade)));q("[data-vgd-schedule]",rootEl)?.addEventListener("click",()=>schedule(p,c));qa("[data-vgd-recall]",rootEl).forEach(b=>b.addEventListener("click",()=>recall(b.dataset.vgdRecall)));q("[data-vgd-close]",rootEl)?.addEventListener("click",()=>closeCase(p,c));qa("[data-vgd-screen]",rootEl).forEach(b=>b.addEventListener("click",()=>{if(typeof vgOpenScreen==="function")vgOpenScreen(b.dataset.vgdScreen);else{state.screen=b.dataset.vgdScreen;window.render()}}))}
  function mount(){if(typeof state==="undefined")return;const screen=q(".screen.active"),allowed=["admit","clinic","surgery","recovery","pets","hospital","carelab","animalprofile"].includes(state.screen);if(!screen||!allowed)return;const p=patient(),c=ensure(p),old=q("#vgdDirector");if(old)old.remove();const host=q(".vg-exact-layout",screen)||screen,hero=q(".vgx-hero",host);if(hero)hero.insertAdjacentHTML("afterend",markup(p,c));else host.insertAdjacentHTML("afterbegin",markup(p,c));const el=q("#vgdDirector",screen);if(el)bind(el,p,c)}
  function rerender(){if(typeof window.render==="function")window.render();else mount()}
@@ -18284,6 +18383,407 @@ function hook(name){
 window.vgflNextRequired=nextRequired;window.vgflFinishRemaining=finishRemaining;window.vgflToggleAuto=toggleAuto;
 window.VetGodFastCaseFlow={render,state:S};
 function install(){render();document.addEventListener("click",e=>{if(!e.target.closest("#vgFastLane"))setTimeout(()=>{render();maybeAuto()},50)},true)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgCoreHospitalOnlyJs">
+(function(){
+'use strict';
+const BLOCKED=new Set(["pets","habitats","antfarm","snaketanks","hamstercages","micecages"]);
+function coreScreen(name){
+  name=String(name||"").toLowerCase();
+  return BLOCKED.has(name)?"clinic":name
+}
+function cleanNav(){
+  document.querySelectorAll('button,a,[data-screen]').forEach(el=>{
+    const txt=(el.textContent||"").toLowerCase();
+    const oc=(el.getAttribute("onclick")||"").toLowerCase();
+    const ds=(el.getAttribute("data-screen")||"").toLowerCase();
+    if(
+      /my pets|ant farm|snake tank|hamster|mice|habitat|pet sim|cage sim/.test(txt) ||
+      /pets|habitats|antfarm|snaketanks|hamstercages|micecages/.test(oc) ||
+      BLOCKED.has(ds)
+    ) el.style.display="none";
+  });
+}
+const oldOpen=window.vgOpenScreen;
+if(typeof oldOpen==="function"){
+  window.vgOpenScreen=function(name){
+    return oldOpen.call(this,coreScreen(name));
+  };
+}
+window.vgOpenMyPets=function(){
+  if(typeof window.vgOpenScreen==="function") return window.vgOpenScreen("clinic");
+};
+function removeScreens(){
+  ["pets","habitats","antfarm","snaketanks","hamstercages","micecages"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.remove();
+  });
+}
+function sanitizeState(){
+  try{
+    if(state && BLOCKED.has(String(state.screen||"").toLowerCase())) state.screen="clinic";
+  }catch(e){}
+}
+function patchDashboard(){
+  try{
+    if(typeof window.vgHospitalDashboardHTML==="function"&&!window.vgHospitalDashboardHTML.__coreOnly){
+      const old=window.vgHospitalDashboardHTML;
+      const w=function(){
+        let s=old.apply(this,arguments);
+        s=s.replace(/<button[^>]*vgOpenMyPets\(\)[\s\S]*?<\/button>/gi,"");
+        s=s.replace(/<button[^>]*(?:pets|habitats|antfarm|snaketanks|hamstercages|micecages)[^>]*>[\s\S]*?<\/button>/gi,"");
+        s=s.replace(/My Pets/gi,"Hospital Cases");
+        return s
+      };
+      w.__coreOnly=true;window.vgHospitalDashboardHTML=w;
+    }
+  }catch(e){}
+}
+function install(){
+  sanitizeState();removeScreens();patchDashboard();cleanNav();
+  setTimeout(()=>{sanitizeState();removeScreens();cleanNav()},100);
+  setInterval(()=>{sanitizeState();cleanNav()},3000);
+}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab"].forEach(name=>{
+  const old=window[name];
+  if(typeof old!=="function"||old.__coreOnly)return;
+  const w=function(){
+    sanitizeState();
+    const r=old.apply(this,arguments);
+    setTimeout(()=>{removeScreens();cleanNav()},0);
+    return r
+  };
+  w.__coreOnly=true;window[name]=w
+});
+window.VetGodCoreHospitalOnly={blocked:[...BLOCKED]};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgFocusFlowJs">
+(function(){
+'use strict';
+const KEY="vetGodFocusFlowV1";
+let S={focus:true,last:"Focus mode ready."};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const cap=v=>Math.max(0,Math.min(100,Math.round(Number(v)||0)));
+function patient(){
+ try{
+   const a=[...(state?.patients||[]),...(state?.pets||[])];
+   return a.find(x=>x.id===state.activeId)||a.find(x=>x.admitted&&!x.discharged&&!x.sentHome)||null
+ }catch(e){return null}
+}
+function needSurgery(p){
+ const t=String(p?.condition||p?.diagnosis||"").toLowerCase();
+ return !!(p?.requiresSurgery||/fracture|foreign body|rupture|internal bleed|mass|obstruction|laceration|wound repair/.test(t))
+}
+function phase(p){
+ if(!p)return {name:"INTAKE",screen:"admit",label:"ADMIT NEXT PATIENT",why:"No active animal is in care. Start the next hospital case."};
+ if(p.discharged||p.sentHome||p.flow?.completed)return {name:"COMPLETE",screen:"clinic",label:"LOAD NEXT PATIENT",why:"This case is finished. Bring in the next animal."};
+ if(p.recoveryCleared)return {name:"COMPLETE CASE",screen:"recovery",label:"COMPLETE CASE",why:"Recovery targets are satisfied. Close this case and collect the reward."};
+ if(/recovery/i.test(p.department||p.location||""))return {name:"RECOVERY",screen:"recovery",label:"GO TO RECOVERY",why:"Treatment is complete. Finish pain control, hydration, mobility and readiness checks."};
+ if(needSurgery(p)&&p.treatmentComplete&&!p.surgeryComplete)return {name:"SURGERY",screen:"surgery",label:"GO TO SURGERY",why:"The primary treatment plan requires an operation before recovery can begin."};
+ if(!p.treatmentComplete&&!p.problemResolved)return {name:"TREATMENT",screen:"clinic",label:"GO TO TREATMENT",why:"The diagnosis is known. Resolve the primary problem before moving on."};
+ return {name:"CLINIC",screen:"clinic",label:"GO TO CLINIC",why:"Continue the active case in the clinic."}
+}
+function go(){
+ const p=patient(),x=phase(p);
+ if(x.name==="INTAKE"){try{if(typeof vgcfNext==="function")vgcfNext();else if(typeof vgOpenScreen==="function")vgOpenScreen("admit")}catch(e){};return}
+ if(x.name==="COMPLETE"){try{if(typeof vgcfNext==="function")vgcfNext()}catch(e){};return}
+ if(x.name==="COMPLETE CASE"){try{if(typeof vgcfComplete==="function")vgcfComplete()}catch(e){};return}
+ try{if(typeof vgOpenScreen==="function")vgOpenScreen(x.screen)}catch(e){}
+ S.last="Opened "+x.name+".";save();render()
+}
+function openArea(area){
+ area=String(area||"").toLowerCase();
+ try{if(typeof vgOpenScreen==="function")vgOpenScreen(area)}catch(e){}
+}
+function toggle(){
+ S.focus=!S.focus;save();document.body.classList.toggle("vg-focus-mode",S.focus);render()
+}
+function html(){
+ const p=patient(),x=phase(p),cur=String(state?.screen||"clinic").toLowerCase();
+ const areas=[["clinic","CLINIC"],["surgery","SURGERY"],["recovery","RECOVERY"],["admit","INTAKE"],["carelab","DIAGNOSTICS"],["research","CODEX"]];
+ const health=p?cap(p.health??0):0,pain=p?cap(p.pain??0):0,hyd=p?cap(p.hydration??p.water??0):0,mob=p?cap(p.mobility??0):0;
+ return `<section id="vgFocusFlow">
+  <div class="vgff-head">
+   <div><h2>🎯 PATIENT FOCUS FLOW</h2><p>One obvious destination at a time. Follow the active animal instead of searching the whole hospital.</p></div>
+   <button class="vgff-toggle" onclick="vgffToggle()">${S.focus?"FOCUS MODE ON":"FOCUS MODE OFF"}</button>
+  </div>
+  <div class="vgff-focus">
+   <div class="vgff-main">
+    <div class="eyebrow">NEXT WORK AREA</div>
+    <h3>${x.name}</h3>
+    <div class="why">${x.why}</div>
+    <button class="vgff-next" onclick="vgffGo()">▶ ${x.label}</button>
+    <div class="vgff-mini">
+      <div><b>${p?health:"--"}</b><span>HEALTH</span></div>
+      <div><b>${p?pain:"--"}</b><span>PAIN</span></div>
+      <div><b>${p?hyd:"--"}</b><span>HYDRATION</span></div>
+      <div><b>${p?mob:"--"}</b><span>MOBILITY</span></div>
+    </div>
+   </div>
+   <div class="vgff-side">
+    <h4>HOSPITAL AREAS</h4>
+    <div class="vgff-areas">${areas.map(a=>`<button class="vgff-area ${cur===a[0]?"current":x.screen===a[0]?"next":""}" onclick="vgffArea('${a[0]}')">${a[1]}</button>`).join("")}</div>
+    <div class="vgff-status">${p?`Active patient: <b>${p.name||"Patient"}</b> · ${p.species||"Animal"} · ${p.diagnosis||p.condition||"Case active"}`:"No active patient. The next action will begin a new case."}</div>
+   </div>
+  </div>
+ </section>`
+}
+function render(){
+ document.body.classList.toggle("vg-focus-mode",S.focus);
+ const scr=document.querySelector(".screen.active")||document.getElementById(state?.screen||"clinic");if(!scr)return;
+ document.getElementById("vgFocusFlow")?.remove();
+ const fast=document.getElementById("vgFastLane"),cf=document.getElementById("vgCaseFlowEngine");
+ if(fast&&fast.parentElement===scr)fast.insertAdjacentHTML("beforebegin",html());
+ else if(cf&&cf.parentElement===scr)cf.insertAdjacentHTML("beforebegin",html());
+ else scr.insertAdjacentHTML("afterbegin",html())
+}
+function hook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgff)return;
+ const w=function(){const r=old.apply(this,arguments);setTimeout(render,20);return r};w.__vgff=true;window[name]=w
+}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","vgcfNext","vgcfComplete","vgcfAdvance","vggdAct"].forEach(hook);
+window.vgffGo=go;window.vgffArea=openArea;window.vgffToggle=toggle;window.VetGodFocusFlow={render,state:S};
+function install(){render();document.addEventListener("click",e=>{if(!e.target.closest("#vgFocusFlow"))setTimeout(render,50)},true)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgClinicalLogicJs">
+(function(){
+'use strict';
+const KEY="vetGodClinicalLogicV1";
+let S={last:"Clinical logic engine online.",events:0};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const cap=v=>Math.max(0,Math.min(100,Math.round(Number(v)||0)));
+const CASES={
+ fracture:{clues:["pain on movement","swelling","reduced weight bearing"],tests:["exam","imaging"],best:["pain","stabilize","repair"],risk:"mobility",surgery:true},
+ dehydration:{clues:["dry gums","weakness","reduced skin elasticity"],tests:["exam","lab"],best:["fluids","water","rest"],risk:"mobility",surgery:false},
+ wound:{clues:["bleeding","tissue injury","contamination"],tests:["exam","imaging"],best:["bleeding","clean","pain"],risk:"ignore",surgery:true},
+ respiratory:{clues:["rapid breathing","low oxygen","anxiety"],tests:["exam","imaging"],best:["oxygen","calm","treat"],risk:"stress",surgery:false},
+ infection:{clues:["fever","pain","inflammation"],tests:["exam","lab"],best:["fluids","pain","treat"],risk:"ignore",surgery:false},
+ "foreign body":{clues:["vomiting","abdominal pain","poor appetite"],tests:["exam","imaging"],best:["fluids","pain","repair"],risk:"feed",surgery:true},
+ arthritis:{clues:["stiffness","pain","limited mobility"],tests:["exam","imaging"],best:["pain","rest","rehab"],risk:"mobility",surgery:false},
+ "minor trauma":{clues:["bruising","fear","mild pain"],tests:["exam"],best:["calm","pain","rest"],risk:"stress",surgery:false}
+};
+const PERSONALITY={
+ CALM:{trust:3,stress:-2,msg:"The patient remains cooperative."},
+ NERVOUS:{trust:2,stress:1,msg:"Gentle handling matters more for this patient."},
+ STOIC:{trust:1,stress:0,msg:"Pain may be less obvious than the numbers suggest."},
+ SOCIAL:{trust:4,stress:-3,msg:"Companion contact improves cooperation."},
+ REACTIVE:{trust:1,stress:3,msg:"Fast or forceful actions can escalate stress."}
+};
+function patient(){
+ try{
+   const a=[...(state?.patients||[]),...(state?.pets||[])];
+   return a.find(x=>x.id===state.activeId)||a.find(x=>x.admitted&&!x.discharged&&!x.sentHome)||null
+ }catch(e){return null}
+}
+function caseDef(p){
+ const k=String(p?.condition||p?.diagnosis||"minor trauma").toLowerCase();
+ return CASES[k]||Object.entries(CASES).find(([n])=>k.includes(n))?.[1]||CASES["minor trauma"]
+}
+function init(p){
+ if(!p)return;
+ p.personality=p.personality||["CALM","NERVOUS","STOIC","SOCIAL","REACTIVE"][Math.abs(String(p.id||p.name||"x").split("").reduce((a,c)=>a+c.charCodeAt(0),0))%5];
+ p.clinical=p.clinical||{
+   clues:{},tests:{},actions:{},complications:[],memory:[],confidence:0,
+   examined:false,diagnosed:false,primaryResolved:false,recoveryProof:0,
+   elapsed:0,lastTick:Date.now()
+ };
+ p.health=cap(p.health??58);p.pain=cap(p.pain??45);p.stress=cap(p.stress??48);
+ p.oxygen=cap(p.oxygen??93);p.hydration=cap(p.hydration??55);p.mobility=cap(p.mobility??45);
+ p.trust=cap(p.trust??35);p.comfort=cap(p.comfort??50)
+}
+function money(delta){
+ try{
+   if(state&&typeof state.money==="number"){state.money=Math.max(0,state.money+delta);return true}
+   if(window.G&&typeof G.money==="number"){G.money=Math.max(0,G.money+delta);return true}
+ }catch(e){}
+ return true
+}
+function remember(p,msg){
+ p.clinical.memory.unshift({t:Date.now(),msg});p.clinical.memory=p.clinical.memory.slice(0,12)
+}
+function applyPersonality(p,gentle=true){
+ const pr=PERSONALITY[p.personality]||PERSONALITY.CALM;
+ p.trust=cap(p.trust+(gentle?pr.trust:-2));
+ p.stress=cap(p.stress+(gentle?pr.stress:Math.abs(pr.stress)+4));
+ return pr.msg
+}
+function maybeComplication(p,kind){
+ let risk=0;
+ if(p.oxygen<88)risk+=.22;if(p.pain>65)risk+=.14;if(p.stress>70)risk+=.12;if(p.hydration<45)risk+=.12;
+ if(["mobility","ignore","stress","feed"].includes(kind))risk+=.30;
+ if(Math.random()<risk){
+   const pool=["bleeding flare","panic response","oxygen dip","pain spike","wound irritation"];
+   const c=pool[Math.floor(Math.random()*pool.length)];
+   p.clinical.complications.unshift(c);p.clinical.complications=p.clinical.complications.slice(0,5);
+   if(c.includes("oxygen"))p.oxygen=cap(p.oxygen-8);
+   else if(c.includes("pain"))p.pain=cap(p.pain+10);
+   else p.stress=cap(p.stress+9);
+   S.last="⚠ Complication: "+c+". The case plan changed.";
+   return true
+ }
+ return false
+}
+function diagnoseReady(p){
+ const d=caseDef(p),done=d.tests.filter(t=>p.clinical.tests[t]).length;
+ return done>=Math.min(2,d.tests.length)
+}
+function act(kind){
+ const p=patient();if(!p)return;init(p);const d=caseDef(p);
+ let msg="",gentle=true,cost=0,good=true;
+ if(kind==="exam"){
+   p.clinical.examined=true;p.clinical.tests.exam=true;d.clues.forEach((c,i)=>{if(i<2)p.clinical.clues[c]=true});
+   p.clinical.confidence=cap(p.clinical.confidence+28);cost=5;msg="Physical exam revealed new clinical clues."
+ } else if(kind==="imaging"){
+   p.clinical.tests.imaging=true;d.clues.forEach(c=>p.clinical.clues[c]=true);
+   p.clinical.confidence=cap(p.clinical.confidence+35);cost=18;msg="Imaging clarified the primary problem."
+ } else if(kind==="lab"){
+   p.clinical.tests.lab=true;d.clues.forEach(c=>p.clinical.clues[c]=true);
+   p.clinical.confidence=cap(p.clinical.confidence+32);cost=15;msg="Laboratory results increased diagnostic confidence."
+ } else if(kind==="calm"){
+   p.stress=cap(p.stress-14);p.comfort=cap(p.comfort+8);msg="Low-stress handling improved cooperation."
+ } else if(kind==="oxygen"){
+   p.oxygen=cap(p.oxygen+10);p.health=cap(p.health+3);cost=6;msg="Oxygen support improved respiratory stability."
+ } else if(kind==="fluids"){
+   p.hydration=cap(p.hydration+16);p.health=cap(p.health+5);cost=7;msg="Supportive fluids improved hydration."
+ } else if(kind==="pain"){
+   p.pain=cap(p.pain-16);p.stress=cap(p.stress-5);cost=8;msg="Veterinarian-directed pain control improved comfort."
+ } else if(kind==="bleeding"){
+   p.health=cap(p.health+8);p.pain=cap(p.pain-5);cost=6;msg="Bleeding control stabilized the patient."
+ } else if(kind==="clean"){
+   p.health=cap(p.health+5);p.pain=cap(p.pain-3);cost=6;msg="The wound was cleaned and protected."
+ } else if(kind==="stabilize"){
+   p.mobility=cap(p.mobility+6);p.pain=cap(p.pain-6);cost=5;msg="Mechanical stabilization reduced painful movement."
+ } else if(kind==="repair"){
+   if(!diagnoseReady(p)){good=false;msg="Repair deferred: diagnostic confidence is too low."}
+   else{p.health=cap(p.health+15);p.pain=cap(p.pain-12);p.clinical.primaryResolved=true;p.problemResolved=true;p.treatmentComplete=true;cost=20;msg=d.surgery?"Definitive repair prepared the patient for Surgery.":"Primary treatment resolved the case."}
+ } else if(kind==="treat"){
+   if(!diagnoseReady(p)){good=false;msg="Treatment deferred: confirm the diagnosis first."}
+   else{p.health=cap(p.health+14);p.pain=cap(p.pain-10);p.clinical.primaryResolved=true;p.problemResolved=true;p.treatmentComplete=true;cost=12;msg="Condition-specific treatment resolved the primary problem."}
+ } else if(kind==="water"){
+   p.hydration=cap(p.hydration+12);p.drank=true;msg="The patient drank voluntarily."
+ } else if(kind==="feed"){
+   if(String(p.condition||"").toLowerCase().includes("foreign")){good=false;gentle=false;p.pain=cap(p.pain+8);msg="Feeding worsened abdominal discomfort before the obstruction was resolved."}
+   else{p.ate=true;p.comfort=cap(p.comfort+6);msg="The patient ate and gained recovery confidence."}
+ } else if(kind==="rest"){
+   p.stress=cap(p.stress-8);p.comfort=cap(p.comfort+8);p.health=cap(p.health+3);msg="Quiet rest improved recovery."
+ } else if(kind==="rehab"){
+   if(p.pain>40){good=false;p.pain=cap(p.pain+5);msg="Rehabilitation was attempted before pain was adequately controlled."}
+   else{p.mobility=cap(p.mobility+14);p.clinical.recoveryProof++;msg="Controlled rehabilitation improved mobility."}
+ } else if(kind==="reassess"){
+   p.clinical.recoveryProof++;p.health=cap(p.health+2);msg="Reassessment recorded the patient's response to care."
+ } else if(kind==="mobility"||kind==="ignore"||kind==="stress"){
+   good=false;gentle=false;maybeComplication(p,kind);msg=S.last.startsWith("⚠")?S.last:"The risky choice increased clinical uncertainty."
+ }
+ if(cost)money(-cost);
+ if(good){
+   const pm=applyPersonality(p,gentle);remember(p,msg+" "+pm);p.clinical.actions[kind]=(p.clinical.actions[kind]||0)+1;
+   if(diagnoseReady(p)){p.clinical.diagnosed=true;p.diagnosis=p.diagnosis||p.condition}
+   if(!maybeComplication(p,kind))S.last="✓ "+msg+" "+pm
+ }else{remember(p,msg);S.last="⚠ "+msg}
+ S.events++;save();
+ try{if(typeof saveGame==="function")saveGame("Clinical logic action",true)}catch(e){}
+ render()
+}
+function recommendation(p){
+ const d=caseDef(p);init(p);
+ if(p.oxygen<89)return ["oxygen","OXYGEN SUPPORT","Oxygen is the immediate priority."];
+ if(p.stress>68)return ["calm","LOW-STRESS HANDLING","Stress is interfering with examination and treatment."];
+ if(p.pain>55)return ["pain","PAIN CONTROL","Pain is high enough to affect the rest of the case."];
+ if(!p.clinical.tests.exam)return ["exam","PHYSICAL EXAM","Start with hands-on assessment and clues."];
+ for(const t of d.tests)if(!p.clinical.tests[t])return [t,t==="imaging"?"IMAGING":"LAB WORK","Build enough diagnostic confidence before definitive treatment."];
+ for(const a of d.best)if(!p.clinical.actions[a]&&["pain","calm","oxygen","fluids","bleeding","clean","stabilize"].includes(a))return [a,a.toUpperCase(),"This action matches the current condition and patient state."];
+ if(!p.problemResolved)return [d.best.includes("repair")?"repair":"treat",d.best.includes("repair")?"DEFINITIVE REPAIR":"PRIMARY TREATMENT","The case is ready for definitive treatment."];
+ if(p.hydration<65)return ["water","OFFER WATER","Recovery requires independent hydration."];
+ if(!p.ate)return ["feed","OFFER FOOD","Appetite is part of recovery readiness."];
+ if(p.pain>35)return ["pain","PAIN REASSESSMENT / CONTROL","Pain must be controlled before discharge."];
+ if(p.mobility<58)return ["rehab","GENTLE REHAB","Restore safe mobility before discharge."];
+ return ["reassess","FINAL REASSESSMENT","Confirm the patient is ready to move on."]
+}
+function available(p){
+ const d=caseDef(p),r=recommendation(p),base=[
+  ["exam","PHYSICAL EXAM"],["imaging","IMAGING"],["lab","LAB WORK"],["calm","CALM PATIENT"],
+  ["oxygen","OXYGEN"],["fluids","FLUID SUPPORT"],["pain","PAIN CONTROL"],["water","OFFER WATER"],
+  ["feed","OFFER FOOD"],["rest","QUIET REST"],["rehab","GENTLE REHAB"],["reassess","REASSESS"]
+ ];
+ if(d.best.includes("bleeding"))base.push(["bleeding","CONTROL BLEEDING"]);
+ if(d.best.includes("clean"))base.push(["clean","CLEAN WOUND"]);
+ if(d.best.includes("stabilize"))base.push(["stabilize","STABILIZE LIMB"]);
+ base.push([d.best.includes("repair")?"repair":"treat",d.best.includes("repair")?"DEFINITIVE REPAIR":"PRIMARY TREATMENT"]);
+ return base.map(a=>`<button class="${a[0]===r[0]?"best":""}" onclick="vgclAction('${a[0]}')">${a[0]===r[0]?"★ ":""}${a[1]}</button>`).join("")
+}
+function html(){
+ const p=patient();
+ if(!p)return `<section id="vgClinicalLogic"><div class="vgcl-head"><div><h3>🧠 CLINICAL LOGIC ENGINE</h3><p>The old simulator logic is now part of actual patient care.</p></div><div class="vgcl-badge">WAITING FOR PATIENT</div></div></section>`;
+ init(p);const d=caseDef(p),r=recommendation(p),pers=PERSONALITY[p.personality]||PERSONALITY.CALM;
+ const clues=d.clues.map(c=>`<div class="vgcl-clue ${p.clinical.clues[c]?"found":""}">${p.clinical.clues[c]?"✓":"?"} ${c}</div>`).join("");
+ const memories=(p.clinical.memory||[]).slice(0,5).map(m=>`• ${m.msg}`).join("<br>")||"No treatment memories yet.";
+ return `<section id="vgClinicalLogic">
+  <div class="vgcl-head"><div><h3>🧠 CLINICAL LOGIC ENGINE</h3><p>Personality, memory, needs, diagnostics, risk, consequences and recovery now drive the hospital case itself.</p></div><div class="vgcl-badge">${p.personality} · CONFIDENCE ${p.clinical.confidence}%</div></div>
+  <div class="vgcl-grid">
+   <div class="vgcl-panel"><h4>PATIENT BRAIN + CLUES</h4>
+    <div class="vgcl-row"><span>Personality</span><b>${p.personality}</b></div>
+    <div class="vgcl-row"><span>Trust</span><b>${p.trust}</b></div><div class="vgcl-meter"><i style="width:${p.trust}%"></i></div>
+    <div class="vgcl-row"><span>Stress</span><b>${p.stress}</b></div><div class="vgcl-meter"><i style="width:${p.stress}%"></i></div>
+    <div class="vgcl-clues">${clues}</div>
+    <div class="vgcl-small" style="margin-top:6px">${pers.msg}</div>
+   </div>
+   <div class="vgcl-panel"><h4>WORK THE CASE</h4>
+    <div class="vgcl-event"><b>NEXT BEST ACTION: ${r[1]}</b><br>${r[2]}</div>
+    <div class="vgcl-actions" style="margin-top:7px">${available(p)}</div>
+    <div class="vgcl-event ${S.last.startsWith("⚠")?"vgcl-alert":""}">${S.last}</div>
+   </div>
+   <div class="vgcl-panel"><h4>CASE MEMORY + CONSEQUENCES</h4>
+    <div class="vgcl-row"><span>Health</span><b>${p.health}</b></div>
+    <div class="vgcl-row"><span>Pain</span><b>${p.pain}</b></div>
+    <div class="vgcl-row"><span>Oxygen</span><b>${p.oxygen}</b></div>
+    <div class="vgcl-row"><span>Hydration</span><b>${p.hydration}</b></div>
+    <div class="vgcl-row"><span>Mobility</span><b>${p.mobility}</b></div>
+    <h4 style="margin-top:9px">MEMORY</h4><div class="vgcl-log">${memories}</div>
+    ${(p.clinical.complications||[]).length?`<div class="vgcl-event vgcl-alert">Complications: ${p.clinical.complications.join(" · ")}</div>`:""}
+   </div>
+  </div>
+ </section>`
+}
+function tick(){
+ const p=patient();if(!p||p.discharged)return;init(p);
+ const now=Date.now(),mins=Math.min(6,(now-p.clinical.lastTick)/60000);if(mins<1)return;
+ p.clinical.lastTick=now;p.clinical.elapsed+=mins;
+ if(p.pain>55)p.stress=cap(p.stress+Math.round(mins));
+ if(p.stress>70)p.trust=cap(p.trust-Math.round(mins*.5));
+ if(p.hydration<45)p.health=cap(p.health-Math.round(mins*.4));
+ if(p.oxygen<88)p.health=cap(p.health-Math.round(mins*.7));
+ save()
+}
+function render(){
+ tick();
+ const scr=document.querySelector(".screen.active")||document.getElementById(state?.screen||"clinic");if(!scr)return;
+ document.getElementById("vgClinicalLogic")?.remove();
+ const ff=document.getElementById("vgFocusFlow"),fast=document.getElementById("vgFastLane");
+ if(ff&&ff.parentElement===scr)ff.insertAdjacentHTML("afterend",html());
+ else if(fast&&fast.parentElement===scr)fast.insertAdjacentHTML("beforebegin",html());
+ else scr.insertAdjacentHTML("afterbegin",html())
+}
+function hook(name){
+ const old=window[name];if(typeof old!=="function"||old.__vgcl)return;
+ const w=function(){const rr=old.apply(this,arguments);setTimeout(render,25);return rr};w.__vgcl=true;window[name]=w
+}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","vgcfNext","vgcfComplete","vgcfAdvance","vggdAct","vgflNextRequired"].forEach(hook);
+window.vgclAction=act;window.VetGodClinicalLogic={render,state:S};
+function install(){render();setInterval(()=>{try{tick();if(document.getElementById("vgClinicalLogic"))render()}catch(e){}},60000)}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
