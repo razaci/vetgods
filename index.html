@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · STABLE CASE CONTROL · SUPERCOMPUTER EDITION</title>
+<title>VET GODS · STABLE SCROLL · HOSPITAL EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3186,6 +3186,48 @@ body.vg-user-scrolling *{scroll-behavior:auto!important}
  .vgcc-wrap{grid-template-columns:1fr}
  .vgcc-actions{justify-content:flex-start}
 }
+</style>
+
+
+<style id="vgRemoveSidewallCss">
+/* Remove the desktop sidewall entirely and reclaim its layout space */
+#vgSupercomputerSidewall,
+#vgSidewall,
+.vg-supercomputer-sidewall,
+.supercomputer-sidewall,
+.desktop-sidewall,
+.sidewall,
+[id*="Sidewall"],
+[id*="sidewall"]{
+  display:none!important;
+  width:0!important;
+  min-width:0!important;
+  max-width:0!important;
+  flex:0 0 0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+}
+button[onclick*="ToggleSidewall"],
+button[onclick*="toggleSidewall"],
+button[onclick*="vgToggleSidewall"],
+button[onclick*="vgSidewall"],
+button[onclick*="sidewall"],
+button[title*="Sidewall"],
+button[aria-label*="Sidewall"]{
+  display:none!important;
+}
+#app,.app,.shell,.main-shell,.supercomputer-shell,.desktop-shell,
+.screen.active,.screen,.workspace,.main-workspace{
+  max-width:none!important;
+}
+</style>
+
+
+<style id="vgAbsoluteStableScrollCss">
+html,body{scroll-behavior:auto!important;overflow-anchor:none!important}
+*{overflow-anchor:none!important}
 </style>
 
 </head>
@@ -18101,7 +18143,7 @@ function hook(name){
 ["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","renderPets"].forEach(hook);
 
 function install(){
-  document.body.insertAdjacentHTML("beforeend",`<button class="vg-desktop-toggle" onclick="vgDesktopToggle()">🖥 TOGGLE SIDEWALL</button>`);
+  document.body.insertAdjacentHTML("beforeend",``);
   renderAll();
   document.addEventListener("click",()=>setTimeout(renderAll,35),true);
 }
@@ -19009,6 +19051,202 @@ function install(){
  document.addEventListener("click",()=>setTimeout(render,60),true);
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgRemoveSidewallJs">
+(function(){
+'use strict';
+function removeSidewall(){
+  const selectors=[
+    "#vgSupercomputerSidewall","#vgSidewall",".vg-supercomputer-sidewall",
+    ".supercomputer-sidewall",".desktop-sidewall",".sidewall",
+    '[id*="Sidewall"]','[id*="sidewall"]'
+  ];
+  selectors.forEach(sel=>{
+    document.querySelectorAll(sel).forEach(el=>{
+      const txt=(el.textContent||"").toLowerCase();
+      if(
+        sel.includes("Sidewall") || sel.includes("sidewall") ||
+        /active screen|hospital network|render passes|last event|toggle sidewall/.test(txt)
+      ){
+        el.remove();
+      }
+    });
+  });
+
+  document.querySelectorAll("button").forEach(btn=>{
+    const txt=(btn.textContent||"").trim().toLowerCase();
+    const oc=(btn.getAttribute("onclick")||"").toLowerCase();
+    if(
+      txt.includes("toggle sidewall") ||
+      txt.includes("toggle side view") ||
+      txt==="sidewall" ||
+      oc.includes("sidewall")
+    ) btn.remove();
+  });
+
+  document.body.classList.remove(
+    "sidewall-open","sidewall-closed","vg-sidewall-open","vg-sidewall-closed",
+    "supercomputer-sidewall-open","supercomputer-sidewall-closed"
+  );
+
+  const candidates=[
+    document.getElementById("app"),
+    document.querySelector(".app"),
+    document.querySelector(".shell"),
+    document.querySelector(".main-shell"),
+    document.querySelector(".supercomputer-shell"),
+    document.querySelector(".desktop-shell"),
+    document.querySelector(".workspace"),
+    document.querySelector(".main-workspace")
+  ].filter(Boolean);
+
+  candidates.forEach(el=>{
+    el.style.gridTemplateColumns="";
+    el.style.marginRight="";
+    el.style.paddingRight="";
+    el.style.maxWidth="none";
+  });
+}
+
+["vgToggleSidewall","toggleSidewall","vgSidewallToggle"].forEach(name=>{
+  try{window[name]=function(){return false}}catch(e){}
+});
+
+function hook(name){
+  const old=window[name];
+  if(typeof old!=="function"||old.__vgNoSidewall)return;
+  const w=function(){
+    const r=old.apply(this,arguments);
+    setTimeout(removeSidewall,0);
+    return r;
+  };
+  w.__vgNoSidewall=true;
+  window[name]=w;
+}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab"].forEach(hook);
+
+function install(){
+  removeSidewall();
+  const mo=new MutationObserver(()=>removeSidewall());
+  mo.observe(document.body,{childList:true,subtree:true});
+  setTimeout(removeSidewall,100);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});
+else install();
+})();
+</script>
+
+
+<script id="vgAbsoluteStableScrollJs">
+(function(){
+'use strict';
+
+/* Absolute scroll lock:
+   background game logic may update data, but periodic/background redraws are not
+   allowed to move the player's viewport. */
+let lastUserY=window.scrollY||0;
+let userMovedAt=Date.now();
+let programmaticActionUntil=0;
+let restoring=false;
+
+function recordUserPosition(){
+  if(restoring)return;
+  lastUserY=window.scrollY||document.documentElement.scrollTop||0;
+  userMovedAt=Date.now();
+}
+["scroll","wheel","touchmove","pointermove"].forEach(ev=>{
+  window.addEventListener(ev,recordUserPosition,{passive:true});
+});
+
+function restore(y){
+  if(!Number.isFinite(y))return;
+  requestAnimationFrame(()=>{
+    restoring=true;
+    window.scrollTo(0,y);
+    requestAnimationFrame(()=>{
+      window.scrollTo(0,y);
+      restoring=false;
+      lastUserY=y;
+    });
+  });
+}
+
+/* Stop focus calls from scrolling controls into view. */
+const nativeFocus=HTMLElement.prototype.focus;
+HTMLElement.prototype.focus=function(opts){
+  try{return nativeFocus.call(this,Object.assign({},opts||{},{preventScroll:true}))}
+  catch(e){return nativeFocus.call(this)}
+};
+
+/* Prevent scrollIntoView from yanking the page unless explicitly marked. */
+const nativeSIV=Element.prototype.scrollIntoView;
+Element.prototype.scrollIntoView=function(arg){
+  if(this?.dataset?.allowGameScroll==="true")return nativeSIV.call(this,arg);
+};
+
+/* Preserve exact viewport around every known renderer. */
+function wrap(name){
+  const old=window[name];
+  if(typeof old!=="function"||old.__vgAbsoluteScroll)return;
+  const w=function(){
+    const y=window.scrollY||0;
+    const r=old.apply(this,arguments);
+    restore(y);
+    return r;
+  };
+  w.__vgAbsoluteScroll=true;
+  window[name]=w;
+}
+[
+ "render","renderClinic","renderRecovery","renderSurgery","renderCareLab",
+ "renderAdmit","renderFunding","renderDiagnostics","renderResearch",
+ "vgcfNext","vgcfComplete","vgcfAdvance","vggdAct","vgflNextRequired",
+ "vgflFinishRemaining","vgffGo","vgclAction","vgccNext","vgccForward","vgccFinish"
+].forEach(wrap);
+
+/* Background intervals are allowed to run, but their DOM work cannot move the page.
+   Short periodic UI redraws are skipped while the user is interacting. */
+const nativeSetInterval=window.setInterval.bind(window);
+if(!window.__vgNoJumpIntervalInstalled){
+  window.__vgNoJumpIntervalInstalled=true;
+  window.setInterval=function(fn,ms){
+    if(typeof fn!=="function")return nativeSetInterval(fn,ms);
+    return nativeSetInterval(function(){
+      const y=window.scrollY||0;
+      const recentlyUsingPage=(Date.now()-userMovedAt)<1800;
+      if(recentlyUsingPage && Number(ms)<=12000)return;
+      let r;
+      try{r=fn.apply(this,arguments)}finally{restore(y)}
+      return r;
+    },ms);
+  };
+}
+
+/* MutationObserver catches late modules that rebuild the active screen. */
+let mutationTimer=null;
+const mo=new MutationObserver(()=>{
+  if(Date.now()<programmaticActionUntil)return;
+  const target=lastUserY;
+  clearTimeout(mutationTimer);
+  mutationTimer=setTimeout(()=>{
+    if(Math.abs((window.scrollY||0)-target)>6)restore(target);
+  },10);
+});
+function install(){
+  mo.observe(document.body,{subtree:true,childList:true});
+  document.addEventListener("click",()=>{
+    programmaticActionUntil=Date.now()+120;
+    lastUserY=window.scrollY||0;
+    setTimeout(()=>restore(lastUserY),20);
+    setTimeout(()=>restore(lastUserY),100);
+    setTimeout(()=>restore(lastUserY),250);
+  },true);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});
+else install();
 })();
 </script>
 
