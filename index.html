@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · NATIVE MOUSE SCROLL</title>
+<title>VET GODS · ALL SCREENS STABLE SCROLL</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3484,6 +3484,54 @@ body{
   max-height:none!important;
   touch-action:pan-x pan-y!important;
   overscroll-behavior-y:auto!important;
+}
+</style>
+
+
+<style id="vgAllScreensStableScrollCss">
+/* Secondary departments should scroll as part of the document, like Clinic. */
+.screen.active:not(#clinic){
+  height:auto!important;
+  min-height:100vh!important;
+  max-height:none!important;
+  overflow:visible!important;
+  position:relative!important;
+  scroll-behavior:auto!important;
+  overflow-anchor:none!important;
+}
+
+/* Old department shells were built as nested scroll panes. Open them back into the page. */
+.screen.active:not(#clinic) .workspace,
+.screen.active:not(#clinic) .main-workspace,
+.screen.active:not(#clinic) .content,
+.screen.active:not(#clinic) .panel-body,
+.screen.active:not(#clinic) .card-body,
+.screen.active:not(#clinic) .vg-samepage-content,
+.screen.active:not(#clinic) .recovery-sim,
+.screen.active:not(#clinic) .tree-shell,
+.screen.active:not(#clinic) [class*="viewport"],
+.screen.active:not(#clinic) [class*="scroll-pane"],
+.screen.active:not(#clinic) [class*="scroll-area"]{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  overscroll-behavior:auto!important;
+  scroll-behavior:auto!important;
+}
+
+/* Stop visual blinking/animated re-entry on department redraws. */
+.screen.active:not(#clinic),
+.screen.active:not(#clinic) *{
+  scroll-behavior:auto!important;
+}
+.screen.active:not(#clinic) .panel,
+.screen.active:not(#clinic) .card,
+.screen.active:not(#clinic) .vg-dept-banner,
+.screen.active:not(#clinic) .vg-screen-banner,
+.screen.active:not(#clinic) .recovery-sim{
+  animation:none!important;
+  transition:none!important;
 }
 </style>
 
@@ -20413,6 +20461,132 @@ document.addEventListener("click",function(e){
 },true);
 
 window.VetGodNativeMouseScroll={release};
+})();
+</script>
+
+
+<script id="vgAllScreensStableScrollJs">
+(function(){
+'use strict';
+
+let lastUserAction=Date.now();
+let lastScreen="";
+let installedRender=null;
+
+function screenName(){
+  try{return String(state?.screen||"clinic")}catch(e){return"clinic"}
+}
+function isSecondary(){return screenName()!=="clinic"}
+
+/* A real user action is allowed to redraw a secondary page. Background timers are not. */
+["pointerdown","mousedown","touchstart","keydown","click","input","change"].forEach(type=>{
+  document.addEventListener(type,()=>{lastUserAction=Date.now()},{capture:true,passive:true});
+});
+
+/*
+  Secondary-screen mouse-wheel bridge.
+  Capture the wheel before old nested panels can swallow it and move the document itself.
+  Clinic is untouched because native wheel scrolling there already works perfectly.
+*/
+window.addEventListener("wheel",function(e){
+  if(!isSecondary())return;
+  if(e.ctrlKey)return; // preserve browser zoom gesture
+  const active=document.querySelector(".screen.active");
+  if(!active || active.id==="clinic")return;
+
+  const target=e.target;
+  /* Preserve horizontal sliders/ranges; normal wheel anywhere else moves the page. */
+  if(target && target.matches && target.matches('input[type="range"]'))return;
+
+  e.preventDefault();
+  e.stopImmediatePropagation();
+
+  const dy=Number(e.deltaY)||0;
+  const dx=Number(e.deltaX)||0;
+  const amount=Math.abs(dy)>=Math.abs(dx)?dy:dx;
+  window.scrollBy({top:amount,left:0,behavior:"auto"});
+},{capture:true,passive:false});
+
+/* Remove browser anchoring/focus from secondary screens only. */
+document.addEventListener("focusin",function(e){
+  if(!isSecondary())return;
+  try{
+    if(e.target && typeof e.target.focus==="function"){
+      e.target.focus({preventScroll:true});
+    }
+  }catch(err){}
+},true);
+
+/*
+  Stop timer-driven full-page redraws on secondary departments.
+  User clicks/actions still render immediately. Screen changes are always allowed.
+*/
+function patchRender(){
+  if(typeof window.render!=="function" || window.render.__vgSecondaryStable)return;
+  const old=window.render;
+  const wrapped=function(){
+    const now=Date.now();
+    const s=screenName();
+    const changed=s!==lastScreen;
+    const userDriven=(now-lastUserAction)<1200;
+    const allow=(s==="clinic") || changed || userDriven || window.__vgAllowSecondaryRender===true;
+
+    if(!allow){
+      return; // data/timer logic may run, but do not rebuild the visible secondary page
+    }
+
+    const r=old.apply(this,arguments);
+    lastScreen=s;
+    return r;
+  };
+  wrapped.__vgSecondaryStable=true;
+  wrapped.__vgOriginal=old;
+  window.render=wrapped;
+  installedRender=wrapped;
+}
+
+/* Navigation functions explicitly permit one redraw. */
+["vgOpenScreen","openScreen","showScreen"].forEach(name=>{
+  const old=window[name];
+  if(typeof old!=="function" || old.__vgSecondaryNav)return;
+  const w=function(){
+    window.__vgAllowSecondaryRender=true;
+    try{return old.apply(this,arguments)}
+    finally{
+      setTimeout(()=>{window.__vgAllowSecondaryRender=false},0);
+    }
+  };
+  w.__vgSecondaryNav=true;
+  window[name]=w;
+});
+
+function normalizeActiveScreen(){
+  const s=document.querySelector(".screen.active");
+  if(!s || s.id==="clinic")return;
+  s.style.setProperty("overflow","visible","important");
+  s.style.setProperty("height","auto","important");
+  s.style.setProperty("max-height","none","important");
+}
+
+function boot(){
+  lastScreen=screenName();
+  normalizeActiveScreen();
+  patchRender();
+
+  /* One very light click hook only; no timers or mutation observers. */
+  document.addEventListener("click",()=>{
+    normalizeActiveScreen();
+    if(window.render!==installedRender)setTimeout(patchRender,0);
+  },true);
+}
+
+window.VetGodAllScreensStableScroll={
+  normalize:normalizeActiveScreen,
+  repatch:patchRender
+};
+
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
+else boot();
 })();
 </script>
 
