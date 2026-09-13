@@ -2812,6 +2812,41 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
 @media(max-width:620px){.vg-pain-grid{grid-template-columns:1fr}.vg-pain-stage{grid-template-columns:repeat(2,1fr)}}
 </style>
 
+
+<style id="vgPersistentDeckCss">
+#vgPersistentDeck{margin:0 0 12px;border:1px solid #365f79;border-radius:16px;background:
+ radial-gradient(circle at 12% 8%,rgba(82,211,255,.12),transparent 26%),
+ linear-gradient(180deg,#091823,#071019);overflow:hidden;box-shadow:0 10px 26px rgba(0,0,0,.24)}
+.vgpd-head{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 12px;border-bottom:1px solid #29495d}
+.vgpd-head h3{margin:0;font-size:13px;letter-spacing:.09em}.vgpd-head small{display:block;color:#91afbf;margin-top:3px;font-size:9px}
+.vgpd-status{padding:5px 8px;border:1px solid #3a677d;border-radius:999px;font-size:8px;font-weight:900;color:#93e9d0;background:#0c2028}
+.vgpd-body{padding:10px}
+.vgpd-patient{display:grid;grid-template-columns:1.2fr .8fr;gap:8px;margin-bottom:9px}
+.vgpd-card{padding:9px;border:1px solid #29485b;border-radius:11px;background:#0b1922}
+.vgpd-name{font-weight:950;font-size:14px}.vgpd-meta{font-size:9px;color:#9db7c5;margin-top:3px;line-height:1.35}
+.vgpd-vitals{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.vgpd-vital{padding:7px 5px;text-align:center;border-radius:8px;background:#0d1f29;border:1px solid #29485b}
+.vgpd-vital b{display:block;font-size:13px}.vgpd-vital span{display:block;font-size:7px;color:#90aebb;margin-top:2px}
+.vgpd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.vgpd-module{border:1px solid #29485b;border-radius:11px;background:#0b1821;padding:8px}
+.vgpd-module h4{margin:0 0 6px;font-size:9px;letter-spacing:.08em;color:#b7d5e3}
+.vgpd-dial{display:grid;grid-template-columns:52px 1fr 33px;gap:5px;align-items:center;margin:5px 0;font-size:8px}
+.vgpd-dial input{width:100%}.vgpd-dial output{text-align:right;color:#8ee7d0;font-weight:900}
+.vgpd-switches{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.vgpd-switches button{min-height:42px;padding:6px;font-size:8px;border-radius:8px!important}
+.vgpd-switches button.on{background:#174a3b!important;border-color:#4a9f80!important}
+.vgpd-action{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.vgpd-action button{min-height:42px;font-size:8px;padding:6px}
+.vgpd-log{margin-top:7px;padding:7px 8px;border-radius:8px;background:#061018;border:1px solid #243e4e;font-size:8px;color:#9fb9c7;line-height:1.4}
+.vgpd-collapse{border:0!important;background:transparent!important;box-shadow:none!important;color:#a8c4d1!important;padding:4px 7px!important;min-height:auto!important}
+#vgPersistentDeck.collapsed .vgpd-body{display:none}
+@media(max-width:720px){
+ .vgpd-patient{grid-template-columns:1fr}.vgpd-grid{grid-template-columns:1fr}
+ .vgpd-vitals{grid-template-columns:repeat(4,1fr)}
+ .vgpd-action{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+
 </head>
 <body>
 <div class="vgfx-header">
@@ -17463,6 +17498,160 @@ function vgprPanel(p){
 }
 window.vgprAction=vgprAction;
 window.vgprPanel=vgprPanel;
+})();
+</script>
+
+
+<script id="vgPersistentDeckJs">
+(function(){
+'use strict';
+const KEY="vetGodPersistentCommandDeckV1";
+let S={calm:50,thermal:50,oxygen:50,circulation:50,scanner:true,quiet:false,companion:false,autoSupport:false,collapsed:false,log:"Command deck online."};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function clamp(v){return Math.max(0,Math.min(100,Math.round(Number(v)||0)))}
+function active(){
+  try{
+    const all=[...(state?.patients||[]),...(state?.pets||[])];
+    return all.find(x=>x.id===state.activeId)||all.find(x=>x.admitted&&!x.discharged)||all[0]||null;
+  }catch(e){return null}
+}
+function screen(){
+  return document.querySelector(".screen.active")||document.getElementById(state?.screen||"clinic");
+}
+function stat(p,k,d){return clamp(p&&p[k]!=null?p[k]:d)}
+function moduleToggle(key,label,p){
+  S[key]=!S[key];
+  if(p){
+    if(key==="quiet"&&S[key])p.stress=clamp(stat(p,"stress",45)-5);
+    if(key==="companion"&&S[key]){p.stress=clamp(stat(p,"stress",45)-4);p.comfort=clamp(stat(p,"comfort",55)+5)}
+  }
+  S.log=label+" "+(S[key]?"enabled":"disabled")+".";
+  save();render();
+}
+function slider(key,val){
+  S[key]=clamp(val);save();
+  const o=document.getElementById("vgpd_"+key);if(o)o.value=S[key];
+}
+function apply(kind){
+  const p=active();if(!p){S.log="No active patient for this command.";render();return}
+  if(kind==="scan"){
+    p.lastCommandScan=Date.now();
+    S.log="Bio-scan complete: "+(p.name||"patient")+" telemetry synchronized.";
+  }
+  if(kind==="calm"){
+    const drop=Math.max(3,Math.round(S.calm/12));
+    p.stress=clamp(stat(p,"stress",45)-drop);
+    p.comfort=clamp(stat(p,"comfort",55)+Math.round(drop*.6));
+    S.log="Calm-field support lowered stress by "+drop+".";
+  }
+  if(kind==="thermal"){
+    const change=Math.max(3,Math.round(S.thermal/14));
+    p.comfort=clamp(stat(p,"comfort",55)+change);
+    if(stat(p,"pain",40)>0)p.pain=clamp(stat(p,"pain",40)-Math.round(change*.45));
+    S.log="Thermal support improved comfort and relaxed the patient.";
+  }
+  if(kind==="oxygen"){
+    const add=Math.max(2,Math.round(S.oxygen/15));
+    p.oxygen=clamp(stat(p,"oxygen",92)+add);
+    S.log="Oxygen support increased saturation by "+add+".";
+  }
+  if(kind==="circulation"){
+    const add=Math.max(2,Math.round(S.circulation/18));
+    p.mobility=clamp(stat(p,"mobility",45)+add);
+    p.comfort=clamp(stat(p,"comfort",55)+2);
+    S.log="Circulation support prepared "+(p.name||"the patient")+" for gentle mobility.";
+  }
+  if(kind==="next"){
+    if(typeof vgCmdDoNext==="function"){try{vgCmdDoNext();return}catch(e){}}
+    S.log="No guided next action is available yet.";
+  }
+  try{if(typeof saveGame==="function")saveGame("Command deck action",true)}catch(e){}
+  save();render();
+}
+function autoSupport(){
+  const p=active();if(!p)return;
+  if(!S.autoSupport)return;
+  if(S.quiet&&stat(p,"stress",45)>55)p.stress=clamp(stat(p,"stress",45)-1);
+  if(S.companion&&stat(p,"comfort",55)<70)p.comfort=clamp(stat(p,"comfort",55)+1);
+  if(S.oxygen>65&&stat(p,"oxygen",92)<90)p.oxygen=clamp(stat(p,"oxygen",92)+1);
+}
+function html(){
+  const p=active();
+  return `<section id="vgPersistentDeck" class="${S.collapsed?"collapsed":""}">
+    <div class="vgpd-head">
+      <div><h3>⚕ VET GODS · LIVE COMMAND DECK</h3><small>The opening console now stays in the game. Every control below changes the active patient or hospital state.</small></div>
+      <div style="display:flex;gap:5px;align-items:center"><span class="vgpd-status">● LIVE</span><button class="vgpd-collapse" onclick="vgpdCollapse()">${S.collapsed?"EXPAND":"COLLAPSE"}</button></div>
+    </div>
+    <div class="vgpd-body">
+      <div class="vgpd-patient">
+        <div class="vgpd-card"><div class="vgpd-name">${p?"🐾 "+(p.name||"ACTIVE PATIENT"):"🏥 HOSPITAL STANDBY"}</div>
+          <div class="vgpd-meta">${p?`${String(p.species||"Animal").toUpperCase()} · ${String(p.condition||p.diagnosis||"ACTIVE CASE").toUpperCase()} · ${String(state?.screen||"clinic").toUpperCase()}`:"Admit a patient and this console will bind to that animal automatically."}</div>
+        </div>
+        <div class="vgpd-vitals">
+          <div class="vgpd-vital"><b>${p?stat(p,"health",65):"--"}</b><span>LIFE</span></div>
+          <div class="vgpd-vital"><b>${p?stat(p,"pain",40):"--"}</b><span>PAIN</span></div>
+          <div class="vgpd-vital"><b>${p?stat(p,"stress",45):"--"}</b><span>STRESS</span></div>
+          <div class="vgpd-vital"><b>${p?stat(p,"oxygen",92):"--"}</b><span>O₂</span></div>
+        </div>
+      </div>
+      <div class="vgpd-grid">
+        <div class="vgpd-module"><h4>🎛 PATIENT ENVIRONMENT</h4>
+          <div class="vgpd-dial"><span>CALM</span><input type="range" min="0" max="100" value="${S.calm}" oninput="vgpdSlider('calm',this.value)"><output id="vgpd_calm">${S.calm}</output></div>
+          <div class="vgpd-dial"><span>THERMAL</span><input type="range" min="0" max="100" value="${S.thermal}" oninput="vgpdSlider('thermal',this.value)"><output id="vgpd_thermal">${S.thermal}</output></div>
+        </div>
+        <div class="vgpd-module"><h4>🫁 LIFE SUPPORT</h4>
+          <div class="vgpd-dial"><span>OXYGEN</span><input type="range" min="0" max="100" value="${S.oxygen}" oninput="vgpdSlider('oxygen',this.value)"><output id="vgpd_oxygen">${S.oxygen}</output></div>
+          <div class="vgpd-dial"><span>CIRC</span><input type="range" min="0" max="100" value="${S.circulation}" oninput="vgpdSlider('circulation',this.value)"><output id="vgpd_circulation">${S.circulation}</output></div>
+        </div>
+        <div class="vgpd-module"><h4>🧠 SUPPORT MODES</h4>
+          <div class="vgpd-switches">
+            <button class="${S.quiet?"on":""}" onclick="vgpdToggle('quiet','Quiet mode')">🌙 QUIET ${S.quiet?"ON":"OFF"}</button>
+            <button class="${S.companion?"on":""}" onclick="vgpdToggle('companion','Companion support')">🐾 COMPANION ${S.companion?"ON":"OFF"}</button>
+            <button class="${S.scanner?"on":""}" onclick="vgpdToggle('scanner','Scanner')">📡 SCANNER ${S.scanner?"ON":"OFF"}</button>
+            <button class="${S.autoSupport?"on":""}" onclick="vgpdToggle('autoSupport','Auto support')">⚙ AUTO ${S.autoSupport?"ON":"OFF"}</button>
+          </div>
+        </div>
+      </div>
+      <div class="vgpd-action">
+        <button onclick="vgpdApply('scan')">📡 RUN BIO-SCAN</button>
+        <button onclick="vgpdApply('calm')">🌙 APPLY CALM</button>
+        <button onclick="vgpdApply('thermal')">🌡 THERMAL SUPPORT</button>
+        <button onclick="vgpdApply('oxygen')">🫁 OXYGEN SUPPORT</button>
+        <button onclick="vgpdApply('circulation')">🩸 CIRCULATION</button>
+        <button onclick="vgpdApply('next')">✨ GUIDED NEXT ACTION</button>
+        <button onclick="typeof vgOpenScreen==='function'&&vgOpenScreen('clinic')">🏥 CLINIC</button>
+        <button onclick="typeof vgOpenScreen==='function'&&vgOpenScreen('recovery')">❤️ RECOVERY</button>
+      </div>
+      <div class="vgpd-log">COMMAND LOG · ${S.log}</div>
+    </div>
+  </section>`;
+}
+function render(){
+  const host=screen();if(!host)return;
+  const old=document.getElementById("vgPersistentDeck");
+  if(old)old.remove();
+  host.insertAdjacentHTML("afterbegin",html());
+}
+function collapse(){S.collapsed=!S.collapsed;save();render()}
+function toggle(key,label){moduleToggle(key,label,active())}
+function hook(name){
+  const old=window[name];if(typeof old!=="function"||old.__vgpd)return;
+  const wrap=function(){const r=old.apply(this,arguments);setTimeout(render,0);return r};
+  wrap.__vgpd=true;window[name]=wrap;
+}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","renderPets"].forEach(hook);
+window.vgpdApply=apply;window.vgpdToggle=toggle;window.vgpdSlider=slider;window.vgpdCollapse=collapse;window.VetGodPersistentDeck={render,state:S};
+
+function install(){
+  render();
+  document.addEventListener("click",function(e){
+    const b=e.target.closest("[data-screen],.quick-links button,.nav button");
+    if(b)setTimeout(render,30);
+  },true);
+  setInterval(function(){autoSupport(); if(document.getElementById("vgPersistentDeck"))render()},12000);
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
 
