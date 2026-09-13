@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · AREA LOCKED CASE FLOW</title>
+<title>VET GODS · AREA LOCKED FLOW</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3291,25 +3291,6 @@ body.vg-focus-mode #vgHospitalAreasBar *{
 </style>
 
 
-<style id="vgPanelNumberingCss">
-.vg-panel-number{
-  position:absolute!important;
-  top:5px!important;left:5px!important;
-  z-index:5000!important;
-  min-width:25px!important;height:25px!important;
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  padding:0 6px!important;
-  border:1px solid #77a7ba!important;border-radius:6px!important;
-  background:#07151d!important;color:#e6f8ff!important;
-  font:900 11px/1 monospace!important;
-  letter-spacing:0!important;
-  box-shadow:0 2px 8px rgba(0,0,0,.4)!important;
-  pointer-events:none!important;
-}
-.vg-numbered-panel{position:relative!important}
-</style>
-
-
 <style id="vgBreedSexCss">
 .vg-animal-identity{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
@@ -3558,6 +3539,16 @@ body{
 .vg-as-note{margin-top:7px;font-size:8px;line-height:1.45;color:#8fb0bd}
 body.vg-area-session-active .screen.active:not(#clinic){
   scroll-margin-top:70px;
+}
+</style>
+
+
+<style id="vgPanelNumbersRemovedCss">
+.vg-panel-number,
+[data-vg-panel-number]::before,
+[data-panel-number]::before{
+  display:none!important;
+  content:none!important;
 }
 </style>
 
@@ -19714,64 +19705,6 @@ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",
 </script>
 
 
-<script id="vgPanelNumberingJs">
-(function(){
-'use strict';
-const KEY="vetGodPanelNumbersV1";
-let registry={};
-try{registry=JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){registry={}}
-let next=Math.max(0,...Object.values(registry).map(Number).filter(Number.isFinite))+1;
-
-function keyFor(el){
- if(el.id)return"id:"+el.id;
- const heading=el.querySelector(":scope > h1,:scope > h2,:scope > h3,:scope > h4,.panel-title,.card-title,.section-title");
- const text=(heading?.textContent||el.getAttribute("aria-label")||"").trim().replace(/\s+/g," ").slice(0,80);
- if(text)return"title:"+text;
- const parent=el.parentElement;
- const siblings=parent?[...parent.children].filter(x=>isPanel(x)):[];
- return"path:"+(parent?.id||parent?.className||"root")+"-"+Math.max(0,siblings.indexOf(el));
-}
-function isPanel(el){
- if(!(el instanceof HTMLElement))return false;
- if(el.classList.contains("vg-panel-number"))return false;
- if(el.id==="vgMobilityLabOverlay")return false;
- const c=(" "+el.className+" ").toLowerCase();
- const id=(el.id||"").toLowerCase();
- return /\b(panel|card|section|module|deck|director|telemetry|readout|flow|engine|lab|board)\b/.test(c) ||
-        /(panel|director|telemetry|flow|engine|lab|board|casecontrol|hospitalareas|casefinish)/.test(id);
-}
-function number(el){
- if(el.dataset.vgPanelNumber)return;
- const key=keyFor(el);
- if(!registry[key]){registry[key]=next++;try{localStorage.setItem(KEY,JSON.stringify(registry))}catch(e){}}
- const n=registry[key];
- el.dataset.vgPanelNumber=n;
- el.classList.add("vg-numbered-panel");
- const badge=document.createElement("span");
- badge.className="vg-panel-number";
- badge.textContent=n;
- badge.setAttribute("aria-label","Panel "+n);
- el.insertBefore(badge,el.firstChild);
-}
-function scan(root=document){
- const all=[...(root.querySelectorAll?root.querySelectorAll("*"):[])];
- all.filter(isPanel).forEach(number);
-}
-function install(){
- scan();
- const mo=new MutationObserver(ms=>{
-   ms.forEach(m=>m.addedNodes.forEach(n=>{
-     if(n.nodeType===1){if(isPanel(n))number(n);scan(n)}
-   }))
- });
- mo.observe(document.body,{childList:true,subtree:true});
-}
-window.VetGodPanelNumbers={scan,registry};
-if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
-})();
-</script>
-
-
 <script id="vgBreedSexJs">
 (function(){
 'use strict';
@@ -20844,6 +20777,21 @@ window.VetGodAreaLockedFlow={
 
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});
 else boot();
+})();
+</script>
+
+
+<script id="vgPanelNumbersRemovedJs">
+(function(){
+  function clean(){
+    document.querySelectorAll(".vg-panel-number").forEach(function(el){el.remove()});
+    document.querySelectorAll("[data-vg-panel-number],[data-panel-number]").forEach(function(el){
+      el.removeAttribute("data-vg-panel-number");
+      el.removeAttribute("data-panel-number");
+    });
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",clean,{once:true});
+  else clean();
 })();
 </script>
 
