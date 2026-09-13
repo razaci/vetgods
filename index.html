@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · DESKTOP SUPERCOMPUTER EDITION</title>
+<title>VET GODS · GUIDED CARE DIRECTOR · SUPERCOMPUTER EDITION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -2987,6 +2987,34 @@ body:not(.vg-hide-sidewall) #app{padding-right:330px!important}
   .screen.active{grid-template-columns:minmax(0,2fr) minmax(300px,.8fr)}
   .vg-super-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+</style>
+
+
+<style id="vgGuidedCareDirectorCss">
+#vgGuidedDirector{grid-column:1/-1;margin:0 0 12px;border:1px solid #39708d;border-radius:15px;background:linear-gradient(135deg,#07121c,#0b1d29 58%,#11182b);overflow:hidden;box-shadow:0 18px 40px rgba(0,0,0,.28)}
+.vggd-head{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px 14px;border-bottom:1px solid #294e64;background:linear-gradient(90deg,rgba(74,205,255,.08),transparent)}
+.vggd-head h2{margin:0;font-size:16px;letter-spacing:.08em}.vggd-head p{margin:3px 0 0;font-size:9px;color:#9ebac8}
+.vggd-mode{align-self:center;padding:6px 9px;border:1px solid #39708d;border-radius:7px;font-size:8px;color:#8de9ce}
+.vggd-layout{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(480px,1.55fr) minmax(320px,.9fr);gap:9px;padding:10px}
+.vggd-pane{border:1px solid #294b60;border-radius:11px;background:#081721;padding:10px;min-height:220px}
+.vggd-pane h4{margin:0 0 8px;font-size:9px;letter-spacing:.1em;color:#b8d7e6}
+.vggd-bodymap{height:230px;position:relative;border:1px solid #29495b;border-radius:10px;background:radial-gradient(circle at 50% 50%,rgba(74,210,255,.08),transparent 42%),#061019;overflow:hidden}
+.vggd-animal{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:104px;filter:drop-shadow(0 0 20px rgba(95,220,255,.16))}
+.vggd-zone{position:absolute;width:18px;height:18px;border-radius:50%;border:2px solid #ffd56b;background:#9e4f35aa;box-shadow:0 0 13px #ef8c62;animation:vggdPulse 1.5s infinite}
+.vggd-zone.z1{left:45%;top:38%}.vggd-zone.z2{left:58%;top:55%}.vggd-zone.z3{left:36%;top:61%}
+@keyframes vggdPulse{50%{transform:scale(1.35);opacity:.7}}
+.vggd-objective{padding:12px;border-radius:10px;border-left:4px solid #ffd56b;background:#221e12;margin-bottom:8px}
+.vggd-objective b{display:block;font-size:15px;color:#ffe08d}.vggd-objective span{display:block;font-size:9px;line-height:1.5;color:#c7c1aa;margin-top:4px}
+.vggd-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.vggd-choice{min-height:130px!important;text-align:left!important;padding:10px!important;border-radius:10px!important}
+.vggd-choice b,.vggd-choice span,.vggd-choice small{display:block}.vggd-choice b{font-size:10px}.vggd-choice span{font-size:8px;margin-top:5px;line-height:1.35}.vggd-choice small{font-size:7px;margin-top:8px;opacity:.7}
+.vggd-choice.best{background:#123c32!important;border-color:#4e9f83!important}.vggd-choice.alt{background:#403518!important;border-color:#92783a!important}.vggd-choice.risk{background:#3d1e24!important;border-color:#874553!important}
+.vggd-timeline{display:flex;gap:4px;margin:9px 0;overflow:hidden}.vggd-step{flex:1;text-align:center;padding:6px 2px;border-radius:5px;background:#10212b;border:1px solid #29495b;font-size:6px;color:#7f9aa8}.vggd-step.done{background:#15372d;color:#92e5c6}.vggd-step.now{background:#4a3d19;color:#ffe08d}
+.vggd-ai{font-size:9px;line-height:1.55;padding:9px;border-radius:8px;background:#0c2029;border:1px solid #31596c;color:#b7d1dc}
+.vggd-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-top:7px}.vggd-metric{padding:7px;border-radius:7px;background:#0c1b24;border:1px solid #29495b;text-align:center}.vggd-metric b{display:block;font-size:14px}.vggd-metric span{font-size:7px;color:#8faab7}
+.vggd-result{margin-top:8px;padding:9px;border-radius:8px;background:#11291f;border:1px solid #356c57;font-size:9px;line-height:1.45}
+.vggd-override{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}.vggd-override button{font-size:8px;min-height:40px}
+@media(max-width:1400px){.vggd-layout{grid-template-columns:1fr 1.5fr}.vggd-layout>.vggd-pane:last-child{grid-column:1/-1}}
 </style>
 
 </head>
@@ -17908,6 +17936,103 @@ function install(){
 }
 window.vgDesktopToggle=toggleSide;
 window.VetGodDesktopSupercomputer={render:renderAll,state:S};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
+})();
+</script>
+
+
+<script id="vgGuidedCareDirectorJs">
+(function(){
+'use strict';
+const KEY="vetGodGuidedCareDirectorV1";
+let S={result:"Guided Care Director standing by.",plays:0,success:0};
+try{Object.assign(S,JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function cap(v){return Math.max(0,Math.min(100,Math.round(Number(v)||0)))}
+function patient(){
+ try{const a=[...(state?.patients||[]),...(state?.pets||[])];return a.find(x=>x.id===state.activeId)||a.find(x=>x.admitted&&!x.discharged)||a[0]||null}catch(e){return null}
+}
+function emoji(p){const s=String(p?.species||"").toLowerCase();if(s.includes("cat"))return"🐈";if(s.includes("rabbit"))return"🐇";if(s.includes("goat"))return"🐐";if(s.includes("horse"))return"🐎";if(s.includes("bird")||s.includes("parrot"))return"🦜";return"🐕"}
+function stage(p){
+ if(!p)return 0;
+ if(p.discharged||p.sentHome)return 6;
+ if(p.recoveryCleared)return 5;
+ if(/recovery/i.test(p.department||p.location||""))return 4;
+ if(p.surgeryComplete||p.treatmentComplete||p.problemResolved)return 3;
+ if(p.diagnosis||p.condition)return 2;
+ if(p.stabilized||cap(p.health)>55)return 1;
+ return 0
+}
+function guide(p){
+ if(!p)return {title:"ADMIT YOUR FIRST PATIENT",why:"The hospital is ready. Bring an animal into the connected care network.",choices:[["best","ADMIT ANIMAL","Open intake and begin a new case.","admit"],["alt","OPEN CLINIC","Inspect the hospital before intake.","clinic"],["risk","RESEARCH","Open the Animal Care Codex.","research"]]};
+ const pain=cap(p.pain??40),stress=cap(p.stress??45),oxy=cap(p.oxygen??92),hyd=cap(p.hydration??p.water??55),mob=cap(p.mobility??45);
+ if(oxy<88)return {title:"RESTORE OXYGENATION",why:`${p.name}'s oxygen is ${oxy}%. Stabilize breathing before lower-priority care.`,choices:[["best","OXYGEN SUPPORT","Raise oxygen and stabilize the patient.","oxygen"],["alt","CALM + POSITION","Reduce stress and support breathing.","calm"],["risk","CONTINUE EXAM","Gather information while oxygen remains low.","exam"]]};
+ if(pain>45)return {title:"CONTROL PAIN FIRST",why:`Pain is ${pain}/100. Reduce pain before pushing mobility or rehabilitation.`,choices:[["best","PAIN CONTROL","Simulated veterinarian-directed analgesic pathway.","pain"],["alt","COLD / THERMAL SUPPORT","Use condition-appropriate supportive thermal care.","thermal"],["risk","MOBILIZE NOW","Movement before pain control may increase stress.","mobility"]]};
+ if(stress>60)return {title:"LOWER FEAR & STRESS",why:`Stress is ${stress}/100. This patient will respond better after low-stress handling.`,choices:[["best","QUIET + COMPANION","Reduce environmental stress and provide reassurance.","companion"],["alt","CALM FIELD","Use the command deck's calming support.","calm"],["risk","FORCE EXAM","Proceed despite behavioral stress.","exam"]]};
+ if(hyd<55)return {title:"RESTORE HYDRATION",why:`Hydration is ${hyd}%. Support hydration and then prove independent drinking.`,choices:[["best","OFFER WATER","Begin voluntary hydration support.","water"],["alt","SUPPORTIVE CARE","Rest, comfort and reassess.","support"],["risk","MOBILITY TEST","Delay hydration for movement testing.","mobility"]]};
+ if(!p.problemResolved&&!p.treatmentComplete)return {title:"TREAT THE PRIMARY PROBLEM",why:`Vitals are sufficiently stable. Focus on ${p.condition||p.diagnosis||"the primary condition"} and move the case toward resolution.`,choices:[["best","GUIDED TREATMENT","Advance the condition-specific treatment pathway.","treat"],["alt","REASSESS","Recheck pain, vitals and response first.","exam"],["risk","SEND TO RECOVERY","Transfer before primary treatment is complete.","recovery"]]};
+ if(mob<55)return {title:"BEGIN CONTROLLED REHABILITATION",why:`Primary treatment is complete. Mobility is ${mob}%. Restore function gradually without overloading the healing area.`,choices:[["best","GENTLE PHYSIO","Controlled movement and circulation support.","mobility"],["alt","HYDROTHERAPY","Low-impact rehabilitation option.","hydro"],["risk","FULL ACTIVITY","Advance activity faster than recommended.","fullmob"]]};
+ return {title:"PROVE RECOVERY READINESS",why:"Primary care is complete. Reassess pain, hydration, appetite, mobility and behavior before deciding the destination.",choices:[["best","FINAL CHECK","Run a recovery readiness assessment.","final"],["alt","MORE COMFORT CARE","Continue rest and low-stress support.","support"],["risk","SEND HOME NOW","Attempt discharge without the guided final check.","home"]]}
+}
+function act(kind){
+ const p=patient();
+ if(kind==="admit"){if(typeof vgOpenScreen==="function")vgOpenScreen("admit");return}
+ if(["clinic","research","recovery"].includes(kind)){if(typeof vgOpenScreen==="function")vgOpenScreen(kind);return}
+ if(!p)return;
+ S.plays++;
+ let good=true,msg="";
+ const plus=(k,v)=>p[k]=cap(Number(p[k]??50)+v);
+ if(kind==="oxygen"){plus("oxygen",8);msg="Oxygen support applied. Saturation improved."}
+ else if(kind==="calm"){plus("stress",-10);plus("comfort",5);msg="Patient settled. Stress decreased."}
+ else if(kind==="companion"){plus("stress",-12);plus("comfort",8);plus("trust",5);msg="Quiet companion support improved comfort and trust."}
+ else if(kind==="pain"){plus("pain",-14);plus("stress",-4);msg="Pain-control pathway advanced. Pain decreased."}
+ else if(kind==="thermal"){plus("pain",-6);plus("comfort",8);msg="Supportive thermal care improved comfort."}
+ else if(kind==="water"){plus("hydration",12);p.water=cap(Number(p.water??p.hydration)+10);p.drank=true;msg="Hydration improved and voluntary drinking was recorded."}
+ else if(kind==="support"){plus("comfort",9);plus("stress",-7);plus("health",3);msg="Supportive care improved comfort and stability."}
+ else if(kind==="exam"){p.painAssessmentCount=Number(p.painAssessmentCount||0)+1;msg="Reassessment completed. The director recalculated priorities."}
+ else if(kind==="treat"){plus("health",10);plus("pain",-8);p.treatmentComplete=true;p.problemResolved=true;msg="Primary treatment resolved. Recovery pathway unlocked."}
+ else if(kind==="mobility"){if(cap(p.pain??40)>45){good=false;plus("stress",8);msg="Mobility was attempted too early; stress increased."}else{plus("mobility",12);p.mobilityChecked=true;msg="Controlled rehabilitation improved mobility."}}
+ else if(kind==="hydro"){plus("mobility",10);plus("comfort",5);p.mobilityChecked=true;msg="Low-impact hydrotherapy improved mobility and comfort."}
+ else if(kind==="fullmob"){good=false;plus("pain",9);plus("stress",7);msg="Activity advanced too quickly. Pain and stress increased."}
+ else if(kind==="final"){p.recoveryCleared=cap(p.pain??40)<=35&&cap(p.hydration??p.water??55)>=60;msg=p.recoveryCleared?"Final check passed. Destination choices are ready.":"Final check found unresolved recovery needs."}
+ else if(kind==="home"){if(cap(p.pain??40)>35||cap(p.hydration??p.water??55)<60){good=false;msg="Discharge blocked: pain or hydration is not ready."}else{p.sentHome=true;p.discharged=true;msg="Patient safely discharged home."}}
+ S.result=(good?"✓ ":"⚠ ")+msg;if(good)S.success++;
+ try{if(typeof saveGame==="function")saveGame("Guided Care Director",true)}catch(e){}
+ save();render();
+}
+function timeline(p){
+ const labels=["ARRIVAL","STABILIZE","DIAGNOSE","TREAT","RECOVER","PROVE READY","HOME"],s=stage(p);
+ return labels.map((x,i)=>`<div class="vggd-step ${i<s?"done":i===s?"now":""}">${i<s?"✓ ":""}${x}</div>`).join("")
+}
+function html(){
+ const p=patient(),g=guide(p),pain=cap(p?.pain??0),stress=cap(p?.stress??0),oxy=cap(p?.oxygen??0),hyd=cap(p?.hydration??p?.water??0);
+ return `<section id="vgGuidedDirector">
+ <div class="vggd-head"><div><h2>🧭 GUIDED CARE DIRECTOR</h2><p>The supercomputer watches the active patient, explains the priority, and gives you meaningful choices. You can still override it.</p></div><div class="vggd-mode">DOCTOR OVERRIDE ENABLED</div></div>
+ <div class="vggd-layout">
+  <div class="vggd-pane"><h4>PATIENT BODY MAP</h4><div class="vggd-bodymap"><div class="vggd-animal">${p?emoji(p):"⚕"}</div>${p&&pain>35?'<i class="vggd-zone z1"></i>':""}${p&&pain>55?'<i class="vggd-zone z2"></i>':""}${p&&stress>65?'<i class="vggd-zone z3"></i>':""}</div>
+   <div class="vggd-metrics"><div class="vggd-metric"><b>${p?pain:"--"}</b><span>PAIN</span></div><div class="vggd-metric"><b>${p?stress:"--"}</b><span>STRESS</span></div><div class="vggd-metric"><b>${p?oxy:"--"}</b><span>OXYGEN</span></div><div class="vggd-metric"><b>${p?hyd:"--"}</b><span>HYDRATION</span></div></div>
+  </div>
+  <div class="vggd-pane"><h4>CURRENT OBJECTIVE</h4><div class="vggd-objective"><b>${g.title}</b><span>${g.why}</span></div>
+   <div class="vggd-choices">${g.choices.map(c=>`<button class="vggd-choice ${c[0]}" onclick="vggdAct('${c[3]}')"><b>${c[0]==="best"?"★ RECOMMENDED":c[0]==="alt"?"◆ ALTERNATIVE":"⚠ RISK / OVERRIDE"}<br>${c[1]}</b><span>${c[2]}</span><small>PRESS TO COMMIT ACTION</small></button>`).join("")}</div>
+   <div class="vggd-timeline">${timeline(p)}</div>
+   <div class="vggd-result">${S.result}</div>
+  </div>
+  <div class="vggd-pane"><h4>SUPERCOMPUTER GUIDANCE</h4><div class="vggd-ai">${p?`Tracking <b>${p.name||"active patient"}</b>. ${g.why} The recommendation changes immediately as pain, stress, oxygen, hydration, treatment state and mobility change.`:"No patient is bound to the director yet. Admit an animal to begin a guided case."}</div>
+   <div class="vggd-metrics"><div class="vggd-metric"><b>${S.plays}</b><span>DECISIONS</span></div><div class="vggd-metric"><b>${S.success}</b><span>POSITIVE RESPONSES</span></div></div>
+   <div class="vggd-override"><button onclick="typeof vgOpenScreen==='function'&&vgOpenScreen('clinic')">CLINIC</button><button onclick="typeof vgOpenScreen==='function'&&vgOpenScreen('surgery')">SURGERY</button><button onclick="typeof vgOpenScreen==='function'&&vgOpenScreen('recovery')">RECOVERY</button></div>
+  </div>
+ </div></section>`
+}
+function render(){
+ const scr=document.querySelector(".screen.active")||document.getElementById(state?.screen||"clinic");if(!scr)return;
+ document.getElementById("vgGuidedDirector")?.remove();
+ const deck=document.getElementById("vgPersistentDeck");
+ if(deck&&deck.parentElement===scr)deck.insertAdjacentHTML("afterend",html());else scr.insertAdjacentHTML("afterbegin",html())
+}
+function hook(name){const old=window[name];if(typeof old!=="function"||old.__vggd)return;const w=function(){const r=old.apply(this,arguments);setTimeout(render,0);return r};w.__vggd=true;window[name]=w}
+["render","renderClinic","renderRecovery","renderSurgery","renderCareLab","renderPets"].forEach(hook);
+window.vggdAct=act;window.VetGodGuidedCareDirector={render,state:S};
+function install(){render();document.addEventListener("click",e=>{if(!e.target.closest("#vgGuidedDirector"))setTimeout(render,40)},true)}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",install,{once:true});else install();
 })();
 </script>
