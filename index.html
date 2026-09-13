@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS HOSPITAL · COMPLETE CARE REPAIR EDITION</title>
+<title>VET GODS · CELESTIAL ANIMAL HOSPITAL · 30-DEEP SIMULATION</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -2791,6 +2791,27 @@ body.vg-hospital-entered #vgReferenceHome{display:none!important}
   .vg-clinic-gauge-grid{grid-template-columns:repeat(2,1fr)}
 }
 </style>
+
+<style id="vgPainRehabCss">
+.vg-pain-center{margin:10px 0;padding:11px;border:1px solid #3b6178;border-radius:14px;background:linear-gradient(180deg,#0d1d29,#09151e)}
+.vg-pain-center h3{margin:0 0 5px}
+.vg-pain-sub{font-size:10px;line-height:1.45;color:#a9c2d0;margin-bottom:9px}
+.vg-pain-score{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:9px;border-radius:10px;background:#101f29;border:1px solid #29485b}
+.vg-pain-score b{font-size:13px}.vg-pain-score span{font-size:11px;color:#ffd77a}
+.vg-pain-stage{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.vg-pain-stage div{padding:7px 5px;text-align:center;font-size:9px;border-radius:8px;background:#10222d;border:1px solid #29485b;opacity:.55}
+.vg-pain-stage div.done{background:#17392f;opacity:1}.vg-pain-stage div.now{background:#50421c;border-color:#8a7130;opacity:1}
+.vg-pain-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.vg-pain-box{padding:9px;border-radius:10px;background:#0d1b25;border:1px solid #29485b}
+.vg-pain-box h4{margin:0 0 6px;font-size:11px;letter-spacing:.06em}
+.vg-pain-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.vg-pain-actions button{min-height:45px;font-size:9px;padding:7px}
+.vg-pain-note{margin-top:7px;font-size:9px;line-height:1.4;color:#9fb9c7}
+.vg-pain-log{margin-top:8px;padding:8px;border-radius:9px;background:#08131b;border:1px solid #243f50;font-size:9px;line-height:1.45;max-height:110px;overflow:auto}
+.vg-pain-ready{margin-top:8px;padding:8px;border-left:3px solid #6bd8ae;background:#10291f;border-radius:8px;font-size:10px}
+@media(max-width:620px){.vg-pain-grid{grid-template-columns:1fr}.vg-pain-stage{grid-template-columns:repeat(2,1fr)}}
+</style>
+
 </head>
 <body>
 <div class="vgfx-header">
@@ -3245,6 +3266,7 @@ function renderRecovery(){
   <div class="statgrid"><div class="stat"><b>${pts.length}</b><span>Patients</span></div><div class="stat"><b>${pts.filter(x=>rwScore(x)>=80).length}</b><span>Near Ready</span></div><div class="stat"><b>${pts.filter(x=>typeof vgIndependentHydrationReady==="function"&&vgIndependentHydrationReady(x)).length}</b><span>Water Ready</span></div></div>
   ${pts.length?`${rwWorldHTML()}<div class="card"><h3>Recovery Patients</h3><div class="recovery-strip">${pts.map(x=>`<button onclick="RECOVERY_SIM.selected='${x.id}';state.activeId='${x.id}';renderRecovery()"><b>${rwEmoji(x)} ${x.name}</b><br><small>${rwScore(x)}% ready</small></button>`).join("")}</div></div>
   <div class="card"><h3>${rwEmoji(p)} ${p.name}</h3>${typeof sgRecoveryJourneyHTML==="function"?sgRecoveryJourneyHTML(p):""}<div class="recovery-readiness"><b>Recovery Readiness ${rwScore(p)}%</b><br><small>${rwMissing(p).length?"Still needs: "+rwMissing(p).join(" · "):"✅ Ready for final discharge decision"}</small></div>
+  ${typeof vgprPanel==="function"?vgprPanel(p):""}
   ${typeof vgOralHydrationStatusHTML==="function"?vgOralHydrationStatusHTML(p):""}
   <div class="actions"><button onclick="rwAction('${p.id}','rest')">🌙 Quiet Rest</button><button onclick="rwAction('${p.id}','food')">🍽 Offer Food</button><button onclick="rwAction('${p.id}','water')">💧 Offer Water</button><button onclick="rwAction('${p.id}','comfort')">🤲 Stay Nearby</button><button onclick="rwAction('${p.id}','walk')">🐾 Gentle Walk</button><button onclick="rwAction('${p.id}','recheck')">🩺 Hydration Recheck</button><button onclick="rwFinal('${p.id}')">✅ Final Check</button></div>
   <div class="recovery-readiness"><b>Milestones</b><br><small>${rwEnsure(p,0).milestones.join(" · ")||"No milestones yet"}</small></div></div>`:`<div class="card"><h3>Integrated Aftercare Empty</h3><p>No patients are currently in Recovery.</p></div>`}`;
@@ -17269,6 +17291,180 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 </script>
 <!-- ===== END VET GODS 30 ===== -->
+
+
+<style id="vgTitleUpgradeCss">
+.vg-title-upgrade{position:relative;overflow:hidden;margin:8px auto 10px;max-width:1180px;border:1px solid #315d78;border-radius:14px;padding:15px 16px 13px;background:radial-gradient(circle at 12% 20%,rgba(96,220,255,.15),transparent 24%),radial-gradient(circle at 88% 10%,rgba(174,108,255,.12),transparent 26%),linear-gradient(135deg,#071521,#0b1e2b 52%,#10162b);box-shadow:0 10px 28px rgba(0,0,0,.24),inset 0 1px rgba(255,255,255,.04)}
+.vg-title-upgrade:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.32;background:linear-gradient(110deg,transparent 35%,rgba(112,220,255,.12) 48%,transparent 60%);animation:vgTitleSweep 7s linear infinite}
+.vg-title-kicker{font-size:.59rem;font-weight:900;letter-spacing:.25em;color:#8fdfff;text-transform:uppercase}
+.vg-title-main{position:relative;z-index:1;margin:4px 0 2px;font-size:clamp(1.75rem,5.8vw,3.45rem);line-height:.93;font-weight:1000;letter-spacing:.08em;color:#f4fcff;text-shadow:0 0 18px rgba(100,220,255,.20)}
+.vg-title-main span{color:#86e8ff}.vg-title-sub{position:relative;z-index:1;font-size:.72rem;letter-spacing:.12em;color:#a8bdca;text-transform:uppercase}
+.vg-title-badges{position:relative;z-index:1;display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.vg-title-badges span{padding:5px 7px;border:1px solid #31566b;border-radius:6px;background:#0b1a25;font-size:.56rem;font-weight:900;letter-spacing:.08em;color:#b9d8e5}
+.brand h1{font-size:clamp(1.35rem,5vw,2.25rem)!important;letter-spacing:.08em!important}
+@keyframes vgTitleSweep{from{transform:translateX(-70%)}to{transform:translateX(70%)}}
+@media(max-width:520px){.vg-title-upgrade{margin:6px 7px 8px;padding:12px}.vg-title-main{letter-spacing:.045em}.vg-title-sub{font-size:.59rem;line-height:1.4}}
+</style>
+<script id="vgTitleUpgradeJs">
+(function(){function install(){if(document.getElementById('vgTitleUpgrade'))return;const app=document.getElementById('app'),anchor=app||document.body;if(!anchor)return;const box=document.createElement('section');box.id='vgTitleUpgrade';box.className='vg-title-upgrade';box.innerHTML='<div class="vg-title-kicker">⚕ CELESTIAL VETERINARY COMMAND</div><div class="vg-title-main">VET <span>GODS</span></div><div class="vg-title-sub">30-DEEP ANIMAL HOSPITAL SIMULATION · RESCUE · SURGERY · RECOVERY · LIFE</div><div class="vg-title-badges"><span>LIVE HOSPITAL</span><span>CRITICAL CARE</span><span>MY PETS</span><span>EXOTIC WING</span><span>SURGERY</span><span>RECOVERY</span></div>';if(app)app.insertBefore(box,app.firstChild);else anchor.insertBefore(box,anchor.firstChild)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install()})();
+</script>
+
+<script id="vgPainRehabJs">
+(function(){
+'use strict';
+
+function vgprPatient(id){
+  if(typeof rwPatients==="function"){
+    const a=rwPatients();
+    return a.find(x=>String(x.id)===String(id))||a[0]||null;
+  }
+  return null;
+}
+function vgprEnsure(p){
+  if(!p)return null;
+  p.painPlan=p.painPlan||{
+    stage:0,med:false,antiInflammatory:false,anxiety:false,
+    warm:false,cold:false,massage:false,physio:false,
+    laser:false,acupuncture:false,mobility:false,hydro:false,
+    reassessed:false,environment:false,companion:false,bedding:false,
+    logs:[]
+  };
+  return p.painPlan;
+}
+function vgprLog(p,msg){
+  const s=vgprEnsure(p); if(!s)return;
+  s.logs.unshift(new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})+" · "+msg);
+  s.logs=s.logs.slice(0,12);
+}
+function vgprSave(){
+  if(typeof saveGame==="function")try{saveGame("Pain & rehabilitation care",true)}catch(e){}
+}
+function vgprRender(){
+  if(typeof renderRecovery==="function")renderRecovery();
+}
+function vgprAction(id,key){
+  const p=vgprPatient(id);if(!p)return;
+  const s=vgprEnsure(p);
+  const pain=()=>Number(p.pain??50), stress=()=>Number(p.stress??40);
+
+  if(key==="painmed"){
+    s.med=true; p.pain=Math.max(0,pain()-14); vgprLog(p,"Veterinarian-directed analgesia administered");
+  }
+  if(key==="anti"){
+    s.antiInflammatory=true; p.pain=Math.max(0,pain()-8); vgprLog(p,"Anti-inflammatory plan recorded");
+  }
+  if(key==="anxiety"){
+    s.anxiety=true; p.stress=Math.max(0,stress()-14); vgprLog(p,"Anxiety-support medication plan recorded");
+  }
+  if(key==="warm"){
+    s.warm=true; p.comfort=Math.min(100,Number(p.comfort??60)+8); vgprLog(p,"Warm compress / thermal support applied for comfort");
+  }
+  if(key==="cold"){
+    s.cold=true; p.pain=Math.max(0,pain()-5); vgprLog(p,"Cold pack support used for inflammation control");
+  }
+  if(key==="massage"){
+    s.massage=true; p.stress=Math.max(0,stress()-5); p.comfort=Math.min(100,Number(p.comfort??60)+6); vgprLog(p,"Gentle massage completed");
+  }
+  if(key==="physio"){
+    s.physio=true; s.mobility=true; p.mobilityChecked=true; vgprLog(p,"Gentle rehabilitation movement completed");
+  }
+  if(key==="laser"){
+    s.laser=true; vgprLog(p,"Photobiomodulation / laser therapy logged as adjunctive care");
+  }
+  if(key==="acupuncture"){
+    s.acupuncture=true; vgprLog(p,"Acupuncture logged as complementary adjunct");
+  }
+  if(key==="hydro"){
+    s.hydro=true; s.mobility=true; p.mobilityChecked=true; vgprLog(p,"Low-impact hydrotherapy session completed");
+  }
+  if(key==="environment"){
+    s.environment=true; p.stress=Math.max(0,stress()-7); vgprLog(p,"Low-stress recovery environment provided");
+  }
+  if(key==="companion"){
+    s.companion=true; p.stress=Math.max(0,stress()-6); vgprLog(p,"Companion contact / reassuring presence provided");
+  }
+  if(key==="bedding"){
+    s.bedding=true; p.comfort=Math.min(100,Number(p.comfort??60)+9); vgprLog(p,"Comfortable supportive bedding provided");
+  }
+  if(key==="reassess"){
+    s.reassessed=true;
+    p.painAssessmentCount=Number(p.painAssessmentCount||0)+1;
+    vgprLog(p,"Pain reassessed using behavior, movement and vital-sign trends");
+  }
+
+  const controlled=Number(p.pain??50)<=35;
+  if(s.med && (s.antiInflammatory||s.anxiety))s.stage=Math.max(s.stage,1);
+  if(controlled && (s.warm||s.cold||s.massage||s.environment))s.stage=Math.max(s.stage,2);
+  if(controlled && (s.physio||s.hydro))s.stage=Math.max(s.stage,3);
+  if(s.reassessed)s.stage=Math.max(s.stage,4);
+
+  vgprSave(); vgprRender();
+}
+function vgprPanel(p){
+  const s=vgprEnsure(p);if(!s)return "";
+  const pain=Math.round(Number(p.pain??50));
+  const controlled=pain<=35;
+  const stages=["CONTROL PAIN","SUPPORT","REHAB","REASSESS"];
+  return `<div class="vg-pain-center">
+    <h3>🩹 PAIN CONTROL · REHABILITATION CENTER</h3>
+    <div class="vg-pain-sub">Multimodal care: control pain first, support circulation and comfort, then gradually restore movement and reassess. Medication choices are simulated and veterinarian-directed; no dosing is provided.</div>
+    <div class="vg-pain-score"><b>Current Pain Assessment</b><span>${pain}/100 · ${controlled?"CONTROLLED":"NEEDS ATTENTION"}</span></div>
+    <div class="vg-pain-stage">${stages.map((x,i)=>`<div class="${s.stage>i?'done':s.stage===i?'now':''}">${s.stage>i?'✓ ':''}${x}</div>`).join("")}</div>
+
+    <div class="vg-pain-grid">
+      <div class="vg-pain-box">
+        <h4>💊 PHARMACOLOGIC SUPPORT</h4>
+        <div class="vg-pain-actions">
+          <button onclick="vgprAction('${p.id}','painmed')">${s.med?'✓ ':''}PAIN MEDS</button>
+          <button onclick="vgprAction('${p.id}','anti')">${s.antiInflammatory?'✓ ':''}ANTI-INFLAMMATORY</button>
+          <button onclick="vgprAction('${p.id}','anxiety')">${s.anxiety?'✓ ':''}ANXIETY SUPPORT</button>
+          <button onclick="vgprAction('${p.id}','reassess')">${s.reassessed?'✓ ':''}PAIN REASSESS</button>
+        </div>
+        <div class="vg-pain-note">Medication selection is condition-specific and veterinarian-directed in the simulation.</div>
+      </div>
+
+      <div class="vg-pain-box">
+        <h4>🌡 NON-PHARMACEUTICAL SUPPORT</h4>
+        <div class="vg-pain-actions">
+          <button onclick="vgprAction('${p.id}','warm')">${s.warm?'✓ ':''}WARM COMPRESS</button>
+          <button onclick="vgprAction('${p.id}','cold')">${s.cold?'✓ ':''}COLD PACK</button>
+          <button onclick="vgprAction('${p.id}','massage')">${s.massage?'✓ ':''}GENTLE MASSAGE</button>
+          <button onclick="vgprAction('${p.id}','environment')">${s.environment?'✓ ':''}QUIET ENVIRONMENT</button>
+        </div>
+        <div class="vg-pain-note">Thermal and manual techniques are supportive modalities; choice depends on injury, healing stage, and patient tolerance.</div>
+      </div>
+
+      <div class="vg-pain-box">
+        <h4>🐾 MOBILITY · REHABILITATION</h4>
+        <div class="vg-pain-actions">
+          <button onclick="vgprAction('${p.id}','physio')" ${controlled?'':'disabled'}>${s.physio?'✓ ':''}GENTLE REHAB</button>
+          <button onclick="vgprAction('${p.id}','hydro')" ${controlled?'':'disabled'}>${s.hydro?'✓ ':''}HYDROTHERAPY</button>
+          <button onclick="vgprAction('${p.id}','laser')">${s.laser?'✓ ':''}LASER ADJUNCT</button>
+          <button onclick="vgprAction('${p.id}','acupuncture')">${s.acupuncture?'✓ ':''}ACUPUNCTURE</button>
+        </div>
+        <div class="vg-pain-note">${controlled?'Pain is controlled enough to begin gradual, controlled movement.':'Control pain before starting mobilization.'} Laser and acupuncture are shown as adjunctive/complementary options rather than replacements for primary pain control.</div>
+      </div>
+
+      <div class="vg-pain-box">
+        <h4>🛏 ENVIRONMENT · BEHAVIOR</h4>
+        <div class="vg-pain-actions">
+          <button onclick="vgprAction('${p.id}','companion')">${s.companion?'✓ ':''}COMPANION SUPPORT</button>
+          <button onclick="vgprAction('${p.id}','bedding')">${s.bedding?'✓ ':''}COMFORT BEDDING</button>
+          <button onclick="vgprAction('${p.id}','environment')">${s.environment?'✓ ':''}LOW-STRESS SPACE</button>
+          <button onclick="vgprAction('${p.id}','reassess')">🩺 CHECK RESPONSE</button>
+        </div>
+        <div class="vg-pain-note">Monitor behavior, mobility and vital-sign trends. Adjust the simulated treatment plan when pain worsens or progress stalls.</div>
+      </div>
+    </div>
+
+    ${s.stage>=4?`<div class="vg-pain-ready">✅ Pain pathway complete: continue regular reassessment, maintain circulation and mobility, and modify the plan as healing progresses.</div>`:""}
+    <div class="vg-pain-log"><b>CARE LOG</b><br>${s.logs.length?s.logs.map(x=>"• "+x).join("<br>"):"No pain-management actions recorded yet."}</div>
+  </div>`;
+}
+window.vgprAction=vgprAction;
+window.vgprPanel=vgprPanel;
+})();
+</script>
 
 </body>
 </html>
