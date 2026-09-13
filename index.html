@@ -4,7 +4,7 @@
 <head><base target="_blank">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>VET GODS · EVENT DRIVEN STABLE UI</title>
+<title>VET GODS · CASE COMPLETE REWARD SCREEN</title>
 <meta name="description" content="A complete veterinary command-console game with intake, evidence-led treatment, surgery, recovery, maternity, patient care, supplies, bazaars, mysteries, and saved-pet follow-up.">
 <meta name="theme-color" content="#020805">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23030b11'/%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='%236feeff' stroke-width='3'/%3E%3Cpath d='M32 17v30M17 32h30' stroke='%2363efa0' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -3442,6 +3442,49 @@ html,body{
   text-size-adjust:100%!important;
 }
 *{overflow-anchor:none!important}
+</style>
+
+
+<style id="vgCaseCompleteRewardCss">
+#vgCaseCompleteRewardOverlay{
+  position:fixed!important; inset:0!important; z-index:999999!important;
+  display:none; align-items:center; justify-content:center;
+  background:rgba(2,8,12,.88)!important; backdrop-filter:blur(7px);
+  padding:28px; overflow:auto;
+}
+#vgCaseCompleteRewardOverlay.open{display:flex!important}
+#vgCaseCompleteRewardCard{
+  width:min(920px,94vw); max-height:90vh; overflow:auto;
+  border:1px solid #6a96a8; border-radius:18px;
+  background:linear-gradient(155deg,#07151d,#0d2530 55%,#08161e);
+  box-shadow:0 30px 100px rgba(0,0,0,.7), inset 0 0 40px rgba(90,170,210,.05);
+  padding:22px;
+}
+.vg-cr-kicker{font-size:9px;letter-spacing:.18em;color:#83b7c9;font-weight:900}
+.vg-cr-title{font-size:28px;line-height:1.05;color:#eefaff;font-weight:1000;margin:7px 0 4px}
+.vg-cr-sub{font-size:11px;color:#9fc1cf;margin-bottom:15px}
+.vg-cr-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0}
+.vg-cr-box{padding:10px;border:1px solid #315361;border-radius:10px;background:#081a23}
+.vg-cr-label{font-size:7px;letter-spacing:.12em;color:#7796a3}
+.vg-cr-value{margin-top:4px;font-size:12px;font-weight:950;color:#dff6ff}
+.vg-cr-section{margin-top:12px;padding:12px;border:1px solid #294958;border-radius:10px;background:#06121a}
+.vg-cr-section h4{margin:0 0 8px;font-size:9px;letter-spacing:.12em;color:#a8d5e5}
+.vg-cr-list{display:grid;gap:6px;font-size:10px;color:#b8d0d9}
+.vg-cr-rewardline{
+  margin-top:14px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px
+}
+.vg-cr-reward{padding:12px;border:1px solid #52785f;border-radius:10px;background:#10271a;text-align:center}
+.vg-cr-reward b{display:block;font-size:16px;color:#e5ffe9}.vg-cr-reward span{font-size:8px;color:#8fb29a}
+#vgCaseCompleteContinue{
+  width:100%;margin-top:16px;min-height:54px;border-radius:11px;
+  border:1px solid #6c9eb0;background:#154258;color:#effbff;
+  font-size:13px;font-weight:1000;letter-spacing:.08em;cursor:pointer
+}
+#vgCaseCompleteContinue:hover{filter:brightness(1.1)}
+@media(max-width:900px){
+ .vg-cr-grid{grid-template-columns:1fr 1fr}
+ .vg-cr-rewardline{grid-template-columns:1fr}
+}
 </style>
 
 </head>
@@ -20472,6 +20515,173 @@ window.vgStableRefresh=function(){
 };
 
 window.VetGodStableUI={capture,restore,refresh:window.vgStableRefresh};
+})();
+</script>
+
+
+<script id="vgCaseCompleteRewardJs">
+(function(){
+'use strict';
+
+let pendingPatient=null;
+let pendingContinue=null;
+
+function patients(){
+  try{return [...(state?.patients||[]),...(state?.pets||[])]}catch(e){return[]}
+}
+function active(){
+  try{return patients().find(p=>p.id===state.activeId)||patients().find(p=>p.admitted&&!p.discharged)||null}catch(e){return null}
+}
+function esc(v){
+  return String(v??"—").replace(/[&<>"']/g,s=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[s]))
+}
+function ensure(){
+  if(document.getElementById("vgCaseCompleteRewardOverlay"))return;
+  const d=document.createElement("div");
+  d.id="vgCaseCompleteRewardOverlay";
+  d.innerHTML=`<div id="vgCaseCompleteRewardCard">
+    <div class="vg-cr-kicker">VET GODS · CASE COMPLETE</div>
+    <div id="vgCaseCompleteRewardBody"></div>
+    <button id="vgCaseCompleteContinue" type="button">OK · CONTINUE TO NEXT PATIENT</button>
+  </div>`;
+  document.body.appendChild(d);
+  document.getElementById("vgCaseCompleteContinue").addEventListener("click",continueCase);
+}
+function summary(p){
+  const ev=Array.isArray(p?.caseEvidence)?p.caseEvidence:[];
+  const fu=Array.isArray(p?.followUps)?p.followUps:[];
+  const mem=p?.clinical?.memory||[];
+  const condition=p?.diagnosis||p?.condition||p?.problem||"Case resolved";
+  const breed=p?.breed||"Unspecified";
+  const sex=p?.sex||"Unspecified";
+  const species=p?.species||p?.type||"Animal";
+  const classification=p?.classification||"";
+  const evidenceText=ev.length
+    ? ev.slice(-5).map(x=>`<div>• ${esc(x.summary||x.area||"Evidence recorded")}</div>`).join("")
+    : `<div>• Clinical findings and treatment record completed.</div>`;
+  const followText=fu.length
+    ? `${fu.length} follow-up record${fu.length===1?"":"s"} attached to the case.`
+    : `Final case follow-up completed.`;
+  const treatmentText=mem.length
+    ? mem.slice(-6).map(x=>`<div>• ${esc(typeof x==="string"?x:(x.note||x.action||"Care action recorded"))}</div>`).join("")
+    : `<div>• Stabilized, treated, reassessed, and cleared for discharge.</div>`;
+  return `
+    <div class="vg-cr-title">${esc(p?.name||"Patient")} is ready to go home.</div>
+    <div class="vg-cr-sub">The case has been completed. Review the record below, then continue when you're ready.</div>
+
+    <div class="vg-cr-grid">
+      <div class="vg-cr-box"><div class="vg-cr-label">PATIENT</div><div class="vg-cr-value">${esc(p?.name||"Patient")}</div></div>
+      <div class="vg-cr-box"><div class="vg-cr-label">SPECIES</div><div class="vg-cr-value">${esc(species)}${classification?" · "+esc(classification):""}</div></div>
+      <div class="vg-cr-box"><div class="vg-cr-label">BREED</div><div class="vg-cr-value">${esc(breed)}</div></div>
+      <div class="vg-cr-box"><div class="vg-cr-label">SEX</div><div class="vg-cr-value">${esc(sex)}</div></div>
+      <div class="vg-cr-box"><div class="vg-cr-label">FINAL CONDITION</div><div class="vg-cr-value">${esc(condition)}</div></div>
+      <div class="vg-cr-box"><div class="vg-cr-label">HEALTH</div><div class="vg-cr-value">${Math.round(Number(p?.health??82))}%</div></div>
+      <div class="vg-cr-box"><div class="vg-cr-label">PAIN</div><div class="vg-cr-value">${Math.round(Number(p?.pain??28))}%</div></div>
+      <div class="vg-cr-box"><div class="vg-cr-label">HYDRATION</div><div class="vg-cr-value">${Math.round(Number(p?.hydration??70))}%</div></div>
+    </div>
+
+    <div class="vg-cr-section">
+      <h4>TREATMENT SUMMARY</h4>
+      <div class="vg-cr-list">${treatmentText}</div>
+    </div>
+
+    <div class="vg-cr-section">
+      <h4>EVIDENCE & FOLLOW-UP</h4>
+      <div class="vg-cr-list">${evidenceText}<div>• ${esc(followText)}</div></div>
+    </div>
+
+    <div class="vg-cr-section">
+      <h4>DISPOSITION</h4>
+      <div class="vg-cr-list">
+        <div>• Primary problem resolved.</div>
+        <div>• Recovery requirements met.</div>
+        <div>• Patient cleared from the hospital case queue.</div>
+        <div>• Disposition: HOME / DISCHARGED.</div>
+      </div>
+    </div>
+
+    <div class="vg-cr-rewardline">
+      <div class="vg-cr-reward"><b>+1</b><span>LIFE SAVED</span></div>
+      <div class="vg-cr-reward"><b>+$125</b><span>CLINIC REWARD</span></div>
+      <div class="vg-cr-reward"><b>COMPLETE</b><span>CASE RECORD</span></div>
+    </div>`;
+}
+function show(p,onContinue){
+  ensure();
+  pendingPatient=p||active();
+  pendingContinue=typeof onContinue==="function"?onContinue:null;
+  if(!pendingPatient)return false;
+  document.getElementById("vgCaseCompleteRewardBody").innerHTML=summary(pendingPatient);
+  const ov=document.getElementById("vgCaseCompleteRewardOverlay");
+  ov.classList.add("open");
+  ov.style.display="flex";
+  document.body.style.overflow="hidden";
+  return true;
+}
+function hide(){
+  const ov=document.getElementById("vgCaseCompleteRewardOverlay");
+  if(ov){ov.classList.remove("open");ov.style.display="none"}
+  document.body.style.overflow="";
+}
+function continueCase(){
+  hide();
+  const cb=pendingContinue;
+  pendingContinue=null;
+  pendingPatient=null;
+  if(cb){try{cb()}catch(e){}}
+  else{
+    try{
+      if(typeof vgRepairNextPatient==="function")return vgRepairNextPatient();
+      if(typeof vgcfNext==="function")return vgcfNext();
+      if(typeof vgOpenScreen==="function")return vgOpenScreen("admit");
+    }catch(e){}
+  }
+}
+
+/*
+  Hook the authoritative case completion path.
+  Instead of patient vanishing immediately:
+  1. finish/discharge logic runs,
+  2. capture the finished patient's record,
+  3. show this one intentional modal,
+  4. only advance after OK.
+*/
+function patchFinish(){
+  if(typeof window.vgRepairFinishCase==="function" && !window.vgRepairFinishCase.__vgRewardPatched){
+    const old=window.vgRepairFinishCase;
+    const w=function(){
+      const p=active();
+      const r=old.apply(this,arguments);
+      setTimeout(()=>show(p),40);
+      return r;
+    };
+    w.__vgRewardPatched=true;
+    window.vgRepairFinishCase=w;
+  }
+
+  if(window.VetGodCaseCompletionRepair && typeof window.VetGodCaseCompletionRepair.finish==="function" &&
+     !window.VetGodCaseCompletionRepair.finish.__vgRewardPatched){
+    const old=window.VetGodCaseCompletionRepair.finish;
+    const w=function(){
+      const p=active();
+      const r=old.apply(this,arguments);
+      setTimeout(()=>show(p),40);
+      return r;
+    };
+    w.__vgRewardPatched=true;
+    window.VetGodCaseCompletionRepair.finish=w;
+  }
+}
+
+function boot(){
+  ensure();
+  patchFinish();
+  // Reapply if another late script replaces the finish function.
+  setTimeout(patchFinish,250);
+  setTimeout(patchFinish,1000);
+}
+window.VetGodCaseCompleteReward={show,hide,continueCase};
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();
 </script>
 
