@@ -83,6 +83,7 @@ main{max-width:1500px;margin:auto;padding:16px 18px 70px}
 .hero h2{font-size:29px;line-height:1.05;margin:7px 0 8px;letter-spacing:-.02em}
 .hero p{margin:0;color:#a3bfcb;max-width:790px;font-size:11px;line-height:1.65}
 .creature-emblem{
+  pointer-events:none;user-select:none;
   min-height:160px;border:1px solid #315368;border-radius:16px;
   background:radial-gradient(circle at 50% 45%,#17394a,#09131e 65%);
   display:grid;place-items:center;position:relative;overflow:hidden
@@ -194,6 +195,22 @@ main{max-width:1500px;margin:auto;padding:16px 18px 70px}
 .pet .face{font-size:36px}
 .pet h3{font-size:12px;margin:5px 0 2px}
 .pet-actions{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}
+.pet-story-btn{
+  width:100%;margin-top:7px;min-height:38px;border-radius:8px;
+  border:1px solid #7765ad;background:#201b3c;color:#eadfff;
+  font-size:7px;font-weight:1000;letter-spacing:.05em
+}
+.pet-story-btn:hover{background:#2b2550;border-color:#a995ed}
+.story-card{
+  border:1px solid #5d4e87;border-radius:14px;
+  background:linear-gradient(180deg,#15152b,#0b1320);padding:14px
+}
+.story-card h2{margin:6px 0 8px;font-size:24px}
+.story-beat{
+  border:1px solid #314a5a;border-radius:10px;background:#091722;
+  padding:9px;margin-top:8px;font-size:8px;line-height:1.6;color:#aac3cd
+}
+
 .pet-actions button{min-height:33px;border:1px solid #315464;border-radius:7px;background:#102735;color:#dff7ff;font-size:7px;font-weight:900}
 .codex-table{width:100%;border-collapse:collapse;font-size:8px}
 .codex-table th,.codex-table td{border-bottom:1px solid #1f3845;padding:8px;text-align:left;vertical-align:top}
@@ -385,6 +402,60 @@ const WORLDS=[
  {id:"iron",name:"Ironroot Basin",biome:"Industrial Wildlands",icon:"⚙️",hazard:"Metal resonance",resource:"Ferrous Bloom",tags:["armor","strength","ore"],objective:"Clear a collapsed route and stabilize the reactor garden."}
 ];
 
+
+const STORY_BEATS=[
+  {
+    title:"THE SIGNAL IN THE SNOW",
+    text:"Koda arrives as a veterinary patient first. The rescue team reports pain, dehydration, and a strange repeating signal that followed him from Aster Reach.",
+    objective:"Treat Koda completely before any morph research begins."
+  },
+  {
+    title:"MEDICINE BEFORE MORPHING",
+    text:"The institute's central rule is simple: no sick, painful, dehydrated, hypoxic, or unstable animal enters morph research.",
+    objective:"Complete triage, physical exam, diagnostics, treatment, and veterinary recovery."
+  },
+  {
+    title:"THE RESONANCE WING",
+    text:"Koda is medically stable. Now the strange signal can be studied safely, and the institute begins mapping possible morph paths.",
+    objective:"Investigate resonance, prepare Koda, and choose a morph branch."
+  },
+  {
+    title:"THE MORPH CHAMBER",
+    text:"The chamber amplifies adaptive traits already present in Koda. Every phase must remain stable, and the animal remains the patient throughout the transformation.",
+    objective:"Complete all chamber phases and post-morph recovery."
+  },
+  {
+    title:"FIELD CERTIFICATION",
+    text:"A new form must prove useful without harming the animal. Training and field work test movement, support, control, and recovery.",
+    objective:"Calibrate abilities, complete an expedition, and return safely."
+  },
+  {
+    title:"THE FIRST RESIDENT",
+    text:"Koda becomes the first permanent resident of the Morph Sanctuary. His veterinary record, morph history, and field certification are archived together.",
+    objective:"Care for Koda, then use ADVANCE PATIENT to begin the next case."
+  }
+];
+
+function currentStoryBeat(){
+  const c=active();
+  if(!c) return 0;
+  if(c.stage<=0) return 0;
+  if(c.stage<=5) return 1;
+  if(c.stage<=9) return 2;
+  if(c.stage<=11) return 3;
+  if(c.stage<=13) return 4;
+  return 5;
+}
+function storyPanel(){
+  const s=STORY_BEATS[currentStoryBeat()];
+  return `<div class="panel" style="border-color:#625391;background:linear-gradient(180deg,#15162e,#0a1320)">
+    <div class="eyebrow">STORY MODE</div>
+    <h3 style="font-size:16px;margin-top:6px">${s.title}</h3>
+    <div class="small" style="line-height:1.7;color:#b9cbd4">${s.text}</div>
+    <div class="callout" style="border-left-color:#bd9cff"><b>OBJECTIVE:</b> ${s.objective}</div>
+  </div>`;
+}
+
 const defaultState=()=>({
   version:1,
   screen:"intake",
@@ -399,7 +470,8 @@ const defaultState=()=>({
   codex:{},
   creature:null,
   logs:["Morph Institute online. First rescue assigned: Koda."],
-  ui:{rewardPending:false}
+  ui:{rewardPending:false,storyIntroSeen:false},
+  storyResidentIndex:0
 });
 
 let state=load();
@@ -530,9 +602,14 @@ function gate(title,checks){
 function areaFooter(canFinish,nextLabel){
   const c=active();
   return `<div class="footer-actions">
-    <button class="primary" ${canFinish&&!c.areaComplete?"":"disabled"} onclick="finishArea()">✓ FINISH THIS AREA</button>
-    <button class="secondary" ${c.areaComplete?"":"disabled"} onclick="continueStage()">ENTER ${nextLabel} →</button>
-    <button class="secondary" onclick="goMeta('institute')">INSTITUTE DASHBOARD</button>
+    <button class="primary" onclick="finishArea()">${c.areaComplete?"✓ AREA COMPLETE":"✓ COMPLETE CURRENT AREA"}</button>
+    <button class="primary" onclick="advanceCase()">▶ ADVANCE PATIENT</button>
+    <button class="secondary" onclick="goMeta('institute')">STORY / INSTITUTE</button>
+  </div>
+  <div class="callout ${canFinish?"good":"warn"}">
+    ${canFinish
+      ? `<b>READY:</b> Press COMPLETE CURRENT AREA, then ADVANCE PATIENT.`
+      : `<b>NOT READY YET:</b> ${missingSummary(c.stage)}`}
   </div>`;
 }
 
@@ -748,8 +825,8 @@ function eligibilityScreen(){
     <div class="callout ${cleared?"good":"warn"}">${cleared?"All veterinary clearance requirements are satisfied. "+c.name+" may enter resonance research.":"Morph research remains locked until every medical criterion is green."}</div>
     ${gate("MORPH MEDICAL CLEARANCE",checks)}
     <div class="footer-actions">
-      <button class="primary" ${cleared&&!c.areaComplete?"":"disabled"} onclick="clearForMorph()">✓ AUTHORIZE MORPH RESEARCH</button>
-      <button class="secondary" ${c.areaComplete?"":"disabled"} onclick="continueStage()">ENTER RESONANCE LAB →</button>
+      <button class="primary" onclick="clearForMorph()">${c.areaComplete?"✓ MORPH RESEARCH AUTHORIZED":"✓ AUTHORIZE MORPH RESEARCH"}</button>
+      <button class="primary" onclick="advanceCase()">▶ ADVANCE PATIENT</button>
       <button class="secondary" onclick="goMeta('institute')">INSTITUTE DASHBOARD</button>
     </div>
   </div></div><aside>${patientSide()}</aside></div>`;
@@ -965,8 +1042,10 @@ function expeditionScreen(){
       <button class="action ${x.extract?"done":""}" onclick="field('extract')"><strong>SAFE EXTRACTION</strong><span>Return with discoveries, resources and creature mastery.</span></button>
     </div>`:""}
     ${gate("EXPEDITION COMPLETION",checks)}
-    <div class="footer-actions"><button class="primary" ${checks.every(x=>x[1])&&!c.areaComplete?"":"disabled"} onclick="finishArea()">✓ FINISH EXPEDITION</button>
-    <button class="secondary" ${c.areaComplete?"":"disabled"} onclick="completeCreatureCase()">SEND TO MORPH SANCTUARY →</button></div>
+    <div class="footer-actions">
+    <button class="primary" onclick="finishArea()">${c.areaComplete?"✓ EXPEDITION COMPLETE":"✓ COMPLETE EXPEDITION"}</button>
+    <button class="primary" onclick="completeCreatureCase()">▶ ADVANCE PATIENT TO SANCTUARY</button>
+  </div>
   </div></div><aside>${patientSide()}</aside></div>`;
 }
 function pickWorld(id){const c=active();c.expedition.world=id;c.expedition.brief=false;c.expedition.route=false;c.expedition.objective=false;c.expedition.extract=false;log("Expedition region selected: "+WORLDS.find(w=>w.id===id).name+".");save();render()}
@@ -1013,9 +1092,14 @@ function sanctuaryScreen(){
   }
   return hero("Morph Sanctuary",
     "Persistent care, habitat fit, bond and mastery continue after a case ends. Use CARE FOR ALL for baseline care, then work with individuals when you want deeper attention.","🌿")
-  +`<div class="panel"><div class="footer-actions"><button class="primary" onclick="careAll()">CARE FOR ALL RESIDENTS</button>
-    <button class="secondary" onclick="startNextCreature()">${state.activeIndex<CREATURES.length-1?"BEGIN NEXT CREATURE CASE":"RESTART CREATURE CYCLE"}</button></div></div>
+  +`<div class="panel"><div class="footer-actions"><button class="primary" onclick="careAll()">CARE FOR ALL RESIDENTS</button><button class="secondary" onclick="openFirstMorphStory()">🗺️ PLAY MORPHED ANIMAL ADVENTURE</button>
+    <button class="secondary" onclick="startNextCreature()">${state.activeIndex<CREATURES.length-1?"▶ ADVANCE TO NEXT PATIENT":"▶ START NEXT PATIENT CYCLE"}</button></div></div>
   <div class="sanctuary-grid">${state.sanctuary.map((p,i)=>petCard(p,i)).join("")}</div>`;
+}
+
+function openFirstMorphStory(){
+  if(!state.sanctuary.length){toast("Complete a morph case first to unlock an animal story.");return}
+  openMorphStory(0);
 }
 function petCard(p,i){
   updateResident(p);
@@ -1025,8 +1109,351 @@ function petCard(p,i){
     <div class="pet-actions">
       <button onclick="petCare(${i},'food')">OFFER FOOD</button><button onclick="petCare(${i},'water')">OFFER WATER</button>
       <button onclick="petCare(${i},'comfort')">COMFORT</button><button onclick="petCare(${i},'train')">TRAIN</button>
-    </div></div>`;
+    </div>
+    <button class="pet-story-btn" onclick="openMorphStory(${i})">🗺️ PLAY ${p.name.toUpperCase()}'S MORPH ADVENTURE</button>
+  </div>`;
 }
+
+
+function morphStoryData(p){
+  const form = p.formName || "Unknown Form";
+  const tagText = (p.tags||[]).join(", ") || "adaptive";
+  return {
+    title:p.name+" · "+form,
+    intro:p.name+" began as a "+p.species+" veterinary patient. Before morph research, the institute stabilized pain, hydration, breathing, mobility and the primary medical problem.",
+    vet:"The medical record for "+p.name+" was completed before transformation. The case only advanced after veterinary treatment and recovery requirements were satisfied.",
+    morph:"After medical clearance, "+p.name+" entered the Morph Institute and became "+form+". This form emphasizes "+tagText+" traits while preserving the animal's original temperament and bond history.",
+    field:"Once stable in the new body, "+p.name+" completed training and a field certification in "+(p.habitat||"a compatible habitat")+". The field mission tested useful adaptation rather than combat.",
+    home:p.name+" now lives in the Morph Sanctuary. Food, water, comfort, bond, mastery and habitat fit continue to change the animal's long-term story."
+  };
+}
+
+function openMorphStory(i){
+  if(!state.sanctuary[i]){
+    toast("That morphed animal is not available yet.");
+    return;
+  }
+  state.storyResidentIndex=i;
+  state.screen="morphstory";
+  save();
+  render();
+  window.scrollTo({top:0,left:0,behavior:"auto"});
+}
+
+function openFirstMorphStory(){
+  if(!state.sanctuary.length){
+    toast("Complete a morph case first to unlock an animal story.");
+    return;
+  }
+  openMorphStory(0);
+}
+
+
+function ensureAdventureState(p){
+  p.adventure=p.adventure||{
+    scene:"trailhead",
+    inventory:[],
+    flags:{},
+    energy:100,
+    completed:false,
+    log:["You entered the wilds beyond the Morph Sanctuary."]
+  };
+  return p.adventure;
+}
+
+const MORPH_ADVENTURE_SCENES={
+  trailhead:{
+    title:"The Sanctuary Gate",
+    text:p=>`${p.name} stands at the open gate. Beyond it, a narrow trail splits between a glowing creek and a wind-cut ridge. Something metallic is half-buried near the fence.`,
+    choices:[
+      {label:"SEARCH THE FENCE LINE",to:"fencecache",effect:"search"},
+      {label:"FOLLOW THE GLOWING CREEK",to:"creek"},
+      {label:"CLIMB THE WIND-CUT RIDGE",to:"ridge"}
+    ]
+  },
+  fencecache:{
+    title:"The Buried Cache",
+    text:p=>"Under the loose soil is a weatherproof veterinary field pouch. It looks old, but the seal is intact.",
+    choices:[
+      {label:"TAKE FIELD MED KIT",to:"trailhead",item:"Field Med Kit",flag:"medkit"},
+      {label:"LEAVE IT AND RETURN",to:"trailhead"}
+    ]
+  },
+  creek:{
+    title:"The Glowing Creek",
+    text:p=>"The water shines with blue mineral light. Fresh tracks cross the mud. A small injured glider-creature hides beneath a root while a crystal fruit hangs over the stream.",
+    choices:[
+      {label:"HELP THE INJURED CREATURE",to:"creekhelp",need:"Field Med Kit"},
+      {label:"PICK THE CRYSTAL FRUIT",to:"creekfruit",item:"Crystal Fruit"},
+      {label:"FOLLOW THE TRACKS",to:"ruins"},
+      {label:"RETURN TO THE FORK",to:"trailhead"}
+    ]
+  },
+  creekhelp:{
+    title:"Field Care",
+    text:p=>"Using the Field Med Kit, you clean the creature's scrape and wrap it. It chirps, circles "+p.name+", then disappears into the brush. Something drops from its wing.",
+    choices:[
+      {label:"TAKE THE SILVER FEATHER",to:"creek",item:"Silver Feather",flag:"rescuedGlider"},
+      {label:"RETURN WITHOUT TAKING IT",to:"creek",flag:"rescuedGlider"}
+    ]
+  },
+  creekfruit:{
+    title:"Crystal Fruit Grove",
+    text:p=>"The fruit is cool and faintly humming. More grow deeper in the reeds, but the ground is unstable.",
+    choices:[
+      {label:"TAKE ONE AND RETURN",to:"creek"},
+      {label:"RISK GOING DEEPER",to:"sinkhole"}
+    ]
+  },
+  sinkhole:{
+    title:"The Soft Ground",
+    text:p=>"The reeds collapse into a shallow mineral sink. "+p.name+" can scramble out, but only by using the new morph body's abilities carefully.",
+    choices:[
+      {label:"USE MORPH STRENGTH TO CLIMB OUT",to:"creek",energy:-15,flag:"escapedSink"},
+      {label:"DROP THE CRYSTAL FRUIT TO LIGHTEN THE LOAD",to:"creek",removeItem:"Crystal Fruit",flag:"escapedSink"}
+    ]
+  },
+  ridge:{
+    title:"Wind-Cut Ridge",
+    text:p=>"From the ridge, "+p.name+" can see three landmarks: a ruined relay tower, a stone arch covered in old institute markings, and a flock of black shapes circling far above.",
+    choices:[
+      {label:"GO TO THE RELAY TOWER",to:"tower"},
+      {label:"INVESTIGATE THE STONE ARCH",to:"arch"},
+      {label:"FOLLOW THE CIRCLING FLOCK",to:"nest"},
+      {label:"RETURN TO THE FORK",to:"trailhead"}
+    ]
+  },
+  tower:{
+    title:"Abandoned Relay Tower",
+    text:p=>"The tower is dead, but a service panel still has one powered slot. A cracked data module is lodged behind the panel.",
+    choices:[
+      {label:"TAKE THE DATA MODULE",to:"ridge",item:"Cracked Data Module",flag:"module"},
+      {label:"TRY TO POWER THE PANEL",to:"towerpower",need:"Crystal Fruit"},
+      {label:"RETURN TO RIDGE",to:"ridge"}
+    ]
+  },
+  towerpower:{
+    title:"The Tower Wakes",
+    text:p=>"The Crystal Fruit discharges into the relay. A map flickers on-screen, revealing a hidden research shelter beneath the old ruins.",
+    choices:[
+      {label:"DOWNLOAD SHELTER COORDINATES",to:"ridge",flag:"shelterKnown",item:"Shelter Coordinates"},
+      {label:"SHUT IT DOWN",to:"ridge"}
+    ]
+  },
+  arch:{
+    title:"Stone Archive Arch",
+    text:p=>"Etched symbols describe early Morph Institute field trials. One slot matches the shape of a feather-shaped token.",
+    choices:[
+      {label:"INSERT SILVER FEATHER",to:"archopen",need:"Silver Feather"},
+      {label:"COPY THE SYMBOLS",to:"ridge",item:"Archive Rubbing"},
+      {label:"RETURN TO RIDGE",to:"ridge"}
+    ]
+  },
+  archopen:{
+    title:"Hidden Archive",
+    text:p=>"The arch opens into a tiny vault. Inside rests an old sanctuary bond charm and a sealed field journal.",
+    choices:[
+      {label:"TAKE BOND CHARM",to:"ridge",item:"Bond Charm",flag:"archiveOpened"},
+      {label:"TAKE FIELD JOURNAL",to:"ridge",item:"Field Journal",flag:"archiveOpened"}
+    ]
+  },
+  nest:{
+    title:"High Nest",
+    text:p=>"The circling shapes are harmless sky-runners guarding a nest. One juvenile is tangled in cable from the old relay system.",
+    choices:[
+      {label:"FREE THE JUVENILE",to:"nestfree",need:"Field Med Kit"},
+      {label:"OBSERVE FROM A DISTANCE",to:"ridge",flag:"observedNest"},
+      {label:"RETURN TO RIDGE",to:"ridge"}
+    ]
+  },
+  nestfree:{
+    title:"Rescue at the Nest",
+    text:p=>"The cable comes loose. The flock settles around "+p.name+" instead of fleeing. One adult nudges a bright stone toward you.",
+    choices:[
+      {label:"TAKE SKYGLASS STONE",to:"ridge",item:"Skyglass Stone",flag:"rescuedNest"},
+      {label:"LEAVE THE GIFT",to:"ridge",flag:"rescuedNest"}
+    ]
+  },
+  ruins:{
+    title:"Old Research Ruins",
+    text:p=>p.adventure.flags.shelterKnown
+      ?"With the downloaded coordinates, you find a concealed stair beneath the ruins."
+      :"The ruins are mostly collapsed. You can search them, but something important seems hidden.",
+    choices:[
+      {label:"SEARCH THE RUINS",to:"ruinsearch"},
+      {label:"ENTER HIDDEN SHELTER",to:"shelter",needFlag:"shelterKnown"},
+      {label:"RETURN TO CREEK",to:"creek"}
+    ]
+  },
+  ruinsearch:{
+    title:"Ruin Search",
+    text:p=>"Behind a broken console is a sealed supply box marked SANCTUARY FIELD USE.",
+    choices:[
+      {label:"TAKE MORPH NUTRIENT PACK",to:"ruins",item:"Morph Nutrient Pack"},
+      {label:"TAKE HABITAT SEED KIT",to:"ruins",item:"Habitat Seed Kit"},
+      {label:"LEAVE SUPPLIES",to:"ruins"}
+    ]
+  },
+  shelter:{
+    title:"Hidden Research Shelter",
+    text:p=>"The underground room contains the missing half of the old field records. A terminal recognizes "+p.name+"'s current morph signature.",
+    choices:[
+      {label:"RECOVER ADVANCED MORPH NOTES",to:"finale",item:"Advanced Morph Notes",flag:"researchRecovered"},
+      {label:"RECOVER SANCTUARY BLUEPRINT",to:"finale",item:"Sanctuary Blueprint",flag:"researchRecovered"}
+    ]
+  },
+  finale:{
+    title:"Return Signal",
+    text:p=>"The Sanctuary calls over the field channel. Your pack is heavier, the map is clearer, and "+p.name+" has proven the new form can explore, rescue, and make choices without losing the animal underneath it.",
+    choices:[
+      {label:"RETURN TO MORPH SANCTUARY",to:"complete"}
+    ]
+  }
+};
+
+function adventureChoiceAllowed(p,c){
+  const a=ensureAdventureState(p);
+  if(c.need && !a.inventory.includes(c.need)) return false;
+  if(c.needFlag && !a.flags[c.needFlag]) return false;
+  return true;
+}
+
+function morphStoryScreen(){
+  if(!state.sanctuary.length){
+    return hero("Morphed Animal Adventure","No transformed resident has been created yet.","📖")
+      +`<div class="panel"><div class="empty">Complete a morph case first.<br><br>
+      <button class="primary" onclick="goMeta('sanctuary')">BACK TO SANCTUARY</button></div></div>`;
+  }
+
+  let i=Math.max(0,Math.min(state.storyResidentIndex||0,state.sanctuary.length-1));
+  const p=state.sanctuary[i];
+  const a=ensureAdventureState(p);
+
+  if(a.scene==="complete" || a.completed){
+    return hero(p.name+"'s Adventure Complete",
+      "The expedition is complete. Everything collected during the story is now part of this resident's Sanctuary inventory.","🏕️")
+      +`<div class="story-card">
+        <h2>${p.icon} ${p.name} returned home</h2>
+        <div class="story-beat"><b>ITEMS BROUGHT BACK</b><br>${a.inventory.length?a.inventory.join(" · "):"No items collected"}</div>
+        <div class="story-beat"><b>FIELD FLAGS</b><br>${Object.keys(a.flags).filter(k=>a.flags[k]).join(" · ")||"No special discoveries"}</div>
+        <div class="footer-actions">
+          <button class="primary" onclick="resetMorphAdventure(${i})">↻ PLAY ANOTHER STORY RUN</button>
+          <button class="secondary" onclick="goMeta('sanctuary')">← BACK TO SANCTUARY</button>
+        </div>
+      </div>`;
+  }
+
+  const scene=MORPH_ADVENTURE_SCENES[a.scene]||MORPH_ADVENTURE_SCENES.trailhead;
+  const choices=scene.choices.map((c,idx)=>{
+    const ok=adventureChoiceAllowed(p,c);
+    return `<button class="action ${ok?"":"locked"}" onclick="chooseMorphAdventure(${i},${idx})" ${ok?"":"disabled"}>
+      <strong>${c.label}</strong>
+      <span>${!ok?(c.need?"Requires: "+c.need:c.needFlag?"Requires discovery: "+c.needFlag:"Locked"):"Choose this path"}</span>
+    </button>`;
+  }).join("");
+
+  return hero(p.name+"'s Morph Adventure",
+    "This is a playable branching story. Pick routes, collect items, rescue creatures, unlock hidden areas, and bring what you find back to the Sanctuary.","🗺️")
+  +`<div class="grid"><div>
+      <div class="story-card">
+        <div class="eyebrow">CURRENT LOCATION</div>
+        <h2>${scene.title}</h2>
+        <div class="story-beat">${scene.text(p)}</div>
+        <h4>WHAT DO YOU DO?</h4>
+        <div class="action-grid">${choices}</div>
+      </div>
+    </div>
+    <aside>
+      <div class="panel">
+        <h3>${p.icon} ${p.name} · ${p.formName}</h3>
+        ${metric("ADVENTURE ENERGY",a.energy)}
+        ${metric("BOND",p.bond)}
+        ${metric("MASTERY",p.mastery)}
+        <h4>PACK INVENTORY</h4>
+        <div class="ability-list">${a.inventory.length?a.inventory.map(x=>`<div class="ability">🎒 ${x}</div>`).join(""):'<div class="ability">Pack is empty</div>'}</div>
+        <h4>FIELD LOG</h4>
+        <div class="small" style="line-height:1.55">${a.log.slice(-5).map(x=>"• "+x).join("<br>")}</div>
+        <div class="footer-actions">
+          <button class="secondary" onclick="goMeta('sanctuary')">← LEAVE STORY FOR NOW</button>
+        </div>
+      </div>
+    </aside></div>`;
+}
+
+function chooseMorphAdventure(i,choiceIndex){
+  const p=state.sanctuary[i];
+  if(!p){toast("Resident not found.");return}
+  const a=ensureAdventureState(p);
+  const scene=MORPH_ADVENTURE_SCENES[a.scene];
+  if(!scene)return;
+  const c=scene.choices[choiceIndex];
+  if(!c||!adventureChoiceAllowed(p,c)){
+    toast("That path is locked.");
+    return;
+  }
+
+  if(c.item && !a.inventory.includes(c.item)){
+    a.inventory.push(c.item);
+    a.log.push("Collected "+c.item+".");
+  }
+  if(c.removeItem){
+    a.inventory=a.inventory.filter(x=>x!==c.removeItem);
+    a.log.push("Used or left behind "+c.removeItem+".");
+  }
+  if(c.flag){
+    a.flags[c.flag]=true;
+    a.log.push("Story event unlocked: "+c.flag+".");
+  }
+  if(typeof c.energy==="number"){
+    a.energy=clamp(a.energy+c.energy);
+  }
+
+  if(c.to==="complete"){
+    a.completed=true;
+    a.scene="complete";
+    p.bond=clamp((p.bond||0)+10);
+    p.mastery=clamp((p.mastery||0)+10);
+    p.storyLoot=[...new Set([...(p.storyLoot||[]),...a.inventory])];
+    log(p.name+" completed a Morph Adventure and returned with "+a.inventory.length+" items.");
+    save();
+    render();
+    return;
+  }
+
+  a.scene=c.to;
+  a.energy=clamp(a.energy-2);
+  p.bond=clamp((p.bond||0)+1);
+  a.log.push("Moved to "+(MORPH_ADVENTURE_SCENES[c.to]?.title||c.to)+".");
+  save();
+  render();
+  window.scrollTo({top:0,left:0,behavior:"auto"});
+}
+
+function resetMorphAdventure(i){
+  const p=state.sanctuary[i];
+  if(!p)return;
+  p.adventure={
+    scene:"trailhead",
+    inventory:[],
+    flags:{},
+    energy:100,
+    completed:false,
+    log:["A new Morph Adventure begins beyond the Sanctuary gate."]
+  };
+  state.storyResidentIndex=i;
+  state.screen="morphstory";
+  save();
+  render();
+}
+
+function closeMorphStory(){
+  state.screen="sanctuary";
+  save();
+  render();
+}
+
+function continueMorphStory(i){ openMorphStory(i); }
+
 function updateResident(p){
   const now=Date.now(),mins=Math.min(480,Math.max(0,(now-(p.lastUpdate||now))/60000));
   if(mins>1){p.hydration=clamp(p.hydration-mins*.03);p.energy=clamp(p.energy-mins*.02);p.comfort=clamp(p.comfort-mins*.015);p.lastUpdate=now}
@@ -1061,9 +1488,13 @@ function render(){
   else if(state.screen==="sanctuary")html=sanctuaryScreen();
   else if(state.screen==="codex")html=codexScreen();
   else if(state.screen==="worldmap")html=worldMapScreen();
+  else if(state.screen==="morphstory")html=morphStoryScreen();
   else{
     const id=stageId();
     html=({intake:intakeScreen,triage:triageScreen,exam:examScreen,diagnostics:diagnosticsScreen,treatment:treatmentScreen,vetrecovery:vetRecoveryScreen,eligibility:eligibilityScreen,resonance:resonanceScreen,prep:prepScreen,tree:treeScreen,chamber:chamberScreen,recovery:recoveryScreen,training:trainingScreen,expedition:expeditionScreen}[id]||intakeScreen)();
+  }
+  if(state.screen!=="sanctuary" && state.screen!=="codex" && state.screen!=="worldmap" && state.screen!=="morphstory"){
+    html = storyPanel() + html;
   }
   document.getElementById("main").innerHTML=html;
   save();
@@ -1076,14 +1507,120 @@ function goStage(i){
 function goMeta(id){state.screen=id;save();render()}
 function finishArea(){
   const c=active(),i=c.stage;
-  if(!canFinish(i)){toast("The completion gate is not ready yet.");return}
-  c.areaComplete=true;if(!c.completedStages.includes(i))c.completedStages.push(i);
-  log(STAGES[i].label+" completed for "+c.name+".");save();render();
+  if(c.areaComplete){toast("This area is already complete. Press ADVANCE PATIENT.");return}
+  if(!canFinish(i)){toast("Still needed: "+missingSummary(i));return}
+  c.areaComplete=true;
+  if(!c.completedStages.includes(i))c.completedStages.push(i);
+  log(STAGES[i].label+" completed for "+c.name+".");
+  save();render();
+  toast("Area complete. Press ADVANCE PATIENT.");
 }
 function continueStage(){
-  const c=active();if(!c.areaComplete)return;
-  c.stage=Math.min(13,c.stage+1);c.areaComplete=false;state.screen=STAGES[c.stage].id;log("Entered "+STAGES[c.stage].label+".");save();render();
+  const c=active();
+  if(!c.areaComplete){toast("Complete the current area before advancing.");return}
+  c.stage=Math.min(13,c.stage+1);
+  c.areaComplete=false;
+  state.screen=STAGES[c.stage].id;
+  log("Advanced patient to "+STAGES[c.stage].label+".");
+  save();render();
+  window.scrollTo({top:0,left:0,behavior:"auto"});
 }
+
+function missingSummary(i){
+  const c=active(),m=[];
+  if(i===0){
+    if(!c.intakeBrief)m.push("read case file");
+    if(!c.intakeVitals)m.push("record vitals");
+    if(!c.intakeCalm)m.push("calm contact");
+  }else if(i===1){
+    const t=c.vet.triage;
+    if(!t.airway)m.push("airway");
+    if(!t.breathing)m.push("breathing/oxygen");
+    if(!t.circulation)m.push("circulation");
+    if(!t.temp)m.push("temperature");
+    if(!t.weight)m.push("weight");
+    if(c.vet.oxygen<94)m.push("oxygen 94+");
+  }else if(i===2){
+    for(const [k,v] of Object.entries(c.vet.exam)) if(!v)m.push(k+" exam");
+  }else if(i===3){
+    const d=c.vet.dx;
+    if(!d.blood)m.push("blood panel");
+    if(!d.imaging)m.push("imaging");
+    if(!d.urine)m.push("urinalysis");
+    if(!d.assessment)m.push("clinical assessment");
+  }else if(i===4){
+    const t=c.vet.treatment;
+    if(!t.fluids)m.push("fluid support");
+    if(!t.pain)m.push("pain control");
+    if(!t.wound)m.push("wound care");
+    if(!t.nutrition)m.push("nutrition");
+    if(!t.primary)m.push("resolve primary problem");
+    if(c.pain>30)m.push("pain ≤30");
+    if(c.hydration<70)m.push("hydration 70+");
+  }else if(i===5){
+    const r=c.vet.recovery;
+    if(!r.water)m.push("offer water");
+    if(!r.food)m.push("offer food");
+    if(!r.rest)m.push("quiet rest");
+    if(!r.walk)m.push("mobility test");
+    if(!r.recheck)m.push("final recheck");
+    if(c.health<82)m.push("health 82+");
+    if(c.pain>25)m.push("pain ≤25");
+    if(c.hydration<75)m.push("hydration 75+");
+    if(c.vet.oxygen<95)m.push("oxygen 95+");
+  }else if(i===6){
+    if(!c.vet.dx.assessment)m.push("diagnosis");
+    if(!c.vet.treatment.primary)m.push("primary treatment");
+    if(!c.vet.recovery.recheck)m.push("recovery recheck");
+    if(c.stress>=40)m.push("stress below 40");
+  }else if(i===7){
+    for(const [k,v] of Object.entries(c.evidence)) if(!v)m.push(k+" evidence");
+  }else if(i===8){
+    if(c.hydration<70)m.push("hydration 70+");
+    if(c.energy<68)m.push("energy 68+");
+    if(c.comfort<68)m.push("comfort 68+");
+    if(c.trust<55)m.push("trust 55+");
+    if(!c.prep.calibrate)m.push("chamber calibration");
+    if(!c.prep.catalyst)m.push("catalyst");
+  }else if(i===9){
+    if(!c.selectedMorph)m.push("select a morph");
+  }else if(i===10){
+    if(c.chamber.phase<CHAMBER_PHASES.length)m.push("all chamber phases");
+    if(c.chamber.stability<60)m.push("stability 60+");
+    if(c.chamber.integrity<60)m.push("integrity 60+");
+  }else if(i===11){
+    if(c.recovery.adaptation<80)m.push("adaptation 80+");
+    if(c.hydration<70)m.push("hydration 70+");
+    if(c.stress>=40)m.push("stress below 40");
+    if(c.comfort<70)m.push("comfort 70+");
+    if(!c.recovery.environment)m.push("habitat tuning");
+  }else if(i===12){
+    for(const [k,v] of Object.entries(c.training)) if(!v)m.push(k+" training");
+  }else if(i===13){
+    const x=c.expedition;
+    if(!x.world)m.push("select region");
+    if(!x.brief)m.push("mission briefing");
+    if(!x.route)m.push("route");
+    if(!x.objective)m.push("objective");
+    if(!x.extract)m.push("safe extraction");
+  }
+  return m.length ? m.join(" · ") : "all requirements complete";
+}
+
+function advanceCase(){
+  const c=active();
+  if(!c.areaComplete){
+    if(canFinish(c.stage)){
+      finishArea();
+      toast("Area complete. Press ADVANCE PATIENT again.");
+    }else{
+      toast("Still needed: "+missingSummary(c.stage));
+    }
+    return;
+  }
+  continueStage();
+}
+
 function canFinish(i){
   const c=active();
   if(i===0)return !!(c.intakeBrief&&c.intakeVitals&&c.intakeCalm);
@@ -1144,13 +1681,34 @@ function resetGame(){
   localStorage.removeItem(SAVE_KEY);state=defaultState();state.creature=createCreature(CREATURES[0]);save();render();window.scrollTo(0,0);
 }
 
-window.goStage=goStage;window.goMeta=goMeta;window.finishArea=finishArea;window.continueStage=continueStage;
+window.goStage=goStage;window.goMeta=goMeta;window.finishArea=finishArea;window.continueStage=continueStage;window.advanceCase=advanceCase;
 window.intakeAction=intakeAction;window.vetTriage=vetTriage;window.vetExam=vetExam;window.vetDx=vetDx;window.vetTreat=vetTreat;window.vetRecover=vetRecover;window.clearForMorph=clearForMorph;window.scan=scan;window.prep=prep;window.selectMorph=selectMorph;window.chamberAction=chamberAction;
 window.recover=recover;window.train=train;window.pickWorld=pickWorld;window.field=field;window.completeCreatureCase=completeCreatureCase;
 window.closeRewardToSanctuary=closeRewardToSanctuary;window.closeRewardToCodex=closeRewardToCodex;window.startNextCreature=startNextCreature;
-window.petCare=petCare;window.careAll=careAll;window.resetGame=resetGame;
+window.petCare=petCare;window.careAll=careAll;window.openMorphStory=openMorphStory;window.openFirstMorphStory=openFirstMorphStory;window.closeMorphStory=closeMorphStory;window.continueMorphStory=continueMorphStory;window.morphStoryScreen=morphStoryScreen;window.chooseMorphAdventure=chooseMorphAdventure;window.resetMorphAdventure=resetMorphAdventure;window.resetGame=resetGame;
 
+
+function showStoryIntro(){
+  if(state.ui && state.ui.storyIntroSeen) return;
+  const modal=document.getElementById("rewardModal");
+  document.getElementById("rewardCard").innerHTML=`<div class="eyebrow">VET GODS · STORY MODE</div>
+    <h2>🐺 THE SIGNAL IN THE SNOW</h2>
+    <div class="small" style="font-size:10px;line-height:1.8;color:#b9cbd4">
+      Koda arrives as a veterinary patient first. Treat him, diagnose him, recover him, and only then investigate the strange morph signal following him from Aster Reach.
+    </div>
+    <div class="callout" style="border-left-color:#bd9cff"><b>FIRST OBJECTIVE:</b> Complete Koda's veterinary intake and advance him through the hospital using the ADVANCE PATIENT buttons.</div>
+    <div class="footer-actions"><button class="primary" onclick="beginVetGodsStory()">▶ BEGIN KODA'S STORY</button></div>`;
+  modal.classList.add("open");
+}
+function beginVetGodsStory(){
+  document.getElementById("rewardModal").classList.remove("open");
+  state.ui=state.ui||{};
+  state.ui.storyIntroSeen=true;
+  save();render();
+}
+window.beginVetGodsStory=beginVetGodsStory;
 render();
+setTimeout(showStoryIntro,80);
 })();
 </script>
 </body>
