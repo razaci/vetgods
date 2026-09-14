@@ -261,6 +261,238 @@ main{max-width:1500px;margin:auto;padding:16px 18px 70px}
 .field-skill{border:1px solid #6a5c91;background:linear-gradient(180deg,#17162d,#0a1420);border-radius:12px;padding:10px;margin-top:10px}
 @media(max-width:1050px){.hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.inventory-grid,.room-map{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){.hub-grid,.inventory-grid,.room-map,.expectation-board{grid-template-columns:1fr}.rank-banner{grid-template-columns:auto 1fr}.rank-banner>.big-kpi{grid-column:1/-1}}
+
+.institute-floor{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+.floor-room{border:1px solid var(--line);border-radius:13px;padding:12px;background:linear-gradient(180deg,#0d2030,#08131d)}
+.floor-room.open{border-color:#37735a;box-shadow:inset 0 0 0 1px rgba(124,240,177,.08)}
+.floor-room.locked{opacity:.48}
+.floor-room .room-icon{font-size:28px}
+.floor-room button{width:100%;margin-top:8px}
+.mission-step{border:1px solid var(--line);border-radius:11px;padding:10px;margin:8px 0;background:#091722}
+.mission-step.current{border-color:var(--gold);background:#171b1d}
+.mission-step.done{border-color:#347558;background:#0b1c17}
+.tool-rack{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.tool-card{border:1px solid var(--line);border-radius:10px;padding:9px;background:#091722}
+.tool-card.equipped{border-color:var(--mint);background:#0b211c}
+.project-stage{display:flex;gap:6px;align-items:center;margin:9px 0}
+.project-stage i{height:7px;flex:1;border-radius:99px;background:#162b37;border:1px solid #284555}
+.project-stage i.done{background:var(--mint);border-color:#57b98a}
+.room-console{border:1px solid var(--line2);border-radius:13px;padding:13px;background:linear-gradient(145deg,#0b1b28,#101a2d)}
+.room-console .console-readout{font-family:ui-monospace,monospace;color:var(--cyan);font-size:12px;padding:9px;border:1px solid #244657;background:#051017;border-radius:8px;margin:7px 0}
+@media(max-width:850px){.institute-floor{grid-template-columns:1fr}.tool-rack{grid-template-columns:1fr}}
+
+
+/* ===== ANIMATED MORPH SHOWCASE ===== */
+@keyframes pulseRing{0%{transform:scale(.7);opacity:.8}70%{transform:scale(1.45);opacity:.08}100%{transform:scale(1.6);opacity:0}}
+@keyframes morphGlow{0%,100%{filter:drop-shadow(0 0 10px #5de6ff) brightness(1)}50%{filter:drop-shadow(0 0 28px #b88cff) brightness(1.35)}}
+@keyframes holoSweep{0%{transform:translateY(-120%)}100%{transform:translateY(220%)}}
+@keyframes floatBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes cardReveal{0%{transform:scale(.82) rotateX(18deg);opacity:0}100%{transform:scale(1) rotateX(0);opacity:1}}
+@keyframes chargeFlash{0%,100%{opacity:.18}50%{opacity:.9}}
+@keyframes spinCore{to{transform:rotate(360deg)}}
+@keyframes starDrift{0%{background-position:0 0,0 0}100%{background-position:180px 320px,-220px 440px}}
+@keyframes scanBlink{0%,100%{opacity:.35}50%{opacity:.9}}
+@keyframes morphShake{0%,100%{transform:translate(0)}25%{transform:translate(2px,-1px)}50%{transform:translate(-2px,1px)}75%{transform:translate(1px,2px)}}
+.morph-showcase{
+ position:relative;overflow:hidden;border:1px solid #3a6c85;border-radius:18px;
+ min-height:330px;background:
+ radial-gradient(circle at 50% 35%,rgba(88,174,255,.16),transparent 28%),
+ radial-gradient(circle at 50% 60%,rgba(170,95,255,.12),transparent 30%),
+ linear-gradient(180deg,#06101b,#071827 60%,#03080e);
+ box-shadow:inset 0 0 50px rgba(80,190,255,.07),0 18px 45px rgba(0,0,0,.35);
+}
+.morph-showcase::before{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background-image:radial-gradient(circle,#7ee8ff 1px,transparent 1px),radial-gradient(circle,#a986ff 1px,transparent 1px);
+ background-size:42px 42px,67px 67px;opacity:.12;animation:starDrift 18s linear infinite;
+}
+.morph-platform{
+ position:absolute;left:50%;bottom:38px;transform:translateX(-50%);
+ width:230px;height:70px;border-radius:50%;
+ border:2px solid #4fd4ef;background:radial-gradient(ellipse,rgba(78,213,239,.2),rgba(2,12,18,.8) 65%);
+ box-shadow:0 0 32px rgba(70,220,255,.35),inset 0 0 25px rgba(70,220,255,.2);
+}
+.morph-core{
+ position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+ width:150px;height:150px;border-radius:50%;display:grid;place-items:center;
+ animation:floatBob 2.4s ease-in-out infinite,morphGlow 2s ease-in-out infinite;
+}
+.morph-creature{
+ font-size:82px;line-height:1;z-index:3;filter:drop-shadow(0 0 12px rgba(255,255,255,.22));
+}
+.morph-ring,.morph-ring2,.morph-ring3{
+ position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);
+ border:2px solid rgba(89,223,255,.72);border-radius:50%;
+}
+.morph-ring{width:170px;height:170px;animation:pulseRing 2.2s infinite}
+.morph-ring2{width:210px;height:210px;border-color:rgba(191,123,255,.55);animation:pulseRing 2.2s .65s infinite}
+.morph-ring3{width:250px;height:250px;border-color:rgba(255,211,109,.38);animation:pulseRing 2.2s 1.3s infinite}
+.holo-sweep{
+ position:absolute;left:0;right:0;height:50px;top:0;
+ background:linear-gradient(180deg,transparent,rgba(77,225,255,.18),transparent);
+ animation:holoSweep 3.8s linear infinite;pointer-events:none;
+}
+.morph-readout{
+ position:absolute;left:14px;right:14px;top:12px;display:flex;justify-content:space-between;gap:8px;
+ font-family:ui-monospace,monospace;font-size:10px;color:#89e9ff;z-index:4
+}
+.morph-readout span{padding:5px 7px;border:1px solid #244e60;border-radius:6px;background:rgba(3,15,24,.72)}
+.morph-caption{
+ position:absolute;left:14px;right:14px;bottom:10px;text-align:center;
+ color:#dffaff;font-weight:900;letter-spacing:.08em;font-size:12px
+}
+.morph-flash{
+ position:absolute;inset:0;background:radial-gradient(circle,rgba(255,255,255,.85),rgba(89,199,255,.22),transparent 70%);
+ animation:chargeFlash 1.6s ease-in-out infinite;mix-blend-mode:screen;pointer-events:none
+}
+.form-reveal-card{
+ border:1px solid #4b6f89;border-radius:18px;padding:16px;
+ background:linear-gradient(145deg,#0b1724,#11172b);animation:cardReveal .55s ease both;
+ box-shadow:0 18px 50px rgba(0,0,0,.35),inset 0 0 24px rgba(113,206,255,.06)
+}
+.form-emblem{
+ width:130px;height:130px;border-radius:50%;margin:8px auto;display:grid;place-items:center;font-size:70px;
+ background:radial-gradient(circle at 40% 35%,rgba(255,255,255,.15),rgba(73,170,255,.09),rgba(4,12,20,.85) 70%);
+ border:2px solid #4fcbe7;box-shadow:0 0 30px rgba(70,210,255,.2);
+ animation:floatBob 2.6s ease-in-out infinite
+}
+.morph-stage-strip{display:flex;gap:6px;margin:10px 0}
+.morph-stage-strip span{height:7px;flex:1;border-radius:99px;background:#183544;border:1px solid #27566a}
+.morph-stage-strip span.on{background:linear-gradient(90deg,#52dbff,#b87cff);box-shadow:0 0 10px rgba(89,219,255,.5)}
+.stat-orbit{position:relative;width:160px;height:160px;margin:8px auto}
+.stat-orbit .orb-core{position:absolute;inset:42px;border-radius:50%;display:grid;place-items:center;border:1px solid #4fd3ef;background:#081620;font-size:34px}
+.stat-orbit i{position:absolute;width:16px;height:16px;border-radius:50%;background:#64e8ff;box-shadow:0 0 12px #64e8ff}
+.stat-orbit i:nth-child(2){left:72px;top:0}
+.stat-orbit i:nth-child(3){right:7px;top:44px}
+.stat-orbit i:nth-child(4){right:22px;bottom:21px}
+.stat-orbit i:nth-child(5){left:18px;bottom:22px}
+.stat-orbit i:nth-child(6){left:4px;top:46px}
+.stat-orbit{animation:spinCore 12s linear infinite}
+.stat-orbit .orb-core{animation:spinCore 12s linear infinite reverse}
+.animated-gauge{position:relative;height:16px;border-radius:999px;overflow:hidden;border:1px solid #294b5d;background:#08151f}
+.animated-gauge>i{display:block;height:100%;background:linear-gradient(90deg,#4ce4ff,#9c78ff,#ffd76b);box-shadow:0 0 12px rgba(86,220,255,.45);transition:width .55s ease}
+.fx-button{position:relative;overflow:hidden}
+.fx-button::after{content:"";position:absolute;inset:-50%;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.18),transparent 60%);transform:translateX(-80%);transition:.45s}
+.fx-button:hover::after{transform:translateX(80%)}
+.screen-transition{animation:cardReveal .35s ease both}
+.mini-particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.mini-particles b{position:absolute;width:4px;height:4px;border-radius:50%;background:#8beaff;opacity:.55;animation:floatBob 2s ease-in-out infinite}
+.mini-particles b:nth-child(1){left:18%;top:22%}.mini-particles b:nth-child(2){left:70%;top:18%;animation-delay:.3s}
+.mini-particles b:nth-child(3){left:35%;top:66%;animation-delay:.7s}.mini-particles b:nth-child(4){left:82%;top:62%;animation-delay:1.1s}
+.mini-particles b:nth-child(5){left:52%;top:34%;animation-delay:1.5s}
+@media(max-width:700px){.morph-showcase{min-height:290px}.morph-creature{font-size:68px}.morph-platform{width:190px}}
+
+
+/* ===== EXCITEMENT OVERDRIVE ===== */
+@keyframes dangerPulse{0%,100%{box-shadow:0 0 0 rgba(255,86,86,0)}50%{box-shadow:0 0 28px rgba(255,86,86,.42)}}
+@keyframes jackpotPop{0%{transform:scale(.7) rotate(-2deg);opacity:0}60%{transform:scale(1.08) rotate(1deg);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes streakGlow{0%,100%{text-shadow:0 0 6px rgba(255,215,90,.35)}50%{text-shadow:0 0 20px rgba(255,215,90,.85)}}
+@keyframes eventSlide{0%{transform:translateY(18px);opacity:0}100%{transform:translateY(0);opacity:1}}
+@keyframes rareShimmer{0%{background-position:-160% 0}100%{background-position:160% 0}}
+.danger-card{border:1px solid #8c3a45;background:linear-gradient(145deg,#231018,#120b11);animation:dangerPulse 1.8s ease-in-out infinite;border-radius:14px;padding:12px}
+.reward-burst{border:1px solid #8e7426;background:linear-gradient(145deg,#2a2411,#151309);border-radius:14px;padding:14px;animation:jackpotPop .45s ease both}
+.combo-banner{font-weight:1000;font-size:18px;letter-spacing:.08em;color:#ffd75e;animation:streakGlow 1.3s ease-in-out infinite}
+.event-card{border:1px solid #355b70;background:linear-gradient(145deg,#0b1a26,#11192a);border-radius:14px;padding:12px;animation:eventSlide .35s ease both}
+.rare-loot{position:relative;overflow:hidden;border:1px solid #7c64a8;background:linear-gradient(110deg,#141126,#211635,#141126);background-size:220% 100%;animation:rareShimmer 2.4s linear infinite;border-radius:12px;padding:10px}
+.streak-meter{height:10px;border-radius:999px;background:#07131d;border:1px solid #23485a;overflow:hidden}
+.streak-meter i{display:block;height:100%;background:linear-gradient(90deg,#4fdfff,#8e7cff,#ffd35f);transition:width .35s ease}
+.choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.choice-grid button{min-height:54px}
+.critical-flash{border-color:#d95050!important;animation:dangerPulse 1.1s ease-in-out infinite}
+.expedition-score{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.score-box{border:1px solid #294b5c;border-radius:10px;padding:8px;text-align:center;background:#08141d}
+.score-box b{display:block;font-size:20px;color:#9ae9ff}
+@media(max-width:720px){.choice-grid,.expedition-score{grid-template-columns:1fr 1fr}}
+
+
+/* ===== SOCKET CRAFTING STATION ===== */
+.socket-station{
+  border:1px solid #45697e;border-radius:16px;padding:14px;
+  background:linear-gradient(145deg,#0a1722,#12172a);
+  box-shadow:inset 0 0 28px rgba(87,207,255,.05)
+}
+.socket-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px}
+.socket-slot{
+  min-height:96px;border:1px dashed #4c7187;border-radius:12px;padding:9px;
+  background:#08131d;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center
+}
+.socket-slot.filled{border-style:solid;border-color:#a277ff;background:linear-gradient(145deg,#121427,#1b1230)}
+.socket-gem{font-size:34px;filter:drop-shadow(0 0 12px rgba(173,120,255,.45))}
+.gem-card{border:1px solid #3a5566;border-radius:12px;padding:10px;background:#09141e}
+.gem-card.selected{border-color:#a879ff;background:#17132a}
+.gem-rarity{font-size:10px;font-weight:900;letter-spacing:.08em}
+.crafting-console{font-family:ui-monospace,monospace;font-size:12px;border:1px solid #28495b;background:#050f16;border-radius:9px;padding:10px;color:#94eaff}
+.socket-bonus{border:1px solid #3d5c70;border-radius:9px;padding:8px;margin:5px 0;background:#0a1722}
+.crafted-item{border:1px solid #8c6d28;border-radius:14px;padding:12px;background:linear-gradient(145deg,#282110,#141109)}
+@media(max-width:760px){.socket-grid{grid-template-columns:1fr}}
+
+
+/* ===== VEGAS TOP-DOWN VISUAL OVERHAUL ===== */
+:root{--vegasGold:#ffd45a;--vegasPink:#ff4fd8;--vegasCyan:#45eaff;--vegasRed:#ff5267}
+body{
+ background:
+ radial-gradient(circle at 10% 5%,rgba(255,69,218,.12),transparent 22%),
+ radial-gradient(circle at 90% 10%,rgba(69,234,255,.12),transparent 24%),
+ #03070d;
+}
+@keyframes neonBuzz{0%,18%,22%,100%{opacity:1}20%{opacity:.55}21%{opacity:.8}}
+@keyframes marquee{to{background-position:34px 0}}
+@keyframes casinoSpark{0%{transform:translateY(20px) scale(.3);opacity:0}45%{opacity:1}100%{transform:translateY(-70px) scale(1);opacity:0}}
+@keyframes floorPulse{0%,100%{box-shadow:inset 0 0 35px rgba(69,234,255,.04)}50%{box-shadow:inset 0 0 55px rgba(255,79,216,.09)}}
+.vegas-sign{
+ margin:10px 0 14px;border:2px solid var(--vegasGold);border-radius:20px;padding:13px;text-align:center;
+ background:#090712;box-shadow:0 0 12px rgba(255,212,90,.35),inset 0 0 20px rgba(255,79,216,.08);
+ position:relative;overflow:hidden
+}
+.vegas-sign:before,.vegas-sign:after{content:"✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦";position:absolute;left:0;right:0;color:#ffe477;font-size:10px;letter-spacing:8px}
+.vegas-sign:before{top:3px}.vegas-sign:after{bottom:3px}
+.vegas-sign h1{margin:4px;color:#fff;text-shadow:0 0 7px #fff,0 0 16px var(--vegasPink),0 0 28px var(--vegasPink);animation:neonBuzz 5s infinite}
+.vegas-sign .small{color:#9ef4ff}
+.topdown-shell{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:12px}
+.topdown-map{
+ position:relative;min-height:620px;border:2px solid #31566a;border-radius:18px;overflow:hidden;
+ background-color:#07131c;
+ background-image:
+ linear-gradient(rgba(69,234,255,.055) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(69,234,255,.055) 1px,transparent 1px),
+ radial-gradient(circle at 50% 50%,rgba(255,79,216,.08),transparent 42%);
+ background-size:32px 32px,32px 32px,100% 100%;
+ animation:floorPulse 4s ease-in-out infinite
+}
+.topdown-map:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 49.7%,rgba(255,212,90,.08) 50%,transparent 50.3%),linear-gradient(transparent 49.7%,rgba(255,212,90,.06) 50%,transparent 50.3%)}
+.map-room{
+ position:absolute;width:27%;min-height:105px;border:2px solid #3a6579;border-radius:12px;padding:9px;z-index:2;
+ background:linear-gradient(145deg,rgba(10,27,39,.96),rgba(12,16,30,.96));cursor:pointer;
+ box-shadow:0 8px 22px rgba(0,0,0,.4),inset 0 0 18px rgba(69,234,255,.05);transition:.2s
+}
+.map-room:hover{transform:translateY(-3px);border-color:var(--vegasCyan);box-shadow:0 0 22px rgba(69,234,255,.22)}
+.map-room.locked{filter:grayscale(.8);opacity:.42;cursor:not-allowed}
+.map-room.current{border-color:var(--vegasGold);box-shadow:0 0 12px rgba(255,212,90,.45),0 0 28px rgba(255,79,216,.2)}
+.map-room .room-lamp{font-size:28px}.map-room strong{display:block;color:#eafaff}.map-room span{font-size:10px;color:#91aebb}
+.room-a{left:4%;top:7%}.room-b{left:36.5%;top:5%}.room-c{right:4%;top:8%}
+.room-d{left:5%;top:38%}.room-e{right:5%;top:38%}
+.room-f{left:4%;bottom:7%}.room-g{left:36.5%;bottom:5%}.room-h{right:4%;bottom:7%}
+.player-marker{
+ position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;width:78px;height:78px;border-radius:50%;
+ display:grid;place-items:center;background:radial-gradient(circle,#1c3850,#07131d 68%);border:2px solid var(--vegasGold);
+ box-shadow:0 0 20px rgba(255,212,90,.35);font-size:34px
+}
+.player-marker:after{content:"YOU";position:absolute;top:80px;font-size:9px;font-weight:900;color:#ffd45a;letter-spacing:.14em}
+.map-path{position:absolute;z-index:1;background:linear-gradient(90deg,rgba(69,234,255,.15),rgba(255,79,216,.14));border:1px dashed rgba(111,215,255,.28)}
+.path-h{height:16px;left:18%;right:18%;top:49%}.path-v{width:16px;top:18%;bottom:18%;left:49%}
+.vegas-side .panel{border-color:#5b456c;background:linear-gradient(145deg,#0d1320,#160e20)}
+.jackpot-box{border:2px solid var(--vegasGold);border-radius:13px;padding:11px;text-align:center;background:#151006;box-shadow:inset 0 0 18px rgba(255,212,90,.08)}
+.jackpot-box b{font-size:25px;color:#ffe477;text-shadow:0 0 10px rgba(255,212,90,.5)}
+.neon-ticket{display:inline-block;border:1px solid var(--vegasPink);border-radius:99px;padding:4px 9px;color:#ffc4f1;background:#1c0b1a;box-shadow:0 0 10px rgba(255,79,216,.2)}
+.casino-console{border:1px solid #654a78;border-radius:12px;padding:10px;background:linear-gradient(180deg,#100c1a,#080c14)}
+.casino-console h3{color:#fff;text-shadow:0 0 9px var(--vegasPink)}
+.casino-lights{height:7px;border-radius:99px;background:repeating-linear-gradient(90deg,#ffd45a 0 8px,#ff4fd8 8px 16px,#45eaff 16px 24px,#ff5267 24px 32px);background-size:34px 100%;animation:marquee 1.1s linear infinite;margin:7px 0}
+@media(max-width:900px){.topdown-shell{grid-template-columns:1fr}.topdown-map{min-height:760px}.map-room{width:40%}.room-a{left:4%;top:5%}.room-b{right:4%;left:auto;top:5%}.room-c{left:4%;right:auto;top:27%}.room-d{right:4%;left:auto;top:27%}.room-e{left:4%;right:auto;top:55%}.room-f{right:4%;left:auto;top:55%;bottom:auto}.room-g{left:4%;bottom:4%}.room-h{right:4%;bottom:4%;left:auto}}
+
+
+/* PANEL NUMBER BADGES */
+.panel,.room-console,.socket-station,.danger-card,.reward-burst,.event-card,.casino-console,.jackpot-box,.form-reveal-card{position:relative}
+.panel-number{position:absolute;top:7px;right:8px;z-index:20;min-width:27px;height:27px;padding:0 7px;border-radius:999px;display:flex;align-items:center;justify-content:center;font:900 11px/1 ui-monospace,monospace;color:#071018;background:#ffd45a;border:1px solid #fff1a3;box-shadow:0 0 12px rgba(255,212,90,.42);pointer-events:none}
 </style>
 </head>
 <body>
@@ -405,6 +637,422 @@ const CREATURES=[
        req:"Phase evidence · Research 40+ · Comfort 65+",strength:"Phase routes and deep scouting",trade:"Higher catalyst cost",
        tags:["flight","phase","scan"],abilities:["Rift Glide","Ghost Mark","Far Sight","Slipstream Gate"],habitat:"Moonfield Expanse"}
     ]
+  },
+  {
+    key:"nova",name:"Nova",species:"Axolotl",sex:"Female",temperament:"Gentle / Curious",icon:"🦎",
+    origin:"Tidevault nursery",mystery:"Her gills pulse with submerged relay signals.",
+    condition:"Stable aquatic rescue",baseTags:["aquatic", "regeneration", "calm"],
+    morphs:[
+      {id:"glowgill",name:"Glowgill",icon:"✨🦎",theme:"Bioluminescent healing form",catalyst:"Luminous Brine",
+       req:"Hydration 80+ · Calm handling",strength:"Regeneration support and underwater light",trade:"Dry heat sensitivity",
+       tags:["swim", "light", "support"],abilities:["Glow Current", "Gill Mend", "Lantern Tail", "Soft Dive"],habitat:"Tidevault"},
+      {id:"riftnewt",name:"Riftnewt",icon:"🌀🦎",theme:"Phase-water scout",catalyst:"Lunar Saline",
+       req:"Phase evidence · Trust 55+",strength:"Hidden water-route discovery",trade:"Lower armor",
+       tags:["phase", "swim", "scan"],abilities:["Phase Gill", "Slip Pool", "Echo Fin", "Quiet Rift"],habitat:"Moonfield Expanse"},
+      {id:"coralbloom",name:"Coralbloom",icon:"🪸🦎",theme:"Reef support form",catalyst:"Reef Bloom Serum",
+       req:"Comfort 70+ · Reef sample",strength:"Camouflage and habitat repair",trade:"Slow on land",
+       tags:["swim", "support", "camouflage"],abilities:["Coral Veil", "Reef Mend", "Current Nest", "Pearl Sense"],habitat:"Flooded Megaruins"}
+    ]
+  },
+  {
+    key:"prism",name:"Prism",species:"Panther Chameleon",sex:"Male",temperament:"Watchful / Reserved",icon:"🦎",
+    origin:"Verdant Crown canopy",mystery:"He changes color before scanners detect environmental shifts.",
+    condition:"Stable; visual stress sensitive",baseTags:["camouflage", "climb", "scan"],
+    morphs:[
+      {id:"neonveil",name:"Neonveil",icon:"🌈🦎",theme:"Chromatic stealth form",catalyst:"Prism Resin",
+       req:"Trust 60+ · Light evidence",strength:"Adaptive camouflage and decoys",trade:"Bright flashes raise stress",
+       tags:["camouflage", "light", "scan"],abilities:["Spectrum Veil", "Branch Grip", "Mirror Blink", "Color Map"],habitat:"Verdant Crown"},
+      {id:"stormtongue",name:"Stormtongue",icon:"⚡🦎",theme:"Electrical hunter form",catalyst:"Charged Nectar",
+       req:"Energy 70+ · Storm evidence",strength:"Precision capture and charge sensing",trade:"Lower cold tolerance",
+       tags:["electric", "climb", "sensor"],abilities:["Arc Tongue", "Static Grip", "Bug Lock", "Relay Climb"],habitat:"Skygrave Archipelago"},
+      {id:"mossoracle",name:"Mossoracle",icon:"🌿🦎",theme:"Forest observation form",catalyst:"Moss Prism",
+       req:"Comfort 65+ · Forest evidence",strength:"Stealth scouting and plant reading",trade:"Slow in open terrain",
+       tags:["forest", "camouflage", "survey"],abilities:["Leaf Fade", "Bark Walk", "Canopy Eye", "Vine Trace"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"pixel",name:"Pixel",species:"Leopard Gecko",sex:"Female",temperament:"Alert / Food-motivated",icon:"🦎",
+    origin:"Ironroot service tunnels",mystery:"She tracks warm circuitry through walls.",
+    condition:"Stable; mild tail injury",baseTags:["heat", "crawl", "sensor"],
+    morphs:[
+      {id:"emberpad",name:"Emberpad",icon:"🔥🦎",theme:"Thermal maintenance form",catalyst:"Ember Gel",
+       req:"Heat evidence · Health 80+",strength:"Heat sensing and tight-space access",trade:"Cold drains energy",
+       tags:["heat", "crawl", "repair"],abilities:["Heat Toe", "Vent Crawl", "Warm Map", "Circuit Lick"],habitat:"Cinder Wastes"},
+      {id:"glassscale",name:"Glassscale",icon:"💎🦎",theme:"Crystal tunnel scout",catalyst:"Prism Dust",
+       req:"Crystal evidence · Trust 55+",strength:"Reflective armor and cavern sensing",trade:"Lower speed",
+       tags:["armor", "scan", "crawl"],abilities:["Crystal Step", "Shard Sense", "Mirror Skin", "Tunnel Ping"],habitat:"Shatterdeep"},
+      {id:"moonclaw",name:"Moonclaw",icon:"🌙🦎",theme:"Nocturnal phase crawler",catalyst:"Lunar Fiber",
+       req:"Phase evidence · Stress <40",strength:"Hidden route navigation",trade:"Weak in intense light",
+       tags:["phase", "stealth", "crawl"],abilities:["Moon Grip", "Shadow Crawl", "Rift Toe", "Night Blink"],habitat:"Moonfield Expanse"}
+    ]
+  },
+  {
+    key:"coil",name:"Coil",species:"Ball Python",sex:"Male",temperament:"Shy / Steady",icon:"🐍",
+    origin:"Archive heating vault",mystery:"He wraps dormant devices moments before they reactivate.",
+    condition:"Stable; dehydrated on intake",baseTags:["coil", "heat", "sensor"],
+    morphs:[
+      {id:"circuitcoil",name:"Circuitcoil",icon:"⚡🐍",theme:"Electrical conduit form",catalyst:"Charged Scale Matrix",
+       req:"Hydration 75+ · Storm evidence",strength:"Power routing and sensor tracing",trade:"Overcharge stress",
+       tags:["electric", "sensor", "crawl"],abilities:["Live Coil", "Circuit Sense", "Arc Wrap", "Relay Slide"],habitat:"Ironroot Basin"},
+      {id:"riftserpent",name:"Riftserpent",icon:"🌀🐍",theme:"Phase tunnel form",catalyst:"Lunar Scale Dust",
+       req:"Phase evidence · Trust 60+",strength:"Passage discovery and stealth",trade:"Lower defense",
+       tags:["phase", "stealth", "crawl"],abilities:["Rift Slip", "Silent Coil", "Gate Taste", "Shadow Loop"],habitat:"Moonfield Expanse"},
+      {id:"rootboa",name:"Rootboa",icon:"🌿🐍",theme:"Forest support form",catalyst:"Verdant Resin",
+       req:"Forest evidence · Comfort 70+",strength:"Vine traversal and support holds",trade:"Heat sensitivity",
+       tags:["forest", "support", "camouflage"],abilities:["Vine Coil", "Root Brace", "Leaf Sense", "Canopy Loop"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"atlas",name:"Atlas",species:"Sulcata Tortoise",sex:"Male",temperament:"Patient / Stubborn",icon:"🐢",
+    origin:"Cinder Wastes caravan route",mystery:"He follows buried geothermal lines with impossible accuracy.",
+    condition:"Stable; shell abrasion",baseTags:["armor", "dig", "endurance"],
+    morphs:[
+      {id:"fortressshell",name:"Fortressshell",icon:"🛡️🐢",theme:"Heavy rescue bulwark",catalyst:"Ferrous Shell Compound",
+       req:"Health 85+ · Mineral evidence",strength:"Defense and debris pushing",trade:"Very slow",
+       tags:["armor", "strength", "rescue"],abilities:["Shell Brace", "Debris Push", "Safe Dome", "Ground Lock"],habitat:"Ironroot Basin"},
+      {id:"sunvault",name:"Sunvault",icon:"☀️🐢",theme:"Solar endurance form",catalyst:"Solar Mineral Gel",
+       req:"Light evidence · Hydration 70+",strength:"Long-duration heat missions",trade:"Slow in cold",
+       tags:["heat", "light", "endurance"],abilities:["Sun Charge", "Heat Store", "Dune March", "Solar Shield"],habitat:"Cinder Wastes"},
+      {id:"mosskeep",name:"Mosskeep",icon:"🌿🐢",theme:"Living habitat form",catalyst:"Verdant Shell Moss",
+       req:"Forest evidence · Bond 60+",strength:"Shelter generation and support",trade:"Low sprint mobility",
+       tags:["forest", "support", "armor"],abilities:["Moss Roof", "Seed Trail", "Root Rest", "Green Bastion"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"echo",name:"Echo",species:"Flying Fox Bat",sex:"Female",temperament:"Social / Sensitive",icon:"🦇",
+    origin:"Shatterdeep upper vault",mystery:"She hears silent machinery through stone.",
+    condition:"Stable; healed wing membrane",baseTags:["flight", "sonic", "night"],
+    morphs:[
+      {id:"sonarshade",name:"Sonarshade",icon:"🔊🦇",theme:"Deep-echo scout",catalyst:"Resonance Membrane",
+       req:"Sonic evidence · Trust 55+",strength:"Cavern mapping and object detection",trade:"Noise overload risk",
+       tags:["flight", "sonic", "scan"],abilities:["Echo Grid", "Silent Wing", "Vault Ping", "Resonance Mark"],habitat:"Shatterdeep"},
+      {id:"nightrelay",name:"Nightrelay",icon:"🌙🦇",theme:"Nocturnal courier",catalyst:"Lunar Nectar",
+       req:"Phase evidence · Energy 65+",strength:"Fast night navigation",trade:"Day missions cost energy",
+       tags:["flight", "phase", "relay"],abilities:["Moon Flight", "Relay Chirp", "Dark Route", "Cave Blink"],habitat:"Moonfield Expanse"},
+      {id:"stormsonic",name:"Stormsonic",icon:"⚡🦇",theme:"Electrical sonar form",catalyst:"Charged Fruit Gel",
+       req:"Storm evidence · Comfort 65+",strength:"Weather and relay sensing",trade:"Static raises stress",
+       tags:["flight", "electric", "sonic"],abilities:["Thunder Ping", "Arc Wing", "Cloud Echo", "Storm Track"],habitat:"Skygrave Archipelago"}
+    ]
+  },
+  {
+    key:"mango",name:"Mango",species:"Hyacinth Macaw",sex:"Male",temperament:"Loud / Clever",icon:"🦜",
+    origin:"Skygrave trading perch",mystery:"He repeats fragments of encoded radio traffic.",
+    condition:"Stable; feather damage",baseTags:["flight", "social", "signal"],
+    morphs:[
+      {id:"signalplume",name:"Signalplume",icon:"📡🦜",theme:"Relay intelligence form",catalyst:"Signal Prism",
+       req:"Signal evidence · Trust 60+",strength:"Decode relays and mimic tones",trade:"Easily distracted",
+       tags:["flight", "signal", "scan"],abilities:["Code Cry", "Relay Mimic", "Beacon Feather", "Sky Decode"],habitat:"Skygrave Archipelago"},
+      {id:"sunmacaw",name:"Sunmacaw",icon:"☀️🦜",theme:"Radiant morale form",catalyst:"Solar Nectar",
+       req:"Light evidence · Bond 55+",strength:"Team support and beacon visibility",trade:"Reduced stealth",
+       tags:["flight", "light", "support"],abilities:["Sun Call", "Bright Wing", "Morale Cry", "Horizon Flash"],habitat:"Cinder Wastes"},
+      {id:"junglecipher",name:"Junglecipher",icon:"🌿🦜",theme:"Canopy codebreaker",catalyst:"Verdant Data Seed",
+       req:"Forest evidence · Research 35+",strength:"Canopy scouting and decoding",trade:"Low armor",
+       tags:["forest", "signal", "survey"],abilities:["Canopy Code", "Vine Flight", "Seed Cipher", "Flock Map"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"zip",name:"Zip",species:"Sugar Glider",sex:"Female",temperament:"Curious / Social",icon:"🐿️",
+    origin:"Verdant Crown med canopy",mystery:"She glides toward hidden weak electrical fields.",
+    condition:"Stable; low body condition",baseTags:["glide", "climb", "social"],
+    morphs:[
+      {id:"voltglider",name:"Voltglider",icon:"⚡🐿️",theme:"Electrical canopy courier",catalyst:"Charged Sap",
+       req:"Energy 70+ · Storm evidence",strength:"Relay delivery and glide control",trade:"Low armor",
+       tags:["electric", "glide", "relay"],abilities:["Arc Glide", "Tree Relay", "Static Tail", "Branch Dash"],habitat:"Skygrave Archipelago"},
+      {id:"moonpouch",name:"Moonpouch",icon:"🌙🐿️",theme:"Phase-glide scout",catalyst:"Lunar Sap",
+       req:"Phase evidence · Trust 55+",strength:"Hidden-path reconnaissance",trade:"Daylight penalty",
+       tags:["phase", "glide", "stealth"],abilities:["Moon Glide", "Pouch Cache", "Night Skip", "Silent Branch"],habitat:"Moonfield Expanse"},
+      {id:"mosswing",name:"Mosswing",icon:"🌿🐿️",theme:"Forest support glider",catalyst:"Verdant Nectar",
+       req:"Forest evidence · Comfort 70+",strength:"Canopy support and supplies",trade:"Weak in barren biomes",
+       tags:["forest", "glide", "support"],abilities:["Leaf Glide", "Supply Pouch", "Nest Mend", "Canopy Route"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"saffron",name:"Saffron",species:"Fennec Fox",sex:"Female",temperament:"Bold / Restless",icon:"🦊",
+    origin:"Cinder Wastes dune station",mystery:"Her ears detect movement beneath glass dunes.",
+    condition:"Stable; healed paw pads",baseTags:["heat", "hearing", "speed"],
+    morphs:[
+      {id:"dunesonar",name:"Dunesonar",icon:"🏜️🦊",theme:"Desert survey form",catalyst:"Ember Sand Serum",
+       req:"Heat evidence · Mobility 70+",strength:"Subsurface detection and heat travel",trade:"Cold vulnerability",
+       tags:["heat", "scan", "speed"],abilities:["Dune Ear", "Glass Sprint", "Buried Ping", "Heat Trail"],habitat:"Cinder Wastes"},
+      {id:"stormear",name:"Stormear",icon:"⛈️🦊",theme:"Weather-listening scout",catalyst:"Charged Skyglass",
+       req:"Storm evidence · Trust 55+",strength:"Long-range storm detection",trade:"Confined stress",
+       tags:["electric", "sensor", "speed"],abilities:["Storm Ear", "Arc Sprint", "Cloud Listen", "Relay Dig"],habitat:"Skygrave Archipelago"},
+      {id:"moonfennec",name:"Moonfennec",icon:"🌙🦊",theme:"Phase desert scout",catalyst:"Lunar Dust Gel",
+       req:"Phase evidence · Comfort 65+",strength:"Night route discovery",trade:"Bright heat lowers focus",
+       tags:["phase", "stealth", "speed"],abilities:["Moon Dash", "Rift Ear", "Quiet Burrow", "Night Map"],habitat:"Moonfield Expanse"}
+    ]
+  },
+  {
+    key:"ink",name:"Ink",species:"Giant Pacific Octopus",sex:"Female",temperament:"Problem-solving / Wary",icon:"🐙",
+    origin:"Tidevault research dome",mystery:"She opens sealed equipment cases without damaging locks.",
+    condition:"Stable; arm abrasion",baseTags:["aquatic", "smart", "grip"],
+    morphs:[
+      {id:"cipheroct",name:"Cipheroct",icon:"🔐🐙",theme:"Aquatic systems hacker",catalyst:"Data Brine",
+       req:"Research 45+ · Signal evidence",strength:"Device access and puzzles",trade:"Aquatic only",
+       tags:["swim", "signal", "control"],abilities:["Eight-Key Override", "Ink Cipher", "Console Grip", "Valve Solve"],habitat:"Tidevault"},
+      {id:"stormtentacle",name:"Stormtentacle",icon:"⚡🐙",theme:"Electrical salvage form",catalyst:"Charged Brine",
+       req:"Storm evidence · Hydration 85+",strength:"Underwater power repair",trade:"Energy intensive",
+       tags:["swim", "electric", "repair"],abilities:["Arc Arm", "Cable Grip", "Current Patch", "Static Ink"],habitat:"Flooded Megaruins"},
+      {id:"prismkraken",name:"Prismkraken",icon:"💎🐙",theme:"Crystal camouflage form",catalyst:"Prism Saline",
+       req:"Crystal evidence · Trust 60+",strength:"Camouflage and scanning",trade:"Lower strength",
+       tags:["swim", "camouflage", "scan"],abilities:["Prism Skin", "Shard Eye", "Mirror Ink", "Cave Grip"],habitat:"Shatterdeep"}
+    ]
+  },
+  {
+    key:"snap",name:"Snap",species:"Peacock Mantis Shrimp",sex:"Male",temperament:"Territorial / Alert",icon:"🦐",
+    origin:"Tidevault pressure lab",mystery:"He reacts to polarized patterns invisible to cameras.",
+    condition:"Stable; molting recovery",baseTags:["aquatic", "vision", "impact"],
+    morphs:[
+      {id:"prismstrike",name:"Prismstrike",icon:"🌈🦐",theme:"Polarized rescue form",catalyst:"Prism Brine",
+       req:"Light evidence · Health 85+",strength:"Visual detection and debris cracking",trade:"High energy use",
+       tags:["swim", "light", "break"],abilities:["Polar Sight", "Rescue Strike", "Shard Crack", "Spectrum Ping"],habitat:"Tidevault"},
+      {id:"thunderclaw",name:"Thunderclaw",icon:"⚡🦐",theme:"Cavitation power form",catalyst:"Charged Saline",
+       req:"Storm evidence · Energy 75+",strength:"Rapid barrier breaking",trade:"Needs recovery",
+       tags:["swim", "electric", "strength"],abilities:["Cavitation Pop", "Arc Claw", "Pressure Dash", "Shock Sense"],habitat:"Flooded Megaruins"},
+      {id:"reefwarden",name:"Reefwarden",icon:"🪸🦐",theme:"Reef defense form",catalyst:"Coral Mineral Serum",
+       req:"Reef evidence · Comfort 70+",strength:"Habitat defense and repair",trade:"Slower travel",
+       tags:["swim", "armor", "support"],abilities:["Reef Brace", "Coral Patch", "Current Guard", "Shell Signal"],habitat:"Flooded Megaruins"}
+    ]
+  },
+  {
+    key:"velvet",name:"Velvet",species:"Mexican Redknee Tarantula",sex:"Female",temperament:"Calm / Defensive",icon:"🕷️",
+    origin:"Archive specimen conservatory",mystery:"Her web follows hidden vibration paths in the floor.",
+    condition:"Stable; recent molt",baseTags:["web", "vibration", "crawl"],
+    morphs:[
+      {id:"signalweb",name:"Signalweb",icon:"📡🕷️",theme:"Vibration-network form",catalyst:"Conductive Silk",
+       req:"Signal evidence · Stress <35",strength:"Relay webs and sensing",trade:"Low sprint speed",
+       tags:["web", "signal", "sensor"],abilities:["Relay Web", "Vibration Read", "Silk Beacon", "Floor Map"],habitat:"Ironroot Basin"},
+      {id:"moonspinner",name:"Moonspinner",icon:"🌙🕷️",theme:"Phase silk scout",catalyst:"Lunar Silk Dust",
+       req:"Phase evidence · Trust 55+",strength:"Hidden-route web anchors",trade:"Heat fragile",
+       tags:["web", "phase", "stealth"],abilities:["Rift Thread", "Moon Web", "Silent Climb", "Gate Anchor"],habitat:"Moonfield Expanse"},
+      {id:"crystalweaver",name:"Crystalweaver",icon:"💎🕷️",theme:"Prism-web architect",catalyst:"Shard Silk",
+       req:"Crystal evidence · Comfort 65+",strength:"Crystal bridges and scans",trade:"Setup time",
+       tags:["web", "light", "support"],abilities:["Prism Web", "Shard Bridge", "Mirror Thread", "Cave Net"],habitat:"Shatterdeep"}
+    ]
+  },
+  {
+    key:"ember",name:"Ember",species:"Emperor Scorpion",sex:"Male",temperament:"Defensive / Still",icon:"🦂",
+    origin:"Cinder Wastes night station",mystery:"He fluoresces near unstable mineral seams.",
+    condition:"Stable; minor claw damage",baseTags:["armor", "night", "sensor"],
+    morphs:[
+      {id:"radarsting",name:"Radarsting",icon:"📡🦂",theme:"Mineral sensor form",catalyst:"Ferrous Venom Matrix",
+       req:"Mineral evidence · Health 80+",strength:"Ore detection and armor",trade:"Low speed",
+       tags:["armor", "ore", "sensor"],abilities:["Ore Sting", "Ground Radar", "Plate Crawl", "Seam Mark"],habitat:"Ironroot Basin"},
+      {id:"neonsting",name:"Neonsting",icon:"💜🦂",theme:"Ultraviolet scout form",catalyst:"Prism Venom Gel",
+       req:"Light evidence · Trust 55+",strength:"Hidden marking detection",trade:"Heat drains energy",
+       tags:["light", "scan", "armor"],abilities:["UV Glow", "Trace Sting", "Night Mark", "Prism Claw"],habitat:"Shatterdeep"},
+      {id:"duneguard",name:"Duneguard",icon:"🏜️🦂",theme:"Desert defense form",catalyst:"Ember Salt Matrix",
+       req:"Heat evidence · Comfort 60+",strength:"Heat endurance and protection",trade:"Weak in flooded zones",
+       tags:["heat", "armor", "guard"],abilities:["Sand Brace", "Heat Claw", "Dune Burrow", "Guard Sting"],habitat:"Cinder Wastes"}
+    ]
+  },
+  {
+    key:"blade",name:"Blade",species:"Orchid Mantis",sex:"Female",temperament:"Still / Precise",icon:"🦗",
+    origin:"Verdant Crown orchid hall",mystery:"She mimics local flowers with impossible accuracy.",
+    condition:"Stable; forelimb strain",baseTags:["camouflage", "precision", "climb"],
+    morphs:[
+      {id:"petalghost",name:"Petalghost",icon:"🌸🦗",theme:"Floral stealth form",catalyst:"Orchid Resin",
+       req:"Forest evidence · Stress <35",strength:"Exceptional camouflage",trade:"Low armor",
+       tags:["forest", "camouflage", "stealth"],abilities:["Petal Fade", "Still Strike", "Bloom Step", "Flower Scan"],habitat:"Verdant Crown"},
+      {id:"prismantis",name:"Prismantis",icon:"💎🦗",theme:"Crystal precision form",catalyst:"Prism Nectar",
+       req:"Crystal evidence · Trust 60+",strength:"Fine manipulation and scanning",trade:"Fragile",
+       tags:["light", "precision", "scan"],abilities:["Shard Eye", "Glass Claw", "Mirror Pose", "Crystal Lock"],habitat:"Shatterdeep"},
+      {id:"stormblade",name:"Stormblade",icon:"⚡🦗",theme:"Charged interception form",catalyst:"Charged Nectar",
+       req:"Storm evidence · Energy 70+",strength:"Fast reaction and relay guard",trade:"High energy use",
+       tags:["electric", "speed", "guard"],abilities:["Arc Claw", "Static Pose", "Relay Guard", "Flash Step"],habitat:"Skygrave Archipelago"}
+    ]
+  },
+  {
+    key:"chrome",name:"Chrome",species:"Hercules Beetle",sex:"Male",temperament:"Steady / Powerful",icon:"🪲",
+    origin:"Ironroot fabrication garden",mystery:"He pushes test blocks far beyond expected capacity.",
+    condition:"Stable; horn abrasion",baseTags:["armor", "strength", "climb"],
+    morphs:[
+      {id:"ironhorn",name:"Ironhorn",icon:"⚙️🪲",theme:"Heavy lifting form",catalyst:"Ferrous Chitin Gel",
+       req:"Mineral evidence · Health 85+",strength:"Pushing and lifting",trade:"Slow turning",
+       tags:["armor", "strength", "ore"],abilities:["Horn Lift", "Plate Push", "Ore Grip", "Steel Brace"],habitat:"Ironroot Basin"},
+      {id:"stormscarab",name:"Stormscarab",icon:"⚡🪲",theme:"Charge-storage form",catalyst:"Storm Chitin",
+       req:"Storm evidence · Energy 65+",strength:"Portable power and repair",trade:"Overcharge stress",
+       tags:["electric", "armor", "repair"],abilities:["Charge Shell", "Arc Horn", "Battery Crawl", "Relay Brace"],habitat:"Skygrave Archipelago"},
+      {id:"sunscarab",name:"Sunscarab",icon:"☀️🪲",theme:"Solar endurance form",catalyst:"Solar Resin",
+       req:"Light evidence · Comfort 65+",strength:"Long-duration surface work",trade:"Night penalty",
+       tags:["light", "armor", "endurance"],abilities:["Sun Shell", "Heat Store", "Bright Horn", "Dune March"],habitat:"Cinder Wastes"}
+    ]
+  },
+  {
+    key:"luna",name:"Luna",species:"Luna Moth",sex:"Female",temperament:"Gentle / Fragile",icon:"🦋",
+    origin:"Moonfield greenhouse",mystery:"She gathers around phase-gate emissions, not lamps.",
+    condition:"Stable; wing scale loss",baseTags:["flight", "night", "delicate"],
+    morphs:[
+      {id:"phasewing",name:"Phasewing",icon:"🌙🦋",theme:"Gate-reading moth",catalyst:"Lunar Nectar",
+       req:"Phase evidence · Trust 60+",strength:"Phase navigation",trade:"Very low armor",
+       tags:["flight", "phase", "scan"],abilities:["Gate Dust", "Moon Flutter", "Rift Sense", "Silent Beacon"],habitat:"Moonfield Expanse"},
+      {id:"auroramoth",name:"Auroramoth",icon:"🌌🦋",theme:"Light-signaling form",catalyst:"Prism Nectar",
+       req:"Light evidence · Comfort 70+",strength:"Long-range signaling",trade:"Weather sensitive",
+       tags:["flight", "light", "signal"],abilities:["Aurora Dust", "Beacon Wing", "Prism Trail", "Glow Map"],habitat:"Aster Reach"},
+      {id:"mossmoth",name:"Mossmoth",icon:"🌿🦋",theme:"Canopy pollination form",catalyst:"Verdant Nectar",
+       req:"Forest evidence · Bond 55+",strength:"Habitat restoration",trade:"Slow in storms",
+       tags:["flight", "forest", "support"],abilities:["Pollen Wave", "Leaf Rest", "Bloom Trail", "Canopy Mend"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"buzz",name:"Buzz",species:"Carpenter Bee",sex:"Female",temperament:"Driven / Social",icon:"🐝",
+    origin:"Verdant fabrication hive",mystery:"She builds tunnel patterns matching Institute circuitry.",
+    condition:"Stable; wing fatigue",baseTags:["flight", "build", "social"],
+    morphs:[
+      {id:"circuitbee",name:"Circuitbee",icon:"⚡🐝",theme:"Micro-repair form",catalyst:"Conductive Pollen",
+       req:"Storm evidence · Research 30+",strength:"Circuit repair and tiny access",trade:"Low durability",
+       tags:["flight", "electric", "repair"],abilities:["Circuit Dust", "Wire Crawl", "Relay Buzz", "Micro Patch"],habitat:"Ironroot Basin"},
+      {id:"solarbee",name:"Solarbee",icon:"☀️🐝",theme:"Energy-harvest form",catalyst:"Solar Nectar",
+       req:"Light evidence · Energy 70+",strength:"Solar charge transfer",trade:"Needs nectar",
+       tags:["flight", "light", "support"],abilities:["Sun Pollen", "Charge Hive", "Bright Buzz", "Energy Share"],habitat:"Cinder Wastes"},
+      {id:"orchidbee",name:"Orchidbee",icon:"🌸🐝",theme:"Habitat pollinator",catalyst:"Orchid Resin",
+       req:"Forest evidence · Comfort 65+",strength:"Plant restoration",trade:"Weak in barren terrain",
+       tags:["flight", "forest", "support"],abilities:["Bloom Route", "Pollen Map", "Hive Mend", "Flower Mark"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"marshal",name:"Marshal",species:"Leafcutter Ant",sex:"Female",temperament:"Coordinated / Tireless",icon:"🐜",
+    origin:"Verdant Crown colony vault",mystery:"She reroutes workers around damaged systems before alarms.",
+    condition:"Stable colony representative",baseTags:["swarm", "build", "trail"],
+    morphs:[
+      {id:"relayant",name:"Relayant",icon:"📡🐜",theme:"Signal trail architect",catalyst:"Data Pheromone Gel",
+       req:"Signal evidence · Research 35+",strength:"Route marking and logistics",trade:"Low solo power",
+       tags:["swarm", "signal", "support"],abilities:["Pheromone Grid", "Relay Trail", "Colony Map", "Supply Chain"],habitat:"Ironroot Basin"},
+      {id:"ironant",name:"Ironant",icon:"⚙️🐜",theme:"Heavy worker form",catalyst:"Ferrous Nectar",
+       req:"Mineral evidence · Health 80+",strength:"Micro-hauling and construction",trade:"Slow individually",
+       tags:["swarm", "strength", "build"],abilities:["Ore Carry", "Bridge Chain", "Tunnel Brace", "Load Route"],habitat:"Ironroot Basin"},
+      {id:"moonant",name:"Moonant",icon:"🌙🐜",theme:"Phase-route colony",catalyst:"Lunar Pheromone",
+       req:"Phase evidence · Trust 55+",strength:"Hidden path networking",trade:"Bright zones disrupt trails",
+       tags:["swarm", "phase", "scan"],abilities:["Rift Trail", "Moon Marker", "Hidden Colony", "Gate Chain"],habitat:"Moonfield Expanse"}
+    ]
+  },
+  {
+    key:"twig",name:"Twig",species:"Giant Stick Insect",sex:"Male",temperament:"Still / Gentle",icon:"🪲",
+    origin:"Verdant Crown research arbor",mystery:"He disappears from optical tracking while resting.",
+    condition:"Stable; limb regeneration",baseTags:["camouflage", "climb", "forest"],
+    morphs:[
+      {id:"ghostbranch",name:"Ghostbranch",icon:"🌿🪲",theme:"Extreme camouflage form",catalyst:"Verdant Fiber",
+       req:"Forest evidence · Stress <30",strength:"Near-perfect concealment",trade:"Very low defense",
+       tags:["forest", "camouflage", "stealth"],abilities:["Branch Fade", "Leaf Pose", "Canopy Crawl", "Still Map"],habitat:"Verdant Crown"},
+      {id:"crystalstick",name:"Crystalstick",icon:"💎🪲",theme:"Reflective survey form",catalyst:"Prism Fiber",
+       req:"Crystal evidence · Trust 55+",strength:"Optical mapping",trade:"Fragile",
+       tags:["light", "scan", "climb"],abilities:["Glass Pose", "Shard Step", "Mirror Limb", "Prism Survey"],habitat:"Shatterdeep"},
+      {id:"stormtwig",name:"Stormtwig",icon:"⚡🪲",theme:"Static-sensing climber",catalyst:"Charged Fiber",
+       req:"Storm evidence · Energy 60+",strength:"Electrical field detection",trade:"High-wind weakness",
+       tags:["electric", "sensor", "climb"],abilities:["Static Limb", "Wire Walk", "Charge Sense", "Relay Perch"],habitat:"Skygrave Archipelago"}
+    ]
+  },
+  {
+    key:"clack",name:"Clack",species:"Hermit Crab",sex:"Male",temperament:"Cautious / Resourceful",icon:"🦀",
+    origin:"Tidevault salvage deck",mystery:"He picks discarded shells containing useful electronics.",
+    condition:"Stable; shell mismatch",baseTags:["aquatic", "salvage", "armor"],
+    morphs:[
+      {id:"shelltech",name:"Shelltech",icon:"⚙️🦀",theme:"Modular salvage form",catalyst:"Machine Shell Core",
+       req:"Research 35+ · Scrap evidence",strength:"Interchangeable shells",trade:"Slow unshelled",
+       tags:["armor", "repair", "salvage"],abilities:["Shell Swap", "Scrap Sense", "Clamp Fix", "Cargo Carry"],habitat:"Ironroot Basin"},
+      {id:"reefcrab",name:"Reefcrab",icon:"🪸🦀",theme:"Habitat restoration form",catalyst:"Coral Shell Gel",
+       req:"Reef evidence · Comfort 65+",strength:"Reef repair and shelter",trade:"Low speed",
+       tags:["swim", "support", "armor"],abilities:["Coral Shell", "Reef Patch", "Sand Carry", "Tide Shelter"],habitat:"Flooded Megaruins"},
+      {id:"mooncrab",name:"Mooncrab",icon:"🌙🦀",theme:"Phase-shell scout",catalyst:"Lunar Shell Dust",
+       req:"Phase evidence · Trust 55+",strength:"Hidden caches and scouting",trade:"Dry heat drains energy",
+       tags:["phase", "armor", "scan"],abilities:["Rift Shell", "Moon Crawl", "Cache Sense", "Gate Clamp"],habitat:"Moonfield Expanse"}
+    ]
+  },
+  {
+    key:"spiral",name:"Spiral",species:"Giant African Land Snail",sex:"Female",temperament:"Slow / Curious",icon:"🐌",
+    origin:"Institute humidity garden",mystery:"Her trail fluoresces near unstable resonance.",
+    condition:"Stable; shell chip",baseTags:["trail", "humidity", "sensor"],
+    morphs:[
+      {id:"signaltrail",name:"Signaltrail",icon:"📡🐌",theme:"Resonance mapping form",catalyst:"Conductive Mucus Gel",
+       req:"Signal evidence · Comfort 70+",strength:"Persistent route mapping",trade:"Extremely slow",
+       tags:["signal", "support", "sensor"],abilities:["Glow Trail", "Resonance Slime", "Route Seal", "Wall Read"],habitat:"Shatterdeep"},
+      {id:"mosscoil",name:"Mosscoil",icon:"🌿🐌",theme:"Habitat gardener form",catalyst:"Verdant Calcium",
+       req:"Forest evidence · Hydration 80+",strength:"Soil and plant recovery",trade:"Heat sensitivity",
+       tags:["forest", "support", "trail"],abilities:["Moss Trail", "Soil Mend", "Seed Carry", "Leaf Sense"],habitat:"Verdant Crown"},
+      {id:"prismshell",name:"Prismshell",icon:"💎🐌",theme:"Crystal armor form",catalyst:"Prism Calcium",
+       req:"Crystal evidence · Health 80+",strength:"Reflective shell scanning",trade:"Very slow",
+       tags:["armor", "light", "scan"],abilities:["Shard Shell", "Crystal Trail", "Mirror Curl", "Cave Read"],habitat:"Shatterdeep"}
+    ]
+  },
+  {
+    key:"mint",name:"Mint",species:"Red-Eyed Tree Frog",sex:"Female",temperament:"Alert / Delicate",icon:"🐸",
+    origin:"Verdant Crown mist lab",mystery:"She calls minutes before pressure shifts.",
+    condition:"Stable; hydration monitored",baseTags:["jump", "humidity", "sensor"],
+    morphs:[
+      {id:"stormfrog",name:"Stormfrog",icon:"⛈️🐸",theme:"Weather prediction form",catalyst:"Charged Mist",
+       req:"Storm evidence · Hydration 85+",strength:"Weather sensing and jumps",trade:"Dry zones dangerous",
+       tags:["electric", "jump", "sensor"],abilities:["Storm Call", "Rain Leap", "Cloud Sense", "Static Toe"],habitat:"Skygrave Archipelago"},
+      {id:"orchidfrog",name:"Orchidfrog",icon:"🌸🐸",theme:"Canopy camouflage form",catalyst:"Orchid Mist",
+       req:"Forest evidence · Stress <35",strength:"Camouflage and plant sensing",trade:"Low armor",
+       tags:["forest", "camouflage", "support"],abilities:["Petal Skin", "Vine Leap", "Bloom Call", "Leaf Mend"],habitat:"Verdant Crown"},
+      {id:"moonfrog",name:"Moonfrog",icon:"🌙🐸",theme:"Phase-pool form",catalyst:"Lunar Mist",
+       req:"Phase evidence · Trust 55+",strength:"Short phase jumps",trade:"Bright heat lowers focus",
+       tags:["phase", "jump", "scan"],abilities:["Moon Leap", "Rift Croak", "Pool Gate", "Night Toe"],habitat:"Moonfield Expanse"}
+    ]
+  },
+  {
+    key:"coral",name:"Coral",species:"Seahorse",sex:"Male",temperament:"Calm / Protective",icon:"🐠",
+    origin:"Tidevault nursery reef",mystery:"He anchors to equipment just before current surges.",
+    condition:"Stable; brood pouch monitored",baseTags:["aquatic", "anchor", "support"],
+    morphs:[
+      {id:"currentkeeper",name:"Currentkeeper",icon:"🌊🐠",theme:"Flow stabilization form",catalyst:"Current Enzyme",
+       req:"Hydration 90+ · Current evidence",strength:"Current control and nursery protection",trade:"Aquatic only",
+       tags:["swim", "support", "current"],abilities:["Anchor Tail", "Nursery Shield", "Flow Calm", "Reef Hold"],habitat:"Tidevault"},
+      {id:"prismhorse",name:"Prismhorse",icon:"💎🐠",theme:"Crystal reef scout",catalyst:"Prism Brine",
+       req:"Crystal evidence · Trust 60+",strength:"Optical scanning and camouflage",trade:"Fragile",
+       tags:["swim", "light", "scan"],abilities:["Prism Tail", "Shard Eye", "Mirror Drift", "Reef Map"],habitat:"Shatterdeep"},
+      {id:"stormhorse",name:"Stormhorse",icon:"⚡🐠",theme:"Electrical current form",catalyst:"Charged Brine",
+       req:"Storm evidence · Energy 65+",strength:"Current sensing and relay tagging",trade:"Frequent rest",
+       tags:["swim", "electric", "sensor"],abilities:["Static Tail", "Surge Hold", "Relay Drift", "Storm Sense"],habitat:"Flooded Megaruins"}
+    ]
+  },
+  {
+    key:"pebble",name:"Pebble",species:"African Pygmy Hedgehog",sex:"Female",temperament:"Cautious / Busy",icon:"🦔",
+    origin:"Ironroot clinic garden",mystery:"She curls near damaged power conduits.",
+    condition:"Stable; mild dehydration",baseTags:["armor", "sniff", "small"],
+    morphs:[
+      {id:"circuitspine",name:"Circuitspine",icon:"⚡🦔",theme:"Maintenance scout",catalyst:"Conductive Keratin",
+       req:"Signal evidence · Hydration 75+",strength:"Fault detection and cable crawling",trade:"Low speed",
+       tags:["electric", "sensor", "repair"],abilities:["Static Spine", "Cable Sniff", "Fault Curl", "Relay Roll"],habitat:"Ironroot Basin"},
+      {id:"mossball",name:"Mossball",icon:"🌿🦔",theme:"Forest support form",catalyst:"Verdant Keratin",
+       req:"Forest evidence · Comfort 70+",strength:"Seed transport and shelter",trade:"Heat weak",
+       tags:["forest", "support", "armor"],abilities:["Seed Spine", "Moss Curl", "Trail Sniff", "Leaf Nest"],habitat:"Verdant Crown"},
+      {id:"moonspike",name:"Moonspike",icon:"🌙🦔",theme:"Phase defense form",catalyst:"Lunar Keratin",
+       req:"Phase evidence · Trust 55+",strength:"Protected hidden-route scouting",trade:"Low sprint speed",
+       tags:["phase", "armor", "scan"],abilities:["Rift Curl", "Moon Spine", "Hidden Sniff", "Gate Roll"],habitat:"Moonfield Expanse"}
+    ]
+  },
+  {
+    key:"gizmo",name:"Gizmo",species:"African Pygmy Dormouse",sex:"Male",temperament:"Fast / Nervous",icon:"🐭",
+    origin:"Institute ventilation arboretum",mystery:"He steals only components emitting weak resonance.",
+    condition:"Stable; underweight",baseTags:["climb", "speed", "cache"],
+    morphs:[
+      {id:"cacheghost",name:"Cacheghost",icon:"🌙🐭",theme:"Hidden-cache scout",catalyst:"Lunar Nut Gel",
+       req:"Phase evidence · Trust 55+",strength:"Caches and narrow routes",trade:"Very low armor",
+       tags:["phase", "speed", "scan"],abilities:["Cache Blink", "Vent Run", "Moon Stash", "Quiet Climb"],habitat:"Moonfield Expanse"},
+      {id:"wiremouse",name:"Wiremouse",icon:"⚡🐭",theme:"Micro-electrical repair form",catalyst:"Charged Seed",
+       req:"Signal evidence · Energy 65+",strength:"Cable routing and maintenance",trade:"Open-space stress",
+       tags:["electric", "repair", "crawl"],abilities:["Wire Dash", "Cable Bite", "Relay Nest", "Static Whisker"],habitat:"Ironroot Basin"},
+      {id:"mossmouse",name:"Mossmouse",icon:"🌿🐭",theme:"Canopy cache form",catalyst:"Verdant Seed",
+       req:"Forest evidence · Comfort 65+",strength:"Seed recovery and climbing",trade:"Heat sensitive",
+       tags:["forest", "climb", "camouflage"],abilities:["Leaf Cache", "Bark Dash", "Seed Sense", "Nest Mend"],habitat:"Verdant Crown"}
+    ]
+  },
+  {
+    key:"opal",name:"Opal",species:"Blue-Ringed Octopus",sex:"Female",temperament:"Alert / Solitary",icon:"🐙",
+    origin:"Tidevault secure habitat",mystery:"Her rings flash repeating numerical sequences around damaged relays.",
+    condition:"Stable; secure habitat",baseTags:["aquatic", "signal", "camouflage"],
+    morphs:[
+      {id:"codering",name:"Code-Ring",icon:"🔵🐙",theme:"Signal-display form",catalyst:"Data Brine",
+       req:"Signal evidence · Research 45+",strength:"Visual code and device reading",trade:"Aquatic only",
+       tags:["swim", "signal", "scan"],abilities:["Ring Code", "Ink Screen", "Relay Grip", "Pattern Read"],habitat:"Tidevault"},
+      {id:"phasering",name:"Phase-Ring",icon:"🌙🐙",theme:"Phase reef scout",catalyst:"Lunar Saline",
+       req:"Phase evidence · Trust 60+",strength:"Hidden aquatic gates",trade:"Low endurance",
+       tags:["swim", "phase", "stealth"],abilities:["Moon Ring", "Rift Arm", "Quiet Ink", "Gate Grip"],habitat:"Moonfield Expanse"},
+      {id:"prismring",name:"Prism-Ring",icon:"💎🐙",theme:"Optical camouflage form",catalyst:"Prism Saline",
+       req:"Crystal evidence · Comfort 65+",strength:"Advanced concealment",trade:"Fragile",
+       tags:["swim", "light", "camouflage"],abilities:["Prism Ring", "Mirror Ink", "Shard Grip", "Reef Fade"],habitat:"Shatterdeep"}
+    ]
   }
 ];
 
@@ -416,7 +1064,15 @@ const WORLDS=[
  {id:"tide",name:"Tidevault",biome:"Flooded Megaruins",icon:"🌊",hazard:"Pressure surges",resource:"Abyssal Enzyme",tags:["swim","current","rescue"],objective:"Open an evacuation route and retrieve a submerged archive."},
  {id:"sky",name:"Skygrave Archipelago",biome:"Floating Isles",icon:"⛈️",hazard:"Gravity shear",resource:"Skyglass",tags:["flight","electric","relay"],objective:"Reactivate a storm relay and transport a fragile sample."},
  {id:"moon",name:"Moonfield Expanse",biome:"Silver Plains",icon:"🌙",hazard:"Phase storms",resource:"Lunar Dust",tags:["phase","speed","scan"],objective:"Align shifting gates and rescue a stranded rover."},
- {id:"iron",name:"Ironroot Basin",biome:"Industrial Wildlands",icon:"⚙️",hazard:"Metal resonance",resource:"Ferrous Bloom",tags:["armor","strength","ore"],objective:"Clear a collapsed route and stabilize the reactor garden."}
+ {id:"iron",name:"Ironroot Basin",biome:"Industrial Wildlands",icon:"⚙️",hazard:"Metal resonance",resource:"Ferrous Bloom",tags:["armor","strength","ore"],objective:"Clear a collapsed route and stabilize the reactor garden."},
+ {id:"canopy",name:"Orchid Spires",biome:"Vertical Rainforest",icon:"🌺",hazard:"Flash monsoons",resource:"Orchid Resin",tags:["forest","climb","camouflage","insect"],objective:"Survey canopy nurseries and restore a pollinator bridge."},
+ {id:"hive",name:"Amber Hiveworks",biome:"Mega-Hive Foundry",icon:"🍯",hazard:"Pheromone storms",resource:"Conductive Wax",tags:["swarm","build","signal","flight"],objective:"Repair a colony relay and escort a brood transport."},
+ {id:"reef",name:"Prism Reef",biome:"Bioluminescent Coral City",icon:"🪸",hazard:"Pressure flicker",resource:"Prism Brine",tags:["swim","light","camouflage","support"],objective:"Stabilize a nursery reef and recover a specimen pod."},
+ {id:"burrow",name:"Glassburrow",biome:"Subterranean Micro-City",icon:"🕳️",hazard:"Tunnel collapse",resource:"Resonant Chitin",tags:["crawl","dig","swarm","sensor"],objective:"Map micro-tunnels and reopen a rescue shaft."},
+ {id:"night",name:"Nocturne Canopy",biome:"Moonlit Jungle",icon:"🌌",hazard:"Phase fog",resource:"Lunar Nectar",tags:["night","flight","phase","camouflage"],objective:"Follow nocturnal signals and locate a vanished perch."},
+ {id:"salt",name:"Saltglass Flats",biome:"Mineral Desert",icon:"🏜️",hazard:"Static mirages",resource:"Glass Salt",tags:["heat","armor","sensor","crawl"],objective:"Cross the flats and recover a buried field station."},
+ {id:"mire",name:"Emerald Mire",biome:"Tropical Wetland",icon:"🐸",hazard:"Humidity surges",resource:"Living Mist",tags:["swim","jump","forest","support"],objective:"Restore a wetland node and rescue nursery animals."},
+ {id:"abyss",name:"Abyss Lantern Zone",biome:"Deep Ocean Trench",icon:"🌊",hazard:"Blackwater pressure",resource:"Abyssal Lumen",tags:["swim","scan","light","rescue"],objective:"Trace a deep beacon and retrieve a sealed archive."}
 ];
 
 
@@ -438,7 +1094,7 @@ const STORY_BEATS=[
   },
   {
     title:"THE MORPH CHAMBER",
-    text:"The chamber amplifies adaptive traits already present in Koda. Every phase must remain stable, and the animal remains the patient throughout the transformation.",
+    text:"The chamber amplifies adaptive traits already present in Koda. Each remaining phase must remain stable, and the animal remains the patient throughout the transformation.",
     objective:"Complete all chamber phases and post-morph recovery."
   },
   {
@@ -636,9 +1292,9 @@ function gate(title,checks){
 function areaFooter(canFinish,nextLabel){
   const c=active();
   return `<div class="footer-actions">
-    <button class="primary" onclick="finishArea()">${c.areaComplete?"✓ AREA COMPLETE":"✓ COMPLETE CURRENT AREA"}</button>
-    <button class="primary" onclick="advanceCase()">▶ ADVANCE PATIENT</button>
-    <button class="secondary" onclick="goMeta('institute')">STORY / INSTITUTE</button>
+    <button class="primary fx-button" onclick="finishArea()">${c.areaComplete?"✓ AREA COMPLETE":"✓ COMPLETE CURRENT AREA"}</button>
+    <button class="primary fx-button" onclick="advanceCase()">▶ ADVANCE PATIENT</button>
+    <button class="secondary fx-button" onclick="goMeta('institute')">STORY / INSTITUTE</button>
   </div>
   <div class="callout ${canFinish?"good":"warn"}">
     ${canFinish
@@ -859,9 +1515,9 @@ function eligibilityScreen(){
     <div class="callout ${cleared?"good":"warn"}">${cleared?"All veterinary clearance requirements are satisfied. "+c.name+" may enter resonance research.":"Morph research remains locked until every medical criterion is green."}</div>
     ${gate("MORPH MEDICAL CLEARANCE",checks)}
     <div class="footer-actions">
-      <button class="primary" onclick="clearForMorph()">${c.areaComplete?"✓ MORPH RESEARCH AUTHORIZED":"✓ AUTHORIZE MORPH RESEARCH"}</button>
-      <button class="primary" onclick="advanceCase()">▶ ADVANCE PATIENT</button>
-      <button class="secondary" onclick="goMeta('institute')">INSTITUTE DASHBOARD</button>
+      <button class="primary fx-button" onclick="clearForMorph()">${c.areaComplete?"✓ MORPH RESEARCH AUTHORIZED":"✓ AUTHORIZE MORPH RESEARCH"}</button>
+      <button class="primary fx-button" onclick="advanceCase()">▶ ADVANCE PATIENT</button>
+      <button class="secondary fx-button" onclick="goMeta('institute')">INSTITUTE DASHBOARD</button>
     </div>
   </div></div><aside>${patientSide()}</aside></div>`;
 }
@@ -949,7 +1605,7 @@ function treeScreen(){
     <div class="small"><b>CATALYST:</b> ${m.catalyst}<br><b>HABITAT:</b> ${m.habitat}<br><b>REQUIREMENTS:</b> ${m.req}</div>
     <div class="procon"><div class="pro">+ ${m.strength}</div><div class="con">– ${m.trade}</div></div>
     <div class="ability-list">${m.abilities.map(a=>`<div class="ability">${a}</div>`).join("")}</div>
-    <button class="primary" style="width:100%;margin-top:9px" onclick="selectMorph('${m.id}')">${c.selectedMorph===m.id?"SELECTED":"SELECT "+m.name.toUpperCase()}</button>
+    <button class="primary fx-button" style="width:100%;margin-top:9px" onclick="selectMorph('${m.id}')">${c.selectedMorph===m.id?"SELECTED":"SELECT "+m.name.toUpperCase()}</button>
   </div>`).join("");
   const checks=[["Morph branch deliberately selected",!!c.selectedMorph],["Preparation Bay completed",c.completedStages.includes(8)]];
   return hero("Morph Tree · Choose a Path",
@@ -961,7 +1617,7 @@ function selectMorph(id){
   const c=active();c.selectedMorph=id;c.areaComplete=false;log("Morph path selected: "+morph().name+".");save();render();
 }
 
-const CHAMBER_PHASES=["Chamber Tune","Resonance Alignment","Catalyst Pulse","Morphology Shift","System Stabilization","Sensory Calibration","Integrity Check"];
+const CHAMBER_PHASES=["Resonance Alignment","Catalyst Pulse","Morphology Shift","System Stabilization","Sensory Calibration","Integrity Check"];
 function chamberScreen(){
   const c=active(),ch=c.chamber,m=morph();
   const phases=CHAMBER_PHASES.map((p,i)=>{
@@ -973,9 +1629,9 @@ function chamberScreen(){
         <button class="action" onclick="chamberAction('advance')"><strong>COMPLETE PHASE</strong><span>Advance only when stability and integrity are safe.</span></button>
       </div>`:""}</div>`;
   }).join("");
-  const checks=[["All seven phases complete",ch.phase>=CHAMBER_PHASES.length],["Stability 60+",ch.stability>=60],["Integrity 60+",ch.integrity>=60]];
+  const checks=[["All six phases complete",ch.phase>=CHAMBER_PHASES.length],["Stability 60+",ch.stability>=60],["Integrity 60+",ch.integrity>=60]];
   return hero("Morph Chamber · "+(m?m.name:"NO PATH SELECTED"),
-    "The transformation is a deliberate seven-phase fictional process. Correct instability as needed. Nothing in this chamber changes rooms automatically.",m?m.icon:"🧬")
+    "The transformation is a deliberate six-phase fictional process. Correct instability as needed. Nothing in this chamber changes rooms automatically.",m?m.icon:"🧬")
   +`<div class="grid"><div>
     <div class="panel"><h3>TRANSFORMATION CONTROL</h3>
       <div class="metric-grid" style="margin-bottom:10px">${metric("STABILITY",ch.stability)}${metric("INTEGRITY",ch.integrity)}${metric("STRESS",c.stress,true)}${metric("ENERGY",c.energy)}</div>
@@ -1065,7 +1721,7 @@ function expeditionScreen(){
       return `<div class="world ${x.world===w.id?"selected":""}"><h3>${w.icon} ${w.name}</h3><p>${w.biome}<br>Hazard: ${w.hazard}<br>Resource: ${w.resource}</p>
       <div class="tags">${w.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
       <div class="small ${matches.length?"":"muted"}">${matches.length?"Morph match: "+matches.join(", "):"No direct morph-tag advantage"}</div>
-      <button class="secondary" style="width:100%;margin-top:7px" onclick="pickWorld('${w.id}')">${x.world===w.id?"SELECTED":"SELECT REGION"}</button></div>`;
+      <button class="secondary fx-button" style="width:100%;margin-top:7px" onclick="pickWorld('${w.id}')">${x.world===w.id?"SELECTED":"SELECT REGION"}</button></div>`;
     }).join("")}</div>
     <div class="callout good" style="margin-top:10px">Recommended for ${m.name}: <b>${recommended.name}</b> · ${recommended.biome}</div>
     ${x.world?`<h4>MISSION · ${selected.name}</h4><div class="callout">${selected.objective}</div>
@@ -1077,8 +1733,8 @@ function expeditionScreen(){
     </div>`:""}
     ${gate("EXPEDITION COMPLETION",checks)}
     <div class="footer-actions">
-    <button class="primary" onclick="finishArea()">${c.areaComplete?"✓ EXPEDITION COMPLETE":"✓ COMPLETE EXPEDITION"}</button>
-    <button class="primary" onclick="completeCreatureCase()">▶ ADVANCE PATIENT TO SANCTUARY</button>
+    <button class="primary fx-button" onclick="finishArea()">${c.areaComplete?"✓ EXPEDITION COMPLETE":"✓ COMPLETE EXPEDITION"}</button>
+    <button class="primary fx-button" onclick="completeCreatureCase()">▶ ADVANCE PATIENT TO SANCTUARY</button>
   </div>
   </div></div><aside>${patientSide()}</aside></div>`;
 }
@@ -1093,23 +1749,20 @@ function field(a){
 }
 
 function instituteScreen(){
-  ensureAdvancedState();evaluateCareerUnlocks();
-  const c=active(),m=morph(),rank=currentCareerRank(),rooms=instituteRoomData(),inv=Object.entries(state.inventoryQty).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
-  return hero("VET GODS · Adaptive Morphology Institute",
-    "The Institute is now the campaign hub. Veterinary medicine creates safe morph candidates; transformed residents run branching expeditions; recovered evidence unlocks careers, research projects, rooms and harder field expectations.","🏛️")
-  +careerRankPanel()
-  +`<div class="hub-grid" style="margin-top:10px">
-    <div class="hub-card"><div class="eyebrow">ACTIVE PATIENT</div><h3>${c.icon} ${c.name} · ${c.species}</h3><div class="big-kpi">${STAGES[c.stage].short}</div><p>${c.vet?.cleared?"Veterinary clearance complete. Continue the morph program.":"Veterinary care is still the priority before morph research."}</p><button class="primary" style="width:100%" onclick="goStage(${c.stage})">RETURN TO ${STAGES[c.stage].label.toUpperCase()}</button></div>
-    <div class="hub-card unlocked"><div class="eyebrow">FIELD OPERATIONS</div><h3>🗺️ Morphed Animal Adventures</h3><div class="big-kpi">${state.sanctuary.length}</div><p>Residents available for branching search-and-recovery expeditions.</p><button class="primary" style="width:100%" onclick="goMeta('sanctuary')">OPEN SANCTUARY</button></div>
-    <div class="hub-card unlocked"><div class="eyebrow">CAREER CENTER</div><h3>🎓 Specializations</h3><div class="big-kpi">${state.career.unlockedTracks.length}</div><p>Career tracks unlocked from real field evidence. Current rank: ${rank.name}.</p><button class="primary" style="width:100%" onclick="goMeta('career')">OPEN CAREER CENTER</button></div>
-    <div class="hub-card unlocked"><div class="eyebrow">RESEARCH PROJECTS</div><h3>🛠️ Build With Recovered Items</h3><div class="big-kpi">${state.instituteProjects.length}</div><p>Combine expedition finds into permanent Institute capabilities.</p><button class="primary" style="width:100%" onclick="goMeta('projects')">OPEN PROJECT LAB</button></div>
-  </div>
-  <div class="grid" style="margin-top:10px"><div>
-    <div class="panel"><h3>INSTITUTE ROOM NETWORK</h3><div class="room-map">${rooms.map(r=>`<div class="room-node ${r[2]?"open":""}"><strong>${r[2]?"🔓":"🔒"} ${r[1]} ${r[0]}</strong><span>${r[3]}</span></div>`).join("")}</div></div>
-    <div class="panel"><h3>RECOVERED FIELD INVENTORY</h3><div class="small muted">${inv.length} unique discoveries · items can unlock tracks, complete assignments, and be consumed by Institute projects.</div><div class="inventory-grid" style="margin-top:8px">${inv.length?inv.slice(0,18).map(([x,q])=>`<div class="inv-item"><span class="qty">×${q}</span><b>🎒 ${x}</b></div>`).join(""):'<div class="inv-item">No field evidence recovered yet. Complete a morphed-animal adventure.</div>'}</div></div>
-  </div><aside>
-    <div class="panel"><h3>FIELD ASSIGNMENT BOARD</h3>${fieldAssignmentsPanel(4)}<button class="secondary" style="width:100%;margin-top:8px" onclick="goMeta('career')">VIEW ALL CAREER WORK</button></div>
-    <div class="panel"><h3>CAMPAIGN RECORD</h3><div class="ability-list"><div class="ability">🧬 Completed morphs: ${state.completedCases}</div><div class="ability">📚 Codex records: ${Object.keys(state.codex).length}</div><div class="ability">🔬 Research points: ${state.career.researchPoints}</div><div class="ability">🛠️ Institute projects: ${state.instituteProjects.length}</div></div><div class="footer-actions"><button class="secondary" onclick="goMeta('codex')">CODEX</button><button class="secondary" onclick="goMeta('worldmap')">WORLD MAP</button></div></div>
+  ensureAdvancedState();
+  const c=active(), rooms=instituteRoomData();
+  const visible=rooms.slice(0,8);
+  const classes=["room-a","room-b","room-c","room-d","room-e","room-f","room-g","room-h"];
+  const rank=currentCareerRank();
+  return `<div class="vegas-sign"><div class="small">WELCOME TO</div><h1>✦ VET GODS INSTITUTE ✦</h1><div class="small">NEON RESEARCH RESORT · MORPH SCIENCE · FIELD OPERATIONS</div></div>`
+  +`<div class="topdown-shell"><div class="topdown-map"><div class="map-path path-h"></div><div class="map-path path-v"></div>
+    ${visible.map((r,i)=>`<div class="map-room ${classes[i]} ${r[2]?"":"locked"} ${state.currentInstituteRoom===r[0]?"current":""}" onclick="${r[2]?`openInstituteRoom('${r[0]}')`:"toast('That Institute room is still locked.');"}"><div class="room-lamp">${r[1]}</div><strong>${r[2]?"🔓":"🔒"} ${r[0]}</strong><span>${r[3]}</span></div>`).join("")}
+    <div class="player-marker">🧬</div>
+  </div><aside class="vegas-side">
+    <div class="jackpot-box"><div class="eyebrow">CAREER JACKPOT</div><b>${rank.icon} ${rank.name}</b><div class="casino-lights"></div><div class="small">XP ${state.career.rankXP} · RP ${state.career.researchPoints}</div></div>
+    <div class="panel"><h3>🦂 EXOTIC REGISTRY</h3><div class="big-kpi">${CREATURES.length-6}</div><div class="small">Exotic cases · ${(CREATURES.length-6)*3} exotic morph forms</div></div><div class="panel"><h3>🎰 INSTITUTE BANK</h3><div class="big-kpi">${state.instituteInventory.length}</div><div class="small">Unique field discoveries</div><div class="neon-ticket">💎 ${availableGems().length} jewel types</div><div class="neon-ticket">🔨 ${state.crafting.crafted.length} socketed gear</div></div>
+    <div class="casino-console"><h3>⚡ QUICK PLAY</h3><button class="primary fx-button" style="width:100%;margin:3px 0" onclick="openInstituteRoom('Career Center')">🎓 CAREER CENTER</button><button class="primary fx-button" style="width:100%;margin:3px 0" onclick="goMeta('projects')">🛠️ PROJECT LAB</button><button class="primary fx-button" style="width:100%;margin:3px 0" onclick="goMeta('crafting')">💎 SOCKET FORGE</button><button class="secondary fx-button" style="width:100%;margin:3px 0" onclick="goMeta('sanctuary')">🐾 SANCTUARY</button></div>
+    <div class="panel"><h3>LIVE FLOOR</h3><div class="small">Click a glowing room directly on the top-down Institute floor. Locked rooms become accessible through career research and field discoveries.</div></div>
   </aside></div>`;
 }
 
@@ -1124,12 +1777,12 @@ function worldMapScreen(){
 function sanctuaryScreen(){
   if(!state.sanctuary.length){
     return hero("Morph Sanctuary","Completed transformed animals live here permanently. Finish Koda's full morph case and expedition to bring the first resident home.","🌿")
-    +`<div class="empty">No transformed residents yet.<br><br><button class="primary" onclick="goStage(${active().stage})">RETURN TO ACTIVE CASE</button></div>`;
+    +`<div class="empty">No transformed residents yet.<br><br><button class="primary fx-button" onclick="goStage(${active().stage})">RETURN TO ACTIVE CASE</button></div>`;
   }
   return hero("Morph Sanctuary",
     "Persistent care, habitat fit, bond and mastery continue after a case ends. Use CARE FOR ALL for baseline care, then work with individuals when you want deeper attention.","🌿")
-  +`<div class="panel"><div class="footer-actions"><button class="primary" onclick="careAll()">CARE FOR ALL RESIDENTS</button><button class="secondary" onclick="openFirstMorphStory()">🗺️ PLAY MORPHED ANIMAL ADVENTURE</button><button class="secondary" onclick="goMeta('career')">🎓 CAREER CENTER</button>
-    <button class="secondary" onclick="startNextCreature()">${state.activeIndex<CREATURES.length-1?"▶ ADVANCE TO NEXT PATIENT":"▶ START NEXT PATIENT CYCLE"}</button></div></div>
+  +`<div class="panel"><div class="footer-actions"><button class="primary fx-button" onclick="careAll()">CARE FOR ALL RESIDENTS</button><button class="secondary fx-button" onclick="openFirstMorphStory()">🗺️ PLAY MORPHED ANIMAL ADVENTURE</button><button class="secondary fx-button" onclick="goMeta('career')">🎓 CAREER CENTER</button>
+    <button class="secondary fx-button" onclick="startNextCreature()">${state.activeIndex<CREATURES.length-1?"▶ ADVANCE TO NEXT PATIENT":"▶ START NEXT PATIENT CYCLE"}</button></div></div>
   <div class="sanctuary-grid">${state.sanctuary.map((p,i)=>petCard(p,i)).join("")}</div>`;
 }
 
@@ -1141,7 +1794,7 @@ function petCard(p,i){
   updateResident(p);
   return `<div class="pet"><div class="face">${p.icon}</div><h3>${p.name} · ${p.formName}</h3>
     <div class="small muted">${p.species} · ${p.habitat}<br>${p.temperament}</div>
-    <div class="metric-grid" style="margin-top:8px">${metric("HEALTH",p.health)}${metric("HYDRATION",p.hydration)}${metric("COMFORT",p.comfort)}${metric("BOND",p.bond)}</div>
+    <div class="metric-grid" style="margin-top:8px">${animatedGauge("HEALTH",p.health)}${animatedGauge("HYDRATION",p.hydration)}${animatedGauge("COMFORT",p.comfort)}${animatedGauge("BOND",p.bond)}</div>
     <div class="pet-actions">
       <button onclick="petCare(${i},'food')">OFFER FOOD</button><button onclick="petCare(${i},'water')">OFFER WATER</button>
       <button onclick="petCare(${i},'comfort')">COMFORT</button><button onclick="petCare(${i},'train')">TRAIN</button>
@@ -1242,6 +1895,15 @@ function ensureAdvancedState(){
   state.career.discoveries=state.career.discoveries||[];
   state.career.rankXP=state.career.rankXP||0;
   state.career.assignmentsCompleted=state.career.assignmentsCompleted||[];
+  state.career.assignmentProgress=state.career.assignmentProgress||{};
+  state.projectProgress=state.projectProgress||{};
+  state.currentInstituteRoom=state.currentInstituteRoom||"Career Center";
+  state.activeAssignment=state.activeAssignment||null;
+  state.expeditionLoadout=state.expeditionLoadout||[];
+  state.fieldExpectationLog=state.fieldExpectationLog||[];
+  state.excitement=state.excitement||{combo:0,bestCombo:0,rareFinds:0,rescues:0,events:0};
+  state.lastFieldEvent=state.lastFieldEvent||null;
+  state.crafting=state.crafting||{selectedProject:null,sockets:{},crafted:[]};
 }
 function currentCareerRank(){
   ensureAdvancedState();let r=CAREER_RANKS[0];for(const x of CAREER_RANKS)if(state.career.rankXP>=x.xp)r=x;return r;
@@ -1272,6 +1934,175 @@ function instituteRoomData(){
     ["Sanctuary Design Bay","🏕️",u.includes("sanctuary"),"Resident habitat expansion"],
   ];
 }
+
+const ASSIGNMENT_STEPS={
+  rescue1:[
+    "Review the animal rescue brief and identify the immediate stabilization priority.",
+    "Check the recovered Field Med Kit and prepare a remote-care pack.",
+    "Run the field stabilization simulation and file the veterinary readiness report."
+  ],
+  flora1:[
+    "Compare the Crystal Fruit and Luminous Reed Sample.",
+    "Record habitat response and nutritional observations.",
+    "Submit an ecology field expectation for the next expedition."
+  ],
+  signal1:[
+    "Inspect the Cracked Data Module for surviving relay identifiers.",
+    "Calibrate the Field Scanner Core to the recovered signal band.",
+    "Reconstruct one lost relay route and publish it to Field Operations."
+  ],
+  archive1:[
+    "Cross-reference the Field Journal with the Archive Rubbing.",
+    "Reconstruct the missing case sequence.",
+    "File the recovered case into the Institute Archive Vault."
+  ],
+  morph1:[
+    "Compare Resonance Coil output against the Unknown Fur Sample.",
+    "Run a fictional trait-stability analysis.",
+    "Publish a morph-safety expectation for future field work."
+  ],
+  sanctuary1:[
+    "Review the Sanctuary Blueprint against resident needs.",
+    "Select one habitat system to improve.",
+    "Approve the design as a future Sanctuary construction expectation."
+  ]
+};
+
+const PROJECT_STAGES=["ANALYZE","ASSEMBLE","VALIDATE"];
+
+function openInstituteRoom(name){
+  const r=instituteRoomData().find(x=>x[0]===name);
+  if(!r||!r[2]){toast("That Institute room is still locked.");return}
+  state.currentInstituteRoom=name;state.screen="instituteroom";save();render();
+  window.scrollTo({top:0,left:0,behavior:"auto"});
+}
+function instituteRoomScreen(){
+  ensureAdvancedState();
+  const name=state.currentInstituteRoom||"Career Center";
+  const r=instituteRoomData().find(x=>x[0]===name)||instituteRoomData()[0];
+  let body="";
+  if(name==="Exotic Wildlife Wing"){
+    const exotic=CREATURES.slice(6), groups={};
+    exotic.forEach(x=>{
+      const g=/Tarantula|Scorpion|Mantis|Beetle|Moth|Bee|Ant|Stick Insect/.test(x.species)?"BUGS & ARTHROPODS":
+      /Octopus|Shrimp|Crab|Seahorse/.test(x.species)?"AQUATIC EXOTICS":
+      /Axolotl|Chameleon|Gecko|Python|Tortoise|Frog/.test(x.species)?"REPTILES & AMPHIBIANS":
+      /Macaw|Bat/.test(x.species)?"FLIGHT EXOTICS":"SMALL EXOTIC MAMMALS";
+      (groups[g]=groups[g]||[]).push(x);
+    });
+    body=`<div class="room-console"><div class="eyebrow">EXOTIC WILDLIFE WING</div><h3>🦂 Expanded Patient Registry</h3><div class="console-readout">EXOTIC CASES: ${exotic.length}<br>EXOTIC MORPH FORMS: ${exotic.length*3}<br>TOTAL PATIENT DATABASE: ${CREATURES.length}</div></div>`
+    +Object.entries(groups).map(([g,list])=>`<div class="panel"><h3>${g}</h3><div class="morph-grid">${list.map(x=>`<div class="card"><div style="font-size:34px">${x.icon}</div><b>${x.name}</b><div class="small">${x.species} · ${x.sex}</div><div class="small muted">${x.temperament}</div><div class="small">${x.morphs.map(m=>m.icon+" "+m.name).join("<br>")}</div></div>`).join("")}</div></div>`).join("");
+  }else if(name==="Socket Forge"){
+    body=`<div class="room-console"><div class="eyebrow">SOCKET FORGE</div><h3>🔨 Equipment Augmentation</h3><div class="console-readout">VALIDATED BASE PROJECTS: ${state.instituteProjects.length}<br>JEWELS AVAILABLE: ${availableGems().length}<br>SOCKETED ITEMS: ${state.crafting.crafted.length}</div><button class="primary fx-button" onclick="goMeta('crafting')">OPEN SOCKET CRAFTING STATION</button></div>`;
+  }else if(name==="Veterinary Wing"){
+    const c=active();
+    body=`<div class="room-console"><div class="eyebrow">PATIENT CONSOLE</div><h3>${c.icon} ${c.name} · ${c.species}</h3><div class="console-readout">CURRENT AREA: ${STAGES[c.stage].label}<br>MEDICAL CLEARANCE: ${c.vet?.cleared?"CLEARED":"NOT YET CLEARED"}<br>HEALTH ${c.health} · PAIN ${c.pain} · HYDRATION ${c.hydration} · OXYGEN ${c.vet?.oxygen||0}</div><button class="primary fx-button" onclick="goStage(${c.stage})">RETURN TO ACTIVE PATIENT</button></div>`;
+  }else if(name==="Morph Laboratory"){
+    body=`<div class="room-console"><div class="eyebrow">MORPH RESEARCH CONSOLE</div><h3>Transformed Residents</h3><div class="console-readout">COMPLETED MORPHS: ${state.completedCases}<br>SANCTUARY RESIDENTS: ${state.sanctuary.length}<br>MORPH RESEARCH PROJECTS: ${state.instituteProjects.filter(x=>x==="scanner").length}</div><button class="primary fx-button" onclick="goMeta('sanctuary')">OPEN RESIDENT ROSTER</button><button class="secondary fx-button" onclick="goMeta('projects')">OPEN RESEARCH PROJECTS</button></div>`;
+  }else if(name==="Field Operations"){
+    body=`<div class="room-console"><div class="eyebrow">EXPEDITION CONTROL</div><h3>Field Operations Deck</h3><div class="console-readout">AVAILABLE RESIDENTS: ${state.sanctuary.length}<br>EQUIPPED FIELD TOOLS: ${state.expeditionLoadout.length}/2<br>FIELD PERMITS: ${(state.career.fieldPermits||[]).length}</div><button class="primary fx-button" onclick="goMeta('sanctuary')">CHOOSE MORPHED RESIDENT</button>${expeditionLoadoutPanel()}</div>`;
+  }else if(name==="Career Center"){
+    body=`<div class="room-console"><div class="eyebrow">CAREER OPERATIONS</div><h3>${currentCareerRank().icon} ${currentCareerRank().name}</h3><div class="console-readout">CAREER XP: ${state.career.rankXP}<br>ASSIGNMENTS COMPLETE: ${state.career.assignmentsCompleted.length}/${FIELD_ASSIGNMENTS.length}<br>SPECIALIZATIONS: ${state.career.unlockedTracks.length}/${CAREER_TRACKS.length}</div><button class="primary fx-button" onclick="goMeta('career')">OPEN CAREER CENTER</button></div>`;
+  }else{
+    const map={
+      "Ecology Wing":["🌿","Ecology research uses botanical evidence to unlock habitat cultivation and adaptive ecology."],
+      "Signal Lab":["📡","Signal intelligence reconstructs lost routes and discovers hidden field sites."],
+      "Archive Vault":["📚","Recovered journals, rubbings and legacy data become playable historical casework."],
+      "Mobility Hangar":["🪽","Aerial and traversal research prepares residents for difficult routes and rescue work."],
+      "Sanctuary Design Bay":["🏕️","Blueprints and bond research become permanent resident-care infrastructure."]
+    };
+    const info=map[name]||["🏛️",r[3]];
+    body=`<div class="room-console"><div class="eyebrow">SPECIALIZED INSTITUTE ROOM</div><h3>${info[0]} ${name}</h3><p>${info[1]}</p><div class="console-readout">ROOM STATUS: ONLINE<br>RESEARCH POINTS: ${state.career.researchPoints}<br>DISCOVERIES LOGGED: ${state.career.discoveries.length}</div><button class="primary fx-button" onclick="goMeta('career')">OPEN RELATED CAREER WORK</button><button class="secondary fx-button" onclick="goMeta('projects')">PROJECT LAB</button></div>`;
+  }
+  return `<div class="vegas-sign"><div class="small">TOP-DOWN INSTITUTE ROOM</div><h1>${r[1]} ${name}</h1><div class="casino-lights"></div><div class="small">ROOM FLOOR POSITION · ${state.currentInstituteRoom}</div></div>`+hero(name,r[3],r[1])+`<div class="grid"><div>${body}</div><aside><div class="panel"><h3>INSTITUTE DIRECTORY</h3><div class="ability-list">${instituteRoomData().map(x=>`<button class="secondary fx-button" style="width:100%;margin:3px 0" onclick="openInstituteRoom('${x[0]}')" ${x[2]?"":"disabled"}>${x[2]?"🔓":"🔒"} ${x[1]} ${x[0]}</button>`).join("")}</div><button class="secondary fx-button" style="width:100%;margin-top:8px" onclick="goMeta('institute')">← INSTITUTE HUB</button></div></aside></div>`;
+}
+
+function startAssignment(id){
+  ensureAdvancedState();
+  const a=FIELD_ASSIGNMENTS.find(x=>x.id===id);if(!a)return;
+  if(state.career.assignmentsCompleted.includes(id)){toast("Assignment already complete.");return}
+  if(!a.need.every(hasItem)){toast("Recover the required evidence first.");return}
+  state.activeAssignment=id;
+  if(state.career.assignmentProgress[id]==null)state.career.assignmentProgress[id]=0;
+  state.screen="assignment";save();render();window.scrollTo({top:0,left:0,behavior:"auto"});
+}
+function assignmentScreen(){
+  ensureAdvancedState();
+  const a=FIELD_ASSIGNMENTS.find(x=>x.id===state.activeAssignment);
+  if(!a)return careerCenterScreen();
+  const steps=ASSIGNMENT_STEPS[a.id]||["Review evidence.","Perform assignment work.","File results."];
+  const p=state.career.assignmentProgress[a.id]||0;
+  return hero(a.title,a.task,"📋")+careerRankPanel()+`<div class="grid"><div><div class="panel"><h3>PLAYABLE CAREER ASSIGNMENT</h3>${steps.map((x,i)=>`<div class="mission-step ${i<p?"done":i===p?"current":""}"><b>${i<p?"✓":i===p?"▶":"○"} STEP ${i+1}</b><div class="small">${x}</div></div>`).join("")}<div class="callout"><b>FIELD EVIDENCE:</b><br>${a.need.map(x=>`${hasItem(x)?"✓":"○"} ${x}`).join("<br>")}</div>${p<steps.length?`<button class="primary fx-button" style="width:100%" onclick="advanceAssignment('${a.id}')">COMPLETE CURRENT WORK STEP</button>`:`<button class="primary fx-button" style="width:100%" onclick="fileAssignment('${a.id}')">✓ FILE ASSIGNMENT REPORT</button>`}</div></div><aside><div class="panel"><h3>ASSIGNMENT REWARD</h3><div class="big-kpi">${a.reward}</div><div class="small">career XP + ${Math.ceil(a.reward/2)} research points</div><button class="secondary fx-button" style="width:100%;margin-top:10px" onclick="goMeta('career')">LEAVE ASSIGNMENT</button></div></aside></div>`;
+}
+function advanceAssignment(id){
+  const a=FIELD_ASSIGNMENTS.find(x=>x.id===id);if(!a)return;
+  const steps=ASSIGNMENT_STEPS[id]||[];
+  let p=state.career.assignmentProgress[id]||0;
+  if(p>=steps.length)return;
+  state.career.assignmentProgress[id]=p+1;
+  state.career.rankXP+=1;state.research+=1;
+  log("Career work completed: "+a.title+" step "+(p+1)+".");save();render();
+}
+function fileAssignment(id){
+  const a=FIELD_ASSIGNMENTS.find(x=>x.id===id);if(!a)return;
+  const steps=ASSIGNMENT_STEPS[id]||[];
+  if((state.career.assignmentProgress[id]||0)<steps.length){toast("Complete every assignment work step first.");return}
+  completeAssignment(id);
+  state.screen="career";state.activeAssignment=null;save();render();
+}
+
+function availableFieldTools(){
+  const tools=[];
+  if(state.instituteProjects.includes("rescuekit"))tools.push(["Remote Rescue Kit","rescuekit","Restore 20 adventure energy and satisfy medical-tool gates."]);
+  if(state.instituteProjects.includes("scanner"))tools.push(["Morph Stability Scanner","scanner","Reveal hidden research evidence during an expedition."]);
+  if(state.instituteProjects.includes("decoder"))tools.push(["Legacy Route Decoder","decoder","Reveal a shortcut to hidden ruins/shelter routes."]);
+  if(state.instituteProjects.includes("aerialpack"))tools.push(["Aerial Rescue Pack","aerialpack","Reduce traversal energy costs and improve ridge searches."]);
+  if(state.instituteProjects.includes("nutritiontrial"))tools.push(["Adaptive Nutrition Pack","nutritiontrial","Restore 15 energy during field work."]);
+  return tools;
+}
+function toggleFieldTool(id){
+  ensureAdvancedState();
+  const exists=availableFieldTools().some(x=>x[1]===id);if(!exists)return;
+  const pos=state.expeditionLoadout.indexOf(id);
+  if(pos>=0)state.expeditionLoadout.splice(pos,1);
+  else{if(state.expeditionLoadout.length>=2){toast("Field loadout is limited to two tools.");return}state.expeditionLoadout.push(id)}
+  save();render();
+}
+function expeditionLoadoutPanel(){
+  const tools=availableFieldTools();
+  return `<div class="panel" style="margin-top:9px"><h3>EXPEDITION TOOL LOADOUT · ${state.expeditionLoadout.length}/2</h3><div class="tool-rack">${tools.length?tools.map(t=>`<div class="tool-card ${state.expeditionLoadout.includes(t[1])?"equipped":""}"><b>${state.expeditionLoadout.includes(t[1])?"✓ ":""}${t[0]}</b><div class="small muted">${t[2]}</div><button class="secondary fx-button" onclick="toggleFieldTool('${t[1]}')">${state.expeditionLoadout.includes(t[1])?"UNEQUIP":"EQUIP"}</button></div>`).join(""):'<div class="tool-card"><b>No field tools built yet.</b><div class="small muted">Build Institute Projects to create reusable expedition equipment.</div></div>'}</div></div>`;
+}
+function useExpeditionTool(i,id){
+  const p=state.sanctuary[i];if(!p||!state.expeditionLoadout.includes(id))return;
+  const a=ensureAdventureState(p);a.flags=a.flags||{};
+  if(id==="rescuekit"){if(a.flags.usedRescueKit){toast("Remote Rescue Kit already used this expedition.");return}a.flags.usedRescueKit=true;const socketEnergy=craftedToolBonus("rescuekit","energy")*5;a.energy=clamp(a.energy+20+socketEnergy);if(!a.inventory.includes("Field Med Kit"))a.inventory.push("Field Med Kit");a.log.push("Remote Rescue Kit restored field readiness.");}
+  if(id==="nutritiontrial"){if(a.flags.usedNutritionPack){toast("Adaptive Nutrition Pack already used.");return}a.flags.usedNutritionPack=true;const gemEnergy=craftedToolBonus("nutritiontrial","energy")*5;a.energy=clamp(a.energy+15+gemEnergy);a.log.push("Adaptive Nutrition Pack restored energy.");}
+  if(id==="scanner"){if(a.flags.usedScanner){toast("Scanner sweep already completed.");return}a.flags.usedScanner=true;const scannerBoost=craftedToolBonus("scanner","scanner");const found=scannerBoost>0?"Enhanced Stability Scan Record":"Stability Scan Record";if(!a.inventory.includes(found)){a.inventory.push(found);addInstituteItemAdvanced(found,p.name)}a.log.push("Morph Stability Scanner found hidden stability data.");}
+  if(id==="decoder"){if(a.flags.usedDecoder){toast("Route Decoder already used.");return}a.flags.usedDecoder=true;a.flags.shelterKnown=true;a.log.push("Legacy Route Decoder exposed hidden shelter coordinates.");}
+  if(id==="aerialpack"){if(a.flags.usedAerialPack){toast("Aerial Rescue Pack already deployed.");return}a.flags.usedAerialPack=true;a.energy=clamp(a.energy+10);a.flags.aerialPrepared=true;a.log.push("Aerial Rescue Pack prepared safe high-route traversal.");}
+  p.mastery=clamp((p.mastery||0)+2);addCombo(1);save();render();toast("Field tool used.");
+}
+
+function advanceProjectStage(id){
+  ensureAdvancedState();const p=INSTITUTE_PROJECTS.find(x=>x.id===id);if(!p)return;
+  if(state.instituteProjects.includes(id)){toast("Project already complete.");return}
+  const cur=state.projectProgress[id]||0;
+  if(cur===0){
+    if(!p.need.every(hasItem)){toast("Recover every project component first.");return}
+    state.projectProgress[id]=1;state.career.rankXP+=2;log("Project analysis complete: "+p.name+".");
+  }else if(cur===1){
+    if(!p.need.every(hasItem)){toast("Project components are no longer available.");return}
+    for(const x of p.need)state.inventoryQty[x]=Math.max(0,itemQty(x)-1);
+    state.projectProgress[id]=2;state.career.rankXP+=3;log("Project assembly complete: "+p.name+".");
+  }else if(cur===2){
+    if((state.career.researchPoints||0)<3){toast("Validation requires 3 research points.");return}
+    state.career.researchPoints-=3;state.projectProgress[id]=3;
+    state.instituteProjects.push(id);state.career.rankXP+=10;state.research+=3;
+    log("Institute project validated and installed: "+p.name+".");
+  }
+  save();render();
+}
+
 function careerRankPanel(){
   const r=currentCareerRank(),n=nextCareerRank(),same=r===n,pct=same?100:Math.max(0,Math.min(100,((state.career.rankXP-r.xp)/(n.xp-r.xp))*100));
   return `<div class="rank-banner"><div class="rank-badge">${r.icon}</div><div><div class="eyebrow">INSTITUTE CAREER RANK</div><div class="rank-title">${r.name}</div><div class="small muted">${same?"Maximum career rank achieved":state.career.rankXP+" / "+n.xp+" XP toward "+n.name}</div><div class="rank-progress"><i style="width:${pct}%"></i></div></div><div class="big-kpi">${state.career.rankXP}<div class="mini-kpi">CAREER XP</div></div></div>`;
@@ -1280,7 +2111,7 @@ function fieldAssignmentsPanel(limit=6){
   ensureAdvancedState();
   const rows=FIELD_ASSIGNMENTS.slice(0,limit).map(a=>{
     const done=state.career.assignmentsCompleted.includes(a.id),ready=a.need.every(hasItem);
-    return `<div class="assignment ${done?"done":""}"><h4>${done?"✓ ":ready?"▶ ":"○ "}${a.title}</h4><div class="small">${a.task}</div><div class="requirement-line">${a.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x}</span>`).join(" · ")}</div><div class="reward">Reward: ${a.reward} career XP + ${Math.ceil(a.reward/2)} research points</div>${!done?`<button class="secondary" style="width:100%;margin-top:7px" onclick="completeAssignment('${a.id}')" ${ready?"":"disabled"}>${ready?"COMPLETE ASSIGNMENT":"EVIDENCE REQUIRED"}</button>`:""}</div>`;
+    return `<div class="assignment ${done?"done":""}"><h4>${done?"✓ ":ready?"▶ ":"○ "}${a.title}</h4><div class="small">${a.task}</div><div class="requirement-line">${a.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x}</span>`).join(" · ")}</div><div class="reward">Reward: ${a.reward} career XP + ${Math.ceil(a.reward/2)} research points</div>${!done?`<button class="secondary fx-button" style="width:100%;margin-top:7px" onclick="startAssignment('${a.id}')" ${ready?"":"disabled"}>${ready?"▶ START PLAYABLE ASSIGNMENT":"EVIDENCE REQUIRED"}</button>`:""}</div>`;
   }).join("");return rows;
 }
 function completeAssignment(id){
@@ -1289,17 +2120,17 @@ function completeAssignment(id){
 }
 function projectsScreen(){
   ensureAdvancedState();
-  const cards=INSTITUTE_PROJECTS.map(p=>{const done=state.instituteProjects.includes(p.id),ready=p.need.every(hasItem);return `<div class="recipe-card ${done?"done":""}"><div class="eyebrow">${done?"PROJECT COMPLETE":"INSTITUTE PROJECT"}</div><h3>${p.icon} ${p.name}</h3><div class="small">${p.effect}</div><div class="requirement-line" style="margin-top:8px">${p.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x} ×1</span>`).join("<br>")}</div><button class="${done?"secondary":"primary"}" style="width:100%;margin-top:8px" onclick="buildInstituteProject('${p.id}')" ${done||!ready?"disabled":""}>${done?"BUILT":ready?"BUILD PROJECT":"MISSING COMPONENTS"}</button></div>`}).join("");
-  return hero("Institute Research Projects","Recovered field items can be reused here to build permanent Institute systems. This is where expedition loot becomes infrastructure instead of disappearing.","🛠️")+careerRankPanel()+`<div class="panel"><div class="morph-grid">${cards}</div><div class="footer-actions"><button class="secondary" onclick="goMeta('institute')">← INSTITUTE HUB</button><button class="secondary" onclick="goMeta('career')">CAREER CENTER</button></div></div>`;
+  const cards=INSTITUTE_PROJECTS.map(p=>{
+    const done=state.instituteProjects.includes(p.id),stage=done?3:(state.projectProgress[p.id]||0),ready=p.need.every(hasItem);
+    const label=done?"INSTALLED":stage===0?(ready?"ANALYZE COMPONENTS":"MISSING COMPONENTS"):stage===1?"ASSEMBLE PROJECT":stage===2?"VALIDATE · COST 3 RP":"INSTALLED";
+    return `<div class="recipe-card ${done?"done":""}"><div class="eyebrow">${done?"PERMANENT INSTITUTE SYSTEM":"MULTI-STAGE RESEARCH PROJECT"}</div><h3>${p.icon} ${p.name}</h3><div class="small">${p.effect}</div><div class="project-stage"><i class="${stage>=1?"done":""}"></i><i class="${stage>=2?"done":""}"></i><i class="${stage>=3?"done":""}"></i></div><div class="small muted">${stage===0?"ANALYZE recovered evidence":stage===1?"ASSEMBLE components into a prototype":stage===2?"VALIDATE prototype with Institute research":"PROJECT ONLINE"}</div><div class="requirement-line" style="margin-top:8px">${p.need.map(x=>`<span class="${hasItem(x)||stage>=2?"yes":"no"}">${hasItem(x)||stage>=2?"✓":"○"} ${x} ×1</span>`).join("<br>")}</div><button class="${done?"secondary":"primary"}" style="width:100%;margin-top:8px" onclick="advanceProjectStage('${p.id}')" ${done||(!ready&&stage===0)?"disabled":""}>${label}</button></div>`;
+  }).join("");
+  return `<div class="vegas-sign"><div class="small">HIGH LIMIT RESEARCH FLOOR</div><h1>🛠️ PROJECT JACKPOT LAB 🛠️</h1><div class="casino-lights"></div><div class="small">ANALYZE · ASSEMBLE · VALIDATE · INSTALL</div></div>`+hero("Institute Research Project Lab","Projects now require analysis, assembly and validation. Finished projects become reusable expedition tools or permanent Institute capabilities.","🛠️")+careerRankPanel()+`<div class="panel"><div class="morph-grid">${cards}</div>${expeditionLoadoutPanel()}<div class="footer-actions"><button class="primary fx-button" onclick="goMeta('crafting')">🔨 SOCKET CRAFTING STATION</button><button class="secondary fx-button" onclick="goMeta('institute')">← INSTITUTE HUB</button><button class="secondary fx-button" onclick="goMeta('career')">CAREER CENTER</button></div></div>`;
 }
-function buildInstituteProject(id){
-  ensureAdvancedState();const p=INSTITUTE_PROJECTS.find(x=>x.id===id);if(!p||state.instituteProjects.includes(id))return;if(!p.need.every(hasItem)){toast("Missing project components.");return}
-  for(const x of p.need)state.inventoryQty[x]=Math.max(0,itemQty(x)-1);
-  state.instituteProjects.push(id);state.career.rankXP+=12;state.career.researchPoints+=5;state.research+=3;log("Institute project built: "+p.name+".");save();render();toast(p.name+" installed in the Institute.");
-}
+function buildInstituteProject(id){ advanceProjectStage(id); }
 function useMorphFieldSkill(i){
   const p=state.sanctuary[i];if(!p)return;const a=ensureAdventureState(p);a.flags=a.flags||{};if(a.flags.morphSkillUsed){toast("This morph's special field search has already been used this run.");return}
-  const pool=MORPH_FIELD_FINDS[p.formName]||["Morph Trace Sample","Field Observation Notes"];const item=pool[Math.floor(Math.random()*pool.length)];a.flags.morphSkillUsed=true;if(!a.inventory.includes(item))a.inventory.push(item);a.log.push(p.formName+" field skill discovered "+item+".");addInstituteItemAdvanced(item,p.name);p.mastery=clamp((p.mastery||0)+4);save();render();toast(p.name+" discovered "+item+" using "+p.formName+" abilities.");
+  const pool=MORPH_FIELD_FINDS[p.formName]||["Morph Trace Sample","Field Observation Notes"];const item=pool[Math.floor(Math.random()*pool.length)];a.flags.morphSkillUsed=true;if(!a.inventory.includes(item))a.inventory.push(item);a.log.push(p.formName+" field skill discovered "+item+".");addInstituteItemAdvanced(item,p.name);p.mastery=clamp((p.mastery||0)+4);addCombo(2);maybeTriggerFieldEvent(i);save();render();toast(p.name+" discovered "+item+" using "+p.formName+" abilities.");
 }
 const CAREER_TRACKS=[
   {
@@ -1400,10 +2231,10 @@ function inventoryCount(){return state.instituteInventory.length}
 function careerCenterScreen(){
   ensureAdvancedState();evaluateCareerUnlocks();
   const inv=state.instituteInventory||[],unlocked=state.career.unlockedTracks||[];
-  const cards=CAREER_TRACKS.map(t=>{const missing=t.need.filter(x=>!hasItem(x)),open=unlocked.includes(t.id);return `<div class="hub-card ${open?"unlocked":"locked"}"><div class="eyebrow">${open?"SPECIALIZATION OPEN":"EVIDENCE REQUIRED"}</div><h3>${t.icon} ${t.name}</h3><p>${t.description}</p><div class="requirement-line">${t.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x}</span>`).join("<br>")}</div><div class="ability-list" style="margin:8px 0">${t.areas.map(x=>`<div class="ability">${open?"🔓":"🔒"} ${x}</div>`).join("")}</div>${open?`<button class="primary" style="width:100%" onclick="openResearchTrack('${t.id}')">ENTER SPECIALIZATION</button>`:`<div class="small muted">Search expeditions for: ${missing.join(" + ")}</div>`}</div>`}).join("");
+  const cards=CAREER_TRACKS.map(t=>{const missing=t.need.filter(x=>!hasItem(x)),open=unlocked.includes(t.id);return `<div class="hub-card ${open?"unlocked":"locked"}"><div class="eyebrow">${open?"SPECIALIZATION OPEN":"EVIDENCE REQUIRED"}</div><h3>${t.icon} ${t.name}</h3><p>${t.description}</p><div class="requirement-line">${t.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x}</span>`).join("<br>")}</div><div class="ability-list" style="margin:8px 0">${t.areas.map(x=>`<div class="ability">${open?"🔓":"🔒"} ${x}</div>`).join("")}</div>${open?`<button class="primary fx-button" style="width:100%" onclick="openResearchTrack('${t.id}')">ENTER SPECIALIZATION</button>`:`<div class="small muted">Search expeditions for: ${missing.join(" + ")}</div>`}</div>`}).join("");
   return hero("Institute Career Center","The Career Center converts field discoveries into long-term progression. Evidence unlocks specializations; assignments award career XP; research areas open new Institute expectations.","🎓")
   +careerRankPanel()
-  +`<div class="grid" style="margin-top:10px"><div><div class="panel"><h3>CAREER SPECIALIZATIONS</h3><div class="hub-grid">${cards}</div></div><div class="panel"><h3>FIELD ASSIGNMENTS</h3>${fieldAssignmentsPanel()}</div></div><aside><div class="panel"><h3>CAREER READOUT</h3><div class="ability-list"><div class="ability">🔬 Research points: ${state.career.researchPoints}</div><div class="ability">🔓 Specializations: ${unlocked.length}/${CAREER_TRACKS.length}</div><div class="ability">✓ Assignments: ${state.career.assignmentsCompleted.length}/${FIELD_ASSIGNMENTS.length}</div><div class="ability">🛠️ Projects: ${state.instituteProjects.length}/${INSTITUTE_PROJECTS.length}</div></div><div class="footer-actions"><button class="primary" onclick="goMeta('projects')">PROJECT LAB</button><button class="secondary" onclick="goMeta('institute')">INSTITUTE HUB</button></div></div></aside></div>`;
+  +`<div class="grid" style="margin-top:10px"><div><div class="panel"><h3>CAREER SPECIALIZATIONS</h3><div class="hub-grid">${cards}</div></div><div class="panel"><h3>FIELD ASSIGNMENTS</h3>${fieldAssignmentsPanel()}</div></div><aside><div class="panel"><h3>CAREER READOUT</h3><div class="ability-list"><div class="ability">🔬 Research points: ${state.career.researchPoints}</div><div class="ability">🔓 Specializations: ${unlocked.length}/${CAREER_TRACKS.length}</div><div class="ability">✓ Assignments: ${state.career.assignmentsCompleted.length}/${FIELD_ASSIGNMENTS.length}</div><div class="ability">🛠️ Projects: ${state.instituteProjects.length}/${INSTITUTE_PROJECTS.length}</div></div><div class="footer-actions"><button class="primary fx-button" onclick="goMeta('projects')">PROJECT LAB</button><button class="secondary fx-button" onclick="goMeta('institute')">INSTITUTE HUB</button></div></div></aside></div>`;
 }
 
 function openResearchTrack(id){
@@ -1438,7 +2269,7 @@ function researchTrackScreen(){
         ${metric("RESEARCH POINTS",Math.min(100,rp))}
         <div class="small" style="margin-top:8px">Completed discoveries: ${(state.career.discoveries||[]).length}</div>
         <div class="footer-actions">
-          <button class="secondary" onclick="goMeta('career')">← CAREER CENTER</button>
+          <button class="secondary fx-button" onclick="goMeta('career')">← CAREER CENTER</button>
         </div>
       </div>
     </aside></div>`;
@@ -1684,7 +2515,7 @@ function morphStoryScreen(){
   if(!state.sanctuary.length){
     return hero("Morphed Animal Adventure","No transformed resident has been created yet.","📖")
       +`<div class="panel"><div class="empty">Complete a morph case first.<br><br>
-      <button class="primary" onclick="goMeta('sanctuary')">BACK TO SANCTUARY</button></div></div>`;
+      <button class="primary fx-button" onclick="goMeta('sanctuary')">BACK TO SANCTUARY</button></div></div>`;
   }
 
   let i=Math.max(0,Math.min(state.storyResidentIndex||0,state.sanctuary.length-1));
@@ -1699,8 +2530,8 @@ function morphStoryScreen(){
         <div class="story-beat"><b>ITEMS BROUGHT BACK</b><br>${a.inventory.length?a.inventory.join(" · "):"No items collected"}</div>
         <div class="story-beat"><b>FIELD FLAGS</b><br>${Object.keys(a.flags).filter(k=>a.flags[k]).join(" · ")||"No special discoveries"}</div>
         <div class="footer-actions">
-          <button class="primary" onclick="resetMorphAdventure(${i})">↻ PLAY ANOTHER STORY RUN</button>
-          <button class="secondary" onclick="goMeta('sanctuary')">← BACK TO SANCTUARY</button>
+          <button class="primary fx-button" onclick="resetMorphAdventure(${i})">↻ PLAY ANOTHER STORY RUN</button>
+          <button class="secondary fx-button" onclick="goMeta('sanctuary')">← BACK TO SANCTUARY</button>
         </div>
       </div>`;
   }
@@ -1716,6 +2547,7 @@ function morphStoryScreen(){
 
   return hero(p.name+"'s Morph Adventure",
     "This is a playable branching story. Pick routes, collect items, rescue creatures, unlock hidden areas, and bring what you find back to the Sanctuary.","🗺️")
+  +animatedMorphShowcase(p)+excitementPanel()+fieldEventCard()
   +`<div class="grid"><div>
       <div class="story-card">
         <div class="eyebrow">CURRENT LOCATION</div>
@@ -1733,14 +2565,16 @@ function morphStoryScreen(){
         ${metric("MASTERY",p.mastery)}
         <h4>PACK INVENTORY</h4>
         <div class="ability-list">${a.inventory.length?a.inventory.map(x=>`<div class="ability">🎒 ${x}</div>`).join(""):'<div class="ability">Pack is empty</div>'}</div>
-        <div class="field-skill"><div class="eyebrow">MORPH-SPECIFIC SEARCH</div><b>${p.formName} FIELD SKILL</b><div class="small muted" style="margin:5px 0">Use the transformed animal's unique abilities to uncover evidence ordinary searches cannot find.</div><button class="primary" style="width:100%" onclick="useMorphFieldSkill(${i})" ${a.flags?.morphSkillUsed?"disabled":""}>${a.flags?.morphSkillUsed?"✓ SPECIAL SEARCH USED":"🔎 USE MORPH FIELD SKILL"}</button></div>
+        <div class="field-skill"><div class="eyebrow">MORPH-SPECIFIC SEARCH</div><b>${p.formName} FIELD SKILL</b><div class="small muted" style="margin:5px 0">Use the transformed animal's unique abilities to uncover evidence ordinary searches cannot find.</div><button class="primary fx-button" style="width:100%" onclick="useMorphFieldSkill(${i})" ${a.flags?.morphSkillUsed?"disabled":""}>${a.flags?.morphSkillUsed?"✓ SPECIAL SEARCH USED":"🔎 USE MORPH FIELD SKILL"}</button></div>
+        <h4>EXPEDITION TOOLS</h4>
+        <div class="tool-rack">${state.expeditionLoadout.length?state.expeditionLoadout.map(id=>{const t=availableFieldTools().find(x=>x[1]===id);return t?`<div class="tool-card equipped"><b>🧰 ${t[0]}</b><div class="small muted">${t[2]}</div><button class="secondary fx-button" onclick="useExpeditionTool(${i},'${id}')">USE TOOL</button></div>`:""}).join(""):'<div class="tool-card"><b>No tools equipped.</b><div class="small muted">Build projects and equip up to two tools in Field Operations or the Project Lab.</div></div>'}</div>
         <h4>FIELD EXPECTATIONS</h4><div class="expectation-board">${(state.career?.fieldPermits||[]).slice(0,4).map(x=>`<div class="expectation"><b>○ ${x}</b><span>Career Center expectation active in future field work.</span></div>`).join("")||'<div class="expectation"><b>NO CAREER EXPECTATIONS YET</b><span>Recover evidence to unlock specializations.</span></div>'}</div>
         <h4>FIELD LOG</h4>
         <div class="small" style="line-height:1.55">${a.log.slice(-5).map(x=>"• "+x).join("<br>")}</div>
         <div class="callout" style="margin-top:10px"><b>INSTITUTE TRANSFER:</b> Items you collect are now copied into the permanent Institute inventory and can unlock Career Center research tracks.</div>
-        <button class="secondary" onclick="goMeta('career')" style="width:100%;margin-top:8px">🎓 VIEW CAREER CENTER</button>
+        <button class="secondary fx-button" onclick="goMeta('career')" style="width:100%;margin-top:8px">🎓 VIEW CAREER CENTER</button>
         <div class="footer-actions">
-          <button class="secondary" onclick="goMeta('sanctuary')">← LEAVE STORY FOR NOW</button>
+          <button class="secondary fx-button" onclick="goMeta('sanctuary')">← LEAVE STORY FOR NOW</button>
         </div>
       </div>
     </aside></div>`;
@@ -1791,7 +2625,8 @@ function chooseMorphAdventure(i,choiceIndex){
   }
 
   a.scene=c.to;
-  a.energy=clamp(a.energy-2);
+  const travelCost=state.expeditionLoadout.includes("aerialpack")?1:2;
+  a.energy=clamp(a.energy-travelCost);
   p.bond=clamp((p.bond||0)+1);
   a.log.push("Moved to "+(MORPH_ADVENTURE_SCENES[c.to]?.title||c.to)+".");
   save();
@@ -1850,6 +2685,196 @@ function codexScreen(){
     :`<div class="empty">The Codex is empty. Complete your first morph expedition to publish a full research record.</div>`}</div>`;
 }
 
+
+
+
+const GEM_DATA={
+  "Prismatic Morph Shard":{icon:"💎",rarity:"EPIC",bonus:"+10 morph stability",tag:"stability"},
+  "Resonance Fossil":{icon:"🪨",rarity:"RARE",bonus:"+8 mastery gain",tag:"mastery"},
+  "Cryo Bloom Sample":{icon:"❄️",rarity:"RARE",bonus:"+10 expedition energy",tag:"energy"},
+  "Celestial Habitat Seed":{icon:"🌱",rarity:"EPIC",bonus:"+8 bond gain",tag:"bond"},
+  "Echo-Feather Relic":{icon:"🪶",rarity:"RARE",bonus:"reduced traversal cost",tag:"mobility"},
+  "Prototype Field Chip":{icon:"💠",rarity:"EPIC",bonus:"improved scanner results",tag:"scanner"},
+  "Ancient Vet Beacon":{icon:"🔷",rarity:"LEGENDARY",bonus:"better rescue outcomes",tag:"rescue"},
+  "Lost Institute Medal":{icon:"🏅",rarity:"LEGENDARY",bonus:"+12 Career XP",tag:"career"},
+  "Skyglass Stone":{icon:"🔹",rarity:"UNCOMMON",bonus:"+5 aerial efficiency",tag:"mobility"},
+  "Crystal Fruit":{icon:"🔸",rarity:"UNCOMMON",bonus:"+5 recovery energy",tag:"energy"}
+};
+
+function isGemItem(name){ return !!GEM_DATA[name]; }
+function availableGems(){
+  ensureAdvancedState();
+  return Object.keys(GEM_DATA).filter(x=>itemQty(x)>0);
+}
+function craftingProjectData(){
+  return INSTITUTE_PROJECTS.map(p=>({...p,sockets:p.id==="scanner"?3:p.id==="decoder"?2:2}));
+}
+function selectCraftProject(id){
+  ensureAdvancedState();
+  state.crafting.selectedProject=id;
+  state.crafting.sockets[id]=state.crafting.sockets[id]||[];
+  state.screen="crafting";save();render();window.scrollTo({top:0,left:0,behavior:"auto"});
+}
+function socketGem(projectId,gem){
+  ensureAdvancedState();
+  const p=craftingProjectData().find(x=>x.id===projectId);if(!p||!isGemItem(gem)||itemQty(gem)<=0)return;
+  const arr=state.crafting.sockets[projectId]||[];
+  if(arr.length>=p.sockets){toast("All sockets are filled.");return}
+  if(arr.includes(gem)){toast("That jewel is already socketed in this item.");return}
+  arr.push(gem);state.crafting.sockets[projectId]=arr;save();render();
+}
+function unsocketGem(projectId,idx){
+  ensureAdvancedState();
+  const arr=state.crafting.sockets[projectId]||[];
+  arr.splice(idx,1);state.crafting.sockets[projectId]=arr;save();render();
+}
+function socketBonusText(projectId){
+  const arr=state.crafting.sockets[projectId]||[];
+  return arr.map(x=>GEM_DATA[x]?.bonus).filter(Boolean);
+}
+function finalizeSocketCraft(projectId){
+  ensureAdvancedState();
+  const p=craftingProjectData().find(x=>x.id===projectId);if(!p)return;
+  const arr=state.crafting.sockets[projectId]||[];
+  if(arr.length===0){toast("Socket at least one jewel before crafting.");return}
+  if(!state.instituteProjects.includes(projectId)){toast("Build and validate the base Institute Project first.");return}
+  for(const g of arr){
+    if(itemQty(g)<=0){toast("A socketed jewel is no longer available.");return}
+  }
+  for(const g of arr)state.inventoryQty[g]=Math.max(0,itemQty(g)-1);
+  const craftedName=p.name+" · Socketed";
+  const existing=state.crafting.crafted.find(x=>x.projectId===projectId);
+  if(existing){
+    existing.gems=[...arr];existing.name=craftedName;
+  }else{
+    state.crafting.crafted.push({projectId,name:craftedName,gems:[...arr]});
+  }
+  state.career.rankXP+=arr.length*4;
+  state.research+=arr.length;
+  log("Socket-crafted "+craftedName+" with "+arr.join(", ")+".");
+  state.crafting.sockets[projectId]=[];
+  save();render();toast("Socketed equipment crafted.");
+}
+function craftedToolBonus(id,tag){
+  ensureAdvancedState();
+  const c=state.crafting.crafted.find(x=>x.projectId===id);
+  if(!c)return 0;
+  return c.gems.reduce((n,g)=>n+(GEM_DATA[g]?.tag===tag?1:0),0);
+}
+function craftingStationScreen(){
+  ensureAdvancedState();
+  const projects=craftingProjectData();
+  const selected=projects.find(x=>x.id===state.crafting.selectedProject)||projects[0];
+  if(!state.crafting.selectedProject)state.crafting.selectedProject=selected?.id||null;
+  const sockets=state.crafting.sockets[selected.id]||[];
+  const gems=availableGems();
+  const built=state.instituteProjects.includes(selected.id);
+  return `<div class="vegas-sign"><div class="small">INSTITUTE CRAFTING CASINO</div><h1>💎 THE SOCKET FORGE 💎</h1><div class="casino-lights"></div><div class="small">RECOVER · SOCKET · AUGMENT · CRAFT</div></div>`+hero("Institute Socket Forge","Install recovered jewels into validated Institute equipment before final crafting. Socket choices permanently change the upgraded item's bonuses.","🔨")
+  +`<div class="grid"><div>
+    <div class="socket-station">
+      <div class="eyebrow">CRAFTING STATION</div>
+      <h2>${selected.icon} ${selected.name}</h2>
+      <div class="small">${selected.effect}</div>
+      <div class="crafting-console">BASE PROJECT: ${built?"VALIDATED":"NOT YET BUILT"}<br>SOCKETS: ${sockets.length}/${selected.sockets}<br>JEWEL BONUSES: ${socketBonusText(selected.id).join(" · ")||"NONE"}</div>
+      <div class="socket-grid">${Array.from({length:selected.sockets}).map((_,i)=>{
+        const g=sockets[i];
+        return `<div class="socket-slot ${g?"filled":""}">${g?`<div class="socket-gem">${GEM_DATA[g].icon}</div><b>${g}</b><div class="gem-rarity">${GEM_DATA[g].rarity}</div><div class="small">${GEM_DATA[g].bonus}</div><button class="secondary fx-button" onclick="unsocketGem('${selected.id}',${i})">REMOVE</button>`:`<div style="font-size:28px">◇</div><b>EMPTY SOCKET</b><div class="small muted">Choose a recovered jewel below.</div>`}</div>`;
+      }).join("")}</div>
+      <button class="primary fx-button" style="width:100%;margin-top:10px" onclick="finalizeSocketCraft('${selected.id}')" ${built&&sockets.length?"":"disabled"}>⚒️ FINALIZE SOCKET CRAFT</button>
+    </div>
+    <div class="panel"><h3>RECOVERED JEWELS</h3><div class="morph-grid">${gems.length?gems.map(g=>`<div class="gem-card ${sockets.includes(g)?"selected":""}"><div class="socket-gem">${GEM_DATA[g].icon}</div><b>${g}</b><div class="gem-rarity">${GEM_DATA[g].rarity}</div><div class="small">${GEM_DATA[g].bonus}</div><div class="small muted">Owned: ${itemQty(g)}</div><button class="secondary fx-button" style="width:100%;margin-top:6px" onclick="socketGem('${selected.id}','${g}')" ${sockets.includes(g)||sockets.length>=selected.sockets?"disabled":""}>SOCKET JEWEL</button></div>`).join(""):'<div class="callout">No jewel-class field finds yet. Rare expedition events can uncover socket materials.</div>'}</div></div>
+  </div><aside>
+    <div class="panel"><h3>CRAFTING RECIPES</h3>${projects.map(p=>`<button class="${p.id===selected.id?"primary":"secondary"} fx-button" style="width:100%;margin:3px 0" onclick="selectCraftProject('${p.id}')">${state.instituteProjects.includes(p.id)?"🔓":"🔒"} ${p.icon} ${p.name} · ${p.sockets} sockets</button>`).join("")}</div>
+    <div class="panel"><h3>SOCKETED EQUIPMENT</h3>${state.crafting.crafted.length?state.crafting.crafted.map(c=>`<div class="crafted-item"><b>✨ ${c.name}</b><div class="small">${c.gems.map(g=>GEM_DATA[g].icon+" "+g+" — "+GEM_DATA[g].bonus).join("<br>")}</div></div>`).join(""):'<div class="small muted">No socket-upgraded items crafted yet.</div>'}</div>
+    <button class="secondary fx-button" style="width:100%" onclick="goMeta('projects')">← PROJECT LAB</button>
+  </aside></div>`;
+}
+const FIELD_EVENTS=[
+  {id:"storm",title:"ION STORM SURGE",icon:"⚡",risk:"Energy -12",reward:"+8 Career XP",desc:"A sudden resonance storm tears across the route. Push through for valuable signal exposure or shelter safely.",choices:["PUSH THROUGH","TAKE COVER"]},
+  {id:"rescue",title:"DISTRESS CALL",icon:"🚨",risk:"Energy -8",reward:"Rare rescue evidence",desc:"A weak animal signal appears off-route. Responding costs time and energy but may reveal a rare field discovery.",choices:["RESPOND NOW","MARK LOCATION"]},
+  {id:"cache",title:"SEALED FIELD CACHE",icon:"📦",risk:"Possible empty cache",reward:"Rare recovered item",desc:"A sealed Institute cache is buried beneath debris. Open it now or conserve energy and continue.",choices:["FORCE CACHE OPEN","LEAVE IT"]},
+  {id:"rift",title:"MORPH RESONANCE RIFT",icon:"🧬",risk:"Stress +10",reward:"Mastery +6",desc:"A brief morph resonance tear appears. Your resident can study it for mastery, but the field is unstable.",choices:["ENTER RIFT","BACK AWAY"]},
+  {id:"trail",title:"FRESH UNKNOWN TRAIL",icon:"🐾",risk:"Energy -6",reward:"Rare sample chance",desc:"A newly disturbed trail crosses the expedition route. Following it may reveal something not in the map.",choices:["FOLLOW TRAIL","STAY ON ROUTE"]}
+];
+
+const RARE_FIELD_LOOT=[
+  "Prismatic Morph Shard","Ancient Vet Beacon","Resonance Fossil","Celestial Habitat Seed",
+  "Prototype Field Chip","Echo-Feather Relic","Cryo Bloom Sample","Lost Institute Medal"
+];
+
+function excitementPanel(){
+  ensureAdvancedState();
+  const e=state.excitement;
+  const pct=Math.min(100,e.combo*18);
+  return `<div class="panel"><div class="combo-banner">⚡ COMBO ${e.combo}x</div><div class="streak-meter"><i style="width:${pct}%"></i></div><div class="expedition-score" style="margin-top:8px"><div class="score-box"><b>${e.bestCombo}</b><span>Best Combo</span></div><div class="score-box"><b>${e.rareFinds}</b><span>Rare Finds</span></div><div class="score-box"><b>${e.rescues}</b><span>Rescues</span></div><div class="score-box"><b>${e.events}</b><span>Events</span></div></div></div>`;
+}
+function addCombo(n=1){
+  ensureAdvancedState();
+  state.excitement.combo=Math.max(0,(state.excitement.combo||0)+n);
+  state.excitement.bestCombo=Math.max(state.excitement.bestCombo||0,state.excitement.combo);
+}
+function breakCombo(){ ensureAdvancedState(); state.excitement.combo=0; }
+
+function maybeTriggerFieldEvent(i){
+  ensureAdvancedState();
+  if(state.lastFieldEvent)return false;
+  if(Math.random()>0.32)return false;
+  const ev=FIELD_EVENTS[Math.floor(Math.random()*FIELD_EVENTS.length)];
+  state.lastFieldEvent={...ev,resident:i};
+  state.excitement.events++;
+  save();
+  return true;
+}
+function fieldEventCard(){
+  const ev=state.lastFieldEvent;if(!ev)return "";
+  return `<div class="danger-card"><div class="eyebrow">UNEXPECTED FIELD EVENT</div><h2>${ev.icon} ${ev.title}</h2><p>${ev.desc}</p><div class="small"><b>RISK:</b> ${ev.risk}<br><b>POTENTIAL:</b> ${ev.reward}</div><div class="choice-grid" style="margin-top:9px">${ev.choices.map((c,idx)=>`<button class="${idx===0?"primary fx-button":"secondary fx-button"}" onclick="resolveFieldEvent(${idx})">${c}</button>`).join("")}</div></div>`;
+}
+function resolveFieldEvent(choice){
+  const ev=state.lastFieldEvent;if(!ev)return;
+  const p=state.sanctuary[ev.resident];if(!p){state.lastFieldEvent=null;return}
+  const a=ensureAdventureState(p);
+  if(choice===0){
+    if(ev.id==="storm"){a.energy=clamp(a.energy-12);state.career.rankXP+=8;addCombo(2);a.log.push("Pushed through an ion storm and captured signal exposure.");}
+    if(ev.id==="rescue"){a.energy=clamp(a.energy-8);const loot="Emergency Rescue Record";if(!a.inventory.includes(loot)){a.inventory.push(loot);addInstituteItemAdvanced(loot,p.name)}state.excitement.rescues++;addCombo(3);p.bond=clamp((p.bond||0)+5);a.log.push("Answered a distress call and completed a field rescue.");}
+    if(ev.id==="cache"){const rare=RARE_FIELD_LOOT[Math.floor(Math.random()*RARE_FIELD_LOOT.length)];if(!a.inventory.includes(rare)){a.inventory.push(rare);addInstituteItemAdvanced(rare,p.name)}state.excitement.rareFinds++;addCombo(3);a.log.push("Opened a sealed cache and recovered "+rare+".");}
+    if(ev.id==="rift"){p.stress=clamp((p.stress||0)+10);p.mastery=clamp((p.mastery||0)+6);addCombo(2);a.log.push("Studied a morph resonance rift and gained mastery.");}
+    if(ev.id==="trail"){a.energy=clamp(a.energy-6);if(Math.random()<.65){const rare=RARE_FIELD_LOOT[Math.floor(Math.random()*RARE_FIELD_LOOT.length)];if(!a.inventory.includes(rare)){a.inventory.push(rare);addInstituteItemAdvanced(rare,p.name)}state.excitement.rareFinds++;addCombo(2);a.log.push("Followed an unknown trail and found "+rare+".");}else{addCombo(1);a.log.push("Followed the trail. It ended cold, but the search improved field awareness.");}}
+  }else{
+    breakCombo();
+    a.log.push("Chose the safer route during "+ev.title+".");
+  }
+  state.lastFieldEvent=null;save();render();
+}
+
+function rareLootCard(name){
+  return `<div class="rare-loot"><div class="eyebrow">RARE DISCOVERY</div><h3>✦ ${name}</h3><div class="small">Exceptional Institute evidence recovered from the field.</div></div>`;
+}
+function expeditionRewardBurst(p){
+  const e=state.excitement;
+  const score=Math.max(1,(p.mastery||0)+(p.bond||0)+e.combo*5+e.rareFinds*8);
+  const grade=score>170?"S":score>140?"A":score>110?"B":"C";
+  return `<div class="reward-burst"><div class="eyebrow">EXPEDITION PERFORMANCE</div><h2>MISSION GRADE ${grade}</h2><div class="expedition-score"><div class="score-box"><b>${score}</b><span>Score</span></div><div class="score-box"><b>${e.combo}x</b><span>Final Combo</span></div><div class="score-box"><b>${e.rareFinds}</b><span>Rare Finds</span></div><div class="score-box"><b>${p.mastery||0}</b><span>Mastery</span></div></div></div>`;
+}
+function morphPhaseLabel(i){
+  const labels=["","RESONANCE","CATALYST","MORPH SHIFT","STABILIZE","SENSORY CAL","INTEGRITY"];
+  return labels[Math.max(0,Math.min(labels.length-1,i||0))];
+}
+function animatedMorphShowcase(c){ return ""; }
+function formRevealPanel(c,branch){
+  if(!branch)return "";
+  return `<div class="form-reveal-card">
+    <div class="eyebrow">MORPH FORM REVEAL</div>
+    <div class="form-emblem">${branch.icon||c.icon||"✨"}</div>
+    <h2 style="text-align:center;margin:4px 0">${branch.name}</h2>
+    <div class="small muted" style="text-align:center">${branch.theme||"Adaptive form"}</div>
+    <div class="morph-stage-strip"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div>
+    <div class="ability-list">${(branch.abilities||[]).map(x=>`<div class="ability">✦ ${x}</div>`).join("")}</div>
+  </div>`;
+}
+function animatedGauge(label,value){
+  const v=Math.max(0,Math.min(100,Math.round(value||0)));
+  return `<div style="margin:8px 0"><div class="small"><b>${label}</b> · ${v}%</div><div class="animated-gauge"><i style="width:${v}%"></i></div></div>`;
+}
 function render(){
   ensureAdvancedState();evaluateCareerUnlocks();
   document.getElementById("resourceBar").innerHTML=resourceBar();
@@ -1863,14 +2888,25 @@ function render(){
   else if(state.screen==="career")html=careerCenterScreen();
   else if(state.screen==="researchtrack")html=researchTrackScreen();
   else if(state.screen==="projects")html=projectsScreen();
+  else if(state.screen==="instituteroom")html=instituteRoomScreen();
+  else if(state.screen==="assignment")html=assignmentScreen();
+  else if(state.screen==="crafting")html=craftingStationScreen();
   else{
     const id=stageId();
     html=({intake:intakeScreen,triage:triageScreen,exam:examScreen,diagnostics:diagnosticsScreen,treatment:treatmentScreen,vetrecovery:vetRecoveryScreen,eligibility:eligibilityScreen,resonance:resonanceScreen,prep:prepScreen,tree:treeScreen,chamber:chamberScreen,recovery:recoveryScreen,training:trainingScreen,expedition:expeditionScreen}[id]||intakeScreen)();
   }
-  if(state.screen!=="sanctuary" && state.screen!=="codex" && state.screen!=="worldmap" && state.screen!=="morphstory" && state.screen!=="career" && state.screen!=="researchtrack" && state.screen!=="projects"){
+  if(state.screen!=="sanctuary" && state.screen!=="codex" && state.screen!=="worldmap" && state.screen!=="morphstory" && state.screen!=="career" && state.screen!=="researchtrack" && state.screen!=="projects" && state.screen!=="instituteroom" && state.screen!=="assignment" && state.screen!=="crafting"){
     html = storyPanel() + html;
   }
   document.getElementById("main").innerHTML=html;
+  requestAnimationFrame(()=>{
+    const root=document.getElementById("main"); let panelNo=1;
+    root.querySelectorAll(".panel,.room-console,.socket-station,.danger-card,.reward-burst,.event-card,.casino-console,.jackpot-box,.form-reveal-card").forEach(el=>{
+      if(el.querySelector(":scope > .panel-number"))return;
+      const badge=document.createElement("span");
+      badge.className="panel-number"; badge.textContent=panelNo++; el.prepend(badge);
+    });
+  });
   save();
 }
 function goStage(i){
@@ -2039,8 +3075,8 @@ function showReward(c,m,w){
     <div class="small muted">${c.species} · ${m.theme}<br>Field certification: ${w.name} · ${w.biome}</div>
     <div class="reward-grid"><div class="reward"><b>+125</b><span>CREDITS</span></div><div class="reward"><b>+12</b><span>RESEARCH</span></div><div class="reward"><b>+1</b><span>CODEX MORPH</span></div></div>
     <div class="callout good">${c.name} now lives permanently in the Morph Sanctuary. This case is archived; the transformed creature will not disappear.</div>
-    <div class="footer-actions"><button class="primary" onclick="closeRewardToSanctuary()">OPEN MORPH SANCTUARY</button>
-    <button class="secondary" onclick="closeRewardToCodex()">VIEW CODEX RECORD</button></div>`;
+    <div class="footer-actions"><button class="primary fx-button" onclick="closeRewardToSanctuary()">OPEN MORPH SANCTUARY</button>
+    <button class="secondary fx-button" onclick="closeRewardToCodex()">VIEW CODEX RECORD</button></div>`;
   modal.classList.add("open");
 }
 function closeRewardToSanctuary(){document.getElementById("rewardModal").classList.remove("open");state.screen="sanctuary";save();render()}
@@ -2059,7 +3095,7 @@ window.goStage=goStage;window.goMeta=goMeta;window.finishArea=finishArea;window.
 window.intakeAction=intakeAction;window.vetTriage=vetTriage;window.vetExam=vetExam;window.vetDx=vetDx;window.vetTreat=vetTreat;window.vetRecover=vetRecover;window.clearForMorph=clearForMorph;window.scan=scan;window.prep=prep;window.selectMorph=selectMorph;window.chamberAction=chamberAction;
 window.recover=recover;window.train=train;window.pickWorld=pickWorld;window.field=field;window.completeCreatureCase=completeCreatureCase;
 window.closeRewardToSanctuary=closeRewardToSanctuary;window.closeRewardToCodex=closeRewardToCodex;window.startNextCreature=startNextCreature;
-window.petCare=petCare;window.careAll=careAll;window.openMorphStory=openMorphStory;window.openFirstMorphStory=openFirstMorphStory;window.closeMorphStory=closeMorphStory;window.continueMorphStory=continueMorphStory;window.morphStoryScreen=morphStoryScreen;window.chooseMorphAdventure=chooseMorphAdventure;window.resetMorphAdventure=resetMorphAdventure;window.careerCenterScreen=careerCenterScreen;window.openResearchTrack=openResearchTrack;window.runCareerResearch=runCareerResearch;window.projectsScreen=projectsScreen;window.buildInstituteProject=buildInstituteProject;window.completeAssignment=completeAssignment;window.useMorphFieldSkill=useMorphFieldSkill;window.resetGame=resetGame;
+window.petCare=petCare;window.careAll=careAll;window.openMorphStory=openMorphStory;window.openFirstMorphStory=openFirstMorphStory;window.closeMorphStory=closeMorphStory;window.continueMorphStory=continueMorphStory;window.morphStoryScreen=morphStoryScreen;window.chooseMorphAdventure=chooseMorphAdventure;window.resetMorphAdventure=resetMorphAdventure;window.careerCenterScreen=careerCenterScreen;window.openResearchTrack=openResearchTrack;window.runCareerResearch=runCareerResearch;window.projectsScreen=projectsScreen;window.buildInstituteProject=buildInstituteProject;window.completeAssignment=completeAssignment;window.useMorphFieldSkill=useMorphFieldSkill;window.openInstituteRoom=openInstituteRoom;window.startAssignment=startAssignment;window.advanceAssignment=advanceAssignment;window.fileAssignment=fileAssignment;window.toggleFieldTool=toggleFieldTool;window.useExpeditionTool=useExpeditionTool;window.advanceProjectStage=advanceProjectStage;window.selectCraftProject=selectCraftProject;window.socketGem=socketGem;window.unsocketGem=unsocketGem;window.finalizeSocketCraft=finalizeSocketCraft;window.resolveFieldEvent=resolveFieldEvent;window.resetGame=resetGame;
 
 
 function showStoryIntro(){
@@ -2071,7 +3107,7 @@ function showStoryIntro(){
       Koda arrives as a veterinary patient first. Treat him, diagnose him, recover him, and only then investigate the strange morph signal following him from Aster Reach.
     </div>
     <div class="callout" style="border-left-color:#bd9cff"><b>FIRST OBJECTIVE:</b> Complete Koda's veterinary intake and advance him through the hospital using the ADVANCE PATIENT buttons.</div>
-    <div class="footer-actions"><button class="primary" onclick="beginVetGodsStory()">▶ BEGIN KODA'S STORY</button></div>`;
+    <div class="footer-actions"><button class="primary fx-button" onclick="beginVetGodsStory()">▶ BEGIN KODA'S STORY</button></div>`;
   modal.classList.add("open");
 }
 function beginVetGodsStory(){
