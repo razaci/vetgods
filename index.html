@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>VET GODS · Morph Institute Desktop Game</title>
+<title>VET GODS · Veterinary Morph Institute</title>
 <style>
 :root{
   --bg:#050b13;--bg2:#07131f;--panel:#0b1926;--panel2:#0e2231;
@@ -237,7 +237,7 @@ main{max-width:1500px;margin:auto;padding:16px 18px 70px}
         <div class="sig">◈</div>
         <div>
           <h1>VET GODS</h1>
-          <div class="sub">ADAPTIVE MORPHOLOGY INSTITUTE · DESKTOP COMMAND SYSTEM</div>
+          <div class="sub">VETERINARY + ADAPTIVE MORPHOLOGY INSTITUTE · DESKTOP COMMAND SYSTEM</div>
         </div>
       </div>
       <div class="resources" id="resourceBar"></div>
@@ -255,14 +255,20 @@ main{max-width:1500px;margin:auto;padding:16px 18px 70px}
 <script>
 (()=>{"use strict";
 
-const SAVE_KEY="vetGodsDesktopV1";
+const SAVE_KEY="vetGodsDesktopVetMorphV2";
 const STAGES=[
   {id:"intake",label:"Intake Bay",short:"INTAKE"},
+  {id:"triage",label:"Veterinary Triage",short:"TRIAGE"},
+  {id:"exam",label:"Physical Exam",short:"EXAM"},
+  {id:"diagnostics",label:"Diagnostics",short:"DX"},
+  {id:"treatment",label:"Treatment Bay",short:"TREAT"},
+  {id:"vetrecovery",label:"Veterinary Recovery",short:"VET REC"},
+  {id:"eligibility",label:"Morph Eligibility",short:"CLEAR"},
   {id:"resonance",label:"Resonance Lab",short:"SCAN"},
   {id:"prep",label:"Preparation Bay",short:"PREP"},
   {id:"tree",label:"Morph Tree",short:"TREE"},
   {id:"chamber",label:"Morph Chamber",short:"MORPH"},
-  {id:"recovery",label:"Recovery Habitat",short:"RECOVER"},
+  {id:"recovery",label:"Post-Morph Recovery",short:"M REC"},
   {id:"training",label:"Training Deck",short:"TRAIN"},
   {id:"expedition",label:"Field Expedition",short:"FIELD"},
   {id:"sanctuary",label:"Morph Sanctuary",short:"HOME"},
@@ -404,7 +410,18 @@ function createCreature(template){
     key:template.key,name:template.name,species:template.species,sex:template.sex,temperament:template.temperament,
     icon:template.icon,origin:template.origin,mystery:template.mystery,condition:template.condition,baseTags:template.baseTags,
     stage:0,completedStages:[],areaComplete:false,
-    health:82,pain:18,hydration:66,energy:64,comfort:58,trust:48,stress:42,mobility:72,bond:36,
+    health:82,pain:38,hydration:62,energy:58,comfort:52,trust:48,stress:48,mobility:64,bond:36,
+    vet:{
+      triage:{airway:false,breathing:false,circulation:false,temp:false,weight:false},
+      exam:{head:false,chest:false,abdomen:false,limbs:false,skin:false},
+      dx:{blood:false,imaging:false,urine:false,assessment:false},
+      treatment:{fluids:false,pain:false,wound:false,nutrition:false,primary:false},
+      recovery:{water:false,food:false,rest:false,walk:false,recheck:false},
+      diagnosis:"Undetermined",
+      primaryProblem:"Rescue trauma with dehydration and soft-tissue pain",
+      oxygen:92,temp:102.1,heartRate:118,respRate:32,
+      cleared:false
+    },
     evidence:{physical:false,resonance:false,temperament:false,sample:false},
     prep:{hydrate:false,rest:false,comfort:false,calibrate:false,catalyst:false},
     selectedMorph:null,
@@ -448,7 +465,7 @@ function resourceBar(){
 
 function nav(){
   const c=active();
-  const stageButtons=STAGES.slice(0,8).map((s,i)=>{
+  const stageButtons=STAGES.slice(0,14).map((s,i)=>{
     const done=c.completedStages.includes(i);
     const current=i===c.stage;
     const unlocked=done||current;
@@ -479,10 +496,14 @@ function patientSide(){
     <h3 style="font-size:15px;margin-top:5px">${c.name} · ${c.species}</h3>
     <div class="small muted">${c.sex} · ${c.temperament}<br>${c.origin}</div>
     <div class="metric-grid" style="margin-top:10px">
-      ${metric("HEALTH",c.health)}${metric("STRESS",c.stress,true)}
-      ${metric("HYDRATION",c.hydration)}${metric("ENERGY",c.energy)}
-      ${metric("COMFORT",c.comfort)}${metric("TRUST",c.trust)}
+      ${metric("HEALTH",c.health)}${metric("PAIN",c.pain,true)}
+      ${metric("HYDRATION",c.hydration)}${metric("OXYGEN",c.vet?.oxygen||92)}
+      ${metric("STRESS",c.stress,true)}${metric("TRUST",c.trust)}
       ${metric("MOBILITY",c.mobility)}${metric("BOND",c.bond)}
+    </div>
+    <div class="callout ${c.vet?.cleared?"good":"warn"}" style="margin-top:10px">
+      <b>VETERINARY STATUS:</b> ${c.vet?.cleared?"CLEARED FOR MORPH RESEARCH":"PATIENT CARE REQUIRED"}<br>
+      ${c.vet?.diagnosis||"Diagnosis pending"}
     </div>
   </div>
   <div class="panel"><h3>CASE LOG</h3><div class="log">${state.logs.slice(0,8).map(x=>`<div>${x}</div>`).join("")}</div></div>`;
@@ -534,7 +555,7 @@ function intakeScreen(){
         <button class="action ${c.intakeCalm?"done":""}" onclick="intakeAction('calm')"><strong>CALM CONTACT</strong><span>Build trust before moving deeper into the institute.</span></button>
       </div>
       ${gate("INTAKE COMPLETION",checks)}
-      ${areaFooter(checks.every(x=>x[1]),"RESONANCE LAB")}
+      ${areaFooter(checks.every(x=>x[1]),"VETERINARY TRIAGE")}
     </div>
   </div><aside>${patientSide()}</aside></div>`;
 }
@@ -544,6 +565,200 @@ function intakeAction(a){
   if(a==="vitals"){c.intakeVitals=true;c.health=clamp(c.health+2);log("Baseline physical profile locked.")}
   if(a==="calm"){c.intakeCalm=true;c.trust=clamp(c.trust+10);c.stress=clamp(c.stress-9);c.bond=clamp(c.bond+5);log("Calm contact improved trust.")}
   save();render();
+}
+
+
+function triageScreen(){
+  const c=active(),v=c.vet,t=v.triage;
+  const checks=[
+    ["Airway checked",t.airway],["Breathing / oxygen checked",t.breathing],
+    ["Circulation checked",t.circulation],["Temperature recorded",t.temp],["Weight recorded",t.weight],
+    ["Oxygen 94+",v.oxygen>=94]
+  ];
+  return hero("Veterinary Triage · "+c.name,
+    "Stabilize the patient before deeper examination. This is a fictional game simulation inspired by ordinary veterinary workflow: airway, breathing, circulation, vital signs, pain and hydration are checked first.","🩺")
+  +`<div class="grid"><div><div class="panel"><h3>PRIMARY SURVEY</h3>
+    <div class="metric-grid" style="margin-bottom:10px">
+      ${metric("OXYGEN",v.oxygen)}${metric("PAIN",c.pain,true)}
+      ${metric("HYDRATION",c.hydration)}${metric("HEALTH",c.health)}
+    </div>
+    <div class="callout warn"><b>TRIAGE NOTE:</b> ${v.primaryProblem}. Complete the primary survey and stabilize low oxygen before leaving triage.</div>
+    <div class="action-grid three">
+      <button class="action ${t.airway?"done":""}" onclick="vetTriage('airway')"><strong>CHECK AIRWAY</strong><span>Confirm the airway is open and record effort.</span></button>
+      <button class="action ${t.breathing?"done":""}" onclick="vetTriage('breathing')"><strong>BREATHING + OXYGEN</strong><span>Assess respiration and provide simulated oxygen support if needed.</span></button>
+      <button class="action ${t.circulation?"done":""}" onclick="vetTriage('circulation')"><strong>CIRCULATION CHECK</strong><span>Record pulse quality and perfusion.</span></button>
+      <button class="action ${t.temp?"done":""}" onclick="vetTriage('temp')"><strong>TEMPERATURE</strong><span>Record the patient's simulated temperature.</span></button>
+      <button class="action ${t.weight?"done":""}" onclick="vetTriage('weight')"><strong>WEIGHT + BODY CONDITION</strong><span>Establish a treatment baseline for the case.</span></button>
+    </div>
+    ${gate("TRIAGE COMPLETION",checks)}
+    ${areaFooter(checks.every(x=>x[1]),"PHYSICAL EXAM")}
+  </div></div><aside>${patientSide()}</aside></div>`;
+}
+function vetTriage(a){
+  const c=active(),v=c.vet,t=v.triage;if(t[a])return;t[a]=true;
+  if(a==="airway") log("Airway patent; no obstruction detected in simulation.");
+  if(a==="breathing"){v.oxygen=clamp(v.oxygen+5);v.respRate=28;c.stress=clamp(c.stress-3);log("Breathing assessed; oxygen support raised saturation.")}
+  if(a==="circulation"){v.heartRate=110;c.health=clamp(c.health+2);log("Circulation and perfusion recorded.")}
+  if(a==="temp") log("Temperature recorded at "+v.temp.toFixed(1)+" °F.");
+  if(a==="weight") log("Weight and body condition entered into the patient record.");
+  save();render();
+}
+
+function examScreen(){
+  const c=active(),e=c.vet.exam;
+  const checks=[["Head / oral exam",e.head],["Heart / lungs",e.chest],["Abdomen",e.abdomen],["Limbs / gait",e.limbs],["Skin / wounds",e.skin]];
+  return hero("Complete Physical Examination",
+    "Work systematically from nose to tail. Findings from the exam determine which diagnostics are useful and what problem must be resolved before morph clearance.","🩻")
+  +`<div class="grid"><div><div class="panel"><h3>NOSE-TO-TAIL EXAM</h3>
+    <div class="action-grid">
+      <button class="action ${e.head?"done":""}" onclick="vetExam('head')"><strong>HEAD + ORAL EXAM</strong><span>Eyes, ears, mouth, hydration signs and mucous membranes.</span></button>
+      <button class="action ${e.chest?"done":""}" onclick="vetExam('chest')"><strong>HEART + LUNGS</strong><span>Auscultation-style simulated findings and breathing effort.</span></button>
+      <button class="action ${e.abdomen?"done":""}" onclick="vetExam('abdomen')"><strong>ABDOMINAL EXAM</strong><span>Check comfort, tension and gastrointestinal clues.</span></button>
+      <button class="action ${e.limbs?"done":""}" onclick="vetExam('limbs')"><strong>LIMBS + GAIT</strong><span>Assess pain, weight bearing and mobility.</span></button>
+      <button class="action ${e.skin?"done":""}" onclick="vetExam('skin')"><strong>SKIN + WOUND SURVEY</strong><span>Look for abrasions, swelling and coat condition.</span></button>
+    </div>
+    <h4>LIVE FINDINGS</h4>
+    <div class="ability-list">
+      ${e.head?'<div class="ability">Mild dehydration signs; oral tissues otherwise normal.</div>':''}
+      ${e.chest?'<div class="ability">Heart rhythm steady; respiratory effort improving after triage support.</div>':''}
+      ${e.abdomen?'<div class="ability">Abdomen soft; no severe guarding detected.</div>':''}
+      ${e.limbs?'<div class="ability">Guarded gait with soft-tissue pain; no gross instability.</div>':''}
+      ${e.skin?'<div class="ability">Superficial rescue abrasions; cleaning/support indicated.</div>':''}
+    </div>
+    ${gate("PHYSICAL EXAM COMPLETION",checks)}
+    ${areaFooter(checks.every(x=>x[1]),"DIAGNOSTICS")}
+  </div></div><aside>${patientSide()}</aside></div>`;
+}
+function vetExam(a){
+  const c=active(),e=c.vet.exam;if(e[a])return;e[a]=true;
+  if(a==="limbs"){c.pain=clamp(c.pain+2);log("Gait exam localized soft-tissue discomfort.")}
+  else log("Physical exam section completed: "+a+".");
+  save();render();
+}
+
+function diagnosticsScreen(){
+  const c=active(),d=c.vet.dx;
+  const checks=[["Blood panel",d.blood],["Imaging",d.imaging],["Urinalysis",d.urine],["Clinical assessment",d.assessment]];
+  return hero("Veterinary Diagnostics",
+    "Turn examination clues into an actionable diagnosis. Tests are simplified for gameplay and produce immediate fictional case findings.","🔬")
+  +`<div class="grid"><div><div class="panel"><h3>DIAGNOSTIC WORKUP</h3>
+    <div class="action-grid">
+      <button class="action ${d.blood?"done":""}" onclick="vetDx('blood')"><strong>BLOOD PANEL</strong><span>Check simulated hydration, inflammation and organ-screen values.</span></button>
+      <button class="action ${d.imaging?"done":""}" onclick="vetDx('imaging')"><strong>IMAGING</strong><span>Evaluate painful limbs/chest for major structural injury.</span></button>
+      <button class="action ${d.urine?"done":""}" onclick="vetDx('urine')"><strong>URINALYSIS</strong><span>Assess concentration and hydration pattern.</span></button>
+      <button class="action ${d.assessment?"done":""}" onclick="vetDx('assessment')"><strong>LOCK CLINICAL ASSESSMENT</strong><span>Combine exam and test evidence into the working diagnosis.</span></button>
+    </div>
+    <h4>RESULT BOARD</h4>
+    <div class="ability-list">
+      ${d.blood?'<div class="ability"><b>Blood:</b> mild dehydration pattern; no severe organ abnormality in this fictional case.</div>':''}
+      ${d.imaging?'<div class="ability"><b>Imaging:</b> no fracture; soft-tissue strain and superficial trauma supported.</div>':''}
+      ${d.urine?'<div class="ability"><b>Urine:</b> concentrated sample consistent with dehydration.</div>':''}
+      ${d.assessment?`<div class="ability"><b>Assessment:</b> ${c.vet.diagnosis}</div>`:''}
+    </div>
+    ${gate("DIAGNOSTIC COMPLETION",checks)}
+    ${areaFooter(checks.every(x=>x[1]),"TREATMENT BAY")}
+  </div></div><aside>${patientSide()}</aside></div>`;
+}
+function vetDx(a){
+  const c=active(),d=c.vet.dx;
+  if(a==="assessment"){
+    if(!(d.blood&&d.imaging&&d.urine)){toast("Complete the diagnostic tests before locking the assessment.");return}
+    d.assessment=true;c.vet.diagnosis="Dehydration + soft-tissue strain + superficial abrasions";log("Working diagnosis locked: "+c.vet.diagnosis+".");
+  }else if(!d[a]){d[a]=true;state.research+=1;log("Diagnostic result completed: "+a+".")}
+  save();render();
+}
+
+function treatmentScreen(){
+  const c=active(),t=c.vet.treatment;
+  const checks=[
+    ["Fluid support",t.fluids],["Pain control",t.pain],["Wound care",t.wound],["Nutrition support",t.nutrition],
+    ["Primary problem resolved",t.primary],["Pain 30 or less",c.pain<=30],["Hydration 70+",c.hydration>=70]
+  ];
+  return hero("Treatment Bay",
+    "Now actually treat the patient. Every action changes measurable patient state. The morph program stays locked until the veterinary problem is resolved.","💉")
+  +`<div class="grid"><div><div class="panel"><h3>TREATMENT PLAN</h3>
+    <div class="callout"><b>Diagnosis:</b> ${c.vet.diagnosis}</div>
+    <div class="action-grid">
+      <button class="action ${t.fluids?"done":""}" onclick="vetTreat('fluids')"><strong>FLUID SUPPORT</strong><span>Correct simulated dehydration and support circulation.</span></button>
+      <button class="action ${t.pain?"done":""}" onclick="vetTreat('pain')"><strong>PAIN CONTROL</strong><span>Provide fictional clinic analgesia and reassess comfort.</span></button>
+      <button class="action ${t.wound?"done":""}" onclick="vetTreat('wound')"><strong>CLEAN + PROTECT ABRASIONS</strong><span>Perform simplified wound care for the rescue injuries.</span></button>
+      <button class="action ${t.nutrition?"done":""}" onclick="vetTreat('nutrition')"><strong>NUTRITION SUPPORT</strong><span>Offer appropriate food once the patient is stable.</span></button>
+      <button class="action ${t.primary?"done":""}" onclick="vetTreat('primary')"><strong>RESOLVE PRIMARY PROBLEM</strong><span>Complete the definitive care plan after the support steps.</span></button>
+    </div>
+    ${gate("TREATMENT COMPLETION",checks)}
+    ${areaFooter(checks.every(x=>x[1]),"VETERINARY RECOVERY")}
+  </div></div><aside>${patientSide()}</aside></div>`;
+}
+function vetTreat(a){
+  const c=active(),t=c.vet.treatment;
+  if(a==="primary"&&!(t.fluids&&t.pain&&t.wound&&t.nutrition)){toast("Complete the support treatments first.");return}
+  if(t[a])return;t[a]=true;
+  if(a==="fluids"){c.hydration=clamp(c.hydration+22);c.health=clamp(c.health+4);log("Fluid support improved hydration and circulation.")}
+  if(a==="pain"){c.pain=clamp(c.pain-18);c.comfort=clamp(c.comfort+10);c.stress=clamp(c.stress-8);log("Pain control improved comfort.")}
+  if(a==="wound"){c.health=clamp(c.health+5);log("Superficial abrasions cleaned and protected.")}
+  if(a==="nutrition"){c.energy=clamp(c.energy+14);log("Nutrition support improved energy.")}
+  if(a==="primary"){c.health=clamp(c.health+8);c.pain=clamp(c.pain-6);log("Primary veterinary problem marked resolved.")}
+  save();render();
+}
+
+function vetRecoveryScreen(){
+  const c=active(),r=c.vet.recovery;
+  const checks=[
+    ["Drank voluntarily",r.water],["Ate voluntarily",r.food],["Quiet rest",r.rest],["Gentle mobility test",r.walk],
+    ["Final recheck",r.recheck],["Health 82+",c.health>=82],["Pain 25 or less",c.pain<=25],["Hydration 75+",c.hydration>=75],["Oxygen 95+",c.vet.oxygen>=95]
+  ];
+  return hero("Veterinary Recovery",
+    "Prove the patient is ready to leave ordinary veterinary care. Eating, drinking, resting, moving and passing a final recheck matter before any morph research is allowed.","❤️")
+  +`<div class="grid"><div><div class="panel"><h3>RECOVERY CHECKLIST</h3>
+    <div class="action-grid">
+      <button class="action ${r.water?"done":""}" onclick="vetRecover('water')"><strong>OFFER WATER</strong><span>Confirm voluntary drinking and maintain hydration.</span></button>
+      <button class="action ${r.food?"done":""}" onclick="vetRecover('food')"><strong>OFFER FOOD</strong><span>Confirm appetite and restore energy.</span></button>
+      <button class="action ${r.rest?"done":""}" onclick="vetRecover('rest')"><strong>QUIET REST</strong><span>Lower stress and allow recovery after treatment.</span></button>
+      <button class="action ${r.walk?"done":""}" onclick="vetRecover('walk')"><strong>GENTLE MOBILITY TEST</strong><span>Check comfortable weight bearing and gait.</span></button>
+      <button class="action ${r.recheck?"done":""}" onclick="vetRecover('recheck')"><strong>FINAL VET RECHECK</strong><span>Confirm treatment response and safe recovery status.</span></button>
+    </div>
+    ${gate("VETERINARY RECOVERY COMPLETION",checks)}
+    ${areaFooter(checks.every(x=>x[1]),"MORPH ELIGIBILITY")}
+  </div></div><aside>${patientSide()}</aside></div>`;
+}
+function vetRecover(a){
+  const c=active(),r=c.vet.recovery;if(r[a])return;
+  if(a==="recheck"&&!(r.water&&r.food&&r.rest&&r.walk)){toast("Complete food, water, rest and mobility checks first.");return}
+  r[a]=true;
+  if(a==="water"){c.hydration=clamp(c.hydration+10);log("Patient drank voluntarily.")}
+  if(a==="food"){c.energy=clamp(c.energy+10);c.health=clamp(c.health+2);log("Patient ate voluntarily.")}
+  if(a==="rest"){c.stress=clamp(c.stress-14);c.comfort=clamp(c.comfort+12);c.health=clamp(c.health+3);log("Quiet recovery rest completed.")}
+  if(a==="walk"){c.mobility=clamp(c.mobility+12);c.pain=clamp(c.pain-4);log("Gentle mobility test passed.")}
+  if(a==="recheck"){c.vet.oxygen=clamp(c.vet.oxygen+2);c.health=clamp(c.health+3);c.pain=clamp(c.pain-3);log("Final veterinary recheck completed.")}
+  save();render();
+}
+
+function eligibilityScreen(){
+  const c=active();
+  const checks=[
+    ["Diagnosis established",c.vet.dx.assessment],
+    ["Primary problem treated",c.vet.treatment.primary],
+    ["Recovery recheck passed",c.vet.recovery.recheck],
+    ["Health 82+",c.health>=82],["Pain ≤25",c.pain<=25],["Hydration 75+",c.hydration>=75],["Oxygen 95+",c.vet.oxygen>=95],["Stress <40",c.stress<40]
+  ];
+  const cleared=checks.every(x=>x[1]);
+  return hero("Morph Eligibility Board",
+    "Veterinary medicine comes first. This board prevents a sick, painful, dehydrated or unstable animal from entering the fictional morph program.","✅")
+  +`<div class="grid"><div><div class="panel"><h3>MEDICAL CLEARANCE</h3>
+    <div class="callout ${cleared?"good":"warn"}">${cleared?"All veterinary clearance requirements are satisfied. "+c.name+" may enter resonance research.":"Morph research remains locked until every medical criterion is green."}</div>
+    ${gate("MORPH MEDICAL CLEARANCE",checks)}
+    <div class="footer-actions">
+      <button class="primary" ${cleared&&!c.areaComplete?"":"disabled"} onclick="clearForMorph()">✓ AUTHORIZE MORPH RESEARCH</button>
+      <button class="secondary" ${c.areaComplete?"":"disabled"} onclick="continueStage()">ENTER RESONANCE LAB →</button>
+      <button class="secondary" onclick="goMeta('institute')">INSTITUTE DASHBOARD</button>
+    </div>
+  </div></div><aside>${patientSide()}</aside></div>`;
+}
+function clearForMorph(){
+  const c=active();
+  if(!canFinish(6)){toast("Veterinary clearance criteria are not complete.");return}
+  c.vet.cleared=true;c.areaComplete=true;if(!c.completedStages.includes(6))c.completedStages.push(6);
+  log(c.name+" medically cleared for fictional morph research.");save();render();
 }
 
 function resonanceScreen(){
@@ -625,7 +840,7 @@ function treeScreen(){
     <div class="ability-list">${m.abilities.map(a=>`<div class="ability">${a}</div>`).join("")}</div>
     <button class="primary" style="width:100%;margin-top:9px" onclick="selectMorph('${m.id}')">${c.selectedMorph===m.id?"SELECTED":"SELECT "+m.name.toUpperCase()}</button>
   </div>`).join("");
-  const checks=[["Morph branch deliberately selected",!!c.selectedMorph],["Preparation Bay completed",c.completedStages.includes(2)]];
+  const checks=[["Morph branch deliberately selected",!!c.selectedMorph],["Preparation Bay completed",c.completedStages.includes(8)]];
   return hero("Morph Tree · Choose a Path",
     "Compare the future, not just the immediate bonus. Every branch changes traversal, abilities, habitat fit and later specialization.","🌌")
   +`<div class="panel"><div class="morph-grid">${cards}</div>${gate("MORPH SELECTION",checks)}
@@ -767,7 +982,7 @@ function field(a){
 function instituteScreen(){
   const c=active(),m=morph();
   return hero("Adaptive Morphology Institute",
-    "A long-form creature-morphing command game built around evidence, care, branching forms, training, expeditions and a permanent sanctuary. No room teleports: work stays where you are until you explicitly finish it.","🏛️")
+    "A veterinary patient-care and creature-morphing command game. Every animal must be triaged, examined, diagnosed, treated and medically cleared before entering the fictional morph program. No room teleports: work stays where you are until you explicitly finish it.","🏛️")
   +`<div class="grid"><div>
     <div class="panel"><h3>CURRENT CASE · ${c.name}</h3>
       <div class="callout">${c.mystery}</div>
@@ -848,7 +1063,7 @@ function render(){
   else if(state.screen==="worldmap")html=worldMapScreen();
   else{
     const id=stageId();
-    html=({intake:intakeScreen,resonance:resonanceScreen,prep:prepScreen,tree:treeScreen,chamber:chamberScreen,recovery:recoveryScreen,training:trainingScreen,expedition:expeditionScreen}[id]||intakeScreen)();
+    html=({intake:intakeScreen,triage:triageScreen,exam:examScreen,diagnostics:diagnosticsScreen,treatment:treatmentScreen,vetrecovery:vetRecoveryScreen,eligibility:eligibilityScreen,resonance:resonanceScreen,prep:prepScreen,tree:treeScreen,chamber:chamberScreen,recovery:recoveryScreen,training:trainingScreen,expedition:expeditionScreen}[id]||intakeScreen)();
   }
   document.getElementById("main").innerHTML=html;
   save();
@@ -867,23 +1082,29 @@ function finishArea(){
 }
 function continueStage(){
   const c=active();if(!c.areaComplete)return;
-  c.stage=Math.min(7,c.stage+1);c.areaComplete=false;state.screen=STAGES[c.stage].id;log("Entered "+STAGES[c.stage].label+".");save();render();
+  c.stage=Math.min(13,c.stage+1);c.areaComplete=false;state.screen=STAGES[c.stage].id;log("Entered "+STAGES[c.stage].label+".");save();render();
 }
 function canFinish(i){
   const c=active();
   if(i===0)return !!(c.intakeBrief&&c.intakeVitals&&c.intakeCalm);
-  if(i===1)return Object.values(c.evidence).every(Boolean);
-  if(i===2)return c.hydration>=70&&c.energy>=68&&c.comfort>=68&&c.trust>=55&&c.prep.calibrate&&c.prep.catalyst;
-  if(i===3)return !!c.selectedMorph&&c.completedStages.includes(2);
-  if(i===4)return c.chamber.phase>=CHAMBER_PHASES.length&&c.chamber.stability>=60&&c.chamber.integrity>=60;
-  if(i===5)return c.recovery.adaptation>=80&&c.hydration>=70&&c.stress<40&&c.comfort>=70&&c.recovery.environment;
-  if(i===6)return Object.values(c.training).every(Boolean);
-  if(i===7)return !!c.expedition.world&&c.expedition.brief&&c.expedition.route&&c.expedition.objective&&c.expedition.extract;
+  if(i===1){const t=c.vet.triage;return t.airway&&t.breathing&&t.circulation&&t.temp&&t.weight&&c.vet.oxygen>=94}
+  if(i===2)return Object.values(c.vet.exam).every(Boolean);
+  if(i===3)return Object.values(c.vet.dx).every(Boolean);
+  if(i===4){const t=c.vet.treatment;return Object.values(t).every(Boolean)&&c.pain<=30&&c.hydration>=70}
+  if(i===5){const r=c.vet.recovery;return Object.values(r).every(Boolean)&&c.health>=82&&c.pain<=25&&c.hydration>=75&&c.vet.oxygen>=95}
+  if(i===6)return c.vet.dx.assessment&&c.vet.treatment.primary&&c.vet.recovery.recheck&&c.health>=82&&c.pain<=25&&c.hydration>=75&&c.vet.oxygen>=95&&c.stress<40;
+  if(i===7)return Object.values(c.evidence).every(Boolean);
+  if(i===8)return c.hydration>=70&&c.energy>=68&&c.comfort>=68&&c.trust>=55&&c.prep.calibrate&&c.prep.catalyst;
+  if(i===9)return !!c.selectedMorph&&c.completedStages.includes(8);
+  if(i===10)return c.chamber.phase>=CHAMBER_PHASES.length&&c.chamber.stability>=60&&c.chamber.integrity>=60;
+  if(i===11)return c.recovery.adaptation>=80&&c.hydration>=70&&c.stress<40&&c.comfort>=70&&c.recovery.environment;
+  if(i===12)return Object.values(c.training).every(Boolean);
+  if(i===13)return !!c.expedition.world&&c.expedition.brief&&c.expedition.route&&c.expedition.objective&&c.expedition.extract;
   return false;
 }
 
 function completeCreatureCase(){
-  const c=active();if(!c.areaComplete||c.stage!==7)return;
+  const c=active();if(!c.areaComplete||c.stage!==13)return;
   const m=morph(),w=WORLDS.find(x=>x.id===c.expedition.world);
   const exists=state.sanctuary.some(x=>x.caseKey===c.key);
   if(!exists){
@@ -924,7 +1145,7 @@ function resetGame(){
 }
 
 window.goStage=goStage;window.goMeta=goMeta;window.finishArea=finishArea;window.continueStage=continueStage;
-window.intakeAction=intakeAction;window.scan=scan;window.prep=prep;window.selectMorph=selectMorph;window.chamberAction=chamberAction;
+window.intakeAction=intakeAction;window.vetTriage=vetTriage;window.vetExam=vetExam;window.vetDx=vetDx;window.vetTreat=vetTreat;window.vetRecover=vetRecover;window.clearForMorph=clearForMorph;window.scan=scan;window.prep=prep;window.selectMorph=selectMorph;window.chamberAction=chamberAction;
 window.recover=recover;window.train=train;window.pickWorld=pickWorld;window.field=field;window.completeCreatureCase=completeCreatureCase;
 window.closeRewardToSanctuary=closeRewardToSanctuary;window.closeRewardToCodex=closeRewardToCodex;window.startNextCreature=startNextCreature;
 window.petCare=petCare;window.careAll=careAll;window.resetGame=resetGame;
