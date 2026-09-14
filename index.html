@@ -244,6 +244,23 @@ main{max-width:1500px;margin:auto;padding:16px 18px 70px}
   .action-grid,.action-grid.three,.morph-grid,.sanctuary-grid,.world-grid{grid-template-columns:1fr}
   .gate-list{grid-template-columns:1fr}.stagebar{grid-template-columns:repeat(5,1fr)}
 }
+
+/* ADVANCED INSTITUTE REDESIGN */
+.hub-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.hub-card{border:1px solid #2d5366;background:linear-gradient(180deg,#0e2231,#09141f);border-radius:14px;padding:12px;min-height:148px;box-shadow:var(--shadow)}
+.hub-card.unlocked{border-color:#447c61;background:linear-gradient(180deg,#102b26,#091c1a)}
+.hub-card.locked{opacity:.68}
+.hub-card h3{margin:5px 0 7px;font-size:13px}.hub-card p{font-size:8px;line-height:1.55;color:var(--muted)}
+.big-kpi{font-size:25px;font-weight:1000;color:var(--cyan);line-height:1}.mini-kpi{font-size:8px;color:var(--muted);margin-top:4px}
+.inventory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.inv-item{border:1px solid #315365;background:#0a1721;border-radius:9px;padding:8px;font-size:8px}.inv-item b{color:#fff}.inv-item .qty{float:right;color:var(--gold);font-weight:900}
+.room-map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.room-node{border:1px solid #345264;border-radius:11px;padding:10px;background:#081721}.room-node.open{border-color:#4a8467;background:#0c211b}.room-node strong{display:block;font-size:9px;margin-bottom:5px}.room-node span{font-size:7px;color:var(--muted)}
+.assignment{border:1px solid #36576a;border-radius:11px;padding:10px;background:#091722;margin-top:8px}.assignment.done{border-color:#4a8467;background:#0d221c}.assignment h4{margin:0 0 6px;font-size:10px}.assignment .reward{color:var(--gold);font-weight:800}
+.recipe-card{border:1px solid #475067;border-radius:11px;padding:10px;background:#0d1420}.recipe-card.done{border-color:#4a8467;background:#0c211a}.recipe-card h3{margin:0 0 6px}.requirement-line{font-size:7px;line-height:1.6;color:#b8c9d1}.requirement-line .yes{color:var(--mint)}.requirement-line .no{color:var(--red)}
+.rank-banner{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;border:1px solid #6f5f2f;background:linear-gradient(90deg,#2a2411,#101b26);padding:12px;border-radius:14px}.rank-badge{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#162a39;border:2px solid var(--gold);font-size:27px}.rank-title{font-size:18px;font-weight:1000}.rank-progress{height:7px;background:#172733;border-radius:99px;overflow:hidden;margin-top:7px}.rank-progress i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));border-radius:99px}
+.expectation-board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.expectation{border:1px solid #315163;background:#091722;border-radius:10px;padding:9px}.expectation b{display:block;font-size:9px}.expectation span{font-size:7px;color:var(--muted)}
+.field-skill{border:1px solid #6a5c91;background:linear-gradient(180deg,#17162d,#0a1420);border-radius:12px;padding:10px;margin-top:10px}
+@media(max-width:1050px){.hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.inventory-grid,.room-map{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.hub-grid,.inventory-grid,.room-map,.expectation-board{grid-template-columns:1fr}.rank-banner{grid-template-columns:auto 1fr}.rank-banner>.big-kpi{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -471,7 +488,20 @@ const defaultState=()=>({
   creature:null,
   logs:["Morph Institute online. First rescue assigned: Koda."],
   ui:{rewardPending:false,storyIntroSeen:false},
-  storyResidentIndex:0
+  storyResidentIndex:0,
+  instituteInventory:[],
+  career:{
+    unlockedTracks:[],
+    researchPoints:0,
+    fieldPermits:[],
+    discoveries:[],
+    rankXP:0,
+    assignmentsCompleted:[]
+  },
+  inventoryQty:{},
+  instituteProjects:[],
+  activeAssignment:null,
+  fieldSkillUses:0
 });
 
 let state=load();
@@ -527,12 +557,14 @@ function toast(msg){
 }
 
 function resourceBar(){
+  ensureAdvancedState();const rank=currentCareerRank();
   return `
-    <div class="chip"><b>INSTITUTE RANK</b><span>${state.rank}</span></div>
-    <div class="chip"><b>RESEARCH</b><span>${state.research} RP</span></div>
-    <div class="chip"><b>CREDITS</b><span>₡ ${state.credits}</span></div>
-    <div class="chip"><b>CATALYST STOCK</b><span>${state.catalystStock}</span></div>
-    <div class="chip"><b>COMPLETED MORPHS</b><span>${state.completedCases}</span></div>`;
+    <div class="chip"><b>CAREER RANK</b><span>${rank.name}</span></div>
+    <div class="chip"><b>CAREER XP</b><span>${state.career.rankXP}</span></div>
+    <div class="chip"><b>RESEARCH</b><span>${state.career.researchPoints} RP</span></div>
+    <div class="chip"><b>FIELD ITEMS</b><span>${Object.values(state.inventoryQty).reduce((a,b)=>a+b,0)}</span></div>
+    <div class="chip"><b>PROJECTS</b><span>${state.instituteProjects.length}</span></div>
+    <div class="chip"><b>MORPHS</b><span>${state.completedCases}</span></div>`;
 }
 
 function nav(){
@@ -543,9 +575,11 @@ function nav(){
     const unlocked=done||current;
     return `<button class="${current?"active":done?"done":"locked"}" ${unlocked?"":"disabled"} onclick="goStage(${i})">${s.short}</button>`;
   }).join("");
-  return `<button class="meta ${state.screen==="institute"?"active":""}" onclick="goMeta('institute')">INSTITUTE</button>
+  return `<button class="meta ${state.screen==="institute"?"active":""}" onclick="goMeta('institute')">INSTITUTE HUB</button>
     ${stageButtons}
-    <button class="meta ${state.screen==="sanctuary"?"active":""}" onclick="goMeta('sanctuary')">SANCTUARY</button>
+    <button class="meta ${state.screen==="sanctuary"||state.screen==="morphstory"?"active":""}" onclick="goMeta('sanctuary')">SANCTUARY</button>
+    <button class="meta ${state.screen==="career"||state.screen==="researchtrack"?"active":""}" onclick="goMeta('career')">CAREER CENTER</button>
+    <button class="meta ${state.screen==="projects"?"active":""}" onclick="goMeta('projects')">PROJECT LAB</button>
     <button class="meta ${state.screen==="codex"?"active":""}" onclick="goMeta('codex')">CODEX</button>
     <button class="meta ${state.screen==="worldmap"?"active":""}" onclick="goMeta('worldmap')">WORLD MAP</button>`;
 }
@@ -1059,22 +1093,24 @@ function field(a){
 }
 
 function instituteScreen(){
-  const c=active(),m=morph();
-  return hero("Adaptive Morphology Institute",
-    "A veterinary patient-care and creature-morphing command game. Every animal must be triaged, examined, diagnosed, treated and medically cleared before entering the fictional morph program. No room teleports: work stays where you are until you explicitly finish it.","🏛️")
-  +`<div class="grid"><div>
-    <div class="panel"><h3>CURRENT CASE · ${c.name}</h3>
-      <div class="callout">${c.mystery}</div>
-      <div class="small">Current stage: <b>${STAGES[c.stage].label}</b><br>Selected form: <b>${m?m.name:"Not yet selected"}</b><br>Completed areas: ${c.completedStages.length}</div>
-      <div class="footer-actions"><button class="primary" onclick="goStage(${c.stage})">RETURN TO ${STAGES[c.stage].label.toUpperCase()}</button>
-      <button class="secondary" onclick="goMeta('worldmap')">OPEN WORLD MAP</button></div>
-    </div>
-    <div class="panel"><h3>CAMPAIGN SYSTEMS</h3><div class="action-grid three">
-      <button class="action" onclick="goMeta('sanctuary')"><strong>MORPH SANCTUARY</strong><span>${state.sanctuary.length} transformed creatures living in persistent habitats.</span></button>
-      <button class="action" onclick="goMeta('codex')"><strong>MORPH CODEX</strong><span>${Object.keys(state.codex).length} individual research records discovered.</span></button>
-      <button class="action" onclick="goMeta('worldmap')"><strong>FICTIONAL WORLDS</strong><span>Eight regions with distinct hazards, resources and traversal tags.</span></button>
-    </div></div>
-  </div><aside>${patientSide()}</aside></div>`;
+  ensureAdvancedState();evaluateCareerUnlocks();
+  const c=active(),m=morph(),rank=currentCareerRank(),rooms=instituteRoomData(),inv=Object.entries(state.inventoryQty).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]);
+  return hero("VET GODS · Adaptive Morphology Institute",
+    "The Institute is now the campaign hub. Veterinary medicine creates safe morph candidates; transformed residents run branching expeditions; recovered evidence unlocks careers, research projects, rooms and harder field expectations.","🏛️")
+  +careerRankPanel()
+  +`<div class="hub-grid" style="margin-top:10px">
+    <div class="hub-card"><div class="eyebrow">ACTIVE PATIENT</div><h3>${c.icon} ${c.name} · ${c.species}</h3><div class="big-kpi">${STAGES[c.stage].short}</div><p>${c.vet?.cleared?"Veterinary clearance complete. Continue the morph program.":"Veterinary care is still the priority before morph research."}</p><button class="primary" style="width:100%" onclick="goStage(${c.stage})">RETURN TO ${STAGES[c.stage].label.toUpperCase()}</button></div>
+    <div class="hub-card unlocked"><div class="eyebrow">FIELD OPERATIONS</div><h3>🗺️ Morphed Animal Adventures</h3><div class="big-kpi">${state.sanctuary.length}</div><p>Residents available for branching search-and-recovery expeditions.</p><button class="primary" style="width:100%" onclick="goMeta('sanctuary')">OPEN SANCTUARY</button></div>
+    <div class="hub-card unlocked"><div class="eyebrow">CAREER CENTER</div><h3>🎓 Specializations</h3><div class="big-kpi">${state.career.unlockedTracks.length}</div><p>Career tracks unlocked from real field evidence. Current rank: ${rank.name}.</p><button class="primary" style="width:100%" onclick="goMeta('career')">OPEN CAREER CENTER</button></div>
+    <div class="hub-card unlocked"><div class="eyebrow">RESEARCH PROJECTS</div><h3>🛠️ Build With Recovered Items</h3><div class="big-kpi">${state.instituteProjects.length}</div><p>Combine expedition finds into permanent Institute capabilities.</p><button class="primary" style="width:100%" onclick="goMeta('projects')">OPEN PROJECT LAB</button></div>
+  </div>
+  <div class="grid" style="margin-top:10px"><div>
+    <div class="panel"><h3>INSTITUTE ROOM NETWORK</h3><div class="room-map">${rooms.map(r=>`<div class="room-node ${r[2]?"open":""}"><strong>${r[2]?"🔓":"🔒"} ${r[1]} ${r[0]}</strong><span>${r[3]}</span></div>`).join("")}</div></div>
+    <div class="panel"><h3>RECOVERED FIELD INVENTORY</h3><div class="small muted">${inv.length} unique discoveries · items can unlock tracks, complete assignments, and be consumed by Institute projects.</div><div class="inventory-grid" style="margin-top:8px">${inv.length?inv.slice(0,18).map(([x,q])=>`<div class="inv-item"><span class="qty">×${q}</span><b>🎒 ${x}</b></div>`).join(""):'<div class="inv-item">No field evidence recovered yet. Complete a morphed-animal adventure.</div>'}</div></div>
+  </div><aside>
+    <div class="panel"><h3>FIELD ASSIGNMENT BOARD</h3>${fieldAssignmentsPanel(4)}<button class="secondary" style="width:100%;margin-top:8px" onclick="goMeta('career')">VIEW ALL CAREER WORK</button></div>
+    <div class="panel"><h3>CAMPAIGN RECORD</h3><div class="ability-list"><div class="ability">🧬 Completed morphs: ${state.completedCases}</div><div class="ability">📚 Codex records: ${Object.keys(state.codex).length}</div><div class="ability">🔬 Research points: ${state.career.researchPoints}</div><div class="ability">🛠️ Institute projects: ${state.instituteProjects.length}</div></div><div class="footer-actions"><button class="secondary" onclick="goMeta('codex')">CODEX</button><button class="secondary" onclick="goMeta('worldmap')">WORLD MAP</button></div></div>
+  </aside></div>`;
 }
 
 function worldMapScreen(){
@@ -1092,7 +1128,7 @@ function sanctuaryScreen(){
   }
   return hero("Morph Sanctuary",
     "Persistent care, habitat fit, bond and mastery continue after a case ends. Use CARE FOR ALL for baseline care, then work with individuals when you want deeper attention.","🌿")
-  +`<div class="panel"><div class="footer-actions"><button class="primary" onclick="careAll()">CARE FOR ALL RESIDENTS</button><button class="secondary" onclick="openFirstMorphStory()">🗺️ PLAY MORPHED ANIMAL ADVENTURE</button>
+  +`<div class="panel"><div class="footer-actions"><button class="primary" onclick="careAll()">CARE FOR ALL RESIDENTS</button><button class="secondary" onclick="openFirstMorphStory()">🗺️ PLAY MORPHED ANIMAL ADVENTURE</button><button class="secondary" onclick="goMeta('career')">🎓 CAREER CENTER</button>
     <button class="secondary" onclick="startNextCreature()">${state.activeIndex<CREATURES.length-1?"▶ ADVANCE TO NEXT PATIENT":"▶ START NEXT PATIENT CYCLE"}</button></div></div>
   <div class="sanctuary-grid">${state.sanctuary.map((p,i)=>petCard(p,i)).join("")}</div>`;
 }
@@ -1161,6 +1197,266 @@ function ensureAdventureState(p){
   return p.adventure;
 }
 
+
+
+const CAREER_RANKS=[
+  {name:"Intern",xp:0,icon:"◈"},{name:"Field Technician",xp:20,icon:"◆"},{name:"Specialist",xp:55,icon:"✦"},
+  {name:"Researcher",xp:100,icon:"✧"},{name:"Senior Researcher",xp:165,icon:"⬢"},{name:"Institute Director",xp:250,icon:"★"}
+];
+const INSTITUTE_PROJECTS=[
+  {id:"rescuekit",name:"Remote Rescue Kit",icon:"🩺",need:["Field Med Kit","Waterproof Sample Tubes"],track:"fieldmed",effect:"Adds a remote-stabilization tool to future expeditions."},
+  {id:"culturetray",name:"Habitat Culture Tray",icon:"🌱",need:["Habitat Seed Kit","Luminous Reed Sample"],track:"xenobotany",effect:"Opens living botanical samples in the Institute ecology wing."},
+  {id:"scanner",name:"Morph Stability Scanner",icon:"📟",need:["Field Scanner Core","Resonance Coil"],track:"morphresearch",effect:"Reveals advanced stability data for transformed residents."},
+  {id:"decoder",name:"Legacy Route Decoder",icon:"🗺️",need:["Cracked Data Module","Relay Maintenance Logs"],track:"signals",effect:"Unlocks hidden expedition-route intelligence."},
+  {id:"archivecase",name:"Archive Reconstruction",icon:"📚",need:["Field Journal","Archive Rubbing"],track:"archive",effect:"Builds a playable legacy case from recovered evidence."},
+  {id:"aerialpack",name:"Aerial Rescue Pack",icon:"🪽",need:["Silver Feather","Skyglass Stone"],track:"aero",effect:"Improves high-ridge and aerial rescue preparation."},
+  {id:"enrichment",name:"Sanctuary Enrichment Module",icon:"🏕️",need:["Sanctuary Blueprint","Bond Charm"],track:"sanctuary",effect:"Adds an enrichment project for long-term residents."},
+  {id:"nutritiontrial",name:"Adaptive Nutrition Trial",icon:"🥣",need:["Morph Nutrient Pack","Crystal Fruit"],track:"nutrition",effect:"Creates an Institute post-morph feeding research program."},
+  {id:"careerpacket",name:"Career Expedition Packet",icon:"🎓",need:["Field Expectation Manual","Institute Career Badge Set"],track:"career",effect:"Unlocks advanced rotating field expectations and career milestones."}
+];
+const FIELD_ASSIGNMENTS=[
+  {id:"rescue1",track:"fieldmed",title:"Remote Rescue Readiness",need:["Field Med Kit"],task:"Recover medical equipment and complete one morphed-animal adventure.",reward:8},
+  {id:"flora1",track:"xenobotany",title:"Living Habitat Survey",need:["Crystal Fruit","Luminous Reed Sample"],task:"Return two botanical discoveries to the Institute.",reward:10},
+  {id:"signal1",track:"signals",title:"Lost Relay Reconstruction",need:["Cracked Data Module","Field Scanner Core"],task:"Recover enough relay technology to reconstruct a field network.",reward:12},
+  {id:"archive1",track:"archive",title:"Legacy Case Recovery",need:["Field Journal","Archive Rubbing"],task:"Recover both narrative and physical archive evidence.",reward:12},
+  {id:"morph1",track:"morphresearch",title:"Trait Stability Survey",need:["Resonance Coil","Unknown Fur Sample"],task:"Bring back two complementary morph-study samples.",reward:14},
+  {id:"sanctuary1",track:"sanctuary",title:"Resident Habitat Upgrade",need:["Sanctuary Blueprint"],task:"Recover an expansion blueprint for resident care.",reward:10}
+];
+const MORPH_FIELD_FINDS={
+  Frostmane:["Thermal Sample","Cryo Moss"],Stormrunner:["Charged Capacitor","Stormglass Shard"],Rootfang:["Root Resin","Medicinal Bark"],
+  "Glasswing Oracle":["Prism Feather","Observation Notes"],Nightvector:["Night Signal Log","Echo Map"],Sunquill:["Solar Quill","Thermal Map"],
+  Tidecoil:["Water Sensor","River Sample"],Reefglide:["Reef Fragment","Current Chart"],Stormfin:["Stormfin Scale","Floodway Map"],
+  Ironbloom:["Ironroot Sample","Soil Core"],Embertusk:["Ember Stone","Heat Shield Fragment"],Mossram:["Moss Culture","Forest Soil Core"],
+  Moonstep:["Lunar Fiber","Burrow Map"],Thornskip:["Thorn Fiber","Hidden Warren Map"],Sparkhare:["Static Tuft","Charge Trace"],
+  Sunlance:["Solar Quill","Highland Marker"],Stormcrest:["Storm Plume","Weather Log"],Riftwing:["Rift Stone","Recon Marker"]
+};
+function ensureAdvancedState(){
+  state.instituteInventory=state.instituteInventory||[];
+  state.inventoryQty=state.inventoryQty||{};
+  for(const item of state.instituteInventory) if(!state.inventoryQty[item])state.inventoryQty[item]=1;
+  state.instituteProjects=state.instituteProjects||[];
+  state.career=state.career||{};
+  state.career.unlockedTracks=state.career.unlockedTracks||[];
+  state.career.researchPoints=state.career.researchPoints||0;
+  state.career.fieldPermits=state.career.fieldPermits||[];
+  state.career.discoveries=state.career.discoveries||[];
+  state.career.rankXP=state.career.rankXP||0;
+  state.career.assignmentsCompleted=state.career.assignmentsCompleted||[];
+}
+function currentCareerRank(){
+  ensureAdvancedState();let r=CAREER_RANKS[0];for(const x of CAREER_RANKS)if(state.career.rankXP>=x.xp)r=x;return r;
+}
+function nextCareerRank(){const cur=currentCareerRank();const i=CAREER_RANKS.indexOf(cur);return CAREER_RANKS[Math.min(i+1,CAREER_RANKS.length-1)]}
+function itemQty(name){ensureAdvancedState();return state.inventoryQty[name]||0}
+function hasItem(name){return itemQty(name)>0}
+function addInstituteItemAdvanced(item,sourceName){
+  ensureAdvancedState();
+  state.inventoryQty[item]=(state.inventoryQty[item]||0)+1;
+  if(!state.instituteInventory.includes(item))state.instituteInventory.push(item);
+  state.career.researchPoints+=2;
+  state.career.rankXP+=2;
+  state.career.discoveries.push(`${item} recovered by ${sourceName||"field team"}`);
+  evaluateCareerUnlocks();
+}
+function instituteRoomData(){
+  ensureAdvancedState();const u=state.career.unlockedTracks;
+  return [
+    ["Veterinary Wing","🩺",true,"Patient care, triage and recovery"],
+    ["Morph Laboratory","🧬",state.completedCases>0,"Transformation research and stability"],
+    ["Field Operations","🗺️",state.sanctuary.length>0,"Twine expeditions and field assignments"],
+    ["Career Center","🎓",true,"Specializations, rank and expectations"],
+    ["Ecology Wing","🌿",u.includes("xenobotany"),"Habitat botany and environmental research"],
+    ["Signal Lab","📡",u.includes("signals"),"Relay recovery and hidden site mapping"],
+    ["Archive Vault","📚",u.includes("archive"),"Legacy cases and recovered histories"],
+    ["Mobility Hangar","🪽",u.includes("aero"),"Aerial and traversal specialization"],
+    ["Sanctuary Design Bay","🏕️",u.includes("sanctuary"),"Resident habitat expansion"],
+  ];
+}
+function careerRankPanel(){
+  const r=currentCareerRank(),n=nextCareerRank(),same=r===n,pct=same?100:Math.max(0,Math.min(100,((state.career.rankXP-r.xp)/(n.xp-r.xp))*100));
+  return `<div class="rank-banner"><div class="rank-badge">${r.icon}</div><div><div class="eyebrow">INSTITUTE CAREER RANK</div><div class="rank-title">${r.name}</div><div class="small muted">${same?"Maximum career rank achieved":state.career.rankXP+" / "+n.xp+" XP toward "+n.name}</div><div class="rank-progress"><i style="width:${pct}%"></i></div></div><div class="big-kpi">${state.career.rankXP}<div class="mini-kpi">CAREER XP</div></div></div>`;
+}
+function fieldAssignmentsPanel(limit=6){
+  ensureAdvancedState();
+  const rows=FIELD_ASSIGNMENTS.slice(0,limit).map(a=>{
+    const done=state.career.assignmentsCompleted.includes(a.id),ready=a.need.every(hasItem);
+    return `<div class="assignment ${done?"done":""}"><h4>${done?"✓ ":ready?"▶ ":"○ "}${a.title}</h4><div class="small">${a.task}</div><div class="requirement-line">${a.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x}</span>`).join(" · ")}</div><div class="reward">Reward: ${a.reward} career XP + ${Math.ceil(a.reward/2)} research points</div>${!done?`<button class="secondary" style="width:100%;margin-top:7px" onclick="completeAssignment('${a.id}')" ${ready?"":"disabled"}>${ready?"COMPLETE ASSIGNMENT":"EVIDENCE REQUIRED"}</button>`:""}</div>`;
+  }).join("");return rows;
+}
+function completeAssignment(id){
+  ensureAdvancedState();const a=FIELD_ASSIGNMENTS.find(x=>x.id===id);if(!a)return;if(state.career.assignmentsCompleted.includes(id)){toast("Assignment already complete.");return}if(!a.need.every(hasItem)){toast("Required field evidence is still missing.");return}
+  state.career.assignmentsCompleted.push(id);state.career.rankXP+=a.reward;state.career.researchPoints+=Math.ceil(a.reward/2);state.research+=2;log("Career assignment completed: "+a.title+".");save();render();toast("Assignment complete · career rank advanced.");
+}
+function projectsScreen(){
+  ensureAdvancedState();
+  const cards=INSTITUTE_PROJECTS.map(p=>{const done=state.instituteProjects.includes(p.id),ready=p.need.every(hasItem);return `<div class="recipe-card ${done?"done":""}"><div class="eyebrow">${done?"PROJECT COMPLETE":"INSTITUTE PROJECT"}</div><h3>${p.icon} ${p.name}</h3><div class="small">${p.effect}</div><div class="requirement-line" style="margin-top:8px">${p.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x} ×1</span>`).join("<br>")}</div><button class="${done?"secondary":"primary"}" style="width:100%;margin-top:8px" onclick="buildInstituteProject('${p.id}')" ${done||!ready?"disabled":""}>${done?"BUILT":ready?"BUILD PROJECT":"MISSING COMPONENTS"}</button></div>`}).join("");
+  return hero("Institute Research Projects","Recovered field items can be reused here to build permanent Institute systems. This is where expedition loot becomes infrastructure instead of disappearing.","🛠️")+careerRankPanel()+`<div class="panel"><div class="morph-grid">${cards}</div><div class="footer-actions"><button class="secondary" onclick="goMeta('institute')">← INSTITUTE HUB</button><button class="secondary" onclick="goMeta('career')">CAREER CENTER</button></div></div>`;
+}
+function buildInstituteProject(id){
+  ensureAdvancedState();const p=INSTITUTE_PROJECTS.find(x=>x.id===id);if(!p||state.instituteProjects.includes(id))return;if(!p.need.every(hasItem)){toast("Missing project components.");return}
+  for(const x of p.need)state.inventoryQty[x]=Math.max(0,itemQty(x)-1);
+  state.instituteProjects.push(id);state.career.rankXP+=12;state.career.researchPoints+=5;state.research+=3;log("Institute project built: "+p.name+".");save();render();toast(p.name+" installed in the Institute.");
+}
+function useMorphFieldSkill(i){
+  const p=state.sanctuary[i];if(!p)return;const a=ensureAdventureState(p);a.flags=a.flags||{};if(a.flags.morphSkillUsed){toast("This morph's special field search has already been used this run.");return}
+  const pool=MORPH_FIELD_FINDS[p.formName]||["Morph Trace Sample","Field Observation Notes"];const item=pool[Math.floor(Math.random()*pool.length)];a.flags.morphSkillUsed=true;if(!a.inventory.includes(item))a.inventory.push(item);a.log.push(p.formName+" field skill discovered "+item+".");addInstituteItemAdvanced(item,p.name);p.mastery=clamp((p.mastery||0)+4);save();render();toast(p.name+" discovered "+item+" using "+p.formName+" abilities.");
+}
+const CAREER_TRACKS=[
+  {
+    id:"fieldmed",
+    name:"Field Veterinary Medicine",
+    icon:"🩺",
+    need:["Field Med Kit"],
+    description:"Unlocks advanced rescue, stabilization, and remote patient-support expectations.",
+    areas:["Remote Triage","Expedition Stabilization","Rescue Medicine"]
+  },
+  {
+    id:"xenobotany",
+    name:"Exotic Habitat Botany",
+    icon:"🌿",
+    need:["Habitat Seed Kit","Crystal Fruit"],
+    description:"Unlocks habitat cultivation, nutritional plant research, and environmental fit studies.",
+    areas:["Habitat Cultivation","Nutritional Flora","Adaptive Ecology"]
+  },
+  {
+    id:"morphresearch",
+    name:"Adaptive Morph Research",
+    icon:"🧬",
+    need:["Advanced Morph Notes"],
+    description:"Unlocks deeper morph-path analysis and second-stage transformation research.",
+    areas:["Morph Genetics","Trait Stability","Second-Stage Morph Theory"]
+  },
+  {
+    id:"archive",
+    name:"Institute History & Archive",
+    icon:"📚",
+    need:["Field Journal","Archive Rubbing"],
+    description:"Unlocks forgotten institute records, historical case reconstruction, and old field routes.",
+    areas:["Historical Casework","Archive Recovery","Legacy Morph Programs"]
+  },
+  {
+    id:"signals",
+    name:"Field Signal Intelligence",
+    icon:"📡",
+    need:["Cracked Data Module","Shelter Coordinates"],
+    description:"Unlocks hidden shelters, relay archaeology, and lost expedition network research.",
+    areas:["Signal Mapping","Relay Recovery","Hidden Site Recon"]
+  },
+  {
+    id:"aero",
+    name:"Aerial & Mobility Research",
+    icon:"🪽",
+    need:["Silver Feather","Skyglass Stone"],
+    description:"Unlocks flight, gliding, ridge navigation, and mobility specialization.",
+    areas:["Flight Adaptation","High-Ridge Navigation","Aerial Rescue"]
+  },
+  {
+    id:"sanctuary",
+    name:"Sanctuary Systems",
+    icon:"🏕️",
+    need:["Sanctuary Blueprint"],
+    description:"Unlocks habitat architecture, resident enrichment, and sanctuary expansion research.",
+    areas:["Habitat Architecture","Resident Enrichment","Sanctuary Expansion"]
+  },
+  {
+    id:"bond",
+    name:"Human-Animal Bond Science",
+    icon:"🤝",
+    need:["Bond Charm"],
+    description:"Unlocks deeper trust, handling, behavioral support, and long-term relationship research.",
+    areas:["Trust Conditioning","Handling Science","Behavioral Recovery"]
+  },
+  {
+    id:"nutrition",
+    name:"Morph Nutrition",
+    icon:"🥣",
+    need:["Morph Nutrient Pack"],
+    description:"Unlocks post-morph feeding studies, energy recovery, and specialized nutrition.",
+    areas:["Post-Morph Diet","Energy Recovery","Nutrient Compatibility"]
+  }
+];
+
+function addInstituteItem(item,sourceName){ addInstituteItemAdvanced(item,sourceName); }
+function evaluateCareerUnlocks(){
+  state.career=state.career||{unlockedTracks:[],researchPoints:0,fieldPermits:[],discoveries:[]};
+  state.career.unlockedTracks=state.career.unlockedTracks||[];
+  for(const t of CAREER_TRACKS){
+    if(t.need.every(x=>state.instituteInventory.includes(x)) && !state.career.unlockedTracks.includes(t.id)){
+      state.career.unlockedTracks.push(t.id);
+      state.career.researchPoints=(state.career.researchPoints||0)+10;
+      state.career.fieldPermits=state.career.fieldPermits||[];
+      for(const area of t.areas){
+        if(!state.career.fieldPermits.includes(area)) state.career.fieldPermits.push(area);
+      }
+      log("Career Center unlocked: "+t.name+".");
+    }
+  }
+}
+function careerTrackUnlocked(id){
+  return (state.career?.unlockedTracks||[]).includes(id);
+}
+function inventoryCount(){return state.instituteInventory.length}
+
+function careerCenterScreen(){
+  ensureAdvancedState();evaluateCareerUnlocks();
+  const inv=state.instituteInventory||[],unlocked=state.career.unlockedTracks||[];
+  const cards=CAREER_TRACKS.map(t=>{const missing=t.need.filter(x=>!hasItem(x)),open=unlocked.includes(t.id);return `<div class="hub-card ${open?"unlocked":"locked"}"><div class="eyebrow">${open?"SPECIALIZATION OPEN":"EVIDENCE REQUIRED"}</div><h3>${t.icon} ${t.name}</h3><p>${t.description}</p><div class="requirement-line">${t.need.map(x=>`<span class="${hasItem(x)?"yes":"no"}">${hasItem(x)?"✓":"○"} ${x}</span>`).join("<br>")}</div><div class="ability-list" style="margin:8px 0">${t.areas.map(x=>`<div class="ability">${open?"🔓":"🔒"} ${x}</div>`).join("")}</div>${open?`<button class="primary" style="width:100%" onclick="openResearchTrack('${t.id}')">ENTER SPECIALIZATION</button>`:`<div class="small muted">Search expeditions for: ${missing.join(" + ")}</div>`}</div>`}).join("");
+  return hero("Institute Career Center","The Career Center converts field discoveries into long-term progression. Evidence unlocks specializations; assignments award career XP; research areas open new Institute expectations.","🎓")
+  +careerRankPanel()
+  +`<div class="grid" style="margin-top:10px"><div><div class="panel"><h3>CAREER SPECIALIZATIONS</h3><div class="hub-grid">${cards}</div></div><div class="panel"><h3>FIELD ASSIGNMENTS</h3>${fieldAssignmentsPanel()}</div></div><aside><div class="panel"><h3>CAREER READOUT</h3><div class="ability-list"><div class="ability">🔬 Research points: ${state.career.researchPoints}</div><div class="ability">🔓 Specializations: ${unlocked.length}/${CAREER_TRACKS.length}</div><div class="ability">✓ Assignments: ${state.career.assignmentsCompleted.length}/${FIELD_ASSIGNMENTS.length}</div><div class="ability">🛠️ Projects: ${state.instituteProjects.length}/${INSTITUTE_PROJECTS.length}</div></div><div class="footer-actions"><button class="primary" onclick="goMeta('projects')">PROJECT LAB</button><button class="secondary" onclick="goMeta('institute')">INSTITUTE HUB</button></div></div></aside></div>`;
+}
+
+function openResearchTrack(id){
+  const t=CAREER_TRACKS.find(x=>x.id===id);
+  if(!t || !careerTrackUnlocked(id)){toast("That research track is still locked.");return}
+  state.screen="researchtrack";
+  state.activeResearchTrack=id;
+  save();render();
+  window.scrollTo({top:0,left:0,behavior:"auto"});
+}
+
+function researchTrackScreen(){
+  const t=CAREER_TRACKS.find(x=>x.id===state.activeResearchTrack);
+  if(!t)return careerCenterScreen();
+  const rp=state.career.researchPoints||0;
+  return hero(t.name,
+    "A Career Center specialization unlocked by evidence recovered from your morphed animals' field adventures.",t.icon)
+  +`<div class="grid"><div>
+      <div class="panel">
+        <h3>RESEARCH EXPECTATIONS</h3>
+        <div class="callout good"><b>EVIDENCE COMPLETE:</b> ${t.need.join(" + ")}</div>
+        <div class="action-grid">
+          ${t.areas.map((x,i)=>`<button class="action" onclick="runCareerResearch('${t.id}',${i})">
+            <strong>${x}</strong><span>Spend 2 research points to run an Institute study and add it to the permanent research record.</span>
+          </button>`).join("")}
+        </div>
+      </div>
+    </div>
+    <aside>
+      <div class="panel">
+        <h3>CAREER STATUS</h3>
+        ${metric("RESEARCH POINTS",Math.min(100,rp))}
+        <div class="small" style="margin-top:8px">Completed discoveries: ${(state.career.discoveries||[]).length}</div>
+        <div class="footer-actions">
+          <button class="secondary" onclick="goMeta('career')">← CAREER CENTER</button>
+        </div>
+      </div>
+    </aside></div>`;
+}
+function runCareerResearch(id,idx){
+  const t=CAREER_TRACKS.find(x=>x.id===id);
+  if(!t||!careerTrackUnlocked(id))return;
+  if((state.career.researchPoints||0)<2){toast("You need 2 research points.");return}
+  const area=t.areas[idx];
+  state.career.researchPoints-=2;
+  const key=`Study complete: ${t.name} / ${area}`;
+  state.career.discoveries=state.career.discoveries||[];
+  if(!state.career.discoveries.includes(key))state.career.discoveries.push(key);
+  state.research=(state.research||0)+2;
+  log(key+".");
+  save();render();toast(area+" study added to Institute research.");
+}
+
 const MORPH_ADVENTURE_SCENES={
   trailhead:{
     title:"The Sanctuary Gate",
@@ -1186,6 +1482,7 @@ const MORPH_ADVENTURE_SCENES={
       {label:"HELP THE INJURED CREATURE",to:"creekhelp",need:"Field Med Kit"},
       {label:"PICK THE CRYSTAL FRUIT",to:"creekfruit",item:"Crystal Fruit"},
       {label:"FOLLOW THE TRACKS",to:"ruins"},
+      {label:"SEARCH THE CREEKBANK",to:"creekbank"},
       {label:"RETURN TO THE FORK",to:"trailhead"}
     ]
   },
@@ -1229,6 +1526,7 @@ const MORPH_ADVENTURE_SCENES={
     choices:[
       {label:"TAKE THE DATA MODULE",to:"ridge",item:"Cracked Data Module",flag:"module"},
       {label:"TRY TO POWER THE PANEL",to:"towerpower",need:"Crystal Fruit"},
+      {label:"SEARCH MAINTENANCE LAB",to:"towerlab"},
       {label:"RETURN TO RIDGE",to:"ridge"}
     ]
   },
@@ -1299,7 +1597,71 @@ const MORPH_ADVENTURE_SCENES={
     text:p=>"The underground room contains the missing half of the old field records. A terminal recognizes "+p.name+"'s current morph signature.",
     choices:[
       {label:"RECOVER ADVANCED MORPH NOTES",to:"finale",item:"Advanced Morph Notes",flag:"researchRecovered"},
-      {label:"RECOVER SANCTUARY BLUEPRINT",to:"finale",item:"Sanctuary Blueprint",flag:"researchRecovered"}
+      {label:"RECOVER SANCTUARY BLUEPRINT",to:"finale",item:"Sanctuary Blueprint",flag:"researchRecovered"},
+      {label:"SEARCH THE SHELTER STORES",to:"shelterstore"}
+    ]
+  },
+
+  creekbank:{
+    title:"Creekbank Search Grid",
+    text:p=>"The glowing creek widens into a debris field. Reed beds, an overturned survey crate, and animal tracks all offer different search opportunities.",
+    choices:[
+      {label:"SEARCH THE SURVEY CRATE",to:"cratefind",item:"Waterproof Sample Tubes",flag:"searchedCrate"},
+      {label:"SEARCH REED BEDS",to:"reedfind",item:"Luminous Reed Sample",flag:"searchedReeds"},
+      {label:"FOLLOW SMALL TRACKS",to:"trackfind",item:"Unknown Fur Sample",flag:"trackedAnimal"},
+      {label:"RETURN TO CREEK",to:"creek"}
+    ]
+  },
+  cratefind:{
+    title:"Recovered Survey Equipment",
+    text:p=>"The crate contains old field sampling equipment and a handwritten location code.",
+    choices:[
+      {label:"TAKE SAMPLE TUBES AND LOCATION CODE",to:"creek",item:"Survey Location Code",flag:"surveyCode"},
+      {label:"RETURN TO SEARCH GRID",to:"creekbank"}
+    ]
+  },
+  reedfind:{
+    title:"Luminous Reed Bed",
+    text:p=>"The reeds react faintly to "+p.name+"'s morph signature. A usable botanical sample can be collected without damaging the bed.",
+    choices:[
+      {label:"BAG THE SAMPLE",to:"creek",flag:"reedSampled"},
+      {label:"SEARCH MORE OF THE BANK",to:"creekbank"}
+    ]
+  },
+  trackfind:{
+    title:"Unknown Animal Trail",
+    text:p=>"The trail ends at a sheltered sleeping hollow. A tuft of shed fur remains on bark nearby; no animal needs to be disturbed.",
+    choices:[
+      {label:"COLLECT SHED FUR SAMPLE",to:"creek",flag:"furSampled"},
+      {label:"MARK LOCATION ONLY",to:"creek",item:"Wildlife Observation Marker"}
+    ]
+  },
+  towerlab:{
+    title:"Relay Maintenance Lab",
+    text:p=>"Behind the tower is a sealed maintenance compartment. Drawers contain old coils, broken sensors, and one intact field scanner core.",
+    choices:[
+      {label:"TAKE FIELD SCANNER CORE",to:"tower",item:"Field Scanner Core",flag:"scannerCore"},
+      {label:"TAKE RESONANCE COIL",to:"tower",item:"Resonance Coil",flag:"resonanceCoil"},
+      {label:"SEARCH OLD LOGS",to:"towerlogs",item:"Relay Maintenance Logs"},
+      {label:"RETURN TO TOWER",to:"tower"}
+    ]
+  },
+  towerlogs:{
+    title:"Relay Log Search",
+    text:p=>"The logs mention field routes that were abandoned after environmental instability.",
+    choices:[
+      {label:"COPY ABANDONED ROUTE MAP",to:"tower",item:"Abandoned Route Map",flag:"routeMap"},
+      {label:"RETURN",to:"tower"}
+    ]
+  },
+  shelterstore:{
+    title:"Research Shelter Stores",
+    text:p=>"The hidden shelter has multiple cabinets. You can only carry a few things, so choose what seems useful to the Institute.",
+    choices:[
+      {label:"TAKE PRESERVED SAMPLE CASE",to:"shelter",item:"Preserved Sample Case",flag:"sampleCase"},
+      {label:"TAKE FIELD EXPECTATION MANUAL",to:"shelter",item:"Field Expectation Manual",flag:"expectationManual"},
+      {label:"TAKE OLD CAREER BADGE SET",to:"shelter",item:"Institute Career Badge Set",flag:"badgeSet"},
+      {label:"RETURN TO TERMINAL",to:"shelter"}
     ]
   },
   finale:{
@@ -1371,8 +1733,12 @@ function morphStoryScreen(){
         ${metric("MASTERY",p.mastery)}
         <h4>PACK INVENTORY</h4>
         <div class="ability-list">${a.inventory.length?a.inventory.map(x=>`<div class="ability">🎒 ${x}</div>`).join(""):'<div class="ability">Pack is empty</div>'}</div>
+        <div class="field-skill"><div class="eyebrow">MORPH-SPECIFIC SEARCH</div><b>${p.formName} FIELD SKILL</b><div class="small muted" style="margin:5px 0">Use the transformed animal's unique abilities to uncover evidence ordinary searches cannot find.</div><button class="primary" style="width:100%" onclick="useMorphFieldSkill(${i})" ${a.flags?.morphSkillUsed?"disabled":""}>${a.flags?.morphSkillUsed?"✓ SPECIAL SEARCH USED":"🔎 USE MORPH FIELD SKILL"}</button></div>
+        <h4>FIELD EXPECTATIONS</h4><div class="expectation-board">${(state.career?.fieldPermits||[]).slice(0,4).map(x=>`<div class="expectation"><b>○ ${x}</b><span>Career Center expectation active in future field work.</span></div>`).join("")||'<div class="expectation"><b>NO CAREER EXPECTATIONS YET</b><span>Recover evidence to unlock specializations.</span></div>'}</div>
         <h4>FIELD LOG</h4>
         <div class="small" style="line-height:1.55">${a.log.slice(-5).map(x=>"• "+x).join("<br>")}</div>
+        <div class="callout" style="margin-top:10px"><b>INSTITUTE TRANSFER:</b> Items you collect are now copied into the permanent Institute inventory and can unlock Career Center research tracks.</div>
+        <button class="secondary" onclick="goMeta('career')" style="width:100%;margin-top:8px">🎓 VIEW CAREER CENTER</button>
         <div class="footer-actions">
           <button class="secondary" onclick="goMeta('sanctuary')">← LEAVE STORY FOR NOW</button>
         </div>
@@ -1395,6 +1761,7 @@ function chooseMorphAdventure(i,choiceIndex){
   if(c.item && !a.inventory.includes(c.item)){
     a.inventory.push(c.item);
     a.log.push("Collected "+c.item+".");
+    addInstituteItem(c.item,p.name);
   }
   if(c.removeItem){
     a.inventory=a.inventory.filter(x=>x!==c.removeItem);
@@ -1414,7 +1781,10 @@ function chooseMorphAdventure(i,choiceIndex){
     p.bond=clamp((p.bond||0)+10);
     p.mastery=clamp((p.mastery||0)+10);
     p.storyLoot=[...new Set([...(p.storyLoot||[]),...a.inventory])];
-    log(p.name+" completed a Morph Adventure and returned with "+a.inventory.length+" items.");
+    for(const item of a.inventory) if(!state.instituteInventory.includes(item)) addInstituteItem(item,p.name);
+    evaluateCareerUnlocks();
+    state.career.rankXP+=6;
+    log(p.name+" completed a Morph Adventure and transferred "+a.inventory.length+" field items to the Institute. Career XP awarded.");
     save();
     render();
     return;
@@ -1481,6 +1851,7 @@ function codexScreen(){
 }
 
 function render(){
+  ensureAdvancedState();evaluateCareerUnlocks();
   document.getElementById("resourceBar").innerHTML=resourceBar();
   document.getElementById("nav").innerHTML=nav();
   let html="";
@@ -1489,11 +1860,14 @@ function render(){
   else if(state.screen==="codex")html=codexScreen();
   else if(state.screen==="worldmap")html=worldMapScreen();
   else if(state.screen==="morphstory")html=morphStoryScreen();
+  else if(state.screen==="career")html=careerCenterScreen();
+  else if(state.screen==="researchtrack")html=researchTrackScreen();
+  else if(state.screen==="projects")html=projectsScreen();
   else{
     const id=stageId();
     html=({intake:intakeScreen,triage:triageScreen,exam:examScreen,diagnostics:diagnosticsScreen,treatment:treatmentScreen,vetrecovery:vetRecoveryScreen,eligibility:eligibilityScreen,resonance:resonanceScreen,prep:prepScreen,tree:treeScreen,chamber:chamberScreen,recovery:recoveryScreen,training:trainingScreen,expedition:expeditionScreen}[id]||intakeScreen)();
   }
-  if(state.screen!=="sanctuary" && state.screen!=="codex" && state.screen!=="worldmap" && state.screen!=="morphstory"){
+  if(state.screen!=="sanctuary" && state.screen!=="codex" && state.screen!=="worldmap" && state.screen!=="morphstory" && state.screen!=="career" && state.screen!=="researchtrack" && state.screen!=="projects"){
     html = storyPanel() + html;
   }
   document.getElementById("main").innerHTML=html;
@@ -1685,7 +2059,7 @@ window.goStage=goStage;window.goMeta=goMeta;window.finishArea=finishArea;window.
 window.intakeAction=intakeAction;window.vetTriage=vetTriage;window.vetExam=vetExam;window.vetDx=vetDx;window.vetTreat=vetTreat;window.vetRecover=vetRecover;window.clearForMorph=clearForMorph;window.scan=scan;window.prep=prep;window.selectMorph=selectMorph;window.chamberAction=chamberAction;
 window.recover=recover;window.train=train;window.pickWorld=pickWorld;window.field=field;window.completeCreatureCase=completeCreatureCase;
 window.closeRewardToSanctuary=closeRewardToSanctuary;window.closeRewardToCodex=closeRewardToCodex;window.startNextCreature=startNextCreature;
-window.petCare=petCare;window.careAll=careAll;window.openMorphStory=openMorphStory;window.openFirstMorphStory=openFirstMorphStory;window.closeMorphStory=closeMorphStory;window.continueMorphStory=continueMorphStory;window.morphStoryScreen=morphStoryScreen;window.chooseMorphAdventure=chooseMorphAdventure;window.resetMorphAdventure=resetMorphAdventure;window.resetGame=resetGame;
+window.petCare=petCare;window.careAll=careAll;window.openMorphStory=openMorphStory;window.openFirstMorphStory=openFirstMorphStory;window.closeMorphStory=closeMorphStory;window.continueMorphStory=continueMorphStory;window.morphStoryScreen=morphStoryScreen;window.chooseMorphAdventure=chooseMorphAdventure;window.resetMorphAdventure=resetMorphAdventure;window.careerCenterScreen=careerCenterScreen;window.openResearchTrack=openResearchTrack;window.runCareerResearch=runCareerResearch;window.projectsScreen=projectsScreen;window.buildInstituteProject=buildInstituteProject;window.completeAssignment=completeAssignment;window.useMorphFieldSkill=useMorphFieldSkill;window.resetGame=resetGame;
 
 
 function showStoryIntro(){
